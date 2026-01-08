@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.maknaez.mapper.ProductMapper">
+
+    <!-- 공통 검색 조건 (WHERE 절) -->
+    <sql id="where-list">
+        <where>
+            is_displayed = 1
+            
+            <!-- 카테고리 필터 -->
+            <if test="categoryNo != null and categoryNo != 0">
+                AND cate_code = #{categoryNo}
+            </if>
+            
+            <!-- 가격 범위 필터 -->
+            <if test="minPrice != null">
+                AND base_price &gt;= #{minPrice}
+            </if>
+            <if test="maxPrice != null">
+                AND base_price &lt;= #{maxPrice}
+            </if>
+            
+            <!-- 사이즈 필터 (pd_size 테이블 서브쿼리 활용) -->
+            <if test="sizes != null and sizes.size > 0">
+                AND EXISTS (
+                    SELECT 1 FROM pd_size ps 
+                    WHERE ps.prod_id = products.prod_id 
+                    AND ps.size IN 
+                    <foreach collection="sizes" item="size" open="(" separator="," close=")">
+                        #{size}
+                    </foreach>
+                )
+            </if>
+            
+            <!-- 성별/스포츠 등은 상품명 검색으로 대체 (DB 컬럼 부재 시) -->
+            <if test="genders != null and genders.size > 0">
+                AND (
+                    <foreach collection="genders" item="gender" separator=" OR ">
+                        prod_name LIKE '%' || #{gender} || '%'
+                    </foreach>
+                )
+            </if>
+            <if test="sports != null and sports.size > 0">
+                 AND (
+                    <foreach collection="sports" item="sport" separator=" OR ">
+                        prod_name LIKE '%' || #{sport} || '%'
+                    </foreach>
+                )
+            </if>
+            <if test="colors != null and colors.size > 0">
+                 AND (
+                    <foreach collection="colors" item="color" separator=" OR ">
+                        prod_name LIKE '%' || #{color} || '%'
+                    </foreach>
+                )
+            </if>
+            
+             <!-- 품절 제외 (재고 로직이 복잡하므로 예시로 0보다 클때 처리한다고 가정) -->
+             <if test="excludeSoldOut == true">
+                <!-- AND EXISTS (SELECT 1 FROM stock_logs sl WHERE sl.prod_id = products.prod_id AND prod_stock > 0) -->
+             </if>
+        </where>
+    </sql>
+
+    <!-- 상품 리스트 조회 -->
+    <select id="listProduct" parameterType="map" resultType="com.maknaez.model.ProductDTO">
+        SELECT prod_id AS productNo, 
+               cate_code AS categoryNo, 
+               prod_name AS productName, 
+               base_price AS price, 
+               thumb_nail AS imageFile, 
+               is_displayed AS isDisplayed,
+               TO_CHAR(prod_date, 'YYYY-MM-DD') AS regDate
+        FROM products
+        <include refid="where-list"/>
+        <choose>
+            <when test="sort == 'price_asc'">ORDER BY base_price ASC</when>
+            <when test="sort == 'price_desc'">ORDER BY base_price DESC</when>
+            <otherwise>ORDER BY prod_id DESC</otherwise>
+        </choose>
+    </select>
+    
+    <!-- 상품 개수 조회 -->
+    <select id="dataCount" parameterType="map" resultType="Integer">
+        SELECT NVL(COUNT(*), 0) FROM products
+        <include refid="where-list"/>
+    </select>
+
+</mapper>

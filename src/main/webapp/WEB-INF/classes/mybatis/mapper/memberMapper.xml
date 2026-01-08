@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.maknaez.mapper.MemberMapper">
+	<select id="loginMember" parameterType="map" resultType="com.maknaez.model.MemberDTO">
+		SELECT m1.memberIdx, m1.userId, userPwd, userName, userLevel, modify_date
+		FROM member1 m1
+		LEFT OUTER JOIN member2 m2 ON m1.memberIdx = m2.memberIdx
+		WHERE m1.userId = #{userId} AND userPwd = #{userPwd} AND enabled = 1
+	</select>
+	
+	<insert id="insertLoginLog" parameterType="com.maknaez.model.MemberDTO">
+		INSERT INTO login_history(memberIdx, userId, userPwd, userName, enabled, userLevel, 
+					register_date, modify_date)
+		VALUES (member_seq.NEXTVAL, #{userId}, #{userPwd}, #{userName}, 
+			1, 1, SYSDATE, SYSDATE) 
+    </insert>
+	
+    <insert id="insertMember1" parameterType="com.maknaez.model.MemberDTO">
+		INSERT INTO member1(memberIdx, userId, userPwd, userName, enabled, userLevel, 
+					register_date, modify_date)
+		VALUES (member_seq.NEXTVAL, #{userId}, #{userPwd}, #{userName}, 
+			1, 1, SYSDATE, SYSDATE) 
+    </insert>
+
+    <insert id="insertMember2" parameterType="com.maknaez.model.MemberDTO">
+		INSERT INTO member2(userId, email, birth, tel, profile_photo, zip, addr1, addr2)
+		VALUES (#{userId}, #{email}, TO_DATE(#{birth}, 'YYYY-MM-DD'), #{tel}, 
+			#{profile_photo, jdbcType=VARCHAR}, #{zip, jdbcType=VARCHAR},
+			#{addr1, jdbcType=VARCHAR}, #{addr2, jdbcType=VARCHAR})
+    </insert>
+	
+    <update id="insertMember12" parameterType="com.maknaez.model.MemberDTO">
+		INSERT ALL
+		INTO member1(memberIdx, userId, userPwd, userName, enabled, userLevel, 
+					register_date, modify_date)
+		VALUES (member_seq.NEXTVAL, #{userId}, #{userPwd}, #{userName}, 
+			1, 1, SYSDATE, SYSDATE)
+		INTO member2(userId, email, birth, tel, profile_photo, zip, addr1, addr2)
+		VALUES (#{userId}, #{email}, TO_DATE(#{birth}, 'YYYY-MM-DD'), #{tel}, 
+			#{profile_photo, jdbcType=VARCHAR}, #{zip, jdbcType=VARCHAR},
+			#{addr1, jdbcType=VARCHAR}, #{addr2, jdbcType=VARCHAR})
+		SELECT * FROM dual
+    </update>
+    
+	<select id="findById" parameterType="String" resultType="com.maknaez.model.MemberDTO">
+		SELECT memberIdx, m1.userId, userPwd, userName,
+			enabled, userLevel, register_date, modify_date,
+			email, TO_CHAR(birth, 'YYYY-MM-DD') birth,
+			profile_photo, tel, zip, addr1, addr2
+		FROM member1 m1
+		LEFT OUTER JOIN member2 m2 ON m1.userId = m2.userId
+		WHERE m1.userId = #{userId}
+	</select>
+	    
+	<update id="updateMember1" parameterType="com.maknaez.model.MemberDTO">
+		UPDATE member1 SET userPwd = #{userPwd}, modify_date = SYSDATE
+		WHERE userId = #{userId}
+    </update>
+	
+    <update id="updateMember2" parameterType="com.maknaez.model.MemberDTO">
+		UPDATE member2 SET email = #{email}, birth = TO_DATE(#{birth},'YYYY-MM-DD'), 
+			tel = #{tel, jdbcType=VARCHAR}, 
+			profile_photo = #{profile_photo, jdbcType=VARCHAR}, 
+			zip = #{zip, jdbcType=VARCHAR},
+			addr1 = #{addr1, jdbcType=VARCHAR}, addr2 = #{addr2, jdbcType=VARCHAR}
+		WHERE userId = #{userId}
+    </update>
+    
+    <update id="updateMemberLevel" parameterType="map">
+		UPDATE member1 SET userLevel = #{userLevel}
+		WHERE userId = #{userId}
+    </update>
+    
+	<update id="deleteProfilePhoto" parameterType="map">
+		UPDATE member2 SET profile_photo = ''
+		WHERE userId = #{userId}
+    </update>
+
+    <update id="deleteMember1" parameterType="map">
+		UPDATE member1 SET enabled = 0, userLevel = 0
+		WHERE userId = #{userId}
+    </update>
+    
+    <delete id="deleteMember2" parameterType="map">
+		DELETE FROM member2
+		WHERE userId = #{userId}
+    </delete>
+    
+	<select id="listAgeSection" resultType="map">
+		WITH  memberAge AS (
+		    SELECT m1.userId, TRUNC(MONTHS_BETWEEN(SYSDATE, birth)/12) age
+		    FROM member1 m1
+			JOIN member2 m2 ON m1.userId = m2.userId
+			WHERE userLevel &gt; 0 AND userLevel &lt; 50
+		)
+		SELECT '10대' section, COUNT(*) count FROM memberAge WHERE age &gt;= 10 AND age &lt; 20
+		UNION ALL
+		SELECT '20대' section, COUNT(*) count FROM memberAge WHERE age &gt;= 20 AND age &lt; 30
+		UNION ALL
+		SELECT '30대' section, COUNT(*) count FROM memberAge WHERE age &gt;= 30 AND age &lt; 40
+		UNION ALL
+		SELECT '40대' section, COUNT(*) count FROM memberAge WHERE age &gt;= 40 AND age &lt; 50
+		UNION ALL
+		SELECT '50대' section, COUNT(*) count FROM memberAge WHERE age &gt;= 50 AND age &lt; 60
+		UNION ALL
+		SELECT '60대' section, COUNT(*) count FROM memberAge WHERE age &gt;= 60 AND age &lt; 70
+		UNION ALL
+		SELECT '기타' section, COUNT(*) count FROM memberAge WHERE age &lt; 10 OR age &gt;= 70
+	</select>
+</mapper>
