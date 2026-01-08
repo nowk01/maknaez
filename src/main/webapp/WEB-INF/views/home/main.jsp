@@ -1,165 +1,114 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core"%>
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt"%>
+
+<jsp:include page="/WEB-INF/views/common/image_config.jsp" />
+
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <title>Shopping Mall Main</title>
+    <title>MAKNAEZ - FUTURE ARCHIVE</title>
     
     <jsp:include page="/WEB-INF/views/layout/headerResources.jsp" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,900;1,900&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/header.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/main.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/footer.css">
 </head>
 <body>
+
+    <div class="intro-curtain">
+        <div class="intro-logo font-brand">MAKNAEZ</div>
+    </div>
 
     <jsp:include page="/WEB-INF/views/layout/header.jsp" />
 
     <main>
-        <section id="mainCarousel" class="carousel slide" data-bs-ride="carousel">
-            <div class="carousel-indicators">
-                <button type="button" data-bs-target="#mainCarousel" data-bs-slide-to="0" class="active"></button>
-                <button type="button" data-bs-target="#mainCarousel" data-bs-slide-to="1"></button>
-                <button type="button" data-bs-target="#mainCarousel" data-bs-slide-to="2"></button>
+        <section class="hero-section">
+            <div class="hero-title-wrap">
+                <div class="hero-title font-brand">FUTURE<br>ARCHIVE</div>
+                <div class="hero-sub">ENGINEERED FOR MODERN LIFE</div>
             </div>
-            <div class="carousel-inner">
-                <div class="carousel-item active">
-                    <img src="https://placehold.co/1920x600/333/fff?text=SEASON+OFF+SALE" class="d-block w-100" alt="Banner 1">
-                    <div class="carousel-caption d-none d-md-block">
-                        <h5>2024 S/S SEASON OFF</h5>
-                        <p>최대 50% 할인 혜택을 만나보세요.</p>
-                    </div>
-                </div>
-                <div class="carousel-item">
-                    <img src="https://placehold.co/1920x600/555/fff?text=NEW+COLLECTION" class="d-block w-100" alt="Banner 2">
-                    <div class="carousel-caption d-none d-md-block">
-                        <h5>NEW ARRIVALS</h5>
-                        <p>이번 주 신상품을 확인해보세요.</p>
-                    </div>
-                </div>
-                <div class="carousel-item">
-                    <img src="https://placehold.co/1920x600/777/fff?text=WEEKLY+BEST" class="d-block w-100" alt="Banner 3">
-                    <div class="carousel-caption d-none d-md-block">
-                        <h5>WEEKLY BEST</h5>
-                        <p>가장 사랑받는 아이템.</p>
-                    </div>
-                </div>
+            <div class="hero-slide active"><img src="${img_hero_1}" alt="Hero 1"></div>
+            <div class="hero-slide"><img src="${img_hero_2}" alt="Hero 2"></div>
+            <div class="hero-slide"><img src="${img_hero_3}" alt="Hero 3"></div>
+        </section>
+
+        <section class="category-nav">
+            <div class="cat-item">
+                <img src="${img_cat_running}" alt="Running">
+                <span class="cat-label font-brand">RUNNING</span>
             </div>
-            <button class="carousel-control-prev" type="button" data-bs-target="#mainCarousel" data-bs-slide="prev">
-                <span class="carousel-control-prev-icon"></span>
-            </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#mainCarousel" data-bs-slide="next">
-                <span class="carousel-control-next-icon"></span>
-            </button>
+            <div class="cat-item">
+                <img src="${img_cat_outdoor}" alt="Outdoor">
+                <span class="cat-label font-brand">OUTDOOR</span>
+            </div>
+            <div class="cat-item">
+                <img src="${img_cat_sportstyle}" alt="Sportstyle">
+                <span class="cat-label font-brand">SPORTSTYLE</span>
+            </div>
+            <div class="cat-item">
+                <img src="${img_cat_slab}" alt="S/LAB">
+                <span class="cat-label font-brand">S/LAB</span>
+            </div>
+        </section>
+
+        <div class="marquee-bar">
+            <div class="marquee-text font-brand">
+                NEW SEASON DROP /// FREE SHIPPING WORLDWIDE /// TECHWEAR COLLECTION /// NEW SEASON DROP ///
+            </div>
+        </div>
+
+        <section class="wide-feature reveal">
+            <img src="${img_wide_banner}" alt="Sportstyle">
+            <div class="wide-txt">
+                <h2 class="wide-title font-brand">SPORTSTYLE<br>EVOLVED</h2>
+                <button class="btn-white">DISCOVER COLLECTION</button>
+            </div>
         </section>
 
         <section class="container">
-            <h2 class="section-title">BEST ITEMS</h2>
-            <p class="text-center text-secondary mb-5">이번 주 가장 많이 판매된 상품입니다.</p>
-            
-            <div class="row">
-                <div class="col-6 col-md-4">
-                    <div class="product-card">
-                        <div class="product-img-wrapper">
-                            <span class="badge-new">BEST</span>
-                            <a href="#"><img src="https://placehold.co/400x400/ddd/333?text=Slacks" alt="Product"></a>
-                        </div>
-                        <div class="product-info">
-                            <a href="#"><div class="product-name">와이드 핏 슬랙스</div><div class="product-price">45,000원</div></a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-6 col-md-4">
-                    <div class="product-card">
-                        <div class="product-img-wrapper">
-                            <a href="#"><img src="https://placehold.co/400x400/ccc/333?text=Knit" alt="Product"></a>
-                        </div>
-                        <div class="product-info">
-                            <a href="#"><div class="product-name">라운드넥 니트</div><div class="product-price">32,000원</div></a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-6 col-md-4">
-                    <div class="product-card">
-                        <div class="product-img-wrapper">
-                            <span class="badge-new">HOT</span>
-                            <a href="#"><img src="https://placehold.co/400x400/bbb/333?text=Dress" alt="Product"></a>
-                        </div>
-                        <div class="product-info">
-                            <a href="#"><div class="product-name">코튼 롱 원피스</div><div class="product-price">58,000원</div></a>
-                        </div>
-                    </div>
-                </div>
+            <div class="section-head reveal">
+                <h2 class="head-title font-brand">LATEST<br>DROPS</h2>
+                <a href="#" class="head-link">VIEW ALL</a>
             </div>
-        </section>
 
-        <section class="container pb-5">
-            <h2 class="section-title">NEW ARRIVALS</h2>
-            <div class="row">
-                <div class="col-6 col-md-3">
-                    <div class="product-card">
-                        <div class="product-img-wrapper">
-                            <span class="badge-new">NEW</span>
-                            <a href="#">
-                                <img src="https://placehold.co/400x400/e0e0e0/333?text=Jacket" alt="New Product">
-                            </a>
-                        </div>
-                        <div class="product-info">
-                            <a href="#">
-                                <div class="product-name">린넨 자켓</div>
-                                <div class="product-price">89,000원</div>
-                            </a>
-                        </div>
+            <div class="grid-layout">
+                <div class="card reveal">
+                    <div class="card-img"><img src="${img_prod_xt6}" alt="Shoe"></div>
+                    <div class="card-txt">
+                        <span class="c-title">MKZ-6 GORE-TEX</span>
+                        <span class="c-cat">Sportstyle</span>
+                        <span class="c-price">280,000</span>
                     </div>
                 </div>
-
-                <div class="col-6 col-md-3">
-                    <div class="product-card">
-                        <div class="product-img-wrapper">
-                            <span class="badge-new">NEW</span>
-                            <a href="#"><img src="https://placehold.co/400x400/d0d0d0/333?text=Sandals" alt="Product"></a>
-                        </div>
-                        <div class="product-info">
-                            <a href="#"><div class="product-name">썸머 샌들</div><div class="product-price">35,000원</div></a>
-                        </div>
+                <div class="card reveal">
+                    <div class="card-img"><img src="${img_prod_speedcross}" alt="Shoe"></div>
+                    <div class="card-txt">
+                        <span class="c-title">SPEEDCROSS 6</span>
+                        <span class="c-cat">Trail Running</span>
+                        <span class="c-price">190,000</span>
                     </div>
                 </div>
-                <div class="col-6 col-md-3">
-                    <div class="product-card">
-                        <div class="product-img-wrapper">
-                            <span class="badge-new">NEW</span>
-                            <a href="#"><img src="https://placehold.co/400x400/c0c0c0/333?text=T-shirt" alt="Product"></a>
-                        </div>
-                        <div class="product-info">
-                            <a href="#"><div class="product-name">스트라이프 티셔츠</div><div class="product-price">19,000원</div></a>
-                        </div>
+                <div class="card reveal">
+                    <div class="card-img"><img src="${img_prod_acs}" alt="Shoe"></div>
+                    <div class="card-txt">
+                        <span class="c-title">ACS PRO</span>
+                        <span class="c-cat">Advanced</span>
+                        <span class="c-price">265,000</span>
                     </div>
                 </div>
-                <div class="col-6 col-md-3">
-                    <div class="product-card">
-                        <div class="product-img-wrapper">
-                            <span class="badge-new">NEW</span>
-                            <a href="#"><img src="https://placehold.co/400x400/b0b0b0/333?text=Shorts" alt="Product"></a>
-                        </div>
-                        <div class="product-info">
-                            <a href="#"><div class="product-name">데님 쇼츠</div><div class="product-price">25,000원</div></a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-        
-        <section class="container-fluid py-5 bg-light mt-5">
-            <div class="container">
-                <div class="row align-items-center">
-                    <div class="col-md-6 mb-3 mb-md-0">
-                        <img src="https://placehold.co/800x400/ccc/333?text=LOOK+BOOK" class="img-fluid rounded" alt="Promo">
-                    </div>
-                    <div class="col-md-6 text-center text-md-start ps-md-5">
-                        <span class="text-primary fw-bold">PROMOTION</span>
-                        <h2 class="fw-bold mt-2">멤버십 혜택 안내</h2>
-                        <p class="text-muted mt-3">
-                            신규 가입 시 10% 할인 쿠폰 즉시 지급!<br>
-                            매월 다양한 등급별 혜택을 놓치지 마세요.
-                        </p>
-                        <a href="#" class="btn btn-dark mt-3 px-4 py-2">자세히 보기</a>
+                <div class="card reveal">
+                    <div class="card-img"><img src="${img_prod_women}" alt="Shoe"></div>
+                    <div class="card-txt">
+                        <span class="c-title">HYPULSE</span>
+                        <span class="c-cat">Trail Running</span>
+                        <span class="c-price">145,000</span>
                     </div>
                 </div>
             </div>
@@ -168,7 +117,28 @@
 
     <jsp:include page="/WEB-INF/views/layout/footer.jsp" />
 
-    <jsp:include page="/WEB-INF/views/layout/footerResources.jsp" />
-    
+    <script>
+        const slides = document.querySelectorAll('.hero-slide');
+        let currentSlide = 0;
+        setInterval(() => {
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (currentSlide + 1) % slides.length;
+            slides[currentSlide].classList.add('active');
+        }, 4000);
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if(entry.isIntersecting) entry.target.classList.add('active');
+            });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+        
+        document.querySelectorAll('img').forEach(img => {
+            img.onerror = function() {
+                this.onerror = null;
+                this.src = 'data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22800%22%20height%3D%22600%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20fill%3D%22%23eee%22%2F%3E%3Ctext%20x%3D%2250%25%22%20y%3D%2250%25%22%20fill%3D%22%23999%22%20font-family%3D%22sans-serif%22%20font-weight%3D%22bold%22%20font-size%3D%2224%22%20text-anchor%3D%22middle%22%20dy%3D%22.3em%22%3EMAKNAEZ%3C%2Ftext%3E%3C%2Fsvg%3E';
+            };
+        });
+    </script>
 </body>
 </html>
