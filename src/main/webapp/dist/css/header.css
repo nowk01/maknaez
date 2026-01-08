@@ -1,0 +1,28 @@
+@charset "UTF-8";
+
+/* [HEADER] Style 1: Clean White */
+header {
+    position: sticky; top: 0; z-index: 1000;
+    background: rgba(255,255,255,0.98); 
+    border-bottom: 1px solid #e5e5e5; /* 연한 회색 라인 */
+    height: 70px; display: flex; align-items: center; justify-content: space-between; padding: 0 40px;
+}
+
+.header-logo { 
+    font-size: 26px; color: #050505; /* Black */
+    font-family: 'Archivo', sans-serif; font-weight: 900; font-style: italic; letter-spacing: -1px;
+}
+
+.nav-menu { 
+    display: flex; gap: 40px; 
+    font-size: 14px; font-weight: 700; text-transform: uppercase; 
+    font-family: 'Inter', sans-serif;
+}
+.nav-menu a { color: #050505; text-decoration: none; transition: 0.2s; }
+.nav-menu a:hover { color: #666; }
+
+.nav-icons { 
+    font-size: 22px; display: flex; gap: 20px; color: #050505;
+}
+.nav-icons i { cursor: pointer; transition: 0.2s; }
+.nav-icons i:hover { color: #ff4e00; /* Accent Color */ }
