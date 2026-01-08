@@ -163,16 +163,16 @@
     <div class="user-actions">
         <div class="icon-btn"><i class="ph ph-magnifying-glass"></i></div>
         
-        <%-- [수정] 사람 아이콘: 로그인 여부에 따라 링크 변경 --%>
+        
         <c:choose>
             <c:when test="${not empty sessionScope.member}">
-                <%-- 로그인 상태: 마이페이지로 이동 --%>
+                
                 <a href="${pageContext.request.contextPath}/member/mypage/main.do" class="icon-btn" style="color: inherit; text-decoration: none; display: flex; align-items: center; justify-content: center;">
                     <i class="ph ph-user"></i>
                 </a>
             </c:when>
             <c:otherwise>
-                <%-- 비로그인 상태: 로그인 페이지로 이동 --%>
+                
                 <a href="${pageContext.request.contextPath}/member/login" class="icon-btn" style="color: inherit; text-decoration: none; display: flex; align-items: center; justify-content: center;">
                     <i class="ph ph-user"></i>
                 </a>
