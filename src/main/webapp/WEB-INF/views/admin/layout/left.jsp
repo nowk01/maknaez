@@ -5,7 +5,7 @@
 <nav id="sidebar-wrapper">
     <div class="sidebar-heading">MAKNAEZ ADMIN</div>
     <div class="list-group list-group-flush mt-3">
-        <a href="" class="list-group-item active-menu">
+        <a href="${pageContext.request.contextPath}/admin" class="list-group-item active-menu">
             <i class="fas fa-home me-2"></i> 홈 대시보드
         </a>
 
@@ -18,8 +18,8 @@
         <div class="collapse" id="menu-member">
             <div class="list-group list-group-flush submenu">
                 <a href="${pageContext.request.contextPath}/admin/member/member_list" class="list-group-item">회원 조회</a>
-                <a href="#" class="list-group-item">마일리지 관리</a>
-                <a href="#" class="list-group-item">휴면 회원 관리</a>
+                <a href="${pageContext.request.contextPath}/admin/member/point_manage" class="list-group-item">마일리지 관리</a>
+                <a href="${pageContext.request.contextPath}/admin/member/dormant_manage" class="list-group-item">휴면 회원 관리</a>
             </div>
         </div>
 
@@ -29,9 +29,9 @@
         </a>
         <div class="collapse" id="menu-order">
             <div class="list-group list-group-flush submenu">
-                <a href="#" class="list-group-item">통합 주문 검색</a>
-                <a href="#" class="list-group-item">견적서 관리</a>
-                <a href="#" class="list-group-item">취소/반품 관리</a>
+                <a href="${pageContext.request.contextPath}/admin/order/order_list" class="list-group-item">통합 주문 검색</a>
+                <a href="${pageContext.request.contextPath}/admin/order/estimate_list" class="list-group-item">견적서 관리</a>
+                <a href="${pageContext.request.contextPath}/admin/order/claim_list" class="list-group-item">취소/반품 관리</a>
             </div>
         </div>
 
@@ -41,9 +41,9 @@
         </a>
         <div class="collapse" id="menu-product">
             <div class="list-group list-group-flush submenu">
-                <a href="#" class="list-group-item">상품 목록/등록/수정</a>
-                <a href="#" class="list-group-item">카테고리 관리</a>
-                <a href="#" class="list-group-item">재고 관리</a>
+                <a href="${pageContext.request.contextPath}/admin/product/product_list" class="list-group-item">상품 목록/등록/수정</a>
+                <a href="${pageContext.request.contextPath}/admin/product/category_manage" class="list-group-item">카테고리 관리</a>
+                <a href="${pageContext.request.contextPath}/admin/product/stock_list" class="list-group-item">재고 관리</a>
             </div>
         </div>
 
@@ -53,9 +53,9 @@
         </a>
         <div class="collapse" id="menu-stats">
             <div class="list-group list-group-flush submenu">
-                <a href="#" class="list-group-item">월/일/상품별 매출</a>
-                <a href="#" class="list-group-item">연령/성별 통계</a>
-                <a href="#" class="list-group-item">방문자 수 조회</a>
+                <a href="${pageContext.request.contextPath}/admin/stats/sales_stats" class="list-group-item">월/일/상품별 매출</a>
+                <a href="${pageContext.request.contextPath}/admin/stats/customer_stats" class="list-group-item">연령/성별 통계</a>
+                <a href="${pageContext.request.contextPath}/admin/stats/visitor_stats" class="list-group-item">방문자 수 조회</a>
             </div>
         </div>
 
@@ -65,10 +65,10 @@
         </a>
         <div class="collapse" id="menu-board">
             <div class="list-group list-group-flush submenu">
-                <a href="#" class="list-group-item">공지사항 관리</a>
-                <a href="#" class="list-group-item">1:1 문의</a>
-                <a href="#" class="list-group-item">Q&A</a>
-                <a href="#" class="list-group-item">리뷰 관리</a>
+                <a href="${pageContext.request.contextPath}/admin/cs/notice_list" class="list-group-item">공지사항 관리</a>
+                <a href="${pageContext.request.contextPath}/admin/cs/inquiry_list" class="list-group-item">1:1 문의</a>
+                <a href="${pageContext.request.contextPath}/admin/cs/qna_list" class="list-group-item">Q&A</a>
+                <a href="${pageContext.request.contextPath}/admin/cs/review_list" class="list-group-item">리뷰 관리</a>
             </div>
         </div>
     </div>
