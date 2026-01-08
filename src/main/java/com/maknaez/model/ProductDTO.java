@@ -1,12 +1,12 @@
 package com.maknaez.model;
 
 public class ProductDTO {
-	private int productNo;      // prod_id (PK)
+	private long productNo;      // prod_id (PK)
     private int categoryNo;     // cate_code (FK)
     private String productName; // prod_name
     private int price;          // base_price
     private String content;     // prod_desc (CLOB)
-    private int isDisplayed;    // is_displayed (1:ǥ��, 0:��ǥ��)
+    private int isDisplayed;    // is_displayed (1:진열, 0:진열안함)
     private String imageFile;   // thumb_nail
     private String regDate;     // prod_date
     private String shippedDate; // shipped_date
@@ -18,11 +18,11 @@ public class ProductDTO {
 	public ProductDTO(long l, String string, String string2, int i, Object object, boolean b, int j) {
 	}
 
-	public int getProductNo() {
+	public long getProductNo() {
 		return productNo;
 	}
 
-	public void setProductNo(int productNo) {
+	public void setProductNo(long productNo) {
 		this.productNo = productNo;
 	}
 
@@ -89,9 +89,7 @@ public class ProductDTO {
 	public void setShippedDate(String shippedDate) {
 		this.shippedDate = shippedDate;
 	}
-	
-	
-  
+
 	
 	
 }
