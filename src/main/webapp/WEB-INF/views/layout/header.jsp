@@ -10,7 +10,7 @@
         <ul class="gnb-list">
             
             <li class="nav-item">
-                <a href="/shop/men" class="nav-link">MEN</a>
+                <a href="${pageContext.request.contextPath}/collections/list?category=men" class="nav-link">MEN</a>
                 <div class="mega-menu">
                     <div class="mega-container">
                         <div class="mega-promo">
