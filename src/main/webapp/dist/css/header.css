@@ -1,28 +1,329 @@
 @charset "UTF-8";
 
-/* [HEADER] Style 1: Clean White */
+/* [HEADER LAYOUT] */
 header {
-    position: sticky; top: 0; z-index: 1000;
-    background: rgba(255,255,255,0.98); 
-    border-bottom: 1px solid #e5e5e5; /* 연한 회색 라인 */
-    height: 70px; display: flex; align-items: center; justify-content: space-between; padding: 0 40px;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	background-color: #fff;
+	z-index: 1000;
+	border-bottom: 1px solid #eee;
+	height: 80px;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 0 40px;
 }
 
-.header-logo { 
-    font-size: 26px; color: #050505; /* Black */
-    font-family: 'Archivo', sans-serif; font-weight: 900; font-style: italic; letter-spacing: -1px;
+.logo a {
+	font-family: 'Archivo', sans-serif;
+	font-weight: 900;
+	font-style: italic;
+	font-size: 1.8rem;
+	letter-spacing: -0.05em;
+	color: #000;
+	text-transform: uppercase;
 }
 
-.nav-menu { 
-    display: flex; gap: 40px; 
-    font-size: 14px; font-weight: 700; text-transform: uppercase; 
-    font-family: 'Inter', sans-serif;
+/* [NAVIGATION] */
+.gnb {
+	display: flex;
+	height: 100%;
+	align-items: center;
 }
-.nav-menu a { color: #050505; text-decoration: none; transition: 0.2s; }
-.nav-menu a:hover { color: #666; }
 
-.nav-icons { 
-    font-size: 22px; display: flex; gap: 20px; color: #050505;
+.gnb-list {
+	display: flex;
+	list-style: none;
+	height: 100%;
+	margin: 0;
+	padding: 0;
 }
-.nav-icons i { cursor: pointer; transition: 0.2s; }
-.nav-icons i:hover { color: #ff4e00; /* Accent Color */ }
+
+.nav-item {
+	height: 100%;
+	display: flex;
+	align-items: center;
+	margin: 0 25px;
+	position: relative;
+	cursor: pointer;
+}
+
+.nav-link {
+	font-family: 'Inter', sans-serif;
+	font-weight: 700;
+	font-size: 1rem;
+	color: #000;
+	text-transform: uppercase;
+	position: relative;
+	height: 100%;
+	display: flex;
+	align-items: center;
+}
+
+.nav-item:hover .nav-link::after {
+	content: '';
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	width: 100%;
+	height: 3px;
+	background-color: #000;
+}
+
+/* [MEGA MENU - FINAL 2-IMAGE STYLE] */
+.mega-menu {
+	position: fixed;
+	top: 80px;
+	left: 0;
+	width: 100%;
+	background-color: #fff;
+	border-bottom: 1px solid #e5e5e5;
+	padding: 0;
+	opacity: 0;
+	visibility: hidden;
+	transform: translateY(-10px);
+	transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+	box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+}
+
+.nav-item:hover .mega-menu {
+	opacity: 1;
+	visibility: visible;
+	transform: translateY(0);
+}
+
+.mega-container {
+	max-width: 1200px;
+	margin: 0 auto;
+	padding: 30px 40px;
+	display: grid;
+	/* 왼쪽 이미지 영역(500px) / 오른쪽 링크 영역 */
+	grid-template-columns: 500px 1fr;
+	gap: 80px;
+}
+
+/* 왼쪽: 이미지 2장 (1x2 그리드) */
+.mega-promo {
+	display: grid;
+	grid-template-columns: 1fr 1fr; /* 2개를 나란히 */
+	gap: 15px;
+	height: 280px; /* 높이 고정으로 깔끔하게 */
+}
+
+.promo-item {
+	position: relative;
+	overflow: hidden;
+	height: 100%;
+	border-radius: 4px;
+	background: #f4f4f4;
+}
+
+.promo-item img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	transition: transform 0.5s ease;
+}
+
+.promo-item:hover img {
+	transform: scale(1.05);
+}
+
+/* 텍스트 스타일: 잘 보이게 */
+.promo-text {
+	position: absolute;
+	bottom: 15px;
+	left: 15px;
+	color: #fff;
+	font-weight: 800;
+	font-size: 1rem;
+	text-shadow: 0 2px 10px rgba(0, 0, 0, 0.7);
+	z-index: 2;
+}
+
+/* 오른쪽: 링크 리스트 */
+.mega-links.reduced-col {
+	display: flex;
+	gap: 80px;
+	padding-top: 10px;
+}
+
+.link-col h3 {
+	font-family: 'Inter', sans-serif;
+	font-size: 1rem;
+	font-weight: 800;
+	margin-bottom: 20px;
+	color: #000;
+	border-bottom: 2px solid #000;
+	padding-bottom: 8px;
+	display: inline-block;
+}
+
+.link-col ul {
+	list-style: none;
+}
+
+.link-col li {
+	margin-bottom: 12px;
+}
+
+.link-col a {
+	font-size: 0.95rem;
+	color: #555;
+	font-weight: 500;
+	transition: color 0.2s;
+}
+
+.link-col a:hover {
+	color: #000;
+	text-decoration: underline;
+	font-weight: 700;
+}
+
+/* [UTILITY ICONS] */
+.user-actions {
+	display: flex;
+	gap: 20px;
+}
+
+.icon-btn {
+	font-size: 1.5rem;
+	color: #000;
+	cursor: pointer;
+}
+
+/* --- Layout Container --- */
+.best-category-container {
+	display: grid;
+	grid-template-columns: 1fr 1fr; /* 1:1 비율 분할 */
+	gap: 40px;
+	max-width: 1200px;
+	margin: 80px auto;
+	padding: 0 20px;
+	align-items: center;
+}
+
+/* --- Left: Best Item Card --- */
+.best-card {
+	position: relative;
+	border-radius: 12px;
+	overflow: hidden;
+	background-color: #f4f4f4; /* 은은한 회색 배경 */
+	box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+	transition: transform 0.3s ease;
+	aspect-ratio: 1/1; /* 정사각형 비율 유지 */
+}
+
+.best-card:hover {
+	transform: translateY(-5px);
+}
+
+.best-card img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	object-position: center;
+	transition: transform 0.5s ease;
+}
+
+.best-card:hover img {
+	transform: scale(1.05); /* 호버 시 살짝 확대 */
+}
+
+/* 이미지 왼쪽 하단 텍스트 ('이번 주 베스트') */
+.best-badge {
+	position: absolute;
+	bottom: 20px;
+	left: 20px;
+	color: #fff;
+	font-size: 1.2rem;
+	font-weight: 700;
+	text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+	z-index: 2;
+}
+
+/* 텍스트 가독성을 위한 하단 그라데이션 */
+.best-card::after {
+	content: '';
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	width: 100%;
+	height: 40%;
+	background: linear-gradient(to top, rgba(0, 0, 0, 0.4), transparent);
+	z-index: 1;
+}
+
+/* --- Right: Category List --- */
+.category-list-wrapper {
+	padding-left: 20px;
+}
+
+.category-header {
+	margin-bottom: 30px;
+}
+
+.category-title {
+	font-size: 1.5rem;
+	font-weight: 800;
+	color: #111;
+	display: inline-block;
+	padding-bottom: 10px;
+	border-bottom: 4px solid #111; /* 두꺼운 밑줄 포인트 */
+}
+
+.category-nav ul {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+
+.category-nav li {
+	margin-bottom: 15px;
+}
+
+.category-nav a {
+	text-decoration: none;
+	color: #666;
+	font-size: 1.1rem;
+	font-weight: 500;
+	transition: all 0.2s ease;
+	display: inline-block;
+	position: relative;
+}
+
+/* 카테고리 링크 호버 효과 */
+.category-nav a:hover {
+	color: #111;
+	transform: translateX(5px); /* 오른쪽으로 살짝 이동 */
+}
+
+.category-nav a.active {
+	color: #111;
+	font-weight: 700;
+}
+
+@media ( max-width : 768px) {
+	.best-category-container {
+		grid-template-columns: 1fr; 
+		gap: 30px;
+	}
+	.category-list-wrapper {
+		padding-left: 0;
+	}
+	.mega-promo {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 8px;
+		height: 280px; /* 높이 고정 */
+	}
+	.promo-item {
+		position: relative;
+		overflow: hidden;
+		height: 100%;
+		border-radius: 4px;
+		background: #f4f4f4;
+	}
+}
