@@ -31,6 +31,15 @@ public class MemberController {
 	private MemberService service = new MemberServiceImpl();
 	private FileManager fileManager = new FileManager();
 	
+	
+	@GetMapping("consent")
+	public ModelAndView consentForm(HttpServletRequest req, HttpServletResponse resp)
+		// 약관 동의 폼
+			throws ServletException, IOException {
+
+			return new ModelAndView("member/consent");
+	}
+	
 	// @RequestMapping(value = "login", method = RequestMethod.GET)
 	@GetMapping("login")
 	public ModelAndView loginForm(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

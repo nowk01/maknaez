@@ -175,9 +175,9 @@
         <p class="register-desc">
             MAKNAEZ 회원에겐 특별한 멤버십 혜택이 제공됩니다.
         </p>
-        <a href="${pageContext.request.contextPath}/member/account" class="btn-outline">
-            회원가입 하기
-        </a>
+        <a href="${pageContext.request.contextPath}/member/consent" class="btn-outline">
+    		회원가입 하기
+		</a>
     </div>
 </section>
 
