@@ -103,6 +103,7 @@ public class LoginFilter implements Filter {
 				"/index.jsp", "/main", 
 				"/member/login", "/member/logout",
 				"/member/account", "/member/userIdCheck", "/member/complete",
+				"/member/consent", // [추가됨] 약관 동의 페이지는 로그인 없이 접근 가능해야 함
 				"/uploads/product/**",
 				"/dist/**",
 				"/collections/**", 
