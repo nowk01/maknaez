@@ -12,12 +12,13 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
 
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,100..900;1,100..900&family=Inter:wght@100..900&display=swap" rel="stylesheet">
+
 <script src="https://unpkg.com/@phosphor-icons/web"></script>
 
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/main.css" type="text/css">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/header.css" type="text/css">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/footer.css" type="text/css">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/list-sidebar.css" type="text/css">
-
-    
-
