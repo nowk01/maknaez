@@ -217,7 +217,7 @@
                             <c:forEach var="dto" items="${list}">
                                 <div class="col-6 col-md-4 col-lg-3">
                                     <!-- [수정] productNum -> productNo 로 파라미터명 변경 -->
-                                    <div class="product-card" onclick="location.href='${pageContext.request.contextPath}/product/detail?productNo=${dto.productNo}'">
+                                    <div class="product-card" onclick="${pageContext.request.contextPath}/product/detail?productNo=${dto.productNo}">
                                         <div class="product-img-box">
                                             <c:if test="${dto.isNew}">
                                                 <span class="badge-new">NEW</span>

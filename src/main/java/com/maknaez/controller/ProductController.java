@@ -18,11 +18,17 @@ public class ProductController {
 
     @GetMapping("/detail")
     public ModelAndView detail(HttpServletRequest req, HttpServletResponse resp) {
-        // [View ê²½ë¡œ] /WEB-INF/views/product/detail.jsp ë¡œ ì´ë™
+        // [View °æ·Î] /WEB-INF/views/product/detail.jsp ·Î ÀÌµ¿
+        // DispatcherServlet ³»ºÎÀÇ ViewResolver(È¤Àº JspView) ¼³Á¤¿¡ µû¶ó 
+        // prefix(/WEB-INF/views/)¿Í suffix(.jsp)°¡ °áÇÕµË´Ï´Ù.
         ModelAndView mav = new ModelAndView("product/detail");
 
-        // 1. íŒŒë¼ë¯¸í„° ìˆ˜ì‹  (productNo)
+        // 1. ÆÄ¶ó¹ÌÅÍ ¼ö½Å (productNo)
         String productNoStr = req.getParameter("productNo");
+        
+        // [µğ¹ö±ë ·Î±×] ¿äÃ»ÀÌ µé¾î¿Ô´ÂÁö ÄÜ¼Ö¿¡¼­ È®ÀÎ
+        System.out.println("[ProductController] detail ¿äÃ» ÁøÀÔ - productNo: " + productNoStr);
+        
         long productNo = 0;
         
         try {
@@ -30,47 +36,52 @@ public class ProductController {
                 productNo = Long.parseLong(productNoStr);
             }
         } catch (NumberFormatException e) {
+            System.out.println("[ProductController] productNo ÆÄ½Ì ¿¡·¯: " + e.getMessage());
             e.printStackTrace();
         }
 
-        // 2. [ê°€ìƒ ë°ì´í„°] DB ì—°ë™ ì „, DTO í•„ë“œì— ë§ì¶˜ Mock Data ìƒì„±
+        // 2. [°¡»ó µ¥ÀÌÅÍ] DB ¿¬µ¿ Àü, DTO ÇÊµå¿¡ ¸ÂÃá Mock Data »ı¼º
         ProductDTO dto = new ProductDTO();
         
-        // íŒŒë¼ë¯¸í„°ê°€ ì—†ìœ¼ë©´ 1001ë²ˆì„ ê¸°ë³¸ê°’ìœ¼ë¡œ ì‚¬ìš©
+        // ÆÄ¶ó¹ÌÅÍ°¡ ¾øÀ¸¸é 1001¹øÀ» ±âº»°ªÀ¸·Î »ç¿ë
         long currentId = (productNo != 0) ? productNo : 1001;
         
         dto.setProductNo(currentId);
-        dto.setProductName("XT-6 Gore-Tex (ìƒí’ˆë²ˆí˜¸: " + currentId + ")");
+        dto.setProductName("XT-6 Gore-Tex (»óÇ°¹øÈ£: " + currentId + ")");
         dto.setPrice(280000);
-        dto.setCategoryNo(10); // ì¹´í…Œê³ ë¦¬ ì½”ë“œ
-        dto.setIsDisplayed(1); // 1: ì§„ì—´í•¨
-        dto.setImageFile("xt6_black.jpg"); // ì´ë¯¸ì§€ íŒŒì¼ëª… ì˜ˆì‹œ
+        dto.setCategoryNo(10); // Ä«Å×°í¸® ÄÚµå (10: ½ºÆ÷Ã÷½ºÅ¸ÀÏ °¡Á¤)
+        dto.setIsDisplayed(1); // 1: Áø¿­ÇÔ
+        dto.setImageFile("xt6_black.jpg"); // ÀÌ¹ÌÁö ÆÄÀÏ¸í ¿¹½Ã
         dto.setRegDate("2024-01-01");
         
-        // ìƒì„¸ ì„¤ëª… (HTML íƒœê·¸ í¬í•¨)
-        String desc = "<b>ìƒí’ˆ ë²ˆí˜¸ " + currentId + "ë²ˆ</b>ì— ëŒ€í•œ ìƒì„¸ í˜ì´ì§€ì…ë‹ˆë‹¤.<br>"
-                    + "ì´ ì œí’ˆì€ ì‚´ë¡œëª¬ì˜ íŠ¸ë ˆì¼ ìœ ì‚°ì´ ë‹´ê¸´ ê¸°ìˆ ë ¥ì— ë°©ìˆ˜ ê¸°ëŠ¥ì„ ë”í•œ ì œí’ˆì…ë‹ˆë‹¤.<br>"
-                    + "ì–´ë– í•œ ì§€í˜•ì—ì„œë„ ìµœìƒì˜ í¼í¬ë¨¼ìŠ¤ë¥¼ ì œê³µí•©ë‹ˆë‹¤.";
+        // »ó¼¼ ¼³¸í (HTML ÅÂ±× Æ÷ÇÔ)
+        String desc = "<b>»óÇ° ¹øÈ£ " + currentId + "¹ø</b>¿¡ ´ëÇÑ »ó¼¼ ÆäÀÌÁöÀÔ´Ï´Ù.<br>"
+                    + "ÀÌ Á¦Ç°Àº »ì·Î¸óÀÇ Æ®·¹ÀÏ À¯»êÀÌ ´ã±ä ±â¼ú·Â¿¡ ¹æ¼ö ±â´ÉÀ» ´õÇÑ Á¦Ç°ÀÔ´Ï´Ù.<br>"
+                    + "¾î¶°ÇÑ ÁöÇü¿¡¼­µµ ÃÖ»óÀÇ ÆÛÆ÷¸Õ½º¸¦ Á¦°øÇÕ´Ï´Ù.";
         dto.setContent(desc);
         
-        // [ì¤‘ìš”] ProductDTOì—ëŠ” categoryName í•„ë“œê°€ ì—†ìœ¼ë¯€ë¡œ, ë³„ë„ë¡œ ì „ë‹¬í•©ë‹ˆë‹¤.
-        String categoryName = "ìŠ¤í¬ì¸ ìŠ¤íƒ€ì¼"; 
+        // [Áß¿ä] ProductDTO¿¡´Â categoryName ÇÊµå°¡ ¾øÀ¸¹Ç·Î, º°µµ·Î Àü´ŞÇÕ´Ï´Ù.
+        // ÃßÈÄ JOIN Äõ¸®¸¦ ÅëÇØ DTO¿¡ ÇÊµå¸¦ Ãß°¡ÇÏ°Å³ª MapÀ¸·Î Ã³¸®ÇÒ ¼ö ÀÖ½À´Ï´Ù.
+        String categoryName = "½ºÆ÷Ã÷½ºÅ¸ÀÏ"; 
 
-        // 3. [ì¶”ì²œ ìƒí’ˆ] í•˜ë‹¨ ìºëŸ¬ì…€ìš© ë¦¬ìŠ¤íŠ¸ êµ¬ì„±
+        // 3. [ÃßÃµ »óÇ°] ÇÏ´Ü Ä³·¯¼¿¿ë ¸®½ºÆ® ±¸¼º (Mock Data)
         List<ProductDTO> recommendList = new ArrayList<>();
         for(int i=1; i<=8; i++) {
             ProductDTO p = new ProductDTO();
             p.setProductNo(i + 100);
-            p.setProductName("ì¶”ì²œ ëª¨ë¸ 0" + i);
+            p.setProductName("ÃßÃµ ¸ğµ¨ 0" + i);
             p.setPrice(200000 + (i * 5000));
-            p.setImageFile("thumb_" + i + ".jpg");
+            p.setImageFile("thumb_" + i + ".jpg"); // ½ÇÁ¦ ÀÌ¹ÌÁö°¡ ¾ø´Ù¸é jsp¿¡¼­ onerror Ã³¸® ÇÊ¿ä
             recommendList.add(p);
         }
 
-        // 4. Viewë¡œ ë°ì´í„° ì „ë‹¬
+        // 4. View·Î µ¥ÀÌÅÍ Àü´Ş
+        // JSP¿¡¼­´Â ${dto.productName}, ${categoryName}, ${recommendList} µîÀ¸·Î Á¢±Ù °¡´É
         mav.addObject("dto", dto);
-        mav.addObject("categoryName", categoryName); // ì¹´í…Œê³ ë¦¬ëª… ë³„ë„ ì „ë‹¬
+        mav.addObject("categoryName", categoryName);
         mav.addObject("recommendList", recommendList);
+        
+        System.out.println("[ProductController] µ¥ÀÌÅÍ ¹ÙÀÎµù ¿Ï·á -> View ÀÌµ¿");
         
         return mav;
     }
