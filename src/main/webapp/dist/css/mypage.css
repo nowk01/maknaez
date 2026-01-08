@@ -1,10 +1,12 @@
 @charset "UTF-8";
 
+
 /* 전체 레이아웃 구성 */
 .mypage-container {
     display: flex;
     max-width: 1200px;
-    margin: 60px auto;
+    /* [수정] 헤더 높이(80px) + 추가 여백(40~60px) = 약 120~140px 필요 */
+    margin: 140px auto 60px; 
     padding: 0 20px;
     color: #000;
 }
@@ -104,9 +106,13 @@
     margin-left: 5px;
 }
 
-.user-actions { margin-top: 15px; }
-.user-actions a {
-    font-size: 12px;
+/* [수정 후 코드] - 앞에 .user-detail 을 붙여서 범위를 한정지음 */
+.user-detail .user-actions { 
+    margin-top: 15px; 
+}
+
+.user-detail .user-actions a {
+    font-size: 12px;      /* 마이페이지 로그아웃 버튼은 작게 유지 */
     color: #888;
     text-decoration: underline;
     margin-right: 15px;

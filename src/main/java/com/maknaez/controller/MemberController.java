@@ -26,7 +26,7 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.Part;
 
 @Controller
-@RequestMapping("/member/*")
+@RequestMapping("/member")
 public class MemberController {
 	private MemberService service = new MemberServiceImpl();
 	private FileManager fileManager = new FileManager();
@@ -38,7 +38,7 @@ public class MemberController {
 		return new ModelAndView("member/login");
 	}
 	
-	@GetMapping("/mypage/main.do")
+	@GetMapping("mypage/main.do")
 	public ModelAndView myPageMain(HttpServletRequest req, HttpServletResponse resp) {
         ModelAndView mav = new ModelAndView("mypage/myMain");
         return mav;
@@ -97,8 +97,8 @@ public class MemberController {
 			e.printStackTrace();
 		}
 
-		// 메인 화면으로 리다이렉트
-		return new ModelAndView("redirect:/");
+		
+		return new ModelAndView("redirect:/member/mypage/main.do");
 	}
 	
 	@GetMapping("logout")
