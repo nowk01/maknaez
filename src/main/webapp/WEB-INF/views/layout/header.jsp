@@ -11,7 +11,7 @@
     </nav>
     <div class="nav-icons">
         <i class="ph ph-magnifying-glass"></i>
-        <i class="ph ph-heart"></i>
+        <i class="ph ph-user"></i>
         <i class="ph ph-shopping-bag"></i>
     </div>
 </header>
