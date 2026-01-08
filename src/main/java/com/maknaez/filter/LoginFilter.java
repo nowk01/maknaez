@@ -105,7 +105,8 @@ public class LoginFilter implements Filter {
 				"/member/account", "/member/userIdCheck", "/member/complete",
 				"/uploads/product/**",
 				"/dist/**",
-				"/collections/**"
+				"/collections/**", 
+				"/product/**"
 		};
 		
 		if(uri.length() <= 1) {
