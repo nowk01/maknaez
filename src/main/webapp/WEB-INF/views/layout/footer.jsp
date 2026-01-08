@@ -6,7 +6,7 @@
             <a href="#" class="footer-logo font-brand">MAKNAEZ</a>
             <p class="f-desc">
                 고객님의 일상에 특별함을 더해드리는<br>
-                프리미엄 테크웨어 편집샵입니다.
+                프리미엄 쇼핑몰입니다.
             </p>
             <div class="f-social">
                 <a href="#"><i class="ph ph-instagram-logo"></i></a>
@@ -40,16 +40,15 @@
                 <h4>CONTACT US</h4>
                 <ul class="contact-info">
                     <li><i class="ph ph-phone"></i> 1588-0000</li>
-                    <li><i class="ph ph-envelope"></i> help@maknaez.com</li>
-                    <li><i class="ph ph-clock"></i> 평일 09:00 - 18:00</li>
-                    <li style="margin-top: 10px;">서울 강남구 테헤란로 123</li>
+                    <li><i class="ph ph-envelope"></i> help@myshop.com</li>
+                    <li><i class="ph ph-clock"></i> 평일 09:00 - 18:00 (주말/공휴일 휴무)</li>
+                    <li style="margin-top: 10px;">서울특별시 강남구 테헤란로 123</li>
                 </ul>
             </div>
         </div>
     </div>
     
     <div class="copyright-bar">
-        <span>© 2026 MAKNAEZ Corp. All Rights Reserved.</span>
-        <span>Designed by MAKNAEZ</span>
+        <span>© 2024 MY SHOP Corp. All rights reserved.</span>
     </div>
 </footer>
