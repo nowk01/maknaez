@@ -5,67 +5,32 @@
 <head>
 <jsp:include page="/WEB-INF/views/layout/headerResources.jsp" />
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/cs.css">
-<style>
-    /* FAQ 전용 스타일 (탭, 아코디언) */
-    .faq-tabs { display: flex; gap: 8px; margin-bottom: 20px; padding-bottom: 20px; }
-    .tab-btn { padding: 8px 18px; border: 1px solid #eee; background: #fff; font-size: 13px; cursor: pointer; border-radius: 20px; color: #666; transition: 0.2s; }
-    .tab-btn:hover { border-color: #ccc; color: #000; }
-    .tab-btn.active { background: #000; color: #fff; border-color: #000; font-weight: 500; }
-    
-    .faq-list { border-top: 1px solid #eee; }
-    .faq-item { border-bottom: 1px solid #eee; }
-    .faq-question { padding: 20px 10px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-size: 14px; font-weight: 500; color: #333; transition: background 0.2s; }
-    .faq-question:hover { background: #f9f9f9; }
-    .faq-question .category { color: #888; font-size: 12px; margin-right: 15px; width: 60px; font-weight: 400; }
-    .faq-question .subject { flex: 1; }
-    .faq-question .icon { font-size: 18px; color: #ccc; transition: transform 0.3s; }
-    
-    .faq-answer { max-height: 0; overflow: hidden; background: #fcfcfc; color: #555; font-size: 13px; line-height: 1.6; padding: 0 20px; transition: all 0.3s ease-in-out; opacity: 0; }
-    .faq-item.active .faq-answer { padding: 20px 20px 30px 20px; max-height: 300px; opacity: 1; border-top: 1px solid #f0f0f0; }
-    .faq-item.active .faq-question .icon { transform: rotate(45deg); color: #000; }
-    .faq-item.active .faq-question { font-weight: 700; color: #000; }
-</style>
-<script>
-    function toggleFaq(element) {
-        const item = element.parentElement;
-        if(item.classList.contains('active')) {
-            item.classList.remove('active');
-        } else {
-            document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('active'));
-            item.classList.add('active');
-        }
-    }
-    
-    function filterFaq(category) {
-        location.href = '${pageContext.request.contextPath}/cs/faq?category=' + category;
-    }
-</script>
 </head>
 <body>
     <jsp:include page="/WEB-INF/views/layout/header.jsp" />
 
     <div class="cs-wrap">
         <div class="cs-sidebar">
-            <div class="cs-sidebar-title">고객센터</div>
+            <div class="cs-sidebar-title">SUPPORT</div>
             <ul class="cs-menu">
-                <li><a href="${pageContext.request.contextPath}/cs/notice">공지사항</a></li>
-                <li><a href="${pageContext.request.contextPath}/cs/faq" class="active">자주 묻는 질문</a></li>
-                <li><a href="${pageContext.request.contextPath}/cs/list">1:1 문의</a></li>
-                <li><a href="#">이용안내</a></li>
+                <li><a href="${pageContext.request.contextPath}/cs/notice">Notice</a></li>
+                <li><a href="${pageContext.request.contextPath}/cs/faq" class="active">FAQ</a></li>
+                <li><a href="${pageContext.request.contextPath}/cs/list">1:1 Inquiry</a></li>
+                <li><a href="#">Guide</a></li>
             </ul>
         </div>
 
         <div class="cs-content">
             <div class="content-header">
-                <h2 class="content-title">자주 묻는 질문</h2>
+                <h2 class="content-title">FAQ</h2>
             </div>
 
             <div class="faq-tabs">
-                <button class="tab-btn ${category=='all'?'active':''}" onclick="filterFaq('all')">전체</button>
-                <button class="tab-btn ${category=='배송'?'active':''}" onclick="filterFaq('배송')">배송</button>
-                <button class="tab-btn ${category=='상품'?'active':''}" onclick="filterFaq('상품')">상품</button>
-                <button class="tab-btn ${category=='교환/반품'?'active':''}" onclick="filterFaq('교환/반품')">반품/교환</button>
-                <button class="tab-btn ${category=='회원'?'active':''}" onclick="filterFaq('회원')">회원</button>
+                <button class="tab-btn ${category=='all'?'active':''}" onclick="filterFaq('all')">ALL</button>
+                <button class="tab-btn ${category=='배송'?'active':''}" onclick="filterFaq('배송')">DELIVERY</button>
+                <button class="tab-btn ${category=='상품'?'active':''}" onclick="filterFaq('상품')">PRODUCT</button>
+                <button class="tab-btn ${category=='교환/반품'?'active':''}" onclick="filterFaq('교환/반품')">RETURN</button>
+                <button class="tab-btn ${category=='회원'?'active':''}" onclick="filterFaq('회원')">MEMBER</button>
             </div>
 
             <div class="faq-list">
@@ -77,7 +42,7 @@
                         <c:forEach var="dto" items="${list}">
                             <div class="faq-item">
                                 <div class="faq-question" onclick="toggleFaq(this)">
-                                    <span class="category">[${dto.category}]</span> 
+                                    <span class="category">${dto.category}</span> 
                                     <span class="subject">${dto.subject}</span> 
                                     <span class="icon">+</span>
                                 </div>
@@ -91,5 +56,9 @@
     </div>
 
     <jsp:include page="/WEB-INF/views/layout/footer.jsp" />
+    <script>
+        const contextPath = "${pageContext.request.contextPath}";
+    </script>
+    <script src="${pageContext.request.contextPath}/dist/js/cs.js"></script>
 </body>
 </html>
