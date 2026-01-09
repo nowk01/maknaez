@@ -3,7 +3,7 @@
 
 <header>
     <div class="logo">
-        <a href="/">MAKNAEZ</a>
+        <a href="${pageContext.request.contextPath}/main">MAKNAEZ</a>
     </div>
 
     <nav class="gnb">
