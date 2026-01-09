@@ -29,8 +29,8 @@
             <div class="f-col">
                 <h4>HELP</h4>
                 <ul>
-                    <li><a href="#">공지사항</a></li>
-                    <li><a href="#">고객센터</a></li>
+                    <li><a href="${pageContext.request.contextPath}/cs/notice">공지사항</a></li>
+                    <li><a href="${pageContext.request.contextPath}/cs/faq">고객센터</a></li>
                     <li><a href="#">배송조회</a></li>
                     <li><a href="#">반품/교환</a></li>
                 </ul>

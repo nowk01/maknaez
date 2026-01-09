@@ -1,0 +1,339 @@
+@charset "UTF-8";
+
+/* =========================================
+   고객센터 공통 레이아웃
+   ========================================= */
+.cs-wrap {
+    max-width: 1100px;
+    margin: 50px auto;
+    padding: 0 20px;
+    display: flex;
+    gap: 50px;
+    font-family: 'Noto Sans KR', sans-serif;
+}
+
+.cs-sidebar {
+    width: 180px;
+    flex-shrink: 0;
+}
+
+.cs-sidebar-title {
+    font-size: 20px;
+    font-weight: 800;
+    color: #000;
+    margin-bottom: 20px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+}
+
+.cs-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    border-top: 1px solid #eee;
+}
+
+.cs-menu li a {
+    display: block;
+    padding: 14px 5px;
+    font-size: 14px;
+    color: #666;
+    text-decoration: none;
+    border-bottom: 1px solid #eee;
+    transition: all 0.2s;
+}
+
+.cs-menu li a:hover {
+    color: #000;
+    font-weight: 500;
+    background: #f9f9f9;
+}
+
+.cs-menu li a.active {
+    color: #000;
+    font-weight: 700;
+    background: #fff;
+}
+
+.cs-content {
+    flex: 1;
+}
+
+.content-header {
+    margin-bottom: 30px;
+    border-bottom: 2px solid #000;
+    padding-bottom: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+
+.content-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: #000;
+    margin: 0;
+}
+
+.no-data {
+    padding: 50px 0;
+    color: #999;
+    font-size: 13px;
+    text-align: center;
+}
+
+/* =========================================
+   공지사항 리스트 (Notice List)
+   ========================================= */
+.notice-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+.notice-table th {
+    padding: 15px 0;
+    border-bottom: 1px solid #000;
+    font-size: 13px;
+    font-weight: 600;
+    color: #333;
+    text-align: center;
+}
+
+.notice-table td {
+    padding: 18px 0;
+    border-bottom: 1px solid #eee;
+    font-size: 14px;
+    color: #444;
+    text-align: center;
+}
+
+.notice-table .subject {
+    text-align: left;
+    padding-left: 20px;
+    cursor: pointer;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.notice-table .subject:hover {
+    text-decoration: underline;
+}
+
+/* 중요 공지 배경색 */
+.notice-fixed {
+    background-color: #f8f9fa;
+}
+
+.notice-icon {
+    color: #d92e2e;
+    font-size: 8px;
+    vertical-align: top;
+    margin-left: 2px;
+}
+
+.notice-badge {
+    font-weight: 700;
+    font-size: 11px;
+}
+
+/* =========================================
+   1:1 문의 리스트 (Inquiry List)
+   ========================================= */
+.board-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.board-table th {
+    padding: 15px 0;
+    border-bottom: 1px solid #000;
+    font-size: 13px;
+    font-weight: 600;
+    color: #333;
+    text-align: center;
+}
+
+.board-table td {
+    padding: 18px 0;
+    border-bottom: 1px solid #eee;
+    font-size: 14px;
+    color: #444;
+    text-align: center;
+}
+
+.board-table td.subject {
+    text-align: left;
+    padding-left: 20px;
+    cursor: pointer;
+}
+
+.board-table td.subject:hover {
+    text-decoration: underline;
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    font-size: 11px;
+    font-weight: 500;
+    border: 1px solid #ddd;
+    color: #888;
+}
+
+.status-done {
+    border-color: #000;
+    background: #000;
+    color: #fff;
+}
+
+.btn-write {
+    padding: 10px 20px;
+    background: #000;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: 0.2s;
+}
+
+.btn-write:hover {
+    background: #333;
+}
+
+/* =========================================
+   게시글 상세 보기 (Article View)
+   ========================================= */
+.view-table {
+    width: 100%;
+    border-collapse: collapse;
+    border-top: 2px solid #000;
+}
+
+.view-table th {
+    background: #f9f9f9;
+    padding: 15px;
+    text-align: left;
+    font-weight: 600;
+    color: #333;
+    border-bottom: 1px solid #eee;
+    font-size: 16px;
+}
+
+.view-table td {
+    padding: 15px;
+    border-bottom: 1px solid #eee;
+    color: #444;
+    font-size: 13px;
+}
+
+.view-content {
+    min-height: 200px;
+    padding: 30px 15px;
+    line-height: 1.6;
+    border-bottom: 1px solid #ddd;
+    font-size: 14px;
+    color: #333;
+}
+
+/* 관리자 답변 박스 */
+.reply-box {
+    margin-top: 30px;
+    background: #f8f9fa;
+    border: 1px solid #eee;
+    padding: 25px;
+    border-radius: 4px;
+}
+
+.reply-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.reply-title {
+    font-weight: 700;
+    font-size: 15px;
+    color: #000;
+    margin-right: 10px;
+}
+
+.reply-date {
+    font-size: 12px;
+    color: #888;
+}
+
+.reply-content {
+    font-size: 14px;
+    line-height: 1.6;
+    color: #333;
+}
+
+/* 버튼 공통 */
+.btn-area {
+    margin-top: 30px;
+    text-align: center;
+}
+
+.btn {
+    display: inline-block;
+    padding: 10px 30px;
+    background: #fff;
+    color: #333;
+    border: 1px solid #ccc;
+    text-decoration: none;
+    font-size: 13px;
+    transition: 0.2s;
+}
+
+.btn:hover {
+    background: #f5f5f5;
+}
+
+.btn-delete {
+    border-color: #ddd;
+    color: #d92e2e;
+}
+
+.btn-delete:hover {
+    border-color: #d92e2e;
+    background: #fff5f5;
+}
+
+/* =========================================
+   페이지 네비게이션
+   ========================================= */
+.page-navigation {
+    margin-top: 40px;
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+}
+
+.page-link {
+    display: inline-block;
+    width: 32px;
+    height: 32px;
+    line-height: 32px;
+    text-align: center;
+    border: 1px solid #eee;
+    color: #888;
+    text-decoration: none;
+    font-size: 13px;
+    transition: 0.2s;
+}
+
+.page-link:hover {
+    border-color: #000;
+    color: #000;
+}
+
+.page-link.active {
+    background: #000;
+    color: #fff;
+    border-color: #000;
+}

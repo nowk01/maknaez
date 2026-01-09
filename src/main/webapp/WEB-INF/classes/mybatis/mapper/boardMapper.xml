@@ -5,12 +5,10 @@
 	<sql id="where-list">
 		<choose>
 			<when test="condition == 'all'">
-				( INSTR(subject, #{keyword}) &gt; 0 OR INSTR(content,
-				#{keyword}) &gt; 0 )
+				( INSTR(subject, #{keyword}) &gt; 0 OR INSTR(content, #{keyword}) &gt; 0 )
 			</when>
 			<when test="condition == 'reg_date'">
-				( TO_CHAR(reg_date, 'YYYY-MM-DD') = #{keyword} OR
-				TO_CHAR(reg_date, 'YYYYMMDD') = #{keyword} )
+				( TO_CHAR(reg_date, 'YYYY-MM-DD') = #{keyword} OR TO_CHAR(reg_date, 'YYYYMMDD') = #{keyword} )
 			</when>
 			<when test="condition == 'userName'">
 				INSTR(userName, #{keyword}) &gt; 0
@@ -25,13 +23,9 @@
 	</sql>
 
 	<insert id="insertBoard" parameterType="com.maknaez.model.BoardDTO">
-		INSERT INTO board (num,
-		userId, userName, subject, content, reg_date, hitCount, saveFilename,
-		originalFilename)
-		VALUES (board_seq.NEXTVAL, #{userId}, #{userName},
-		#{subject}, #{content}, SYSDATE, 0,
-		#{saveFilename, jdbcType=VARCHAR},
-		#{originalFilename, jdbcType=VARCHAR})
+		INSERT INTO board (num, userId, userName, subject, content, reg_date, hitCount, saveFilename, originalFilename)
+		VALUES (board_seq.NEXTVAL, #{userId}, #{userName}, #{subject}, #{content}, SYSDATE, 0,
+		#{saveFilename, jdbcType=VARCHAR}, #{originalFilename, jdbcType=VARCHAR})
 	</insert>
 
 	<select id="dataCount" parameterType="map" resultType="Integer">
@@ -40,85 +34,129 @@
 			<if test="keyword != null and keyword != ''">
 				<include refid="where-list" />
 			</if>
+			<if test="status == 'wait'">
+                AND replyContent IS NULL
+            </if>
+            <if test="status == 'done'">
+                AND replyContent IS NOT NULL
+            </if>
 		</where>
 	</select>
 
-	<select id="listBoard" parameterType="map"
-		resultType="com.maknaez.model.BoardDTO">
-		SELECT num, userId, userName, subject, reg_date, hitCount,
-		saveFilename
+	<select id="listBoard" parameterType="map" resultType="com.maknaez.model.BoardDTO">
+		SELECT num, userId, userName, subject, content, reg_date, hitCount, saveFilename, 
+               replyContent, replyDate
 		FROM board
 		<where>
 			<if test="keyword != null and keyword != ''">
 				<include refid="where-list" />
 			</if>
+            <if test="status == 'wait'">
+                AND replyContent IS NULL
+            </if>
+            <if test="status == 'done'">
+                AND replyContent IS NOT NULL
+            </if>
 		</where>
 		ORDER BY num DESC
 		OFFSET #{offset} ROWS FETCH NEXT #{size} ROWS ONLY
 	</select>
 
-	<select id="findById" parameterType="Long"
-		resultType="com.maknaez.model.BoardDTO">
-		SELECT num, userId, userName, subject, content, reg_date,
-		hitCount, saveFilename, originalFilename
+	<select id="findById" parameterType="Long" resultType="com.maknaez.model.BoardDTO">
+		SELECT num, userId, userName, subject, content, reg_date, hitCount, saveFilename, originalFilename,
+               replyContent, replyDate, replyId
 		FROM board
 		WHERE num = #{num}
 	</select>
 
+	<update id="updateBoardReply" parameterType="com.maknaez.model.BoardDTO">
+		UPDATE board SET 
+			replyContent = #{replyContent},
+			replyDate = SYSDATE,
+			replyId = #{replyId}
+		WHERE num = #{num}
+	</update>
+    
 	<update id="updateHitCount" parameterType="Long">
-		UPDATE board SET
-		hitCount = hitCount + 1 WHERE num = #{num}
+		UPDATE board SET hitCount = hitCount + 1 WHERE num = #{num}
 	</update>
 
-	<select id="findByPrev" parameterType="map"
-		resultType="com.maknaez.model.BoardDTO">
-		SELECT num, subject
-		FROM board
+	<select id="findByPrev" parameterType="map" resultType="com.maknaez.model.BoardDTO">
+		SELECT num, subject FROM board
 		<where>
 			<if test="keyword != null and keyword != ''">
 				<include refid="where-list" />
 			</if>
 			AND (num &gt; #{num})
 		</where>
-		ORDER BY num ASC
-		FETCH FIRST 1 ROWS ONLY
+		ORDER BY num ASC FETCH FIRST 1 ROWS ONLY
 	</select>
 
-	<select id="findByNext" parameterType="map"
-		resultType="com.maknaez.model.BoardDTO">
-		SELECT num, subject
-		FROM board
+	<select id="findByNext" parameterType="map" resultType="com.maknaez.model.BoardDTO">
+		SELECT num, subject FROM board
 		<where>
 			<if test="keyword != null and keyword != ''">
 				<include refid="where-list" />
 			</if>
 			AND (num &lt; #{num})
 		</where>
-		ORDER BY num DESC
-		FETCH FIRST 1 ROWS ONLY
+		ORDER BY num DESC FETCH FIRST 1 ROWS ONLY
 	</select>
 
 	<delete id="deleteBoard" parameterType="map">
-		DELETE FROM board
-		WHERE
-		num = #{num}
+		DELETE FROM board WHERE num = #{num}
 	</delete>
-	<select id="listNotice" parameterType="map"
-		resultType="com.maknaez.model.BoardDTO">
-		SELECT num, subject, reg_date, hitCount, saveFilename
+
+
+	<select id="listNotice" parameterType="map" resultType="com.maknaez.model.BoardDTO">
+		SELECT num, subject, reg_date, hitCount, saveFilename, isNotice, isShow, userName
 		FROM notice
-		ORDER BY num DESC
+		<where>
+			<if test="keyword != null and keyword != ''">
+				<include refid="where-list" />
+			</if>
+			<if test="isShow != null and isShow != ''">
+				AND isShow = #{isShow}
+			</if>
+		</where>
+		ORDER BY isNotice DESC, num DESC
 		OFFSET #{offset} ROWS FETCH NEXT #{size} ROWS ONLY
 	</select>
 
-	<select id="dataCountNotice" resultType="Integer">
+	<select id="dataCountNotice" parameterType="map" resultType="Integer">
 		SELECT NVL(COUNT(*), 0) FROM notice
+		<where>
+			<if test="keyword != null and keyword != ''">
+				<include refid="where-list" />
+			</if>
+			<if test="isShow != null and isShow != ''">
+				AND isShow = #{isShow}
+			</if>
+		</where>
 	</select>
 
-	<select id="findByIdNotice" parameterType="Long"
-		resultType="com.maknaez.model.BoardDTO">
-		SELECT num, subject, content, reg_date, hitCount, saveFilename,
-		originalFilename
+	<insert id="insertNotice" parameterType="com.maknaez.model.BoardDTO">
+		INSERT INTO notice (num, subject, content, reg_date, hitCount, saveFilename, originalFilename, isNotice, isShow, userName)
+		VALUES (notice_seq.NEXTVAL, #{subject}, #{content}, SYSDATE, 0,
+		#{saveFilename, jdbcType=VARCHAR}, #{originalFilename, jdbcType=VARCHAR},
+		#{isNotice}, #{isShow}, #{userName})
+	</insert>
+
+	<update id="updateNotice" parameterType="com.maknaez.model.BoardDTO">
+		UPDATE notice SET 
+			subject=#{subject}, content=#{content}, 
+			isNotice=#{isNotice}, isShow=#{isShow},
+			saveFilename=#{saveFilename, jdbcType=VARCHAR},
+			originalFilename=#{originalFilename, jdbcType=VARCHAR}
+		WHERE num = #{num}
+	</update>
+
+	<delete id="deleteNotice" parameterType="Long">
+		DELETE FROM notice WHERE num = #{num}
+	</delete>
+
+	<select id="findByIdNotice" parameterType="Long" resultType="com.maknaez.model.BoardDTO">
+		SELECT num, subject, content, reg_date, hitCount, saveFilename, originalFilename, isNotice, isShow
 		FROM notice WHERE num = #{num}
 	</select>
 
@@ -126,10 +164,8 @@
 		UPDATE notice SET hitCount = hitCount + 1 WHERE num = #{num}
 	</update>
 
-	<select id="listFaq" parameterType="map"
-		resultType="com.maknaez.model.FaqDTO">
-		SELECT num, category, subject, content
-		FROM faq
+	<select id="listFaq" parameterType="map" resultType="com.maknaez.model.FaqDTO">
+		SELECT num, category, subject, content FROM faq
 		<where>
 			<if test="category != null and category != 'all'">
 				category = #{category}

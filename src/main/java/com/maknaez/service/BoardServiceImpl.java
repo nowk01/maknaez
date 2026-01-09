@@ -11,6 +11,7 @@ import com.maknaez.mybatis.support.MapperContainer;
 public class BoardServiceImpl implements BoardService {
 	private BoardMapper mapper = MapperContainer.get(BoardMapper.class);
 
+	// 1:1 문의
 	@Override
 	public void insertBoard(BoardDTO dto) throws Exception {
 		try {
@@ -23,35 +24,32 @@ public class BoardServiceImpl implements BoardService {
 
 	@Override
 	public List<BoardDTO> listBoard(Map<String, Object> map) {
-		List<BoardDTO> list = null;
 		try {
-			list = mapper.listBoard(map);
+			return mapper.listBoard(map);
 		} catch (Exception e) {
 			e.printStackTrace();
+			return null;
 		}
-		return list;
 	}
 
 	@Override
 	public int dataCount(Map<String, Object> map) {
-		int result = 0;
 		try {
-			result = mapper.dataCount(map);
+			return mapper.dataCount(map);
 		} catch (Exception e) {
 			e.printStackTrace();
+			return 0;
 		}
-		return result;
 	}
 
 	@Override
 	public BoardDTO findById(long num) {
-		BoardDTO dto = null;
 		try {
-			dto = mapper.findById(num);
+			return mapper.findById(num);
 		} catch (Exception e) {
 			e.printStackTrace();
+			return null;
 		}
-		return dto;
 	}
 
 	@Override
@@ -61,28 +59,6 @@ public class BoardServiceImpl implements BoardService {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
-
-	@Override
-	public BoardDTO findByPrev(Map<String, Object> map) {
-		BoardDTO dto = null;
-		try {
-			dto = mapper.findByPrev(map);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return dto;
-	}
-
-	@Override
-	public BoardDTO findByNext(Map<String, Object> map) {
-		BoardDTO dto = null;
-		try {
-			dto = mapper.findByNext(map);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return dto;
 	}
 
 	@Override
@@ -96,47 +72,100 @@ public class BoardServiceImpl implements BoardService {
 	}
 
 	@Override
-	public List<BoardDTO> listNotice(Map<String, Object> map) {
-		List<BoardDTO> list = null;
+	public BoardDTO findByPrev(Map<String, Object> map) {
 		try {
-			list = mapper.listNotice(map);
+			return mapper.findByPrev(map);
 		} catch (Exception e) {
-			e.printStackTrace();
+			return null;
 		}
-		return list;
 	}
 
 	@Override
-	public int dataCountNotice() {
-		int result = 0;
+	public BoardDTO findByNext(Map<String, Object> map) {
 		try {
-			result = mapper.dataCountNotice();
+			return mapper.findByNext(map);
+		} catch (Exception e) {
+			return null;
+		}
+	}
+
+	@Override
+	public void updateBoardReply(BoardDTO dto) throws Exception {
+		try {
+			mapper.updateBoardReply(dto);
 		} catch (Exception e) {
 			e.printStackTrace();
+			throw e;
 		}
-		return result;
+	}
+
+	// 공지사항
+	@Override
+	public void insertNotice(BoardDTO dto) throws Exception {
+		try {
+			mapper.insertNotice(dto);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+	}
+
+	@Override
+	public void updateNotice(BoardDTO dto) throws Exception {
+		try {
+			mapper.updateNotice(dto);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+	}
+
+	@Override
+	public void deleteNotice(long num) throws Exception {
+		try {
+			mapper.deleteNotice(num);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+	}
+
+	@Override
+	public List<BoardDTO> listNotice(Map<String, Object> map) {
+		try {
+			return mapper.listNotice(map);
+		} catch (Exception e) {
+			return null;
+		}
+	}
+
+	@Override
+	public int dataCountNotice(Map<String, Object> map) {
+		try {
+			return mapper.dataCountNotice(map);
+		} catch (Exception e) {
+			return 0;
+		}
 	}
 
 	@Override
 	public BoardDTO findByIdNotice(long num) {
-		BoardDTO dto = null;
 		try {
-			mapper.updateHitCountNotice(num);
-			dto = mapper.findByIdNotice(num);
+			// 조회수 증가 로직은 필요에 따라 추가
+			// mapper.updateHitCountNotice(num);
+			return mapper.findByIdNotice(num);
 		} catch (Exception e) {
-			e.printStackTrace();
+			return null;
 		}
-		return dto;
 	}
 
+	// FAQ
 	@Override
 	public List<FaqDTO> listFaq(Map<String, Object> map) {
-		List<FaqDTO> list = null;
 		try {
-			list = mapper.listFaq(map);
+			return mapper.listFaq(map);
 		} catch (Exception e) {
-			e.printStackTrace();
+			return null;
 		}
-		return list;
 	}
 }
