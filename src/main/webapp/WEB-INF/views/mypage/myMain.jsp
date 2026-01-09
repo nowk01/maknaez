@@ -59,16 +59,41 @@
         <h1 class="page-title">마이페이지</h1>
         
         <div class="profile-card dashboard-area">
+            
             <div class="user-profile">
-                <div class="profile-circle">B</div>
+                <c:choose>
+                    <c:when test="${sessionScope.member.userLevel >= 4}">
+                        <div class="profile-circle vip">V</div>
+                    </c:when>
+                    <c:when test="${sessionScope.member.userLevel == 3}">
+                        <div class="profile-circle gold">G</div>
+                    </c:when>
+                    <c:when test="${sessionScope.member.userLevel == 2}">
+                        <div class="profile-circle silver">S</div>
+                    </c:when>
+                    <c:otherwise>
+                        <div class="profile-circle bronze">B</div>
+                    </c:otherwise>
+                </c:choose>
+
                 <div class="user-detail">
                     <p class="user-name">
                         ${not empty sessionScope.member.userName ? sessionScope.member.userName : '최하늘'} 님
                     </p>
+                    
                     <div class="grade-box">
-                        <p class="user-grade">BRONZE <span>등급</span></p>
+                        <p class="user-grade">
+                            <c:choose>
+                                <c:when test="${sessionScope.member.userLevel >= 4}">VIP</c:when>
+                                <c:when test="${sessionScope.member.userLevel == 3}">GOLD</c:when>
+                                <c:when test="${sessionScope.member.userLevel == 2}">SILVER</c:when>
+                                <c:otherwise>BRONZE</c:otherwise>
+                            </c:choose>
+                            <span>등급</span>
+                        </p>
                     </div>
-                    <div class="user-actions">
+                    
+                    <div class="profile-actions">
                         <a href="#">등급혜택 &gt;</a>
                         <a href="${pageContext.request.contextPath}/member/logout">로그아웃</a>
                     </div>
@@ -80,7 +105,7 @@
                 <div class="status-count">0</div>
             </div>
             
-            <div style="width: 150px;"></div>
+            <div style="width: 100px;"></div>
         </div>
     </main>
 </div>
