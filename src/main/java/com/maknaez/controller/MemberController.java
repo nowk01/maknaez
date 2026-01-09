@@ -4,11 +4,15 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.maknaez.util.FileManager;
 import com.maknaez.util.MyMultipartFile;
+import com.maknaez.util.MyUtil;
+import com.maknaez.mapper.OrderMapper;
 import com.maknaez.model.MemberDTO;
+import com.maknaez.model.OrderDTO;
 import com.maknaez.model.SessionInfo;
 import com.maknaez.mvc.annotation.Controller;
 import com.maknaez.mvc.annotation.GetMapping;
@@ -16,6 +20,7 @@ import com.maknaez.mvc.annotation.PostMapping;
 import com.maknaez.mvc.annotation.RequestMapping;
 import com.maknaez.mvc.annotation.ResponseBody;
 import com.maknaez.mvc.view.ModelAndView;
+import com.maknaez.mybatis.support.MapperContainer;
 import com.maknaez.service.MemberService;
 import com.maknaez.service.MemberServiceImpl;
 
@@ -363,4 +368,58 @@ public class MemberController {
 		model.put("state", state);
 		return model;
 	}
+	
+	@GetMapping("mypage/orderList")
+    public ModelAndView orderList(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        ModelAndView mav = new ModelAndView("mypage/orderList");
+        HttpSession session = req.getSession();
+        
+        // 로그인 체크
+        SessionInfo info = (SessionInfo) session.getAttribute("member");
+        if (info == null) {
+            return new ModelAndView("redirect:/member/login");
+        }
+        
+        // Mapper 가져오기 (Service 레이어가 있다면 Service를 호출하세요)
+        OrderMapper mapper = MapperContainer.get(OrderMapper.class);
+        MyUtil util = new MyUtil(); // 페이징용 유틸
+        
+        try {
+            String page = req.getParameter("page");
+            int current_page = 1;
+            if (page != null) current_page = Integer.parseInt(page);
+            
+            // 파라미터 맵 설정
+            Map<String, Object> map = new HashMap<>();
+            map.put("memberIdx", info.getMemberIdx());
+            
+            // 페이징 처리
+            int dataCount = mapper.dataCount(map);
+            int size = 5; // 한 페이지에 5개씩
+            int total_page = util.pageCount(dataCount, size);
+            if (current_page > total_page) current_page = total_page;
+            
+            int start = (current_page - 1) * size + 1;
+            int end = current_page * size;
+            map.put("start", start);
+            map.put("end", end);
+            
+            // 리스트 가져오기
+            List<OrderDTO> list = mapper.listOrder(map);
+            
+            String listUrl = req.getContextPath() + "/member/mypage/orderList";
+            String paging = util.paging(current_page, total_page, listUrl);
+            
+            mav.addObject("list", list);
+            mav.addObject("dataCount", dataCount);
+            mav.addObject("paging", paging);
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        return mav;
+    }
+	
+	
 }
