@@ -99,6 +99,10 @@ public class LoginFilter implements Filter {
 		String cp = req.getContextPath();
 		uri = uri.substring(cp.length());
 		
+		if(uri.startsWith("/product/")) {
+            return true;
+        }
+		
 		String []uris = {
 				"/index.jsp", "/main", 
 				"/member/login", "/member/logout",
@@ -107,7 +111,8 @@ public class LoginFilter implements Filter {
 				"/uploads/product/**",
 				"/dist/**",
 				"/collections/**", 
-				"/product/**"
+				"/product/**",
+				"/product/detail"
 		};
 		
 		if(uri.length() <= 1) {

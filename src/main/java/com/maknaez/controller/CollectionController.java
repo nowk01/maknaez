@@ -1,5 +1,8 @@
 package com.maknaez.controller;
 
+import java.io.IOException;
+import java.sql.SQLException;
+
 import com.maknaez.mvc.annotation.Controller;
 import com.maknaez.mvc.annotation.GetMapping;
 import com.maknaez.mvc.annotation.RequestMapping;
@@ -16,7 +19,7 @@ public class CollectionController {
     }
 
     @GetMapping("/collections/list")
-    public ModelAndView list(HttpServletRequest req, HttpServletResponse resp) {
+    public ModelAndView list(HttpServletRequest req, HttpServletResponse resp) throws SQLException, IOException {
         String category = req.getParameter("category");
         
         if (category == null || category.isEmpty()) {
@@ -32,5 +35,6 @@ public class CollectionController {
         
         return mav;
     }
+
 
 }

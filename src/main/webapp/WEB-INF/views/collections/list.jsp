@@ -21,6 +21,34 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Oswald:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        /* 임시 이미지 플레이스홀더 스타일 */
+        .placeholder-div {
+            background-color: #f8f9fa; /* 밝은 회색 배경 */
+            width: 100%;
+            padding-bottom: 100%; /* 1:1 비율 유지 */
+            position: relative;
+            margin-bottom: 15px;
+            border-radius: 4px;
+        }
+        .placeholder-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #adb5bd;
+        }
+        .product-card {
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .product-card:hover {
+            transform: translateY(-5px);
+        }
+    </style>
 </head>
 <body>
 
@@ -28,25 +56,25 @@
 
     <div class="container-fluid" style="max-width: 1600px; padding: 0 40px; margin-top: 100px;">
         <div class="page-header">
-	        <div class="breadcrumbs">
-	                <a href="${pageContext.request.contextPath}/">Home</a> / <span style="color:#1a1a1a">남성 신발</span>
-	            </div>
-	            <div class="d-flex justify-content-between align-items-end">
-	                <h1 class="collection-title">
-	                    남성 신발 <span class="collection-count">[${dataCount}]</span>
-	                </h1>
-	                <div class="sort-wrapper" style="margin-bottom:0;">
-	                    <select id="sortSelect" class="sort-select" onchange="changeSort(this.value)">
-	                        <option value="new" ${sort == 'new' ? 'selected' : ''}>신상품순</option>
-	                        <option value="price_asc" ${sort == 'price_asc' ? 'selected' : ''}>낮은가격순</option>
-	                        <option value="price_desc" ${sort == 'price_desc' ? 'selected' : ''}>높은가격순</option>
-	                    </select>
-	                </div>
-	            </div>
+            <div class="breadcrumbs">
+                <a href="${pageContext.request.contextPath}/">Home</a> / <span style="color:#1a1a1a">남성 신발</span>
+            </div>
+            <div class="d-flex justify-content-between align-items-end">
+                <h1 class="collection-title">
+                    남성 신발 <span class="collection-count">[12]</span> <!-- 더미 개수 -->
+                </h1>
+                <div class="sort-wrapper" style="margin-bottom:0;">
+                    <select id="sortSelect" class="sort-select" onchange="changeSort(this.value)">
+                        <option value="new" ${sort == 'new' ? 'selected' : ''}>신상품순</option>
+                        <option value="price_asc" ${sort == 'price_asc' ? 'selected' : ''}>낮은가격순</option>
+                        <option value="price_desc" ${sort == 'price_desc' ? 'selected' : ''}>높은가격순</option>
+                    </select>
+                </div>
+            </div>
         </div>
 
         <div class="row">
-            <!-- Left Sidebar (Filter Form) -->
+            <!-- Left Sidebar-->
             <aside class="col-lg-2 d-none d-lg-block sidebar-container">
                 <form name="searchForm" action="${pageContext.request.contextPath}/collections/list.jsp" method="post">
                     <input type="hidden" name="page" value="1">
@@ -62,7 +90,7 @@
                         </button>
                     </div>
 
-                    <!-- 1. 컬렉션 (스포츠/용도) -->
+                    <!-- 1. 컬렉션-->
                     <details class="filter-group" open>
                         <summary class="filter-title">카테고리</summary>
                         <div class="filter-content">
@@ -75,7 +103,7 @@
                         </div>
                     </details>
 
-                    <!-- 2. 판매 상태 (품절 제외) -->
+                    <!-- 2. 판매 상태 -->
                     <details class="filter-group" open>
                         <summary class="filter-title">판매 상태</summary>
                         <div class="filter-content">
@@ -92,7 +120,6 @@
                         <div class="filter-content">
                             <c:forEach var="g" items="${['남성', '여성', 'Unisex']}">
                                 <label class="custom-check">
-                                    <!-- JSTL로 param.genders 배열 체크 로직은 복잡하므로 여기선 생략하고 UI만 표시 -->
                                     <input type="checkbox" name="genders" value="${g}" onchange="searchList()">
                                     <span>${g}</span>
                                 </label>
@@ -100,7 +127,7 @@
                         </div>
                     </details>
 
-                    <!-- 4. 사이즈 (220~320, 5단위, 둥근 사각형) -->
+                    <!-- 4. 사이즈 -->
                     <details class="filter-group" open>
                         <summary class="filter-title">사이즈</summary>
                         <div class="filter-content">
@@ -115,7 +142,7 @@
                         </div>
                     </details>
 
-                    <!-- 5. 가격 (0 ~ 1,000,000, 1000단위) -->
+                    <!-- 5. 가격 -->
                     <details class="filter-group" open>
                         <summary class="filter-title">가격</summary>
                         <div class="filter-content">
@@ -154,9 +181,6 @@
                         </div>
                     </details>
 
-
-
-                    <!-- 정렬 값 유지를 위한 hidden input -->
                     <input type="hidden" name="sort" id="hiddenSort" value="${sort}">
                 </form>
             </aside>
@@ -172,20 +196,43 @@
                     </select>
                 </div>
 
-                <!-- 상품 for:each 사용 -->
+                <!-- 상품 목록 영역 -->
                 <div id="productList" class="row gx-4 gy-5">
+                    
+                    <%-- 백단 작업 전 가라 데이터 --%>
+                    <c:forEach var="i" begin="1" end="12">
+                        <div class="col-6 col-md-4 col-lg-3">
+                            <!-- 링크 연결: productNo=${i} 로 더미 파라미터 전달 -->
+                            <div class="product-card" onclick="location.href='${pageContext.request.contextPath}/product/detail?productNo=${i}'">
+                                <div class="product-img-box">
+                                    <c:if test="${i % 3 == 0}">
+                                        <span class="badge-new">NEW</span>    
+                                    </c:if>
+                                    <!-- 이미지 대신 텍스트로 위치 잡기 --> 
+                                    <div class="placeholder-div">
+                                        <span class="placeholder-text">신발 ${i}</span>
+                                    </div>
+                                </div>
+                                <div class="product-info">
+                                    <div class="product-meta">남성 라이프스타일</div>
+                                    <h3 class="product-name">나이키 에어 포스 1 '07 (${i}번)</h3>
+                                    <div class="product-price">₩<fmt:formatNumber value="${139000 + (i * 1000)}" pattern="#,###" /></div>
+                                </div>
+                            </div>
+                        </div>
+                    </c:forEach>
+                    
+                    <%-- 실제 데이터 처리단 --%>
+                    <%--
                     <c:choose>
                         <c:when test="${not empty list}">
                             <c:forEach var="dto" items="${list}">
                                 <div class="col-6 col-md-4 col-lg-3">
-                                    <!-- [수정] productNum -> productNo 로 파라미터명 변경 -->
                                     <div class="product-card" onclick="location.href='${pageContext.request.contextPath}/product/detail?productNo=${dto.productNo}'">
-                                    <div class="product-card" onclick="${pageContext.request.contextPath}/product/detail?productNo=${dto.productNo}">
                                         <div class="product-img-box">
                                             <c:if test="${dto.isNew}">
-                                                <span class="badge-new">NEW</span>
+                                                <span class="badge-new">NEW</span>	
                                             </c:if>
-                                            <!-- 이미지 Placeholder (DB 연동 전 자리잡기용) 여기 빽단 연결하기 --> 
                                             <div class="placeholder-div">
                                                 상품 이미지 
                                             </div>
@@ -206,6 +253,7 @@
                             </div>
                         </c:otherwise>
                     </c:choose>
+                    --%>
                 </div>
 
                 <!-- Paging (Mock) -->
@@ -225,6 +273,12 @@
         }
         function resetFilters() {
             location.href = 'list.jsp';
+        }
+        
+        // 간단한 검색용 JS 함수 (실제 구현 시 form submit으로 변경)
+        function searchList() {
+            // document.searchForm.submit(); // DB 연동 시 주석 해제
+            console.log("필터 변경됨");
         }
     </script>
 </body>
