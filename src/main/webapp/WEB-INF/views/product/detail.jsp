@@ -68,17 +68,19 @@
 				<!-- 좌-중2: 제품 정보 -->
 				<div class="tab-content" id="myTabContent">
 					<div class="tab-pane fade show active" id="info-pane" role="tabpanel">
-						<div class="product-info-scrollable">
+						<div class="product-info-content">
 							${dto.content}
 							
 							<c:if test="${empty dto.content}">
 								<p>상세 정보가 없습니다.</p>
-                                <br><br>
+                                <br>
                                 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
                                 <p>Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
                                 <img src="https://via.placeholder.com/700x500?text=Detail+Description+Image" class="img-fluid my-3">
-                                <p>스크롤 테스트용 텍스트입니다. 높이 제한은 800px입니다.</p>
-                                <br><br>
+                                <p>이제 스크롤 없이 전체 내용이 그대로 표시됩니다.</p>
+                                <c:forEach var="tt" begin="0" end="50">
+								    <p>${tt} 스크롤 테스트용 텍스트입니다. 높이 제한은 800px입니다.</p>
+								</c:forEach>
 							</c:if>
 						</div>
 					</div>
