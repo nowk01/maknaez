@@ -10,7 +10,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>남성 신발 | MAKNAEZ</title>
+    <title> 남성 신발 | MAKNAEZ</title>
 
     <jsp:include page="/WEB-INF/views/layout/headerResources.jsp" />
     
