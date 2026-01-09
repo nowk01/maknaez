@@ -121,6 +121,7 @@
     </main>
 
     <jsp:include page="/WEB-INF/views/layout/footer.jsp" />
+    <jsp:include page="/WEB-INF/views/layout/footerResources.jsp" />
 
     <script>
         const slides = document.querySelectorAll('.hero-slide');
