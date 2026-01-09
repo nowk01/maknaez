@@ -9,17 +9,15 @@
 }
 
 /* --- Header Animation Styles --- */
-/* 헤더를 sticky로 설정하여 스크롤 애니메이션 적용 */
 body > header {
     position: sticky;
     top: 0;
     z-index: 1020;
     width: 100%;
-    background-color: #fff; /* 투명 배경 방지 */
-    transition: transform 0.3s ease-in-out; /* 0.3초 애니메이션 */
+    background-color: #fff;
+    transition: transform 0.3s ease-in-out;
 }
 
-/* 헤더가 숨겨질 때 적용할 클래스 */
 body > header.header-hidden {
     transform: translateY(-100%);
 }
@@ -55,7 +53,7 @@ body > header.header-hidden {
     margin-bottom: 30px;
     border-bottom: 1px solid #ddd;
     display: flex;
-    justify-content: center; /* 탭 가운데 정렬 */
+    justify-content: center;
 }
 
 .product-tabs .nav-link {
@@ -71,25 +69,17 @@ body > header.header-hidden {
     color: #000;
 }
 
-/* 3. Product Info (Scrollable Content) */
-.product-info-scrollable {
-    max-height: 800px;
-    overflow-y: auto;
-    padding-right: 15px;
+/* 3. Product Info (Full Height Content) */
+/* 스크롤 제거됨: 내용 길이에 따라 높이 자동 조절 */
+.product-info-content {
     margin-bottom: 30px;
     border-bottom: 1px solid #eee;
+    /* max-height, overflow-y 제거 */
 }
 
-.product-info-scrollable::-webkit-scrollbar {
-    width: 8px;
-}
-.product-info-scrollable::-webkit-scrollbar-thumb {
-    background-color: #ccc;
-    border-radius: 4px;
-}
-
-.product-info-scrollable img {
+.product-info-content img {
     max-width: 100%;
+    height: auto;
 }
 
 /* 4. Product Features */
@@ -103,7 +93,7 @@ body > header.header-hidden {
     font-size: 1.1rem;
     font-weight: 700;
     margin-bottom: 20px;
-    text-align: center; /* 타이틀 가운데 정렬 */
+    text-align: center;
 }
 
 /* 5. Product Notice (Legal Info) */
@@ -142,7 +132,7 @@ body > header.header-hidden {
     padding-left: 20px;
 }
 
-/* R1 ~ R7 Styles (Same as before) */
+/* R1 ~ R7 Styles */
 .product-name {
     font-size: 1.5rem;
     font-weight: 700;
@@ -373,7 +363,6 @@ body > header.header-hidden {
     margin-top: 60px;
 }
 
-/* 섹션 타이틀 가운데 정렬 */
 .review-section h3, .recommend-section h3 {
     text-align: center;
     margin-bottom: 30px;

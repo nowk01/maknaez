@@ -16,18 +16,12 @@ import jakarta.servlet.http.HttpServletResponse;
 public class ProductController {
 
     public ProductController() {
-        System.out.println("=================================================");
-        System.out.println(">>> [ProductController] 생성자 호출됨 (Bean 등록 성공)");
-        System.out.println("=================================================");
     }
-
-    // [중요] 전체 경로를 직접 지정해서 테스트
+    
     @GetMapping("/product/detail") 
     public ModelAndView detail(HttpServletRequest req, HttpServletResponse resp) throws SQLException, IOException {
-        System.out.println(">>> [ProductController] detail 메서드 진입 성공!");
         
         String productNoStr = req.getParameter("productNo");
-        System.out.println(">>> 요청 파라미터: " + productNoStr);
         
         long productNo = 0;
         try {
