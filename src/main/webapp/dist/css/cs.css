@@ -809,6 +809,27 @@ to {
 	color: var(--color-white);
 }
 
+/* 1. 기본 상태: 답변을 숨김 */
+.faq-answer {
+    max-height: 0;           /* 높이를 0으로 */
+    overflow: hidden;        /* 넘치는 내용 숨김 */
+    padding: 0 30px;         /* 좌우 여백만 유지 */
+    transition: all 0.3s ease; /* 부드럽게 열리는 효과 */
+    background: #f9f9f9;
+}
+
+/* 2. 클릭 시(active 클래스 추가 시): 답변을 보여줌 */
+.faq-item.active .faq-answer {
+    max-height: 1000px;      /* 내용이 다 보일 만큼 충분한 높이 */
+    padding: 30px;           /* 상하 여백 추가 */
+    border-bottom: 1px solid #eee;
+}
+
+/* 3. 클릭 시 아이콘 변경 (+ -> -) */
+.faq-item.active .faq-question .icon {
+    transform: rotate(45deg); /* + 모양을 돌려서 x 또는 - 처럼 보이게 함 */
+}
+
 /* =========================================
    [Common] 로딩 애니메이션 (무한 스크롤용)
    ========================================= */
