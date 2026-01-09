@@ -8,8 +8,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.maknaez.util.FileManager;
-import com.maknaez.util.MyMultipartFile;
 import com.maknaez.model.BoardDTO;
 import com.maknaez.model.FaqDTO;
 import com.maknaez.model.SessionInfo;
@@ -20,6 +18,8 @@ import com.maknaez.mvc.annotation.RequestMapping;
 import com.maknaez.mvc.view.ModelAndView;
 import com.maknaez.service.BoardService;
 import com.maknaez.service.BoardServiceImpl;
+import com.maknaez.util.FileManager;
+import com.maknaez.util.MyMultipartFile;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -33,10 +33,11 @@ public class BoardController {
     private BoardService service = new BoardServiceImpl();
     private FileManager fileManager = new FileManager();
 
-    // 1-1. 목록 보기
+    // ==========================================
+    // 1:1 문의 (Inquiry)
+    // ==========================================
     @GetMapping("list")
     public ModelAndView list(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        // 로그인 체크
         HttpSession session = req.getSession();
         SessionInfo info = (SessionInfo) session.getAttribute("member");
         if(info == null) {
@@ -50,10 +51,8 @@ public class BoardController {
             int current_page = 1;
             if(page != null) current_page = Integer.parseInt(page);
             
-            String condition = req.getParameter("condition");
+            String condition = "all";
             String keyword = req.getParameter("keyword");
-            
-            if(condition == null) condition = "all";
             if(keyword == null) keyword = "";
             
             if(req.getMethod().equalsIgnoreCase("GET")) {
@@ -82,7 +81,6 @@ public class BoardController {
             mav.addObject("dataCount", dataCount);
             mav.addObject("page", current_page);
             mav.addObject("total_page", total_page);
-            mav.addObject("condition", condition);
             mav.addObject("keyword", keyword);
             
         } catch (Exception e) {
@@ -153,16 +151,14 @@ public class BoardController {
         }
 
         String page = req.getParameter("page");
-        String condition = req.getParameter("condition");
         String keyword = req.getParameter("keyword");
         
         if(page == null) page = "1";
-        if(condition == null) condition = "all";
         if(keyword == null) keyword = "";
         
         String query = "page=" + page;
         if(keyword.length() != 0) {
-            query += "&condition=" + condition + "&keyword=" + URLEncoder.encode(keyword, "utf-8");
+            query += "&keyword=" + URLEncoder.encode(keyword, "utf-8");
         }
         
         try {
@@ -178,15 +174,18 @@ public class BoardController {
             
             dto.setContent(dto.getContent().replaceAll("\n", "<br>"));
             
+            if(dto.getReplyContent() != null) {
+                dto.setReplyContent(dto.getReplyContent().replaceAll("\n", "<br>"));
+            }
+            
             Map<String, Object> map = new HashMap<>();
             map.put("num", num);
-            map.put("condition", condition);
             map.put("keyword", keyword);
             
             BoardDTO prevDto = service.findByPrev(map);
             BoardDTO nextDto = service.findByNext(map);
             
-            ModelAndView mav = new ModelAndView("cs/inquiry_article"); // 파일명 오타 주의 (inquiry_article)
+            ModelAndView mav = new ModelAndView("cs/inqurity_article");
             mav.addObject("dto", dto);
             mav.addObject("prevDto", prevDto);
             mav.addObject("nextDto", nextDto);
@@ -237,8 +236,6 @@ public class BoardController {
         
         try {
             long num = Long.parseLong(req.getParameter("num"));
-
-            
             service.deleteBoard(num);
         } catch (Exception e) {
             e.printStackTrace();
@@ -247,17 +244,26 @@ public class BoardController {
         return new ModelAndView("redirect:/cs/list?" + query);
     }
 
+    // ==========================================
+    // 공지사항 (Notice) - [수정됨] 파라미터 resp 추가
+    // ==========================================
     @GetMapping("notice")
-    public ModelAndView notice(HttpServletRequest req) {
+    public ModelAndView notice(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         ModelAndView mav = new ModelAndView("cs/notice_list");
         
         try {
             String page = req.getParameter("page");
             int current_page = 1;
             if(page != null) current_page = Integer.parseInt(page);
+            
+            String keyword = req.getParameter("keyword");
+            if(keyword == null) keyword = "";
 
             Map<String, Object> map = new HashMap<>();
-            int dataCount = service.dataCountNotice();
+            map.put("keyword", keyword);
+            map.put("isShow", 1); 
+            
+            int dataCount = service.dataCountNotice(map);
             
             int size = 10;
             int total_page = dataCount / size + (dataCount % size > 0 ? 1 : 0);
@@ -273,6 +279,7 @@ public class BoardController {
             mav.addObject("dataCount", dataCount);
             mav.addObject("page", current_page);
             mav.addObject("total_page", total_page);
+            mav.addObject("keyword", keyword);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -280,8 +287,9 @@ public class BoardController {
         return mav;
     }
 
+    // [수정됨] 파라미터 resp 추가
     @GetMapping("notice/article")
-    public ModelAndView noticeArticle(HttpServletRequest req) {
+    public ModelAndView noticeArticle(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         ModelAndView mav = new ModelAndView("cs/notice_article");
         
         try {
@@ -302,8 +310,11 @@ public class BoardController {
         return mav;
     }
 
+    // ==========================================
+    // FAQ - [수정됨] 파라미터 resp 추가
+    // ==========================================
     @GetMapping("faq")
-    public ModelAndView faq(HttpServletRequest req) {
+    public ModelAndView faq(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         ModelAndView mav = new ModelAndView("cs/faq");
         
         try {

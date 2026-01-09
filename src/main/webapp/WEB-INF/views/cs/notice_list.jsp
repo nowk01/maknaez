@@ -1,5 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core"%>
+<%@ taglib prefix="fmt" uri="jakarta.tags.fmt"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -13,71 +14,68 @@
     <div class="cs-sidebar">
         <div class="cs-sidebar-title">고객센터</div>
         <ul class="cs-menu">
-            <li><a href="${pageContext.request.contextPath}/cs/notice">공지사항</a></li>
+            <li><a href="${pageContext.request.contextPath}/cs/notice" class="active">공지사항</a></li>
             <li><a href="${pageContext.request.contextPath}/cs/faq">자주 묻는 질문</a></li>
-            <li><a href="${pageContext.request.contextPath}/cs/list" class="active">1:1 문의</a></li>
+            <li><a href="${pageContext.request.contextPath}/cs/list">1:1 문의</a></li>
             <li><a href="#">이용안내</a></li>
         </ul>
     </div>
 
     <div class="cs-content">
         <div class="content-header">
-            <h3 class="content-title">1:1 문의</h3>
-            <a href="${pageContext.request.contextPath}/cs/write" class="btn-write">문의하기</a>
+            <h2 class="content-title">공지사항</h2>
         </div>
 
-        <table class="board-table">
+        <table class="notice-table">
             <colgroup>
-                <col width="60"> 
-                <col width="100"> 
+                <col width="60">
                 <col width="*">
                 <col width="100">
-                <col width="120">
+                <col width="80">
             </colgroup>
             <thead>
                 <tr>
                     <th>번호</th>
-                    <th>상태</th>
                     <th>제목</th>
-                    <th>작성자</th>
                     <th>작성일</th>
+                    <th>조회수</th>
                 </tr>
             </thead>
             <tbody>
                 <c:choose>
                     <c:when test="${empty list}">
-                         <tr><td colspan="5" class="no-data">등록된 문의 내역이 없습니다.</td></tr>
+                        <tr><td colspan="4" class="no-data">등록된 공지사항이 없습니다.</td></tr>
                     </c:when>
                     <c:otherwise>
                         <c:forEach var="dto" items="${list}">
-                            <tr>
-                                <td>${dto.num}</td>
+                            <tr class="${dto.isNotice == 1 ? 'notice-fixed' : ''}">
                                 <td>
                                     <c:choose>
-                                        <c:when test="${not empty dto.replyDate}">
-                                            <span class="status-badge status-done">답변완료</span>
+                                        <c:when test="${dto.isNotice == 1}">
+                                            <span class="notice-badge">공지</span>
                                         </c:when>
-                                        <c:otherwise>
-                                            <span class="status-badge">답변대기</span>
-                                        </c:otherwise>
+                                        <c:otherwise>${dto.num}</c:otherwise>
                                     </c:choose>
                                 </td>
-                                <td class="subject" onclick="location.href='${pageContext.request.contextPath}/cs/article?num=${dto.num}&page=${page}'">
+                                <td class="subject" onclick="location.href='${pageContext.request.contextPath}/cs/notice/article?num=${dto.num}&page=${page}'">
                                     ${dto.subject}
+                                    <c:if test="${dto.isNotice == 1}">
+                                        <span class="notice-icon">●</span>
+                                    </c:if>
                                 </td>
-                                <td>${dto.userName}</td>
-                                <td>${dto.reg_date.substring(0,10)}</td>
+                                <td>${dto.reg_date.substring(0, 10)}</td>
+                                <td>${dto.hitCount}</td>
                             </tr>
                         </c:forEach>
                     </c:otherwise>
                 </c:choose>
             </tbody>
         </table>
-        
+
         <div class="page-navigation">
             <c:if test="${dataCount > 0}">
                 <c:forEach var="i" begin="1" end="${total_page}">
-                    <a href="${pageContext.request.contextPath}/cs/list?page=${i}" class="page-link ${page==i?'active':''}">${i}</a>
+                    <a href="${pageContext.request.contextPath}/cs/notice?page=${i}" class="page-link ${page==i?'active':''}">${i}</a>
                 </c:forEach>
             </c:if>
         </div>
