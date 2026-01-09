@@ -2,33 +2,60 @@
 
 /* --- Layout & Container --- */
 .product-detail-container {
+    max-width: 80%; /* 화면의 80%만 사용 */
+    margin: 0 auto; /* 가운데 정렬 */
     padding-top: 50px;
     padding-bottom: 100px;
 }
 
+/* --- Header Animation Styles --- */
+/* 헤더를 sticky로 설정하여 스크롤 애니메이션 적용 */
+body > header {
+    position: sticky;
+    top: 0;
+    z-index: 1020;
+    width: 100%;
+    background-color: #fff; /* 투명 배경 방지 */
+    transition: transform 0.3s ease-in-out; /* 0.3초 애니메이션 */
+}
+
+/* 헤더가 숨겨질 때 적용할 클래스 */
+body > header.header-hidden {
+    transform: translateY(-100%);
+}
+
 /* --- Left Section (Contents) --- */
 .detail-left-section {
-    padding-right: 40px; /* 오른쪽 섹션과의 간격 */
+    padding-right: 40px;
 }
 
-/* 1. Gallery (Carousel) */
-.product-gallery {
-    margin-bottom: 50px;
-    background-color: #f0f0f0; /* 이미지 없을 때 배경 */
-    border-radius: 4px;
-    overflow: hidden;
+/* 1. Image Grid Layout */
+.product-image-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 3rem;
 }
 
-.product-gallery img {
+.product-image-grid img {
     width: 100%;
     height: auto;
     object-fit: cover;
+    display: block;
 }
 
-/* 2. Tabs */
+.product-image-grid img:nth-child(5) {
+    grid-column: 1 / -1;
+    width: calc(50% - 5px);
+    margin: 0 auto;
+}
+
+/* 2. Tabs (Centered) */
 .product-tabs {
     margin-bottom: 30px;
     border-bottom: 1px solid #ddd;
+    display: flex;
+    justify-content: center; /* 탭 가운데 정렬 */
 }
 
 .product-tabs .nav-link {
@@ -44,13 +71,24 @@
     color: #000;
 }
 
-/* 3. Product Info (Editor Content) */
-.product-info-content {
-    margin-bottom: 60px;
-    min-height: 200px;
+/* 3. Product Info (Scrollable Content) */
+.product-info-scrollable {
+    max-height: 800px;
+    overflow-y: auto;
+    padding-right: 15px;
+    margin-bottom: 30px;
+    border-bottom: 1px solid #eee;
 }
 
-.product-info-content img {
+.product-info-scrollable::-webkit-scrollbar {
+    width: 8px;
+}
+.product-info-scrollable::-webkit-scrollbar-thumb {
+    background-color: #ccc;
+    border-radius: 4px;
+}
+
+.product-info-scrollable img {
     max-width: 100%;
 }
 
@@ -65,6 +103,7 @@
     font-size: 1.1rem;
     font-weight: 700;
     margin-bottom: 20px;
+    text-align: center; /* 타이틀 가운데 정렬 */
 }
 
 /* 5. Product Notice (Legal Info) */
@@ -93,38 +132,29 @@
 
 /* --- Right Section (Sticky Sidebar) --- */
 .detail-right-section {
-    /* 부모인 .row 내에서 상대적 위치 */
     position: relative; 
 }
 
 .sticky-sidebar {
     position: sticky;
-    top: 100px; /* 헤더 높이만큼 띄움 */
+    top: 100px;
     transition: top 0.3s ease;
     padding-left: 20px;
 }
 
-/* Sentinel(리뷰) 만났을 때 고정 해제용 클래스 (JS로 제어) */
-.sticky-sidebar.unstick {
-    position: relative;
-    top: 0;
-}
-
-/* R1. Product Name */
+/* R1 ~ R7 Styles (Same as before) */
 .product-name {
     font-size: 1.5rem;
     font-weight: 700;
     margin-bottom: 10px;
 }
 
-/* R2. Price */
 .product-price {
     font-size: 1.2rem;
     font-weight: 600;
     margin-bottom: 20px;
 }
 
-/* R3. Star, Share, Wish */
 .product-actions-top {
     display: flex;
     justify-content: space-between;
@@ -135,7 +165,7 @@
 }
 
 .star-rating {
-    color: #f5c518; /* Gold color */
+    color: #f5c518;
     font-size: 1rem;
 }
 
@@ -150,7 +180,6 @@
     color: #666;
 }
 
-/* R4. Color Info */
 .color-options {
     margin-bottom: 30px;
 }
@@ -185,14 +214,13 @@
     object-fit: cover;
 }
 
-/* R5. Size Info (Grid Layout) */
 .size-options {
     margin-bottom: 20px;
 }
 
 .size-grid {
     display: grid;
-    grid-template-columns: repeat(5, 1fr); /* 한 줄에 5개 */
+    grid-template-columns: repeat(5, 1fr);
     gap: 8px;
 }
 
@@ -200,7 +228,6 @@
     position: relative;
 }
 
-/* 실제 라디오 버튼 숨김 */
 .size-item input[type="radio"] {
     position: absolute;
     opacity: 0;
@@ -214,9 +241,9 @@
     align-items: center;
     width: 100%;
     height: 45px;
-    border: 1px solid #EEEEEE; /* 재고 있음 기본 테두리 */
-    background-color: #fff; /* 재고 있음 기본 배경 */
-    border-radius: 25px; /* 둥근 직사각형 */
+    border: 1px solid #EEEEEE;
+    background-color: #fff;
+    border-radius: 25px;
     font-size: 0.9rem;
     font-weight: 500;
     cursor: pointer;
@@ -224,30 +251,32 @@
     user-select: none;
 }
 
-/* Hover Effect (재고 있는 경우만) */
 .size-item input:not(:disabled) + .size-btn:hover {
     border: 1px solid #000;
 }
 
-/* Selected State */
 .size-item input:checked + .size-btn {
     border: 2px solid #000;
     font-weight: 700;
 }
 
-/* Sold Out State */
 .size-item input:disabled + .size-btn {
     background-color: #F7F7F7;
     color: #A5A5AC;
     border-color: #F7F7F7;
     cursor: not-allowed;
-    text-decoration: line-through; /* 선택사항: 품절 표시 강조 */
+    text-decoration: line-through;
 }
 
-/* R6. Restock Notification */
 .restock-alert {
     margin-bottom: 30px;
-    text-align: right;
+}
+
+.restock-text-left {
+    font-size: 0.9rem;
+    color: #666;
+    font-weight: normal;
+    text-align: left;
 }
 
 .restock-btn {
@@ -266,70 +295,69 @@
     color: #000;
 }
 
-/* R7. Qty, Cart, Buy Buttons */
-.purchase-area {
-    margin-top: 20px;
+.purchase-area-custom {
+    margin-top: 30px;
     padding-top: 20px;
     border-top: 1px solid #eee;
 }
 
-.qty-control {
+.purchase-row-top {
     display: flex;
-    align-items: center;
-    margin-bottom: 20px;
+    gap: 10px;
+    margin-bottom: 10px;
+    align-items: stretch;
 }
 
-.qty-btn {
-    width: 30px;
-    height: 30px;
+.qty-control-custom {
+    display: flex;
     border: 1px solid #ddd;
+}
+
+.qty-control-custom button {
+    width: 40px;
     background: #fff;
+    border: none;
+    font-size: 1.2rem;
     cursor: pointer;
 }
 
-.qty-input {
+.qty-control-custom input {
     width: 50px;
-    height: 30px;
     text-align: center;
-    border: 1px solid #ddd;
-    border-left: none;
-    border-right: none;
+    border: none;
+    border-left: 1px solid #eee;
+    border-right: 1px solid #eee;
+    font-weight: bold;
 }
 
-.action-buttons {
-    display: flex;
-    gap: 10px;
-}
-
-.btn-cart {
+.btn-cart-custom {
     flex: 1;
-    padding: 15px 0;
-    border: 1px solid #000;
     background: #fff;
+    border: 1px solid #000;
     color: #000;
     font-weight: 600;
-    transition: all 0.3s;
+    padding: 12px 0;
+    transition: all 0.2s;
 }
 
-.btn-cart:hover {
-    background: #f0f0f0;
+.btn-cart-custom:hover {
+    background: #f5f5f5;
 }
 
-.btn-buy {
-    flex: 1;
-    padding: 15px 0;
-    border: 1px solid #000;
+.btn-buy-custom {
+    width: 100%;
     background: #000;
     color: #fff;
-    font-weight: 600;
+    border: 1px solid #000;
+    font-size: 1.1rem;
+    font-weight: 700;
+    padding: 18px 0;
     transition: all 0.3s;
 }
 
-/* 구매하기 버튼 Hover 색상 반전 */
-.btn-buy:hover {
+.btn-buy-custom:hover {
     background: #fff;
     color: #000;
-    border: 1px solid #000;
 }
 
 /* --- Bottom Sections (Reviews, Recommend) --- */
@@ -345,8 +373,14 @@
     margin-top: 60px;
 }
 
+/* 섹션 타이틀 가운데 정렬 */
+.review-section h3, .recommend-section h3 {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
 .recommend-carousel {
     position: relative;
     overflow: hidden;
-    padding: 0 40px; /* 화살표 공간 */
+    padding: 0 40px;
 }
