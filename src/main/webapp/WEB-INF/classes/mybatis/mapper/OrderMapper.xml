@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.maknaez.mapper.OrderMapper">
+
+    <select id="dataCount" parameterType="map" resultType="Integer">
+        SELECT NVL(COUNT(*), 0)
+        FROM orders
+        WHERE memberIdx = #{memberIdx}
+    </select>
+
+    <select id="listOrder" parameterType="map" resultType="com.maknaez.model.OrderDTO">
+        SELECT * FROM (
+            SELECT ROWNUM rnum, tb.* FROM (
+                SELECT 
+                    o.order_id AS orderNum,
+                    TO_CHAR(o.order_date, 'YYYY-MM-DD') AS orderDate,
+                    NVL(o.total_amount, 0) AS totalAmount,
+                    o.status AS orderState,
+                    p.prod_name AS productName,
+                    NVL(oi.count, 0) AS qty,
+                    NVL(oi.price, 0) AS price,
+                    p.thumb_nail AS thumbNail
+                FROM orders o
+                JOIN order_items oi ON o.order_id = oi.order_id
+                JOIN pd_size ps ON oi.opt_id = ps.opt_id
+                JOIN products p ON ps.prod_id = p.prod_id
+                WHERE o.memberIdx = #{memberIdx}
+                ORDER BY o.order_date DESC
+            ) tb WHERE ROWNUM &lt;= #{end}
+        ) WHERE rnum &gt;= #{start}
+    </select>
+
+</mapper>
