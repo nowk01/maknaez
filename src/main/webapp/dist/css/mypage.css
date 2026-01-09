@@ -1,6 +1,8 @@
 @charset "UTF-8";
 
-/* 전체 레이아웃 구성 */
+/* =========================================
+   1. 전체 레이아웃 & 사이드바 (기존 유지)
+   ========================================= */
 .mypage-container {
     display: flex;
     max-width: 1200px;
@@ -9,7 +11,7 @@
     color: #000;
 }
 
-/* 사이드바 영역 */
+/* 사이드바 */
 .sidebar {
     width: 200px;
     flex-shrink: 0;
@@ -38,210 +40,277 @@
     opacity: 0.7;
 }
 
-/* 메인 콘텐츠 영역 */
-.main-content {
-    flex: 1;
-    padding-left: 100px;
-}
-
-.page-title {
-    font-size: 26px;
-    font-weight: bold;
-    text-align: center;
-    margin-bottom: 60px;
-}
-
-/* 대시보드 영역 (크기 확장 및 디자인) */
-.profile-card {
-    background-color: #fff; 
-    padding: 100px 120px; 
-    border: 1px solid #eee;
-    border-radius: 8px;
-}
-
-.dashboard-area {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-/* 사용자 정보 구역 */
-.user-profile {
-    display: flex;
-    align-items: center;
-    gap: 30px;
-}
-
-.profile-circle {
-    width: 100px;
-    height: 100px;
-    background-color: #ddd; /* 기본 배경 */
-    color: #fff;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 40px;
-    font-weight: 500;
-    flex-shrink: 0;
-}
-
-/* [확인완료] 등급별 배경색 설정 */
-.profile-circle.bronze { background-color: #a57c6b; } /* 갈색 */
-.profile-circle.silver { background-color: #A8A9AD; } /* 은색 */
-.profile-circle.gold   { background-color: #D4AF37; } /* 금색 */
-.profile-circle.vip    { background-color: #000000; } /* 검정색 */
-
-.user-detail {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-}
-
-.user-name {
-    font-size: 16px;
-    font-weight: 600;
-    margin-bottom: 12px;
-}
-
-
-.user-grade {
-    font-size: 30px;
-    font-weight: 500;
-    margin: 0;
-    color: #222;
-}
-
-.user-grade span {
-    font-size: 13px;
-    font-weight: 400;
-    color: #666;
-    margin-left: 5px;
-}
-
-/* [수정] 헤더 스타일 충돌 방지를 위해 클래스명 변경 (user-actions -> profile-actions) */
-.profile-actions {
-    margin-top: 5px;
-}
-
-.profile-actions a {
-    font-size: 13px;
-    color: #888;
-    text-decoration: none;
-    margin-right: 15px;
-    transition: color 0.2s;
-}
-.profile-actions a:hover {
-    color: #000;
-    text-decoration: underline;
-}
-
-/* 주문/배송 섹션 */
-.order-status {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    margin-right: 100px;
-}
-
-.status-label {
-    font-size: 15px;
-    color: #333;
-    margin-bottom: 15px;
-    font-weight: 600;
-}
-
-/* 숫자 0 스타일 */
-.status-count {
-    font-size: 45px;
-    font-weight: 600;
-    line-height: 1;
-    color: #000;
-    
-    display: inline-block;
-    border-bottom: 3px solid #000; /* 밑줄 */
-    padding-bottom: 5px;
-}
-
-
-
-/* 사이드바 활성화 링크 */
 .sidebar a.active {
     font-weight: bold;
     color: #000;
 }
 
-/* 주문 리스트 테이블 */
-.order-list-wrap {
-    width: 100%;
+/* 메인 콘텐츠 */
+.main-content {
+    flex: 1;
+    padding-left: 60px;
 }
 
-.list-info {
-    font-size: 14px;
-    margin-bottom: 10px;
-    color: #666;
-}
-
-.order-table {
-    width: 100%;
-    border-collapse: collapse;
-    border-top: 2px solid #000;
-    font-size: 14px;
-}
-
-.order-table th {
-    background: #f8f9fa;
-    padding: 15px 0;
-    border-bottom: 1px solid #ddd;
-    font-weight: 500;
-    color: #333;
-}
-
-.order-table td {
-    padding: 15px 10px;
-    border-bottom: 1px solid #eee;
+/* =========================================
+   2. 페이지 타이틀 & 안내
+   ========================================= */
+.page-title {
+    font-size: 28px;
+    font-weight: bold;
     text-align: center;
-    color: #444;
-}
-
-.order-table td.left {
-    text-align: left;
-}
-
-/* 주문일자/번호 */
-.td-date .order-date { display: block; color: #333; font-weight: 500; }
-.td-date .order-num a { font-size: 12px; color: #888; text-decoration: none; }
-.td-date .order-num a:hover { text-decoration: underline; }
-
-/* 상품명 */
-.td-product .p-name { font-weight: bold; margin-bottom: 4px; color: #000; }
-.td-product .p-opt { font-size: 12px; color: #888; }
-
-/* 상태 뱃지 */
-.status-badge {
-    display: inline-block;
-    padding: 4px 8px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 12px;
-    background: #fff;
-}
-
-.status-badge.shipping {
-    border-color: #000;
+    margin-bottom: 15px;
     color: #000;
 }
 
-/* 데이터 없음 */
-.no-data {
-    padding: 50px 0;
-    color: #999;
+.notice-box {
     text-align: center;
+    margin-bottom: 40px;
 }
 
-/* 페이징 영역 */
+.notice-box p {
+    font-size: 13px;
+    color: #888;
+    margin: 4px 0;
+    line-height: 1.4;
+}
+
+/* =========================================
+   3. 🔥 살로몬 스타일 대시보드 (Status Bar)
+   ========================================= */
+.sm-salomon__statusBar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+    /* 요청하신 살로몬 스타일 값 적용 */
+    padding: 28px 94px;
+    gap: 96px;
+    border-radius: 8px;
+    border: 1px solid #e7e7e7; /* var 대체 */
+    background-color: #fff;
+    margin-bottom: 64px;
+    width: 100%;
+    box-sizing: border-box; /* 패딩 포함 크기 계산 */
+}
+
+/* 개별 아이템 정렬 */
+.sm-salomon__statusBarItem {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-width: 60px; /* 숫자 자릿수 변경 시 흔들림 방지 */
+}
+
+/* 타이틀 (전체, 결제완료...) */
+.sm-salomon__statusBarItemTitle {
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 12px;
+}
+
+/* 숫자 값 */
+.sm-salomon__statusBarItemValue {
+    font-size: 32px;
+    font-weight: 700;
+    color: #000;
+    line-height: 1;
+}
+
+/* [옵션] 전체 숫자만 붉은색 포인트 (이전 요청 유지 시 사용) */
+.sm-salomon__statusBarItemValue[data-status-total] {
+    color: #d65a5a;
+}
+
+/* 구분선 (SVG 감싸는 div) */
+.sm-salomon__statusBarBorder {
+    display: flex;
+    align-items: center;
+    height: 76px; /* SVG 높이에 맞춤 */
+}
+
+/* =========================================
+   4. 필터 영역
+   ========================================= */
+.filter-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* 양끝 정렬 */
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #333;
+}
+
+/* div 버튼들이 가로로 나란히 오도록 설정 */
+.period-buttons {
+    display: flex;
+    gap: 8px; /* 버튼 사이 간격 */
+    align-items: center;
+}
+
+/* --- [NEW] 살로몬 스타일 필터 알약 (변수 제거 및 최적화) --- */
+
+/* 1. 기본 상태 (선택 안됨) */
+.sm-salomon__filterPill {
+    display: flex;              /* 내용물 중앙 정렬을 위해 flex 사용 */
+    align-items: center;
+    justify-content: center;
+    
+    height: 38px;               /* 살로몬 스타일 높이 */
+    padding: 0 20px;            /* 좌우 여백 */
+    
+    border: 1px solid #e0e0e0;  /* 연한 회색 테두리 */
+    border-radius: 9999px;      /* 둥근 알약 모양 */
+    background-color: #fff;     /* 흰색 배경 */
+    
+    font-size: 13px;
+    color: #333;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    user-select: none;          /* 텍스트 드래그 방지 */
+    white-space: nowrap;        /* 줄바꿈 방지 */
+}
+
+.sm-salomon__filterPill:hover {
+    background-color: #f7f7f7;
+    border-color: #ccc;
+}
+
+/* 2. 선택된 상태 (HTML의 data-selected 속성이 있을 때) */
+.sm-salomon__filterPill[data-selected] {
+    /* 변수 var(--gray02) 대신 직접 색상 코드 사용 */
+    border: 1px solid #4a4a53;  
+    background: #000;           /* 검정 배경 */
+    color: #fff;                /* 흰색 텍스트 */
+    font-weight: 600;
+}
+
+/* --- 날짜 입력창 레이아웃 --- */
+.date-inputs {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.input-date {
+    border: 1px solid #d5d5d5;
+    padding: 6px 10px;
+    font-size: 13px;
+    color: #333;
+    width: 125px;
+    height: 38px; /* 버튼 높이와 맞춤 */
+    box-sizing: border-box;
+}
+
+.tilde { margin: 0 5px; color: #888; }
+
+.btn-search {
+    background: #333;
+    color: #fff;
+    border: 1px solid #333;
+    padding: 0 20px;
+    height: 38px; /* 높이 통일 */
+    font-size: 13px;
+    cursor: pointer;
+}
+
+/* =========================================
+   5. 🔥 수정된 주문 카드 (위 코드 반영)
+   ========================================= */
+.order-card {
+    border: 1px solid #eee;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    overflow: hidden;
+}
+
+.order-card-header {
+    background: #fdfdfd;
+    padding: 12px 20px;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    font-weight: 600;
+}
+
+.order-detail-link {
+    font-size: 13px;
+    color: #888;
+    text-decoration: none;
+}
+
+.order-card-body {
+    padding: 20px;
+    display: flex;
+    align-items: center;
+}
+
+.product-img-box img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-right: 20px;
+}
+
+.product-info {
+    flex: 1;
+}
+
+.order-status-text {
+    color: #28a745;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.product-name {
+    font-size: 16px;
+    margin-bottom: 5px;
+}
+
+.product-price {
+    color: #555;
+}
+
+/* 우측 버튼 */
+.order-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.btn-action {
+    padding: 8px 15px;
+    border: 1px solid #ddd;
+    background: #fff;
+    border-radius: 4px;
+    font-size: 13px;
+    cursor: pointer;
+    min-width: 120px;
+}
+
+.btn-action.primary {
+    border-color: #007bff;
+    color: #007bff;
+}
+
+.btn-action:hover {
+    background: #f8f9fa;
+}
+
+/* =========================================
+   6. 기타
+   ========================================= */
+.no-data-msg {
+    padding: 80px 0;
+    text-align: center;
+    color: #666;
+    font-size: 14px;
+    font-weight: 500;
+}
+
 .page-navigation {
     margin-top: 30px;
     text-align: center;
