@@ -1,6 +1,5 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core"%>
-<%@ taglib prefix="fmt" uri="jakarta.tags.fmt"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -12,21 +11,21 @@
 
 <div class="cs-wrap">
     <div class="cs-sidebar">
-        <div class="cs-sidebar-title">고객센터</div>
+        <div class="cs-sidebar-title">SUPPORT</div>
         <ul class="cs-menu">
-            <li><a href="${pageContext.request.contextPath}/cs/notice" class="active">공지사항</a></li>
-            <li><a href="${pageContext.request.contextPath}/cs/faq">자주 묻는 질문</a></li>
-            <li><a href="${pageContext.request.contextPath}/cs/list">1:1 문의</a></li>
-            <li><a href="#">이용안내</a></li>
+            <li><a href="${pageContext.request.contextPath}/cs/notice" class="active">Notice</a></li>
+            <li><a href="${pageContext.request.contextPath}/cs/faq">FAQ</a></li>
+            <li><a href="${pageContext.request.contextPath}/cs/list">1:1 Inquiry</a></li>
+            <li><a href="#">Guide</a></li>
         </ul>
     </div>
 
     <div class="cs-content">
         <div class="content-header">
-            <h2 class="content-title">공지사항</h2>
+            <h2 class="content-title">Notice</h2>
         </div>
 
-        <table class="notice-table">
+        <table class="cs-table">
             <colgroup>
                 <col width="60">
                 <col width="*">
@@ -35,10 +34,10 @@
             </colgroup>
             <thead>
                 <tr>
-                    <th>번호</th>
-                    <th>제목</th>
-                    <th>작성일</th>
-                    <th>조회수</th>
+                    <th>NO</th>
+                    <th>SUBJECT</th>
+                    <th>DATE</th>
+                    <th>HIT</th>
                 </tr>
             </thead>
             <tbody>
@@ -52,16 +51,14 @@
                                 <td>
                                     <c:choose>
                                         <c:when test="${dto.isNotice == 1}">
-                                            <span class="notice-badge">공지</span>
+                                            <span class="notice-badge">NOTICE</span>
                                         </c:when>
                                         <c:otherwise>${dto.num}</c:otherwise>
                                     </c:choose>
                                 </td>
                                 <td class="subject" onclick="location.href='${pageContext.request.contextPath}/cs/notice/article?num=${dto.num}&page=${page}'">
+                                    <c:if test="${dto.isNotice == 1}"><b style="margin-right:5px;">[중요]</b></c:if>
                                     ${dto.subject}
-                                    <c:if test="${dto.isNotice == 1}">
-                                        <span class="notice-icon">●</span>
-                                    </c:if>
                                 </td>
                                 <td>${dto.reg_date.substring(0, 10)}</td>
                                 <td>${dto.hitCount}</td>

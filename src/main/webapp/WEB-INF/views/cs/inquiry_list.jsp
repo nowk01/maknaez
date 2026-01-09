@@ -11,22 +11,22 @@
 
 <div class="cs-wrap">
     <div class="cs-sidebar">
-        <div class="cs-sidebar-title">고객센터</div>
+        <div class="cs-sidebar-title">SUPPORT</div>
         <ul class="cs-menu">
-            <li><a href="${pageContext.request.contextPath}/cs/notice">공지사항</a></li>
-            <li><a href="${pageContext.request.contextPath}/cs/faq">자주 묻는 질문</a></li>
-            <li><a href="${pageContext.request.contextPath}/cs/list" class="active">1:1 문의</a></li>
-            <li><a href="#">이용안내</a></li>
+            <li><a href="${pageContext.request.contextPath}/cs/notice">Notice</a></li>
+            <li><a href="${pageContext.request.contextPath}/cs/faq">FAQ</a></li>
+            <li><a href="${pageContext.request.contextPath}/cs/list" class="active">1:1 Inquiry</a></li>
+            <li><a href="#">Guide</a></li>
         </ul>
     </div>
 
     <div class="cs-content">
         <div class="content-header">
-            <h3 class="content-title">1:1 문의</h3>
-            <a href="${pageContext.request.contextPath}/cs/write" class="btn-write">문의하기</a>
+            <h3 class="content-title">1:1 Inquiry</h3>
+            <a href="${pageContext.request.contextPath}/cs/write" class="btn-black">문의하기</a>
         </div>
 
-        <table class="board-table">
+        <table class="cs-table">
             <colgroup>
                 <col width="60"> 
                 <col width="100"> 
@@ -36,11 +36,11 @@
             </colgroup>
             <thead>
                 <tr>
-                    <th>번호</th>
-                    <th>상태</th>
-                    <th>제목</th>
-                    <th>작성자</th>
-                    <th>작성일</th>
+                    <th>NO</th>
+                    <th>STATUS</th>
+                    <th>SUBJECT</th>
+                    <th>AUTHOR</th>
+                    <th>DATE</th>
                 </tr>
             </thead>
             <tbody>
@@ -55,10 +55,10 @@
                                 <td>
                                     <c:choose>
                                         <c:when test="${not empty dto.replyDate}">
-                                            <span class="status-badge status-done">답변완료</span>
+                                            <span class="status-badge status-done">Answered</span>
                                         </c:when>
                                         <c:otherwise>
-                                            <span class="status-badge">답변대기</span>
+                                            <span class="status-badge">Waiting</span>
                                         </c:otherwise>
                                     </c:choose>
                                 </td>
