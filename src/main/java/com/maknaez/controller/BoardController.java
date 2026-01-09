@@ -2,11 +2,15 @@ package com.maknaez.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import com.maknaez.model.BoardDTO;
 import com.maknaez.model.FaqDTO;
@@ -15,6 +19,7 @@ import com.maknaez.mvc.annotation.Controller;
 import com.maknaez.mvc.annotation.GetMapping;
 import com.maknaez.mvc.annotation.PostMapping;
 import com.maknaez.mvc.annotation.RequestMapping;
+import com.maknaez.mvc.annotation.ResponseBody;
 import com.maknaez.mvc.view.ModelAndView;
 import com.maknaez.service.BoardService;
 import com.maknaez.service.BoardServiceImpl;
@@ -34,7 +39,7 @@ public class BoardController {
     private FileManager fileManager = new FileManager();
 
     // ==========================================
-    // 1:1 문의 (Inquiry)
+    // 1:1 문의 (Inquiry) - 리스트 화면 진입
     // ==========================================
     @GetMapping("list")
     public ModelAndView list(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -47,9 +52,8 @@ public class BoardController {
         ModelAndView mav = new ModelAndView("cs/inquiry_list");
         
         try {
-            String page = req.getParameter("page");
-            int current_page = 1;
-            if(page != null) current_page = Integer.parseInt(page);
+            int size = 10;
+            int offset = 0;
             
             String condition = "all";
             String keyword = req.getParameter("keyword");
@@ -64,13 +68,7 @@ public class BoardController {
             map.put("keyword", keyword);
             
             int dataCount = service.dataCount(map);
-            
-            int size = 10;
             int total_page = dataCount / size + (dataCount % size > 0 ? 1 : 0);
-            if(current_page > total_page) current_page = total_page;
-            
-            int offset = (current_page - 1) * size;
-            if(offset < 0) offset = 0;
             
             map.put("offset", offset);
             map.put("size", size);
@@ -79,7 +77,6 @@ public class BoardController {
             
             mav.addObject("list", list);
             mav.addObject("dataCount", dataCount);
-            mav.addObject("page", current_page);
             mav.addObject("total_page", total_page);
             mav.addObject("keyword", keyword);
             
@@ -88,6 +85,66 @@ public class BoardController {
         }
         
         return mav;
+    }
+
+    // ==========================================
+    // [AJAX] 무한 스크롤용 데이터 반환
+    // ==========================================
+    @ResponseBody
+    @GetMapping("listData")
+    public void listData(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        HttpSession session = req.getSession();
+        SessionInfo info = (SessionInfo) session.getAttribute("member");
+        
+        resp.setContentType("application/json; charset=utf-8");
+        JSONObject jobj = new JSONObject();
+        
+        if(info == null) {
+            jobj.put("status", "login_required");
+            resp.getWriter().print(jobj.toString());
+            return;
+        }
+
+        try {
+            String pageStr = req.getParameter("page");
+            int page = 1;
+            if(pageStr != null) page = Integer.parseInt(pageStr);
+            
+            int size = 10;
+            int offset = (page - 1) * size;
+
+            Map<String, Object> map = new HashMap<>();
+            map.put("condition", "all");
+            map.put("keyword", "");
+            map.put("offset", offset);
+            map.put("size", size);
+            
+            List<BoardDTO> list = service.listBoard(map);
+            
+            JSONArray jarr = new JSONArray();
+            for(BoardDTO dto : list) {
+                JSONObject jo = new JSONObject();
+                jo.put("num", dto.getNum());
+                jo.put("subject", dto.getSubject());
+                jo.put("userName", dto.getUserName());
+                jo.put("reg_date", dto.getReg_date().substring(0, 10));
+                
+                boolean isAnswered = (dto.getReplyDate() != null && !dto.getReplyDate().isEmpty());
+                jo.put("isAnswered", isAnswered);
+                
+                jarr.put(jo);
+            }
+            
+            jobj.put("status", "success");
+            jobj.put("list", jarr);
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            jobj.put("status", "error");
+        }
+        
+        PrintWriter out = resp.getWriter();
+        out.print(jobj.toString());
     }
 
     @GetMapping("write")
@@ -185,7 +242,7 @@ public class BoardController {
             BoardDTO prevDto = service.findByPrev(map);
             BoardDTO nextDto = service.findByNext(map);
             
-            ModelAndView mav = new ModelAndView("cs/inqurity_article");
+            ModelAndView mav = new ModelAndView("cs/inquiry_article");
             mav.addObject("dto", dto);
             mav.addObject("prevDto", prevDto);
             mav.addObject("nextDto", nextDto);
@@ -231,9 +288,6 @@ public class BoardController {
             return new ModelAndView("redirect:/member/login");
         }
         
-        String page = req.getParameter("page");
-        String query = "page=" + page;
-        
         try {
             long num = Long.parseLong(req.getParameter("num"));
             service.deleteBoard(num);
@@ -241,11 +295,11 @@ public class BoardController {
             e.printStackTrace();
         }
         
-        return new ModelAndView("redirect:/cs/list?" + query);
+        return new ModelAndView("redirect:/cs/list");
     }
 
     // ==========================================
-    // 공지사항 (Notice) - [수정됨] 파라미터 resp 추가
+    // 공지사항 (Notice)
     // ==========================================
     @GetMapping("notice")
     public ModelAndView notice(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -287,7 +341,6 @@ public class BoardController {
         return mav;
     }
 
-    // [수정됨] 파라미터 resp 추가
     @GetMapping("notice/article")
     public ModelAndView noticeArticle(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         ModelAndView mav = new ModelAndView("cs/notice_article");
@@ -311,7 +364,7 @@ public class BoardController {
     }
 
     // ==========================================
-    // FAQ - [수정됨] 파라미터 resp 추가
+    // FAQ
     // ==========================================
     @GetMapping("faq")
     public ModelAndView faq(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
