@@ -157,7 +157,7 @@
                     </table>
                     
                     <div class="page-navigation-wrap">
-                        ${paging}
+                        ${paging} 
                     </div>
                 </div>
 
