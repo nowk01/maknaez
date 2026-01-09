@@ -49,6 +49,6 @@
     </div>
     
     <div class="copyright-bar">
-        <span>© 2024 MY SHOP Corp. All rights reserved.</span>
+        <span>© 2026 MY SHOP Corp. All rights reserved.</span>
     </div>
 </footer>
