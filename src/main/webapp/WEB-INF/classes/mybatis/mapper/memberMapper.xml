@@ -144,8 +144,8 @@
                  m3.register_date BETWEEN TO_DATE(#{startDate}, 'YYYY-MM-DD') 
                                       AND TO_DATE(#{endDate}, 'YYYY-MM-DD') + 0.99999
             </if>
-            <if test="levelKey != null and levelKey != '' and levelKey != '전체 등급'">
-                 AND m1.userLevel = #{levelKey}
+            <if test="userLevel != null and userLevel != '' and userLevel != '전체 등급'">
+                 AND m1.userLevel = #{userLevel}
             </if>
             <if test="searchValue != null and searchValue != ''">
                 AND <include refid="where-list"/>
@@ -165,8 +165,8 @@
                  m3.register_date BETWEEN TO_DATE(#{startDate}, 'YYYY-MM-DD') 
                                       AND TO_DATE(#{endDate}, 'YYYY-MM-DD') + 0.99999
             </if>
-            <if test="levelKey != null and levelKey != '' and levelKey != '전체 등급'">
-                 AND m1.userLevel = #{levelKey}
+            <if test="userLevel != null and userLevel != '' and userLevel != '전체 등급'">
+                 AND m1.userLevel = #{userLevel}
             </if>
             <if test="searchValue != null and searchValue != ''">
                 AND <include refid="where-list"/>

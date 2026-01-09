@@ -41,18 +41,18 @@ public class MemberManageController {
 	    String searchValue = req.getParameter("searchValue");
 	    String startDate = req.getParameter("startDate");
 	    String endDate = req.getParameter("endDate");
-	    String levelKey = req.getParameter("levelKey");
+	    String userLevel = req.getParameter("userLevel");
 
 	    if(searchKey == null) searchKey = "all";
 	    if(searchValue == null) searchValue = "";
-	    if(levelKey == null) levelKey = "전체 등급"; // 기본값 설정
+	    if(userLevel == null) userLevel = "전체 등급"; // 기본값 설정
 
 	    Map<String, Object> map = new HashMap<>();
 	    map.put("searchKey", searchKey);
 	    map.put("searchValue", searchValue);
 	    map.put("startDate", startDate);
 	    map.put("endDate", endDate);
-	    map.put("levelKey", levelKey);
+	    map.put("userLevel", userLevel);
 
 	    // 2. 전체 데이터 개수 구하기
 	    int dataCount = service.dataCount(map);
@@ -86,9 +86,9 @@ public class MemberManageController {
 	        query += "startDate=" + startDate + "&endDate=" + endDate;
 	    }
 	    
-	    if(!levelKey.equals("전체 등급")) {
+	    if(!userLevel.equals("전체 등급")) {
 	        if(query.length() != 0) query += "&";
-	        query += "levelKey=" + java.net.URLEncoder.encode(levelKey, "UTF-8");
+	        query += "userLevel=" + java.net.URLEncoder.encode(userLevel, "UTF-8");
 	    }
 
 	    String listUrl = req.getContextPath() + "/admin/member/member_list";
@@ -111,7 +111,7 @@ public class MemberManageController {
 	    mav.addObject("searchValue", searchValue);
 	    mav.addObject("startDate", startDate);
 	    mav.addObject("endDate", endDate);
-	    mav.addObject("levelKey", levelKey);
+	    mav.addObject("userLevel", userLevel);
 
 	    return mav;
 	}

@@ -61,11 +61,11 @@
                             </div>
                             <div class="col-md-3">
                                 <label class="search-label">회원 등급</label>
-                                <select class="form-select" name="levelKey" id="levelKey">
-                                    <option value="전체 등급" ${levelKey == '전체 등급' ? 'selected' : ''}>전체 등급</option>
-                                    <option value="1" ${levelKey == '1' ? 'selected' : ''}>일반 회원 (Lv.1)</option>
-                                    <option value="51" ${levelKey == '51' ? 'selected' : ''}>관리자 (Lv.51)</option>
-                                    <option value="99" ${levelKey == '99' ? 'selected' : ''}>최고 관리자 (Lv.99)</option>
+                                <select class="form-select" name="userLevel" id="userLevel">
+                                    <option value="전체 등급" ${userLevel == '전체 등급' ? 'selected' : ''}>전체 등급</option>
+                                    <option value="1" ${userLevel == '1' ? 'selected' : ''}>일반 회원 (Lv.1)</option>
+                                    <option value="51" ${userLevel == '51' ? 'selected' : ''}>관리자 (Lv.51)</option>
+                                    <option value="99" ${userLevel == '99' ? 'selected' : ''}>최고 관리자 (Lv.99)</option>
                                 </select>
                             </div>
                             <div class="col-md-5">
@@ -173,7 +173,7 @@
             
             let startDate = document.getElementById("startDate").value;
             let endDate = document.getElementById("endDate").value;
-            let levelKey = document.getElementById("levelKey").value;
+            let userLevel = document.getElementById("userLevel").value;
             let searchKey = document.getElementById("searchKey").value;
             let searchValue = document.getElementById("searchValue").value;
 
@@ -187,8 +187,8 @@
                 query += "&startDate=" + startDate + "&endDate=" + endDate;
             }
             
-            if(levelKey !== "전체 등급") {
-                query += "&levelKey=" + encodeURIComponent(levelKey);
+            if(userLevel !== "전체 등급") {
+                query += "&userLevel=" + encodeURIComponent(userLevel);
             }
             
             if(searchValue) {
