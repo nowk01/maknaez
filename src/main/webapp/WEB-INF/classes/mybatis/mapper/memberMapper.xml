@@ -108,4 +108,71 @@
 		UNION ALL
 		SELECT '기타' section, COUNT(*) count FROM memberAge WHERE age &lt; 10 OR age &gt;= 70
 	</select>
+	
+	
+	<!-- 관리자  -->
+	
+	<sql id="where-list">
+        <choose>
+            <when test="searchKey == 'all' ">
+                ( INSTR(m1.userId, #{searchValue}) &gt; 0 OR
+                  INSTR(m2.userName, #{searchValue}) &gt; 0 OR
+                  INSTR(m2.email, #{searchValue}) &gt; 0 )
+            </when>
+            <when test="searchKey == 'userId'">
+                INSTR(m1.userId, #{searchValue}) &gt; 0
+            </when>
+            <when test="searchKey == 'userName'">
+                INSTR(m2.userName, #{searchValue}) &gt; 0
+            </when>
+            <when test="searchKey == 'email'">
+                INSTR(m2.email, #{searchValue}) &gt; 0
+            </when>
+            <otherwise>
+                INSTR(${searchKey}, #{searchValue}) &gt; 0
+            </otherwise>
+        </choose>
+    </sql>
+    
+    <select id="dataCount" parameterType="map" resultType="Integer">
+        SELECT COUNT(*)
+        FROM member1 m1
+        JOIN member2 m2 ON m1.memberIdx = m2.memberIdx
+        LEFT JOIN member3 m3 ON m1.memberIdx = m3.memberIdx
+        <where>
+            <if test="startDate != null and startDate != '' and endDate != null and endDate != ''">
+                 m3.register_date BETWEEN TO_DATE(#{startDate}, 'YYYY-MM-DD') 
+                                      AND TO_DATE(#{endDate}, 'YYYY-MM-DD') + 0.99999
+            </if>
+            <if test="levelKey != null and levelKey != '' and levelKey != '전체 등급'">
+                 AND m1.userLevel = #{levelKey}
+            </if>
+            <if test="searchValue != null and searchValue != ''">
+                AND <include refid="where-list"/>
+            </if>
+        </where>
+    </select>
+    
+    <select id="listMember" parameterType="map" resultType="com.maknaez.model.MemberDTO">
+        SELECT m1.memberIdx, m1.userId, m1.userLevel, m1.enabled,
+               m2.userName, m2.email,
+               TO_CHAR(m3.register_date, 'YYYY-MM-DD') as register_date
+        FROM member1 m1
+        JOIN member2 m2 ON m1.memberIdx = m2.memberIdx
+        LEFT JOIN member3 m3 ON m1.memberIdx = m3.memberIdx
+        <where>
+            <if test="startDate != null and startDate != '' and endDate != null and endDate != ''">
+                 m3.register_date BETWEEN TO_DATE(#{startDate}, 'YYYY-MM-DD') 
+                                      AND TO_DATE(#{endDate}, 'YYYY-MM-DD') + 0.99999
+            </if>
+            <if test="levelKey != null and levelKey != '' and levelKey != '전체 등급'">
+                 AND m1.userLevel = #{levelKey}
+            </if>
+            <if test="searchValue != null and searchValue != ''">
+                AND <include refid="where-list"/>
+            </if>
+        </where>
+        ORDER BY m1.memberIdx DESC
+        OFFSET #{offset} ROWS FETCH NEXT #{size} ROWS ONLY
+    </select>
 </mapper>
