@@ -1,87 +1,53 @@
 package com.maknaez.controller;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.IOException;
+import java.sql.SQLException;
 
 import com.maknaez.model.ProductDTO;
 import com.maknaez.mvc.annotation.Controller;
 import com.maknaez.mvc.annotation.GetMapping;
-import com.maknaez.mvc.annotation.RequestMapping;
 import com.maknaez.mvc.view.ModelAndView;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 @Controller
-@RequestMapping("/product")
+// @RequestMapping("/product")  <-- [í…ŒìŠ¤íŠ¸] ì ì‹œ ì£¼ì„ ì²˜ë¦¬ (ë§¤í•‘ ê²°í•© ë¬¸ì œ ë°°ì œ)
 public class ProductController {
 
-    @GetMapping("/detail")
-    public ModelAndView detail(HttpServletRequest req, HttpServletResponse resp) {
-        // [View °æ·Î] /WEB-INF/views/product/detail.jsp ·Î ÀÌµ¿
-        // DispatcherServlet ³»ºÎÀÇ ViewResolver(È¤Àº JspView) ¼³Á¤¿¡ µû¶ó 
-        // prefix(/WEB-INF/views/)¿Í suffix(.jsp)°¡ °áÇÕµË´Ï´Ù.
-        ModelAndView mav = new ModelAndView("product/detail");
+    public ProductController() {
+        System.out.println("=================================================");
+        System.out.println(">>> [ProductController] ìƒì„±ì í˜¸ì¶œë¨ (Bean ë“±ë¡ ì„±ê³µ)");
+        System.out.println("=================================================");
+    }
 
-        // 1. ÆÄ¶ó¹ÌÅÍ ¼ö½Å (productNo)
-        String productNoStr = req.getParameter("productNo");
+    // [ì¤‘ìš”] ì „ì²´ ê²½ë¡œë¥¼ ì§ì ‘ ì§€ì •í•´ì„œ í…ŒìŠ¤íŠ¸
+    @GetMapping("/product/detail") 
+    public ModelAndView detail(HttpServletRequest req, HttpServletResponse resp) throws SQLException, IOException {
+        System.out.println(">>> [ProductController] detail ë©”ì„œë“œ ì§„ì… ì„±ê³µ!");
         
-        // [µğ¹ö±ë ·Î±×] ¿äÃ»ÀÌ µé¾î¿Ô´ÂÁö ÄÜ¼Ö¿¡¼­ È®ÀÎ
-        System.out.println("[ProductController] detail ¿äÃ» ÁøÀÔ - productNo: " + productNoStr);
+        String productNoStr = req.getParameter("productNo");
+        System.out.println(">>> ìš”ì²­ íŒŒë¼ë¯¸í„°: " + productNoStr);
         
         long productNo = 0;
-        
         try {
-            if(productNoStr != null && !productNoStr.isEmpty()) {
+            if (productNoStr != null && !productNoStr.isEmpty()) {
                 productNo = Long.parseLong(productNoStr);
+            } else {
+                productNo = 1;
             }
         } catch (NumberFormatException e) {
-            System.out.println("[ProductController] productNo ÆÄ½Ì ¿¡·¯: " + e.getMessage());
-            e.printStackTrace();
+            productNo = 1;
         }
 
-        // 2. [°¡»ó µ¥ÀÌÅÍ] DB ¿¬µ¿ Àü, DTO ÇÊµå¿¡ ¸ÂÃá Mock Data »ı¼º
         ProductDTO dto = new ProductDTO();
+        dto.setProductNo(productNo); 
+        dto.setProductName("ë‚˜ì´í‚¤ ì—ì–´ í¬ìŠ¤ 1 '07 (" + productNo + "ë²ˆ ëª¨ë¸)");
+        dto.setPrice((int)(139000 + (productNo * 1000))); 
+        dto.setCategoryNo(1);
         
-        // ÆÄ¶ó¹ÌÅÍ°¡ ¾øÀ¸¸é 1001¹øÀ» ±âº»°ªÀ¸·Î »ç¿ë
-        long currentId = (productNo != 0) ? productNo : 1001;
-        
-        dto.setProductNo(currentId);
-        dto.setProductName("XT-6 Gore-Tex (»óÇ°¹øÈ£: " + currentId + ")");
-        dto.setPrice(280000);
-        dto.setCategoryNo(10); // Ä«Å×°í¸® ÄÚµå (10: ½ºÆ÷Ã÷½ºÅ¸ÀÏ °¡Á¤)
-        dto.setIsDisplayed(1); // 1: Áø¿­ÇÔ
-        dto.setImageFile("xt6_black.jpg"); // ÀÌ¹ÌÁö ÆÄÀÏ¸í ¿¹½Ã
-        dto.setRegDate("2024-01-01");
-        
-        // »ó¼¼ ¼³¸í (HTML ÅÂ±× Æ÷ÇÔ)
-        String desc = "<b>»óÇ° ¹øÈ£ " + currentId + "¹ø</b>¿¡ ´ëÇÑ »ó¼¼ ÆäÀÌÁöÀÔ´Ï´Ù.<br>"
-                    + "ÀÌ Á¦Ç°Àº »ì·Î¸óÀÇ Æ®·¹ÀÏ À¯»êÀÌ ´ã±ä ±â¼ú·Â¿¡ ¹æ¼ö ±â´ÉÀ» ´õÇÑ Á¦Ç°ÀÔ´Ï´Ù.<br>"
-                    + "¾î¶°ÇÑ ÁöÇü¿¡¼­µµ ÃÖ»óÀÇ ÆÛÆ÷¸Õ½º¸¦ Á¦°øÇÕ´Ï´Ù.";
-        dto.setContent(desc);
-        
-        // [Áß¿ä] ProductDTO¿¡´Â categoryName ÇÊµå°¡ ¾øÀ¸¹Ç·Î, º°µµ·Î Àü´ŞÇÕ´Ï´Ù.
-        // ÃßÈÄ JOIN Äõ¸®¸¦ ÅëÇØ DTO¿¡ ÇÊµå¸¦ Ãß°¡ÇÏ°Å³ª MapÀ¸·Î Ã³¸®ÇÒ ¼ö ÀÖ½À´Ï´Ù.
-        String categoryName = "½ºÆ÷Ã÷½ºÅ¸ÀÏ"; 
-
-        // 3. [ÃßÃµ »óÇ°] ÇÏ´Ü Ä³·¯¼¿¿ë ¸®½ºÆ® ±¸¼º (Mock Data)
-        List<ProductDTO> recommendList = new ArrayList<>();
-        for(int i=1; i<=8; i++) {
-            ProductDTO p = new ProductDTO();
-            p.setProductNo(i + 100);
-            p.setProductName("ÃßÃµ ¸ğµ¨ 0" + i);
-            p.setPrice(200000 + (i * 5000));
-            p.setImageFile("thumb_" + i + ".jpg"); // ½ÇÁ¦ ÀÌ¹ÌÁö°¡ ¾ø´Ù¸é jsp¿¡¼­ onerror Ã³¸® ÇÊ¿ä
-            recommendList.add(p);
-        }
-
-        // 4. View·Î µ¥ÀÌÅÍ Àü´Ş
-        // JSP¿¡¼­´Â ${dto.productName}, ${categoryName}, ${recommendList} µîÀ¸·Î Á¢±Ù °¡´É
+        ModelAndView mav = new ModelAndView("product/detail");
         mav.addObject("dto", dto);
-        mav.addObject("categoryName", categoryName);
-        mav.addObject("recommendList", recommendList);
-        
-        System.out.println("[ProductController] µ¥ÀÌÅÍ ¹ÙÀÎµù ¿Ï·á -> View ÀÌµ¿");
         
         return mav;
     }
