@@ -100,3 +100,5 @@ function filterFaq(category) {
     location.href = contextPath + '/cs/faq?category=' + category;
 }
 
+
+

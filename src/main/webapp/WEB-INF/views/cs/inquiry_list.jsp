@@ -5,6 +5,7 @@
 <head>
 <jsp:include page="/WEB-INF/views/layout/headerResources.jsp"/>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/cs.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 </head>
 <body>
 <jsp:include page="/WEB-INF/views/layout/header.jsp"/>
@@ -23,63 +24,56 @@
     <div class="cs-content">
         <div class="content-header">
             <h3 class="content-title">1:1 Inquiry</h3>
-            <a href="${pageContext.request.contextPath}/cs/write" class="btn-black">문의하기</a>
+            <a href="${pageContext.request.contextPath}/cs/write" class="btn-new-chat">
+                <i class="bi bi-pencil-fill"></i> 문의하기
+            </a>
         </div>
 
-        <table class="cs-table">
-            <colgroup>
-                <col width="60"> 
-                <col width="100"> 
-                <col width="*">
-                <col width="100">
-                <col width="120">
-            </colgroup>
-            <thead>
-                <tr>
-                    <th>NO</th>
-                    <th>STATUS</th>
-                    <th>SUBJECT</th>
-                    <th>AUTHOR</th>
-                    <th>DATE</th>
-                </tr>
-            </thead>
-            <tbody>
-                <c:choose>
-                    <c:when test="${empty list}">
-                         <tr><td colspan="5" class="no-data">등록된 문의 내역이 없습니다.</td></tr>
-                    </c:when>
-                    <c:otherwise>
-                        <c:forEach var="dto" items="${list}">
-                            <tr>
-                                <td>${dto.num}</td>
-                                <td>
+        <div class="chat-list-container">
+            <c:choose>
+                <c:when test="${empty list}">
+                    <div class="no-data">
+                        <i class="bi bi-chat-square-dots" style="font-size: 40px; color: #e0e0e0; margin-bottom: 15px; display:block;"></i>
+                        문의 내역이 없습니다.
+                    </div>
+                </c:when>
+                <c:otherwise>
+                    <c:forEach var="dto" items="${list}">
+                        <div class="chat-list-item" onclick="location.href='${pageContext.request.contextPath}/cs/article?num=${dto.num}&page=${page}'">
+                            
+                            <div class="chat-item-icon">
+                                <c:choose>
+                                    <c:when test="${not empty dto.replyDate}">
+                                        <i class="bi bi-check-lg" style="color:#0ca678; font-weight:bold;"></i>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <i class="bi bi-chat-dots"></i>
+                                    </c:otherwise>
+                                </c:choose>
+                            </div>
+                            
+                            <div class="chat-item-info">
+                                <div class="chat-item-top">
+                                    <span class="chat-item-subject">${dto.subject}</span>
+                                    <span class="chat-item-date">${dto.reg_date.substring(0,10)}</span>
+                                </div>
+                                <div class="chat-item-bottom">
+                                    <span class="chat-item-preview">${dto.content}</span>
+                                    
                                     <c:choose>
                                         <c:when test="${not empty dto.replyDate}">
-                                            <span class="status-badge status-done">Answered</span>
+                                            <span class="badge-status complete">답변완료</span>
                                         </c:when>
                                         <c:otherwise>
-                                            <span class="status-badge">Waiting</span>
+                                            <span class="badge-status waiting">답변대기</span>
                                         </c:otherwise>
                                     </c:choose>
-                                </td>
-                                <td class="subject" onclick="location.href='${pageContext.request.contextPath}/cs/article?num=${dto.num}&page=${page}'">
-                                    ${dto.subject}
-                                </td>
-                                <td>${dto.userName}</td>
-                                <td>${dto.reg_date.substring(0,10)}</td>
-                            </tr>
-                        </c:forEach>
-                    </c:otherwise>
-                </c:choose>
-            </tbody>
-        </table>
-        
-        <div class="page-navigation">
-            <c:if test="${dataCount > 0}">
-                <c:forEach var="i" begin="1" end="${total_page}">
-                    <a href="${pageContext.request.contextPath}/cs/list?page=${i}" class="page-link ${page==i?'active':''}">${i}</a>
-                </c:forEach>
-            </c:if>
+                                </div>
+                            </div>
+                        </div>
+                    </c:forEach>
+                </c:otherwise>
+            </c:choose>
         </div>
     </div>
 </div>
