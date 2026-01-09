@@ -62,12 +62,11 @@
         .inquiry-subject { font-weight: 600; font-size: 14px; margin-bottom: 5px; color: #333; }
         .inquiry-preview { font-size: 13px; color: #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-        /* 상태 배지 (클릭 시 변경 가능하게 디자인) */
+        /* 상태 배지 */
         .status-badge {
             font-size: 11px;
             padding: 3px 8px;
             border-radius: 12px;
-            cursor: pointer;
         }
         .status-wait { background-color: #fff3bf; color: #f08c00; } /* 답변대기 */
         .status-done { background-color: #e6fcf5; color: #0ca678; } /* 답변완료 */
@@ -163,59 +162,48 @@
                     <div class="col-lg-4 h-100 border-end">
                         <div class="card-box">
                             <div class="inquiry-list-header">
-                                <div class="d-flex gap-2 mb-2">
-                                    <select class="form-select form-select-sm" id="sortFilter">
-                                        <option value="new">최신순</option>
-                                        <option value="old">오래된순</option>
-                                    </select>
-                                    <select class="form-select form-select-sm" id="statusFilter">
-                                        <option value="all">전체 상태</option>
-                                        <option value="wait">답변 대기</option>
-                                        <option value="done">답변 완료</option>
-                                    </select>
-                                </div>
-                                <div class="input-group input-group-sm">
-                                    <input type="text" class="form-control" placeholder="작성자, 제목 검색">
-                                    <button class="btn btn-outline-secondary">🔍</button>
-                                </div>
+                                <form name="searchForm" action="${pageContext.request.contextPath}/admin/cs/inquiry_list" method="get">
+	                                <div class="d-flex gap-2 mb-2">
+	                                    <select class="form-select form-select-sm" name="status" onchange="searchList()">
+	                                        <option value="all" ${status == 'all' ? 'selected' : ''}>전체 상태</option>
+	                                        <option value="wait" ${status == 'wait' ? 'selected' : ''}>답변 대기</option>
+	                                        <option value="done" ${status == 'done' ? 'selected' : ''}>답변 완료</option>
+	                                    </select>
+	                                </div>
+	                                <div class="input-group input-group-sm">
+	                                    <input type="text" class="form-control" name="keyword" value="${keyword}" placeholder="작성자, 제목 검색">
+	                                    <button type="button" class="btn btn-outline-secondary" onclick="searchList()">🔍</button>
+	                                </div>
+                                </form>
                             </div>
 
                             <div class="inquiry-list-wrapper">
-                                <div class="inquiry-item" onclick="openChat(1, '사이즈 문의 드립니다.', 'user_01')">
-                                    <div class="inquiry-info">
-                                        <span>user_01 (홍길동)</span>
-                                        <span>2026-01-08</span>
-                                    </div>
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <div class="inquiry-subject">XL 사이즈 재입고 언제 되나요?</div>
-                                        <span class="badge status-badge status-wait" onclick="toggleStatus(this, event)">답변대기</span>
-                                    </div>
-                                    <div class="inquiry-preview">평소 105 입는데 작을까요? 재입고 일정...</div>
-                                </div>
-
-                                <div class="inquiry-item" onclick="openChat(2, '배송 지연 관련', 'user_02')">
-                                    <div class="inquiry-info">
-                                        <span>user_02 (김철수)</span>
-                                        <span>2026-01-07</span>
-                                    </div>
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <div class="inquiry-subject">배송이 아직 출발을 안 했어요</div>
-                                        <span class="badge status-badge status-done" onclick="toggleStatus(this, event)">답변완료</span>
-                                    </div>
-                                    <div class="inquiry-preview">주문한지 3일 지났는데 아직 배송준비중...</div>
-                                </div>
+                            	<c:forEach var="dto" items="${list}">
+	                                <div class="inquiry-item" onclick="openChat('${dto.num}')">
+	                                    <div class="inquiry-info">
+	                                        <span>${dto.userName} (${dto.userId})</span>
+	                                        <span>${dto.reg_date}</span>
+	                                    </div>
+	                                    <div class="d-flex justify-content-between align-items-center">
+	                                        <div class="inquiry-subject">${dto.subject}</div>
+	                                        <c:choose>
+	                                        	<c:when test="${not empty dto.replyContent}">
+	                                        		<span class="badge status-badge status-done">답변완료</span>
+	                                        	</c:when>
+	                                        	<c:otherwise>
+	                                        		<span class="badge status-badge status-wait">답변대기</span>
+	                                        	</c:otherwise>
+	                                        </c:choose>
+	                                    </div>
+	                                    <div class="inquiry-preview">${dto.content}</div>
+	                                </div>
+                                </c:forEach>
                                 
-                                <div class="inquiry-item" onclick="openChat(3, '반품 접수 확인', 'user_03')">
-                                    <div class="inquiry-info">
-                                        <span>user_03 (이영희)</span>
-                                        <span>2026-01-05</span>
-                                    </div>
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <div class="inquiry-subject">반품 수거 언제 해가시나요?</div>
-                                        <span class="badge status-badge status-done" onclick="toggleStatus(this, event)">답변완료</span>
-                                    </div>
-                                    <div class="inquiry-preview">경비실에 맡겨두었다고 메모 남겼는데...</div>
-                                </div>
+                                <c:if test="${empty list}">
+                                	<div class="d-flex justify-content-center align-items-center p-5 text-muted">
+                                		등록된 문의가 없습니다.
+                                	</div>
+                                </c:if>
                             </div>
                         </div>
                     </div>
@@ -231,39 +219,23 @@
                             <div class="d-none d-flex flex-column h-100" id="chatView">
                                 <div class="chat-header">
                                     <div>
-                                        <h5 class="fw-bold m-0" id="chatTitle">제목이 들어갑니다</h5>
+                                        <h5 class="fw-bold m-0" id="chatTitle">제목</h5>
                                         <small class="text-muted" id="chatUser">작성자 정보</small>
                                     </div>
-                                    <button class="btn btn-outline-danger btn-sm">삭제</button>
-                                </div>
+                                    </div>
 
                                 <div class="chat-body" id="chatBody">
-                                    <div class="message-row user">
-                                        <div class="message-bubble">
-                                            안녕하세요, 이 상품 XL 사이즈 언제 재입고 되나요? 알림 신청 했는데 소식이 없어서요.
-                                        </div>
-                                        <span class="message-time">14:30</span>
                                     </div>
-                                    
-                                    <div class="message-row admin">
-                                        <span class="message-time">14:45</span>
-                                        <div class="message-bubble">
-                                            안녕하세요 고객님, MAKNAEZ입니다.<br>
-                                            해당 상품은 다음 주 수요일(1/14) 입고 예정입니다.<br>
-                                            입고 즉시 알림톡 보내드리겠습니다. 감사합니다.
-                                        </div>
-                                    </div>
-                                </div>
 
                                 <div class="chat-footer">
                                     <div class="input-group">
-                                        <textarea class="form-control" rows="2" placeholder="답변 내용을 입력하세요..." style="resize: none;"></textarea>
-                                        <button class="btn btn-primary" type="button">전송</button>
+                                        <textarea class="form-control" id="replyContent" rows="2" placeholder="답변 내용을 입력하세요..." style="resize: none;"></textarea>
+                                        <button class="btn btn-primary" type="button" onclick="sendReply()">전송</button>
                                     </div>
                                     <div class="form-check mt-2">
                                         <input class="form-check-input" type="checkbox" id="smsSend">
                                         <label class="form-check-label small text-muted" for="smsSend">
-                                            답변 등록 시 SMS/알림톡 발송
+                                            답변 등록 시 SMS/알림톡 발송 (준비중)
                                         </label>
                                     </div>
                                 </div>
@@ -272,11 +244,27 @@
                         </div>
                     </div>
 
-                </div> </div> </div> </div> <jsp:include page="/WEB-INF/views/admin/layout/footerResources.jsp" />
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <jsp:include page="/WEB-INF/views/admin/layout/footerResources.jsp" />
 
     <script>
-        // 1. 목록 클릭 시 우측 채팅창 열기
-        function openChat(id, title, user) {
+    	// 검색 기능
+    	function searchList() {
+    		const f = document.searchForm;
+    		f.submit();
+    	}
+    
+        // 현재 선택된 문의 번호 저장
+        let currentInquiryNum = 0;
+
+        // 1. 목록 클릭 시 상세 내용 불러오기 (AJAX)
+        function openChat(num) {
+        	currentInquiryNum = num;
+        	
             // 활성화 스타일 표시
             document.querySelectorAll('.inquiry-item').forEach(el => el.classList.remove('active'));
             event.currentTarget.classList.add('active');
@@ -286,29 +274,104 @@
             const chatView = document.getElementById('chatView');
             chatView.classList.remove('d-none');
             
-            // 데이터 바인딩 (예시)
-            document.getElementById('chatTitle').innerText = title;
-            document.getElementById('chatUser').innerText = user + "님의 문의";
+            // 기존 내용 초기화
+            const chatBody = document.getElementById('chatBody');
+            chatBody.innerHTML = "";
             
-            // 실제 구현 시 여기서 AJAX로 대화 내용을 불러와 chatBody에 넣어야 함
+            // 답변 입력창 초기화
+            const replyArea = document.getElementById('replyContent');
+            replyArea.value = "";
+            replyArea.disabled = false;
+            replyArea.placeholder = "답변 내용을 입력하세요...";
+            
+            // AJAX 요청
+            const url = "${pageContext.request.contextPath}/admin/cs/inquiry_detail";
+            const query = "num=" + num;
+            
+            $.ajax({
+            	type: "GET",
+            	url: url,
+            	data: query,
+            	dataType: "json",
+            	success: function(data) {
+            		if(data.status === "success") {
+            			// 헤더 세팅
+            			document.getElementById('chatTitle').innerText = data.subject;
+            			document.getElementById('chatUser').innerText = data.userName + " 님의 문의 (" + data.reg_date + ")";
+            			
+            			// 1) 사용자 질문 표시
+            			let userHtml = '';
+            			userHtml += '<div class="message-row user">';
+            			userHtml += '  <div class="message-bubble">' + data.content.replace(/\n/g, "<br>") + '</div>';
+            			userHtml += '  <span class="message-time">질문</span>';
+            			userHtml += '</div>';
+            			chatBody.insertAdjacentHTML('beforeend', userHtml);
+            			
+            			// 2) 답변이 있다면 표시
+            			if(data.replyContent) {
+            				let adminHtml = '';
+            				adminHtml += '<div class="message-row admin">';
+            				adminHtml += '  <span class="message-time">' + (data.replyDate ? data.replyDate : '') + '</span>';
+            				adminHtml += '  <div class="message-bubble">' + data.replyContent.replace(/\n/g, "<br>") + '</div>';
+            				adminHtml += '</div>';
+            				chatBody.insertAdjacentHTML('beforeend', adminHtml);
+            				
+            				// 답변 완료 상태 처리
+            				replyArea.value = "";
+            				replyArea.placeholder = "이미 답변이 완료된 문의입니다.";
+            				replyArea.disabled = true;
+            			}
+            			
+            			// 스크롤 최하단 이동
+            			chatBody.scrollTop = chatBody.scrollHeight;
+            			
+            		} else {
+            			alert("해당 문의 내용을 불러올 수 없습니다.");
+            		}
+            	},
+            	error: function(e) {
+            		console.log(e.responseText);
+            	}
+            });
         }
-
-        // 2. 상태 배지 클릭 시 토글 (대기 <-> 완료)
-        function toggleStatus(badge, e) {
-            e.stopPropagation(); // 부모 클릭(채팅창 열기) 방지
-            
-            if (badge.classList.contains('status-wait')) {
-                // 대기 -> 완료로 변경
-                badge.classList.remove('status-wait');
-                badge.classList.add('status-done');
-                badge.innerText = "답변완료";
-                // alert("상태가 '답변완료'로 변경되었습니다.");
-            } else {
-                // 완료 -> 대기로 변경
-                badge.classList.remove('status-done');
-                badge.classList.add('status-wait');
-                badge.innerText = "답변대기";
-            }
+        
+        // 2. 답변 전송 (AJAX)
+        function sendReply() {
+        	const content = document.getElementById('replyContent').value.trim();
+        	
+        	if(!currentInquiryNum) {
+        		alert("문의를 선택해주세요.");
+        		return;
+        	}
+        	if(!content) {
+        		alert("답변 내용을 입력해주세요.");
+        		return;
+        	}
+        	
+        	if(!confirm("답변을 등록하시겠습니까?")) return;
+        	
+        	const url = "${pageContext.request.contextPath}/admin/cs/inquiry_reply";
+        	const query = "num=" + currentInquiryNum + "&replyContent=" + encodeURIComponent(content);
+        	
+        	$.ajax({
+        		type: "POST",
+        		url: url,
+        		data: query,
+        		dataType: "json",
+        		success: function(data) {
+        			if(data.status === "success") {
+        				alert("답변이 등록되었습니다.");
+        				// 목록 갱신을 위해 새로고침 (가장 깔끔한 방법)
+        				location.reload();
+        			} else {
+        				alert("답변 등록에 실패했습니다.");
+        			}
+        		},
+        		error: function(e) {
+        			console.log(e.responseText);
+        			alert("서버 통신 오류가 발생했습니다.");
+        		}
+        	});
         }
     </script>
 

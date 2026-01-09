@@ -160,25 +160,26 @@
         </ul>
     </nav>
 
-    <div class="user-actions">
-        <div class="icon-btn"><i class="ph ph-magnifying-glass"></i></div>
-        
-        
-        <c:choose>
-            <c:when test="${not empty sessionScope.member}">
-                
-                <a href="${pageContext.request.contextPath}/member/mypage/main.do" class="icon-btn" style="color: inherit; text-decoration: none; display: flex; align-items: center; justify-content: center;">
-                    <i class="ph ph-user"></i>
-                </a>
-            </c:when>
-            <c:otherwise>
-                
-                <a href="${pageContext.request.contextPath}/member/login" class="icon-btn" style="color: inherit; text-decoration: none; display: flex; align-items: center; justify-content: center;">
-                    <i class="ph ph-user"></i>
-                </a>
-            </c:otherwise>
-        </c:choose>
-
-        <div class="icon-btn"><i class="ph ph-shopping-bag"></i></div>
+  <div class="user-actions">
+    <c:choose>
+        <c:when test="${not empty sessionScope.member}">
+            <c:if test="${sessionScope.member.userId == 'admin'}">
+                <a href="${pageContext.request.contextPath}/admin" class="icon-btn" title="관리자 페이지" style="color: #ff4e00;">
+                    <i class="ph ph-gear"></i> </a>
+            </c:if>
+            
+            <a href="${pageContext.request.contextPath}/member/mypage/main.do" class="icon-btn">
+                <i class="ph ph-user"></i>
+            </a>
+            <a href="${pageContext.request.contextPath}/member/logout" class="icon-btn">
+                <i class="ph ph-sign-out"></i>
+            </a>
+        </c:when>
+        <c:otherwise>
+            <a href="${pageContext.request.contextPath}/member/login" class="icon-btn">
+                <i class="ph ph-user"></i>
+            </a>
+        </c:otherwise>
+    </c:choose>
     </div>
 </header>
