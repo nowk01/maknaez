@@ -22,4 +22,7 @@ public interface MemberMapper {
 	
 	public MemberDTO findById(String userId);	
 	public List<Map<String, Object>> listAgeSection();
+	
+	public Integer dataCount(Map<String, Object> map);
+	public List<MemberDTO> listMember(Map<String, Object> map);
 }

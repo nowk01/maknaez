@@ -121,4 +121,29 @@ public class MemberServiceImpl implements MemberService {
 		return null;
 	}
 
+	@Override
+	public Integer dataCount(Map<String, Object> map) {
+		int result = 0;
+		
+		try {
+			result = mapper.dataCount(map);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return result;
+	}
+
+	@Override
+	public List<MemberDTO> listMember(Map<String, Object> map) {
+		List<MemberDTO> list = null;
+		
+		try {
+			list = mapper.listMember(map);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
+
 }
