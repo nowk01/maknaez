@@ -31,8 +31,11 @@
 	<select id="dataCount" parameterType="map" resultType="Integer">
 		SELECT NVL(COUNT(*), 0) FROM board
 		<where>
+			<if test="userId != null and userId != ''">
+				AND userId = #{userId}
+			</if>
 			<if test="keyword != null and keyword != ''">
-				<include refid="where-list" />
+				AND <include refid="where-list" />
 			</if>
 			<if test="status == 'wait'">
                 AND replyContent IS NULL
@@ -48,8 +51,11 @@
                replyContent, replyDate
 		FROM board
 		<where>
+			<if test="userId != null and userId != ''">
+				AND userId = #{userId}
+			</if>
 			<if test="keyword != null and keyword != ''">
-				<include refid="where-list" />
+				AND <include refid="where-list" />
 			</if>
             <if test="status == 'wait'">
                 AND replyContent IS NULL
@@ -84,8 +90,11 @@
 	<select id="findByPrev" parameterType="map" resultType="com.maknaez.model.BoardDTO">
 		SELECT num, subject FROM board
 		<where>
+			<if test="userId != null and userId != ''">
+				AND userId = #{userId}
+			</if>
 			<if test="keyword != null and keyword != ''">
-				<include refid="where-list" />
+				AND <include refid="where-list" />
 			</if>
 			AND (num &gt; #{num})
 		</where>
@@ -95,8 +104,11 @@
 	<select id="findByNext" parameterType="map" resultType="com.maknaez.model.BoardDTO">
 		SELECT num, subject FROM board
 		<where>
+			<if test="userId != null and userId != ''">
+				AND userId = #{userId}
+			</if>
 			<if test="keyword != null and keyword != ''">
-				<include refid="where-list" />
+				AND <include refid="where-list" />
 			</if>
 			AND (num &lt; #{num})
 		</where>
@@ -106,7 +118,6 @@
 	<delete id="deleteBoard" parameterType="map">
 		DELETE FROM board WHERE num = #{num}
 	</delete>
-
 
 	<select id="listNotice" parameterType="map" resultType="com.maknaez.model.BoardDTO">
 		SELECT num, subject, reg_date, hitCount, saveFilename, isNotice, isShow, userName
