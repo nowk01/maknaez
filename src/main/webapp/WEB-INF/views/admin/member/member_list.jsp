@@ -305,9 +305,9 @@
             location.href = url + "?" + query;
         }
         
-        // 모달 열기 (모드에 따라 처리)
+     	// 모달 열기 (모드에 따라 처리)
         function openMemberModal(mode, memberIdx) {
-            // Bootstrap 5 Modal 인스턴스 생성 또는 가져오기
+            // 1. 모달 인스턴스 가져오기
             let modalEl = document.getElementById('memberModal');
             let myModal = bootstrap.Modal.getInstance(modalEl);
             if (!myModal) {
@@ -316,43 +316,55 @@
 
             const form = document.getElementById("memberForm");
             
-            // 폼 초기화
+            // 2. 폼 초기화
             form.reset();
             document.getElementById("modalMode").value = mode;
 
+            // 3. 모드별 처리
             if (mode === 'add') {
+                // [회원 추가 모드]
                 document.getElementById("memberModalLabel").innerText = "회원 추가";
-                document.getElementById("userId").readOnly = false;
+                document.getElementById("userId").readOnly = false; // 아이디 입력 가능
                 document.getElementById("modalMemberIdx").value = "0";
-                myModal.show();
+                
+                myModal.show(); // 빈 모달 바로 열기
 
             } else if (mode === 'update') {
+                // [회원 수정 모드]
                 document.getElementById("memberModalLabel").innerText = "회원 상세/수정";
                 document.getElementById("userId").readOnly = true; // 아이디 수정 불가
                 document.getElementById("modalMemberIdx").value = memberIdx;
 
-                // 회원 정보 가져오기 (util-jquery.js의 ajaxRequest 사용)
+                // AJAX로 회원 상세 정보 가져오기
                 let url = "${pageContext.request.contextPath}/admin/member/detail";
                 let query = "memberIdx=" + memberIdx;
 
                 const fn = function(data) {
                     if(data.state === "true") {
                         let dto = data.dto;
+                        
+                        // --- [핵심] 기존 정보 입력하기 ---
                         $("#userId").val(dto.userId);
                         $("#userName").val(dto.userName);
-                        $("#birth").val(dto.birth);
                         $("#email").val(dto.email);
                         $("#tel").val(dto.tel);
                         $("#modalUserLevel").val(dto.userLevel);
-                        
-                        // 데이터 로드 성공 시 모달 표시
+
+                        // **날짜 포맷 처리 (가장 중요)**
+                        // DB에서 "2024-01-01 10:30:00" 처럼 올 경우 앞 10자리만 잘라서 넣어야 함
+                        if(dto.birth) {
+                            // 문자열인 경우 앞에서 10자리만 추출 (YYYY-MM-DD)
+                            let birthStr = dto.birth.substring(0, 10);
+                            $("#birth").val(birthStr);
+                        }
+
+                        // 데이터 세팅 후 모달 열기
                         myModal.show();
                     } else {
                         alert("회원 정보를 불러올 수 없습니다.");
                     }
                 };
 
-                // ajaxRequest(url, method, query, responseType, callback)
                 ajaxRequest(url, "GET", query, "json", fn);
             }
         }
