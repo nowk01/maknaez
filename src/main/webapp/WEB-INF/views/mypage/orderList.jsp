@@ -32,7 +32,7 @@
 			<div class="menu-group">
 				<span class="menu-title">혜택내역</span>
 				<ul>
-					<li><a href="#">상품 리뷰</a></li>
+					<li><a href="${pageContext.request.contextPath}/member/mypage/review">상품 리뷰</a></li>
 					<li><a href="#">포인트/쿠폰</a></li>
 				</ul>
 			</div>
