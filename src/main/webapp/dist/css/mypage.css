@@ -1,7 +1,7 @@
 @charset "UTF-8";
 
 /* =========================================
-   1. 전체 레이아웃 & 사이드바 (기존 유지)
+   1. 전체 레이아웃 & 사이드바
    ========================================= */
 .mypage-container {
     display: flex;
@@ -82,15 +82,15 @@
     justify-content: center;
     align-items: center;
     
-    /* 요청하신 살로몬 스타일 값 적용 */
+    /* 4개 항목 기준 살로몬 스타일 */
     padding: 28px 94px;
     gap: 96px;
     border-radius: 8px;
-    border: 1px solid #e7e7e7; /* var 대체 */
+    border: 1px solid #e7e7e7;
     background-color: #fff;
     margin-bottom: 64px;
     width: 100%;
-    box-sizing: border-box; /* 패딩 포함 크기 계산 */
+    box-sizing: border-box; 
 }
 
 /* 개별 아이템 정렬 */
@@ -99,10 +99,10 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    min-width: 60px; /* 숫자 자릿수 변경 시 흔들림 방지 */
+    min-width: 60px; 
 }
 
-/* 타이틀 (전체, 결제완료...) */
+/* 타이틀 */
 .sm-salomon__statusBarItemTitle {
     font-size: 14px;
     font-weight: 600;
@@ -118,16 +118,16 @@
     line-height: 1;
 }
 
-/* [옵션] 전체 숫자만 붉은색 포인트 (이전 요청 유지 시 사용) */
+/* 전체 숫자만 붉은색 포인트 (#fd6464) */
 .sm-salomon__statusBarItemValue[data-status-total] {
-    color: #d65a5a;
+    color: #fd6464;
 }
 
 /* 구분선 (SVG 감싸는 div) */
 .sm-salomon__statusBarBorder {
     display: flex;
     align-items: center;
-    height: 76px; /* SVG 높이에 맞춤 */
+    height: 76px;
 }
 
 /* =========================================
@@ -136,41 +136,35 @@
 .filter-wrapper {
     display: flex;
     align-items: center;
-    justify-content: space-between; /* 양끝 정렬 */
+    justify-content: space-between;
     margin-bottom: 20px;
     padding-bottom: 15px;
     border-bottom: 2px solid #333;
 }
 
-/* div 버튼들이 가로로 나란히 오도록 설정 */
 .period-buttons {
     display: flex;
-    gap: 8px; /* 버튼 사이 간격 */
+    gap: 8px;
     align-items: center;
 }
 
-/* --- [NEW] 살로몬 스타일 필터 알약 (변수 제거 및 최적화) --- */
-
-/* 1. 기본 상태 (선택 안됨) */
+/* 필터 알약 버튼 */
 .sm-salomon__filterPill {
-    display: flex;              /* 내용물 중앙 정렬을 위해 flex 사용 */
+    display: flex;
     align-items: center;
     justify-content: center;
-    
-    height: 38px;               /* 살로몬 스타일 높이 */
-    padding: 0 20px;            /* 좌우 여백 */
-    
-    border: 1px solid #e0e0e0;  /* 연한 회색 테두리 */
-    border-radius: 9999px;      /* 둥근 알약 모양 */
-    background-color: #fff;     /* 흰색 배경 */
-    
+    height: 38px;
+    padding: 0 20px;
+    border: 1px solid #e0e0e0;
+    border-radius: 9999px;
+    background-color: #fff;
     font-size: 13px;
     color: #333;
     font-weight: 500;
     cursor: pointer;
     transition: all 0.2s ease;
-    user-select: none;          /* 텍스트 드래그 방지 */
-    white-space: nowrap;        /* 줄바꿈 방지 */
+    user-select: none;
+    white-space: nowrap;
 }
 
 .sm-salomon__filterPill:hover {
@@ -178,16 +172,15 @@
     border-color: #ccc;
 }
 
-/* 2. 선택된 상태 (HTML의 data-selected 속성이 있을 때) */
+/* 선택된 상태 */
 .sm-salomon__filterPill[data-selected] {
-    /* 변수 var(--gray02) 대신 직접 색상 코드 사용 */
     border: 1px solid #4a4a53;  
-    background: #000;           /* 검정 배경 */
-    color: #fff;                /* 흰색 텍스트 */
+    background: #000;
+    color: #fff;
     font-weight: 600;
 }
 
-/* --- 날짜 입력창 레이아웃 --- */
+/* 날짜 입력창 */
 .date-inputs {
     display: flex;
     align-items: center;
@@ -200,7 +193,7 @@
     font-size: 13px;
     color: #333;
     width: 125px;
-    height: 38px; /* 버튼 높이와 맞춤 */
+    height: 38px;
     box-sizing: border-box;
 }
 
@@ -211,13 +204,13 @@
     color: #fff;
     border: 1px solid #333;
     padding: 0 20px;
-    height: 38px; /* 높이 통일 */
+    height: 38px;
     font-size: 13px;
     cursor: pointer;
 }
 
 /* =========================================
-   5. 🔥 수정된 주문 카드 (위 코드 반영)
+   5. 주문 리스트 카드
    ========================================= */
 .order-card {
     border: 1px solid #eee;
@@ -274,7 +267,6 @@
     color: #555;
 }
 
-/* 우측 버튼 */
 .order-actions {
     display: flex;
     flex-direction: column;
@@ -301,7 +293,7 @@
 }
 
 /* =========================================
-   6. 기타
+   6. 기타 (페이징, 데이터 없음)
    ========================================= */
 .no-data-msg {
     padding: 80px 0;
