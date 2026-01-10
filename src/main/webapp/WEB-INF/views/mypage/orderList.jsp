@@ -64,6 +64,7 @@
 				<p>전체 취소 후 재구매 부탁드립니다.</p>
 			</div>
 
+
 			<div class="sm-salomon__statusBar">
 				
 				<div class="sm-salomon__statusBarItem" data-status-bar-item="">
