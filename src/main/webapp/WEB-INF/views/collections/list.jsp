@@ -25,9 +25,9 @@
     <style>
         /* 임시 이미지 플레이스홀더 스타일 */
         .placeholder-div {
-            background-color: #f8f9fa; 
+            background-color: #f8f9fa; /* 밝은 회색 배경 */
             width: 100%;
-            padding-bottom: 100%; 
+            padding-bottom: 100%; /* 1:1 비율 유지 */
             position: relative;
             margin-bottom: 15px;
             border-radius: 4px;
@@ -48,6 +48,21 @@
         .product-card:hover {
             transform: translateY(-5px);
         }
+        
+        /* 슬라이더 스타일 */
+        .price-slider {
+            background-color: #e0e0e0;
+        }
+        .slider-fill {
+            background-color: #111;
+        }
+        
+        /* 로딩 중일 때 리스트 영역 흐리게 처리 (선택사항) */
+        .loading-overlay {
+            opacity: 0.5;
+            pointer-events: none;
+            transition: opacity 0.2s;
+        }
     </style>
 </head>
 <body>
@@ -57,12 +72,10 @@
     <div class="container-fluid" style="max-width: 1600px; padding: 0 40px; margin-top: 100px;">
         <div class="page-header">
             <div class="breadcrumbs">
-                <!-- [수정 2] 브레드크럼: 현재 카테고리명 표시 -->
                 <a href="${pageContext.request.contextPath}/">Home</a> / <span style="color:#1a1a1a">${categoryName}</span>
             </div>
             <div class="d-flex justify-content-between align-items-end">
                 <h1 class="collection-title">
-                    <!-- [수정 3] 메인 타이틀: 동적으로 변경 -->
                     ${categoryName} <span class="collection-count">[12]</span> <!-- 더미 개수 -->
                 </h1>
                 <div class="sort-wrapper" style="margin-bottom:0;">
@@ -78,9 +91,8 @@
         <div class="row">
             <!-- Left Sidebar-->
             <aside class="col-lg-2 d-none d-lg-block sidebar-container">
-                <form name="searchForm" action="${pageContext.request.contextPath}/collections/list" method="post">
+                <form name="searchForm" action="${pageContext.request.contextPath}/collections/list" method="get">
                     <input type="hidden" name="page" value="1">
-                    <!-- [수정 4] 중요: 필터 검색 시 현재 카테고리(men/women 등)가 유지되도록 hidden 값 설정 -->
                     <input type="hidden" name="category" value="${categoryCode}">
 
                     <div class="sidebar-header">
@@ -94,13 +106,21 @@
                         </button>
                     </div>
 
-                    <!-- 1. 컬렉션-->
+                    <!-- 1. 컬렉션 -->
                     <details class="filter-group" open>
                         <summary class="filter-title">카테고리</summary>
                         <div class="filter-content">
                             <c:forEach var="sport" items="${['로드러닝', '트레일러닝', '하이킹', '스포츠스타일', '샌들/워터슈즈']}">
+                                <c:set var="isSportChecked" value="false"/>
+                                <c:if test="${not empty paramValues.sports}">
+                                    <c:forEach var="val" items="${paramValues.sports}">
+                                        <c:if test="${val eq sport}">
+                                            <c:set var="isSportChecked" value="true"/>
+                                        </c:if>
+                                    </c:forEach>
+                                </c:if>
                                 <label class="custom-check">
-                                    <input type="checkbox" name="sports" value="${sport}" onchange="searchList()">
+                                    <input type="checkbox" name="sports" value="${sport}" onchange="searchList()" ${isSportChecked ? 'checked' : ''}>
                                     <span>${sport}</span>
                                 </label>
                             </c:forEach>
@@ -123,8 +143,16 @@
                         <summary class="filter-title">성별</summary>
                         <div class="filter-content">
                             <c:forEach var="g" items="${['남성', '여성', 'Unisex']}">
+                                <c:set var="isGenderChecked" value="false"/>
+                                <c:if test="${not empty paramValues.genders}">
+                                    <c:forEach var="val" items="${paramValues.genders}">
+                                        <c:if test="${val eq g}">
+                                            <c:set var="isGenderChecked" value="true"/>
+                                        </c:if>
+                                    </c:forEach>
+                                </c:if>
                                 <label class="custom-check">
-                                    <input type="checkbox" name="genders" value="${g}" onchange="searchList()">
+                                    <input type="checkbox" name="genders" value="${g}" onchange="searchList()" ${isGenderChecked ? 'checked' : ''}>
                                     <span>${g}</span>
                                 </label>
                             </c:forEach>
@@ -137,8 +165,17 @@
                         <div class="filter-content">
                             <div class="size-grid">
                                 <c:forEach var="i" begin="220" end="320" step="5">
+                                    <c:set var="sizeStr" value="${String.valueOf(i)}"/>
+                                    <c:set var="isSizeChecked" value="false"/>
+                                    <c:if test="${not empty paramValues.sizes}">
+                                        <c:forEach var="val" items="${paramValues.sizes}">
+                                            <c:if test="${val eq sizeStr}">
+                                                <c:set var="isSizeChecked" value="true"/>
+                                            </c:if>
+                                        </c:forEach>
+                                    </c:if>
                                     <label class="size-btn">
-                                        <input type="checkbox" name="sizes" value="${i}" onchange="searchList()">
+                                        <input type="checkbox" name="sizes" value="${i}" onchange="searchList()" ${isSizeChecked ? 'checked' : ''}>
                                         <span>${i}</span>
                                     </label>
                                 </c:forEach>
@@ -146,15 +183,19 @@
                         </div>
                     </details>
 
-                    <!-- 5. 가격 -->
+                    <!-- 5. 가격 슬라이더 -->
                     <details class="filter-group" open>
                         <summary class="filter-title">가격</summary>
                         <div class="filter-content">
                             <div class="price-slider">
                                 <div class="slider-track"></div>
                                 <div id="sliderFill" class="slider-fill" style="left:0%; width:100%;"></div>
-                                <input type="range" id="rangeMin" name="minPrice" min="0" max="1000000" step="1000" value="${param.minPrice != null ? param.minPrice : 0}" onchange="searchList()">
-                                <input type="range" id="rangeMax" name="maxPrice" min="0" max="1000000" step="1000" value="${param.maxPrice != null ? param.maxPrice : 1000000}" onchange="searchList()">
+                                <input type="range" id="rangeMin" name="minPrice" min="0" max="1000000" step="1000" 
+                                       value="${param.minPrice != null ? param.minPrice : 0}" 
+                                       onchange="searchList()">
+                                <input type="range" id="rangeMax" name="maxPrice" min="0" max="1000000" step="1000" 
+                                       value="${param.maxPrice != null ? param.maxPrice : 1000000}" 
+                                       onchange="searchList()">
                             </div>
                             <div class="price-inputs">
                                 <div class="price-input-group">
@@ -176,8 +217,16 @@
                             <div class="color-list">
                                 <c:set var="colorList" value="${[{'name':'블랙','hex':'#000000'}, {'name':'화이트','hex':'#FFFFFF'}, {'name':'그레이','hex':'#808080'}, {'name':'레드','hex':'#E32526'}, {'name':'블루','hex':'#0057B8'}, {'name':'그린','hex':'#006F44'}, {'name':'베이지','hex':'#DBCFB6'}, {'name':'브라운','hex':'#6E4E37'}, {'name':'옐로우','hex':'#FFD100'}]}" />
                                 <c:forEach var="color" items="${colorList}">
+                                    <c:set var="isColorChecked" value="false"/>
+                                    <c:if test="${not empty paramValues.colors}">
+                                        <c:forEach var="val" items="${paramValues.colors}">
+                                            <c:if test="${val eq color.name}">
+                                                <c:set var="isColorChecked" value="true"/>
+                                            </c:if>
+                                        </c:forEach>
+                                    </c:if>
                                     <label class="color-swatch" title="${color.name}">
-                                        <input type="checkbox" name="colors" value="${color.name}" onchange="searchList()">
+                                        <input type="checkbox" name="colors" value="${color.name}" onchange="searchList()" ${isColorChecked ? 'checked' : ''}>
                                         <span style="background-color: ${color.hex}; ${color.name eq '화이트' ? 'border:1px solid #ddd;' : ''}"></span>
                                     </label>
                                 </c:forEach>
@@ -200,10 +249,10 @@
                     </select>
                 </div>
 
-                <!-- 상품 목록 영역 -->
+                <!-- 상품 목록 영역 (Ajax로 교체될 영역) -->
                 <div id="productList" class="row gx-4 gy-5">
                     
-                    <%-- 백단 작업 전 가라 데이터 (화면 확인용 더미 루프) --%>
+                    <%-- 백단 작업 전 가라 데이터 --%>
                     <c:forEach var="i" begin="1" end="12">
                         <div class="col-6 col-md-4 col-lg-3">
                             <div class="product-card" onclick="location.href='${pageContext.request.contextPath}/product/detail?productNo=${i}'">
@@ -212,12 +261,10 @@
                                         <span class="badge-new">NEW</span>    
                                     </c:if>
                                     <div class="placeholder-div">
-                                        <!-- [수정 5] 상품 이미지 텍스트도 카테고리에 맞춰 변경 -->
                                         <span class="placeholder-text">${categoryName} ${i}</span>
                                     </div>
                                 </div>
                                 <div class="product-info">
-                                    <!-- [수정 6] 상품 설명 텍스트도 카테고리에 맞춰 변경 -->
                                     <div class="product-meta">${categoryName} 라이프스타일</div>
                                     <h3 class="product-name">나이키 에어 포스 1 '07 (${i}번)</h3>
                                     <div class="product-price">₩<fmt:formatNumber value="${139000 + (i * 1000)}" pattern="#,###" /></div>
@@ -226,23 +273,23 @@
                         </div>
                     </c:forEach>
                     
-                    <%-- 실제 데이터 처리단 (나중에 주석 해제하여 사용) --%>
+                    <%-- 실제 데이터 처리단 (추후 활성화) --%>
                     <%--
                     <c:choose>
                         <c:when test="${not empty list}">
                             <c:forEach var="dto" items="${list}">
-                                ... 기존 코드 ...
+                                ...
                             </c:forEach>
                         </c:when>
                         <c:otherwise>
-                            ... 기존 코드 ...
+                            ...
                         </c:otherwise>
                     </c:choose>
                     --%>
                 </div>
 
                 <!-- Paging (Mock) -->
-                <div class="d-flex justify-content-center mt-5">
+                <div id="pagingArea" class="d-flex justify-content-center mt-5">
                     ${paging}
                 </div>
             </main>
@@ -253,21 +300,121 @@
     <jsp:include page="/WEB-INF/views/layout/footerResources.jsp" />
     
     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 가격 슬라이더 기능 초기화
+            initPriceSlider();
+            
+            // 기존 스크롤 위치 복원 로직은 Ajax 방식에서는 '뒤로가기' 등에서만 유효
+            const savedScrollPos = sessionStorage.getItem('listScrollPos');
+            if (savedScrollPos) {
+                window.scrollTo(0, parseInt(savedScrollPos));
+                sessionStorage.removeItem('listScrollPos');
+            }
+        });
+
+        // 정렬 변경 함수
         function changeSort(val) {
-            // 현재 URL 파라미터(카테고리 등)를 유지하면서 sort만 변경
-            const urlParams = new URLSearchParams(window.location.search);
-            urlParams.set('sort', val);
-            location.href = '?' + urlParams.toString();
+            document.getElementById('hiddenSort').value = val;
+            searchList(); // Ajax 검색 호출
         }
+
+        // 필터 초기화 함수
         function resetFilters() {
-            // 필터 초기화 시 현재 카테고리는 유지하고 초기 상태로 이동
             location.href = '${pageContext.request.contextPath}/collections/list?category=${categoryCode}';
         }
         
+        // [핵심] Ajax 상품 검색 함수 (화면 깜빡임 없이 리스트만 교체)
         function searchList() {
-            // 필터 변경 시 폼 제출 (POST 방식으로 컨트롤러에 전달됨)
             const f = document.searchForm;
-            f.submit(); 
+            const formData = new FormData(f);
+            const params = new URLSearchParams(formData);
+            
+            // 1. 현재 URL을 변경하여 필터 상태를 히스토리에 저장 (새로고침 시 유지)
+            const url = '${pageContext.request.contextPath}/collections/list?' + params.toString();
+            window.history.pushState({path: url}, '', url);
+
+            // 2. 리스트 영역에 로딩 효과 (선택 사항)
+            const productListEl = document.getElementById('productList');
+            if(productListEl) productListEl.classList.add('loading-overlay');
+
+            // 3. 비동기 요청 (Ajax)
+            fetch(url, {
+                method: 'GET',
+                headers: {
+                    'AJAX': 'true' // 서버/필터에 Ajax 요청임을 알림
+                }
+            })
+            .then(response => response.text())
+            .then(html => {
+                // 4. 받아온 전체 HTML 텍스트를 파싱
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                
+                // 5. 상품 리스트 영역(#productList)만 추출하여 교체
+                const newProductList = doc.getElementById('productList');
+                if (newProductList && productListEl) {
+                    productListEl.innerHTML = newProductList.innerHTML;
+                    productListEl.classList.remove('loading-overlay');
+                }
+                
+                // 6. 페이징 영역 교체
+                const newPaging = doc.getElementById('pagingArea'); // 페이징 영역에 id 추가함
+                const oldPaging = document.getElementById('pagingArea');
+                if (newPaging && oldPaging) {
+                    oldPaging.innerHTML = newPaging.innerHTML;
+                }
+                
+                // 7. 총 개수([12]) 업데이트
+                const newCount = doc.querySelector('.collection-count');
+                const oldCount = document.querySelector('.collection-count');
+                if(newCount && oldCount) {
+                    oldCount.textContent = newCount.textContent;
+                }
+            })
+            .catch(err => {
+                console.error('Filter Error:', err);
+                if(productListEl) productListEl.classList.remove('loading-overlay');
+            });
+        }
+
+        // 가격 슬라이더 동작 로직 (유지)
+        function initPriceSlider() {
+            const rangeMin = document.getElementById('rangeMin');
+            const rangeMax = document.getElementById('rangeMax');
+            const inputMin = document.getElementById('inputMin');
+            const inputMax = document.getElementById('inputMax');
+            const sliderFill = document.getElementById('sliderFill');
+            const minGap = 50000; 
+
+            function updateSlider(e) {
+                let minVal = parseInt(rangeMin.value);
+                let maxVal = parseInt(rangeMax.value);
+                const max = parseInt(rangeMax.max);
+
+                if (maxVal - minVal < minGap) {
+                    if (e && e.target.id === "rangeMin") {
+                        rangeMin.value = maxVal - minGap;
+                        minVal = parseInt(rangeMin.value);
+                    } else {
+                        rangeMax.value = minVal + minGap;
+                        maxVal = parseInt(rangeMax.value);
+                    }
+                }
+
+                inputMin.value = minVal.toLocaleString();
+                inputMax.value = maxVal.toLocaleString();
+
+                const percentMin = (minVal / max) * 100;
+                const percentMax = (maxVal / max) * 100;
+
+                sliderFill.style.left = percentMin + "%";
+                sliderFill.style.width = (percentMax - percentMin) + "%";
+            }
+
+            rangeMin.addEventListener('input', updateSlider);
+            rangeMax.addEventListener('input', updateSlider);
+
+            updateSlider();
         }
     </script>
 </body>

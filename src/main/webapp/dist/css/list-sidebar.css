@@ -107,7 +107,7 @@
 .color-swatch input:checked + span { outline: 2px solid #111; outline-offset: 2px; }
 
 /* Price Slider */
-.price-slider { position: relative; height: 5px; background: #ddd; border-radius: 5px; margin: 20px 0; }
+.price-slider { position: relative; height: 3px; background: #ddd; border-radius: 5px; margin: 20px 0; }
 .slider-fill { position: absolute; height: 100%; background: #111; border-radius: 5px; }
 .price-slider input[type="range"] {
     position: absolute; width: 100%; background: none; pointer-events: none;

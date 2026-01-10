@@ -107,11 +107,12 @@
         transition: all 0.2s ease;
     }
     
+    /* [수정] 아이콘 우측 여백 추가 */
     .share-btn i {
         line-height: 1;
         display: block;
-        margin-top: 1px; 
-        margin-right: 12px; 
+        margin-top: 1px;
+        margin-right: 12px; /* 요청하신 간격 적용 */
     }
     
     .share-btn:hover {
@@ -161,11 +162,11 @@
         position: fixed;
         bottom: 50px;
         left: 50%;
-        transform: translateX(-50%) translateY(20px); /* 초기 위치: 약간 아래 */
-        background-color: rgba(34, 34, 34, 0.95); /* 진한 회색 배경 */
+        transform: translateX(-50%) translateY(20px); 
+        background-color: rgba(34, 34, 34, 0.95); 
         color: #fff;
         padding: 12px 30px;
-        border-radius: 50px; /* 둥근 알약 모양 */
+        border-radius: 50px; 
         font-size: 0.95rem;
         font-weight: 400;
         z-index: 9999;
@@ -173,14 +174,60 @@
         visibility: hidden;
         transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         box-shadow: 0 5px 15px rgba(0,0,0,0.15);
-        pointer-events: none; /* 클릭 방지 */
+        pointer-events: none; 
         white-space: nowrap;
     }
 
     .toast-message.show {
         opacity: 1;
         visibility: visible;
-        transform: translateX(-50%) translateY(0); /* 원래 위치로 부드럽게 이동 */
+        transform: translateX(-50%) translateY(0); 
+    }
+
+    /* =================================================================
+       [신규 추가] 버튼 스타일 커스터마이징 (둥근 모서리 & 테두리 유지)
+       ================================================================= */
+    
+    #stickySidebar .restock-alert .btn {
+        border-radius: 30px; 
+        border: 1px solid #e0e0e0;
+        color: #555;
+        padding: 5px 15px;
+        background-color: transparent;
+        transition: all 0.2s;
+    }
+    #stickySidebar .restock-alert .btn:hover {
+        background-color: #fff;
+        border-color: #000 !important; 
+        color: #000;
+    }
+
+    .btn-cart-custom {
+        border-radius: 30px; 
+        border: 1px solid #ddd;
+        background-color: #fff;
+        color: #111;
+        transition: all 0.2s;
+    }
+    .btn-cart-custom:hover {
+        background-color: #fff;
+        border-color: #000 !important; 
+        color: #000;
+    }
+
+    .btn-buy-custom {
+        border-radius: 30px; 
+        border: 1px solid #111;
+        background-color: #111;
+        color: #fff;
+        transition: all 0.2s;
+        margin-top: 10px; 
+        width: 100%;
+    }
+    .btn-buy-custom:hover {
+        background-color: #333; 
+        border-color: #111 !important; 
+        color: #fff;
     }
 </style>
 
@@ -531,7 +578,7 @@ const contextPath = "${pageContext.request.contextPath}";
 const productNum = "${dto.productNo}"; 
 let currentReviewPage = 1;
 
-// [공유하기 기능 스크립트] - 함수를 상단으로 이동하여 ReferenceError 방지
+// [공유하기 기능 스크립트]
 // ===================================================================
 
 // [추가] 토스트 알림 메시지 함수
@@ -563,10 +610,16 @@ function showToast(message) {
 
 // [수정] 링크 복사 기능 (호환성 개선)
 function copyLink() {
-    const url = window.location.href;
+    // 1. 현재 주소를 가져오되, localhost인 경우 실제 IP로 변환 (개발 편의성)
+    let url = window.location.href;
+    const myPublicIP = "61.73.115.26:9090"; // ★ 실제 접속 가능한 IP로 변경하세요
+    if (url.includes("localhost")) {
+        url = url.replace("localhost:9090", myPublicIP);
+    }
+
     const msg = "링크가 클립보드에 복사되었습니다";
     
-    // 1. 임시 textarea 생성 (가장 호환성 높음)
+    // 2. 임시 textarea 생성 (가장 호환성 높음)
     const t = document.createElement("textarea");
     document.body.appendChild(t);
     t.value = url;
@@ -578,7 +631,7 @@ function copyLink() {
         if (successful) {
             showToast(msg);
         } else {
-            // 실패 시 navigator.clipboard 시도 (최신 브라우저용 백업)
+            // 실패 시 navigator.clipboard 시도
             if (navigator.clipboard) {
                 navigator.clipboard.writeText(url).then(() => {
                     showToast(msg);
@@ -596,9 +649,9 @@ function copyLink() {
     document.body.removeChild(t);
 }
 
-// TODO: 카카오 개발자 센터(https://developers.kakao.com/)에서 발급받은 키를 아래에 입력해야 합니다.
+// [수정] 카카오 초기화 및 공유 기능
 try {
-    Kakao.init('YOUR_KAKAO_JAVASCRIPT_KEY'); // <-- 여기에 실제 키 입력
+    Kakao.init('a53a314410a0900a26a5586abe6f8847'); // 발급받은 키 유지
 } catch(e) {
     console.log("카카오 SDK 초기화 실패 (키 미입력)");
 }
@@ -609,24 +662,34 @@ function shareKakao() {
         return;
     }
 
+    // [개발 편의성] localhost로 접속 중이라도 공유 링크는 IP 주소로 변환
+    let shareUrl = window.location.href;
+    const myPublicIP = "61.73.115.26:9090"; // ★ 실제 IP
+    
+    if (shareUrl.includes("localhost")) {
+        shareUrl = shareUrl.replace("localhost:9090", myPublicIP);
+    }
+
     Kakao.Share.sendDefault({
         objectType: 'feed',
         content: {
-            // [중요] 큰따옴표("")를 사용하여 작은따옴표(')가 포함된 상품명으로 인한 스크립트 오류 방지
-            title: "${dto.productName}", 
+            title: "<c:out value='${dto.productName}'/>", 
             description: 'MAKNAEZ에서 이 상품을 확인해보세요!',
-            imageUrl: 'https://placehold.co/800x600?text=Maknaez+Product', // 실제 상품 이미지 URL
+            imageUrl: 'https://placehold.co/800x600?text=Maknaez+Product', 
             link: {
-                mobileWebUrl: window.location.href,
-                webUrl: window.location.href,
+                mobileWebUrl: shareUrl,
+                webUrl: shareUrl,
             },
+        },
+        fail: function(err) {
+            alert('카카오톡 공유 실패: ' + JSON.stringify(err));
         },
         buttons: [
             {
                 title: '웹으로 보기',
                 link: {
-                    mobileWebUrl: window.location.href,
-                    webUrl: window.location.href,
+                    mobileWebUrl: shareUrl,
+                    webUrl: shareUrl,
                 },
             },
         ],
