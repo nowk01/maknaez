@@ -292,7 +292,6 @@
     background: #f8f9fa;
 }
 
-
 /* =========================================
    6. 기타 (페이징, 데이터 없음)
    ========================================= */
@@ -307,4 +306,331 @@
 .page-navigation {
     margin-top: 30px;
     text-align: center;
+}
+
+/* =========================================
+   🔥 [Final] 살로몬 스타일 '카오스' 애니메이션
+   (순서: 리스트영역 -> 제목 -> 사이드바 -> 대시보드 -> [마지막] 데이터없음 메시지)
+   ========================================= */
+
+/* 1. 애니메이션 정의: 쫀득한 등장 (cubic-bezier) */
+@keyframes salomonChaos {
+    0% {
+        opacity: 0;
+        transform: translateY(15px) scale(0.99); 
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* 2. 애니메이션 적용 대상 (일단 모두 숨김) */
+.sidebar,
+.page-title,
+.notice-box,
+.sm-salomon__statusBar,
+.filter-wrapper,
+.order-list-area,
+.no-data-msg { /* no-data-msg 추가 */
+    opacity: 0; 
+    animation: salomonChaos 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+/* 3. 🔥 순서 뒤섞기 (딜레이 설정) */
+
+/* [1등] 목록 영역 (데이터가 있다면 가장 먼저 뜸!) */
+.order-list-area {
+    animation-delay: 0.1s;
+}
+
+/* [2등] 페이지 제목 & 안내문구 */
+.page-title {
+    animation-delay: 0.4s;
+}
+.notice-box {
+    animation-delay: 0.5s;
+}
+
+/* [3등] 사이드바 */
+.sidebar {
+    animation-delay: 0.6s;
+}
+
+/* [4등] 대시보드 & 필터 (중요한 정보) */
+.sm-salomon__statusBar {
+    animation-delay: 0.8s;
+}
+.filter-wrapper {
+    animation-delay: 0.9s;
+}
+
+.no-data-msg {
+    animation-delay: 1.2s; 
+}
+
+/* =========================================
+   [NEW] 리뷰 페이지 & 새로운 사이드바 스타일
+   ========================================= */
+
+/* 1. 새로운 사이드바 스타일 (제공된 코드 적용) */
+.sm-salomon__accountSidebar {
+    width: 200px;
+    flex-shrink: 0;
+    text-align: left;
+}
+
+.sm-salomon__accountSidebar .h2 {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 35px;
+    color: #000;
+}
+
+.sm-salomon__accountCard {
+    margin-bottom: 24px;
+}
+
+.sm-salomon__accountCardHeading {
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    display: block;
+}
+
+.sm-salomon__accountCardLink {
+    display: block;
+    color: #000;
+    font-size: 14px;
+    text-decoration: none;
+    margin-bottom: 8px;
+    transition: opacity 0.3s;
+}
+
+.sm-salomon__accountCardLink:hover {
+    opacity: 0.7;
+}
+
+/* 2. 리뷰 탭 (Tab) 스타일 */
+.review-tabs {
+    display: flex;
+    gap: 20px;
+    border-bottom: 1px solid #ddd;
+    margin-bottom: 30px;
+}
+
+.tab-btn {
+    background: none;
+    border: none;
+    padding: 10px 5px;
+    font-size: 15px;
+    color: #888;
+    cursor: pointer;
+    font-weight: 500;
+    position: relative;
+}
+
+.tab-btn.active {
+    color: #000;
+    font-weight: 700;
+}
+
+.tab-btn.active::after {
+    content: '';
+    position: absolute;
+    bottom: -1px; /* 선 굵기만큼 내림 */
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: #000;
+}
+
+.review-tab-content {
+    display: none;
+    min-height: 200px;
+}
+
+.review-tab-content.active {
+    display: block;
+}
+
+
+/* 3. 유의사항 박스 (Notice Container) */
+.notice-container {
+    background-color: #f8f8f8; /* 살로몬 스타일 연한 회색 배경 */
+    padding: 30px;
+    margin-top: 60px;
+    border-radius: 4px;
+}
+
+.notice-container h3 {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 15px;
+    color: #000;
+}
+
+.notice-container ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.notice-container li {
+    font-size: 13px;
+    color: #555;
+    margin-bottom: 8px;
+    padding-left: 10px;
+    position: relative;
+    line-height: 1.6;
+}
+
+.notice-container li::before {
+    content: '·';
+    position: absolute;
+    left: 0;
+    font-weight: bold;
+}
+
+/* =========================================
+   [NEW] 리뷰 페이지 - 정렬 헤더 (PendingReviews)
+   ========================================= */
+
+/* 1. 헤더 컨테이너 (보내주신 코드 반영) */
+.PendingReviews__header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    border-bottom: 1px solid #ebeff5;
+    padding-bottom: 16px;
+    margin-bottom: 20px; /* 목록과의 간격 추가 */
+}
+
+/* 2. 정렬 버튼 스타일 (투명 버튼) */
+.AppButton__button--style-plain {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 4px; /* 글자와 화살표 사이 간격 */
+}
+
+/* 3. 버튼 텍스트 (과거 구매순) */
+.AppDropdown__label {
+    font-size: 14px;
+    color: #333;
+    font-weight: 500;
+    font-family: 'Noto Sans KR', sans-serif; /* 요청하신 폰트 반영 */
+}
+
+/* 4. 화살표 아이콘 */
+.AppSvgIcon {
+    width: 10px;
+    height: 10px;
+    fill: #333;
+    transition: transform 0.2s;
+}
+
+/* 버튼에 마우스 올렸을 때 */
+.AppButton__button--style-plain:hover .AppDropdown__label {
+    color: #000;
+    font-weight: 700;
+}
+
+/* =========================================
+   [NEW] 살로몬 원본 스타일 정렬 버튼
+   ========================================= */
+
+/* 1. 버튼 내부 레이아웃 (Flex) */
+.PendingReviews__header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    border-bottom: 1px solid #ebeff5;
+    padding-bottom: 16px;
+    margin-bottom: 20px;
+}
+
+/* 2. 버튼 기본 스타일 초기화 (보내주신 Reset 코드 반영) */
+.AppButton__button {
+    background: transparent;
+    border: 0;
+    margin: 0;
+    padding: 0;
+    cursor: pointer;
+    font-family: 'Noto Sans KR', sans-serif;
+    line-height: 1;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    box-sizing: border-box;
+}
+
+/* 3. 인라인 스타일 버튼 (텍스트 + 아이콘 정렬) */
+.AppButton__button--style-plain {
+    display: flex;
+    align-items: center;
+    color: #000;
+}
+
+/* 4. 라벨 텍스트 */
+.AppDropdown__label {
+    font-size: 14px; /* 인라인 스타일인 --label-font-size 대응 */
+    font-weight: 400;
+    margin-right: 6px; /* 아이콘과의 간격 */
+    display: block;
+}
+
+/* 5. SVG 아이콘 (화살표) */
+.AppDropdown__icon {
+    width: 9px; 
+    height: 8px;
+    fill: #000; /* 아이콘 색상 */
+    transition: transform 0.2s ease;
+}
+
+/* (옵션) 메뉴가 열렸을 때 화살표 회전 */
+.PendingReviews__order_dropdown.open .AppDropdown__icon {
+    transform: rotate(180deg);
+}
+
+/* -------------------------------------------
+   드롭다운 메뉴 박스 (이전 코드 유지)
+   ------------------------------------------- */
+.PendingReviews__order_dropdown {
+    position: relative;
+    height: 100%;
+}
+
+.sm-salomon__dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: #fff;
+    border: 1px solid #ebeff5;
+    border-radius: 4px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    min-width: 140px;
+    z-index: 100;
+    margin-top: 8px;
+    padding: 8px 0;
+}
+
+.sm-salomon__dropdown-menu.active {
+    display: block;
+}
+
+.sm-salomon__dropdown-item {
+    padding: 10px 16px;
+    font-size: 13px;
+    color: #333;
+    cursor: pointer;
+}
+
+.sm-salomon__dropdown-item:hover {
+    background-color: #f7f7f7;
+    font-weight: 600;
 }
