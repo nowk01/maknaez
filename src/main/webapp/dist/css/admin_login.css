@@ -1,0 +1,113 @@
+@charset "UTF-8";
+
+/* 관리자 로그인 전용 스타일 */
+body {
+    margin: 0; 
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    /* 고급스러운 다크 네이비 그라데이션 */
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    height: 100vh;
+    display: flex; 
+    justify-content: center; 
+    align-items: center;
+}
+
+.admin-login-box {
+    background: #ffffff;
+    width: 360px;
+    padding: 50px 40px;
+    border-radius: 12px;
+    /* 깊이감 있는 그림자 */
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    text-align: center;
+}
+
+/* 로고 영역 */
+.logo-area h1 { 
+    font-size: 28px; 
+    font-weight: 800; 
+    color: #0f172a; 
+    margin: 0; 
+    letter-spacing: -1px; 
+}
+
+.logo-area span { 
+    display: block; 
+    margin-top: 5px; 
+    font-size: 11px; 
+    color: #64748b; 
+    letter-spacing: 2px; 
+    text-transform: uppercase; 
+    font-weight: 700; 
+    margin-bottom: 40px; 
+}
+
+/* 폼 스타일 */
+.form-group { 
+    margin-bottom: 20px; 
+    text-align: left; 
+}
+
+.form-label { 
+    display: block; 
+    font-size: 12px; 
+    font-weight: 700; 
+    color: #475569; 
+    margin-bottom: 8px; 
+    text-transform: uppercase; 
+}
+
+.form-input {
+    width: 100%; 
+    padding: 14px;
+    border: 2px solid #e2e8f0; 
+    border-radius: 6px;
+    font-size: 14px; 
+    box-sizing: border-box;
+    transition: all 0.2s; 
+    background: #f8fafc;
+}
+
+.form-input:focus { 
+    outline: none; 
+    border-color: #0f172a; 
+    background: #fff; 
+}
+
+/* 로그인 버튼 */
+.btn-submit {
+    width: 100%; 
+    padding: 16px; 
+    margin-top: 20px;
+    background: #0f172a; 
+    color: white;
+    border: none; 
+    border-radius: 6px;
+    font-size: 15px; 
+    font-weight: 700; 
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btn-submit:hover { 
+    background: #334155; 
+}
+
+/* 에러 메시지 */
+.error-msg {
+    background: #fee2e2; 
+    color: #991b1b;
+    padding: 12px; 
+    border-radius: 6px; 
+    font-size: 13px;
+    margin-bottom: 25px; 
+    font-weight: 600; 
+    text-align: left;
+}
+
+.footer { 
+    margin-top: 30px; 
+    font-size: 11px; 
+    color: #cbd5e1; 
+}
