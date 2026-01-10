@@ -20,6 +20,7 @@
     <aside class="sidebar">
         <h2>마이페이지</h2>
         
+        
         <div class="menu-group">
             <span class="menu-title">구매내역</span>
             <ul>

@@ -489,6 +489,7 @@ public class MemberController {
 			// ★ 중요: 리스트 조회 전 상태 조건 제거 (mode="cancel"은 유지)
 			map.remove("orderState");
 			
+			
 			int size = 5;
 			int total_page = util.pageCount(dataCount, size);
 			if (current_page > total_page) current_page = total_page;
