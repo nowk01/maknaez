@@ -9,192 +9,191 @@
     <jsp:include page="/WEB-INF/views/admin/layout/headerResources.jsp" />
     
     <style>
-        /* [공통 스타일] 레이아웃 통일 */
-        body { background-color: #f4f6f9; }
+        body { 
+            background-color: #fcfcfd; 
+            color: #202224; 
+            font-family: 'Pretendard', -apple-system, sans-serif;
+            letter-spacing: -0.4px;
+        }
         
+        .content-container { padding: 40px; }
+        
+        /* 헤더 섹션 */
+        .page-header { margin-bottom: 35px; border-left: 4px solid #202224; padding-left: 20px; }
+        .page-title { font-weight: 800; font-size: 28px; color: #1a1c1e; margin: 0; }
+        .page-desc { color: #8a8a8a; font-size: 14px; margin-top: 4px; }
+
         .card-box {
-            background-color: #fff;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.05);
-            padding: 20px;
-            margin-bottom: 20px;
-            border: none;
+            background: #ffffff;
+            border-radius: 1px; 
+            border: 1px solid #eee;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.02);
+            padding: 30px;
+            margin-bottom: 30px;
         }
 
-        .search-label {
-            font-weight: 600;
-            font-size: 14px;
-            color: #555;
-            margin-bottom: 8px;
-            display: block;
+        .search-row { display: grid; grid-template-columns: 1.5fr 1fr 2fr; gap: 20px; align-items: end; }
+        .form-label { font-weight: 700; color: #333; font-size: 12px; margin-bottom: 10px; display: block; text-transform: uppercase; }
+        .form-control, .form-select {
+            border-radius: 0; border: none; border-bottom: 1px solid #ddd; height: 40px; font-size: 14px; padding: 0; transition: all 0.3s;
         }
+        .form-control:focus, .form-select:focus {
+            border-bottom: 2px solid #202224; box-shadow: none;
+        }
+        .btn-black {
+            background: #202224; color: #fff; border: none; padding: 10px 30px; font-weight: 600; font-size: 13px; height: 40px; transition: 0.3s;
+        }
+        .btn-black:hover { background: #000; letter-spacing: 0.5px; }
+
+        /* 액션 컨트롤러 */
+        .list-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .count-info { font-size: 14px; color: #666; }
+        .count-info b { color: #000; font-size: 16px; }
         
-        /* 테이블 스타일 */
-        .table th {
-            background-color: #f8f9fa;
-            font-weight: 600;
-            text-align: center;
-            border-bottom: 2px solid #dee2e6;
-            vertical-align: middle;
+        .action-group .btn { 
+            font-size: 12px; font-weight: 600; padding: 6px 15px; border-radius: 0; margin-left: 5px; border: 1px solid #ddd; background: #fff; color: #555;
         }
-        .table td {
-            vertical-align: middle;
-            text-align: center;
-            font-size: 14px;
-        }
+        .action-group .btn:hover { border-color: #000; color: #000; }
 
-        /* 배지 스타일 */
-        .badge-status { padding: 5px 10px; border-radius: 4px; font-size: 12px; font-weight: 500; }
-        .status-dormant { background-color: #fff4e6; color: #f76707; } /* 휴면: 주황 */
-        .status-mail-sent { background-color: #e7f5ff; color: #1c7ed6; } /* 메일발송됨: 파랑 */
-        .status-mail-wait { background-color: #f8f9fa; color: #868e96; border: 1px solid #dee2e6; } /* 대기: 회색 */
+        .table { width: 100%; border-top: 2px solid #202224; }
+        .table thead th {
+            background: #fbfbfb; color: #222; font-weight: 700; font-size: 13px; padding: 15px; border-bottom: 1px solid #eee; text-align: center;
+        }
+        .table tbody td {
+            padding: 20px 15px; vertical-align: middle; border-bottom: 1px solid #f5f5f5; text-align: center; font-size: 14px; color: #444;
+        }
+        .table tbody tr:hover { background-color: #fafafa; }
 
-        /* 버튼 스타일 */
-        .btn-restore {
-            background-color: #20c997; /* 복구: 민트/초록 계열 */
-            border-color: #20c997;
-            color: white;
-            font-size: 13px;
+        .badge-clean {
+            font-size: 11px; font-weight: 700; padding: 4px 10px; border: 1px solid #eee; color: #888; text-transform: uppercase;
         }
-        .btn-delete {
-            background-color: #fa5252; /* 삭제: 빨강 */
-            border-color: #fa5252;
-            color: white;
-            font-size: 13px;
-        }
-        .btn-mail {
-            background-color: #4dabf7; /* 메일: 밝은 파랑 */
-            border-color: #4dabf7;
-            color: white;
-            font-size: 13px;
-        }
+        .badge-active { border-color: #202224; color: #202224; }
+        .badge-point { border-color: #e5e7eb; background: #f9fafb; color: #374151; }
+
+        .pagination .page-link { border: none; color: #999; font-size: 14px; padding: 8px 15px; transition: 0.2s; }
+        .pagination .page-item.active .page-link { background: none; color: #000; font-weight: 800; text-decoration: underline; }
+        .pagination .page-link:hover { color: #000; background: none; }
+
     </style>
 </head>
 <body>
 
     <div id="wrapper">
-        
         <jsp:include page="/WEB-INF/views/admin/layout/left.jsp" />
 
         <div id="page-content-wrapper">
-            
             <jsp:include page="/WEB-INF/views/admin/layout/header.jsp" />
 
             <div class="content-container">
                 
-                <h3 class="fw-bold mb-4">휴면 회원 관리</h3>
-
-                <div class="card-box">
-                    <div class="row g-3">
-                        <div class="col-md-4">
-                            <label class="search-label">휴면 전환일</label>
-                            <div class="input-group">
-                                <input type="date" class="form-control" value="2025-01-01">
-                                <span class="input-group-text">~</span>
-                                <input type="date" class="form-control" value="2026-01-08">
-                            </div>
-                        </div>
-                        
-                        <div class="col-md-3">
-                            <label class="search-label">메일 발송 여부</label>
-                            <select class="form-select">
-                                <option selected>전체</option>
-                                <option value="Y">발송 완료</option>
-                                <option value="N">미발송</option>
-                            </select>
-                        </div>
-                        
-                        <div class="col-md-5">
-                            <label class="search-label">검색어</label>
-                            <div class="input-group">
-                                <input type="text" class="form-control" placeholder="이름, ID, 이메일 검색">
-                                <button class="btn btn-outline-secondary" type="button">🔍</button>
-                            </div>
-                        </div>
-                    </div>
+                <div class="page-header">
+                    <h3 class="page-title">DORMANT MANAGEMENT</h3>
+                    <p class="page-desc">Manage dormant accounts and security protocols.</p>
                 </div>
 
                 <div class="card-box">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
+                    <form class="search-row">
                         <div>
-                            <h5 class="fw-bold m-0 d-inline-block me-2">휴면 계정 목록</h5>
-                            <span class="text-muted small">총 3건</span>
+                            <label class="form-label">Period</label>
+                            <div class="d-flex align-items-center">
+                                <input type="date" class="form-control" value="2025-01-01">
+                                <span class="mx-2 text-muted">~</span>
+                                <input type="date" class="form-control" value="2026-01-08">
+                            </div>
                         </div>
-                        <div class="btn-group" role="group">
-                            <button class="btn btn-restore">🔄 선택 복구</button>
-                            <button class="btn btn-mail">📧 안내메일 발송</button>
-                            <button class="btn btn-delete">🗑️ 영구 삭제</button>
+                        <div>
+                            <label class="form-label">Mail Status</label>
+                            <select class="form-select">
+                                <option>ALL STATUS</option>
+                                <option>SENT</option>
+                                <option>WAITING</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="form-label">Search</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" placeholder="ID or Member Name">
+                                <button class="btn-black">SEARCH</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="card-box" style="padding: 40px;">
+                    <div class="list-header">
+                        <div class="count-info">Showing <b>3</b> members found</div>
+                        <div class="action-group">
+                            <button class="btn">RESTORE</button>
+                            <button class="btn">SEND MAIL</button>
+                            <button class="btn" style="color: #d93025;">DELETE</button>
                         </div>
                     </div>
 
-                    <table class="table table-hover">
+                    <table class="table">
                         <thead>
                             <tr>
-                                <th style="width: 50px;"><input type="checkbox" class="form-check-input"></th>
-                                <th>번호</th>
+                                <th style="width: 40px;"><input type="checkbox" class="form-check-input"></th>
+                                <th>NO</th>
                                 <th>ID</th>
-                                <th>이름</th>
-                                <th>마지막 로그인</th>
-                                <th>휴면 전환일</th>
-                                <th>상태</th>
-                                <th>메일</th>
-                                <th>관리</th>
+                                <th>NAME</th>
+                                <th>LAST LOGIN</th>
+                                <th>DORMANT DATE</th>
+                                <th>STATUS</th>
+                                <th>MAIL</th>
+                                <th>SETTING</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
                                 <td><input type="checkbox" class="form-check-input"></td>
                                 <td>3</td>
-                                <td>sleeping_lion</td>
+                                <td class="fw-bold">sleeping_lion</td>
                                 <td>사자후</td>
-                                <td>2024-12-10</td>
-                                <td>2025-12-10</td>
-                                <td><span class="badge-status status-dormant">휴면</span></td>
-                                <td><span class="badge-status status-mail-sent">발송됨</span></td>
-                                <td>
-                                    <button class="btn btn-sm btn-light border" title="상세보기">📝</button>
-                                </td>
+                                <td style="color: #999;">2024.12.10</td>
+                                <td class="fw-bold" style="color: #000;">2025.12.10</td>
+                                <td><span class="badge-clean badge-active">Dormant</span></td>
+                                <td><span class="badge-clean">Sent</span></td>
+                                <td><i class="fas fa-ellipsis-v" style="cursor: pointer; color: #ccc;"></i></td>
                             </tr>
-                            
                             <tr>
                                 <td><input type="checkbox" class="form-check-input"></td>
                                 <td>2</td>
-                                <td>ghost_user</td>
+                                <td class="fw-bold">ghost_user</td>
                                 <td>유령회원</td>
-                                <td>2024-05-20</td>
-                                <td>2025-05-20</td>
-                                <td><span class="badge-status status-dormant">휴면</span></td>
-                                <td><span class="badge-status status-mail-wait">미발송</span></td>
-                                <td>
-                                    <button class="btn btn-sm btn-light border" title="상세보기">📝</button>
-                                </td>
+                                <td style="color: #999;">2024.05.20</td>
+                                <td class="fw-bold" style="color: #000;">2025.05.20</td>
+                                <td><span class="badge-clean badge-active">Dormant</span></td>
+                                <td><span class="badge-clean badge-point">Waiting</span></td>
+                                <td><i class="fas fa-ellipsis-v" style="cursor: pointer; color: #ccc;"></i></td>
                             </tr>
-
                             <tr>
                                 <td><input type="checkbox" class="form-check-input"></td>
                                 <td>1</td>
-                                <td>user_03</td>
+                                <td class="fw-bold">user_03</td>
                                 <td>현곡</td>
-                                <td>2025-01-03</td>
-                                <td>2026-01-03</td>
-                                <td><span class="badge-status status-dormant">휴면</span></td>
-                                <td><span class="badge-status status-mail-sent">발송됨</span></td>
-                                <td>
-                                    <button class="btn btn-sm btn-light border" title="상세보기">📝</button>
-                                </td>
+                                <td style="color: #999;">2025.01.03</td>
+                                <td class="fw-bold" style="color: #000;">2026.01.03</td>
+                                <td><span class="badge-clean badge-active">Dormant</span></td>
+                                <td><span class="badge-clean">Sent</span></td>
+                                <td><i class="fas fa-ellipsis-v" style="cursor: pointer; color: #ccc;"></i></td>
                             </tr>
                         </tbody>
                     </table>
-                    
-                    <nav aria-label="Page navigation" class="mt-4">
-                        <ul class="pagination justify-content-center">
-                            <li class="page-item disabled"><a class="page-link" href="#">&lt;</a></li>
+
+                    <div class="mt-5 d-flex justify-content-center">
+                        <ul class="pagination">
+                            <li class="page-item"><a class="page-link" href="#">PREV</a></li>
                             <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                            <li class="page-item"><a class="page-link" href="#">&gt;</a></li>
+                            <li class="page-item"><a class="page-link" href="#">2</a></li>
+                            <li class="page-item"><a class="page-link" href="#">NEXT</a></li>
                         </ul>
-                    </nav>
+                    </div>
+                </div>
 
-                </div> </div> </div> </div> <jsp:include page="/WEB-INF/views/admin/layout/footerResources.jsp" />
-
+            </div>
+        </div>
+    </div>
+    
+    <jsp:include page="/WEB-INF/views/admin/layout/footerResources.jsp" />
 </body>
 </html>
