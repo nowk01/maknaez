@@ -11,24 +11,23 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 @Controller
-@RequestMapping("/collections")
+@RequestMapping("/collections") 
 public class CollectionController {
 
     public CollectionController() {
     }
 
-    
-    @RequestMapping("/collections/list")
+    @RequestMapping("/list") 
     public ModelAndView list(HttpServletRequest req, HttpServletResponse resp) throws SQLException, IOException {
         String category = req.getParameter("category");
         String sub = req.getParameter("sub");
         
-        // 2. 카테고리가 없으면 기본값 설정
+        // 카테고리가 없으면 기본값 설정
         if (category == null || category.isEmpty()) {
             category = "men";
         }
 
-        String categoryName = "전체 상품"; // 기본 제목
+        String categoryName = "전체 상품";
         
         switch (category.toLowerCase()) {
             case "men":
@@ -44,12 +43,9 @@ public class CollectionController {
                 categoryName = "세일";
                 break;
             default:
-                categoryName = "남성"; // 잘못된 접근 시 기본값
+                categoryName = "남성";
                 category = "men";
                 break;
-        }
-
-        if (sub != null && !sub.isEmpty()) {
         }
 
         String viewName = "collections/list"; 
