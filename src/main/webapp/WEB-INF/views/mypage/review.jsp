@@ -51,10 +51,10 @@
 		</div>
 
 		<main class="main-content">
-			<h2 class="page-title" style="text-align: left; margin-bottom: 30px;">상품 리뷰</h2>
+			<h2 class="page-title">상품 리뷰</h2>
 
 			<div class="review-tabs">
-				<button type="button" class="tab-btn active" onclick="showTab('writable')">작성 가능한 리뷰 (0)</button>
+				<button type="button" class="tab-btn active" onclick="showTab('writable')">작성 가능한 리뷰 (${dataCount})</button>
 				<button type="button" class="tab-btn" onclick="showTab('written')">작성한 리뷰 (0)</button>
 			</div>
 
@@ -63,8 +63,8 @@
 				<div class="PendingReviews__header">
 					<div class="PendingReviews__order_dropdown">
 						<div style="height: 100%;">
-							<button type="button" class="AppButton__button AppButton__button--style-plain" onclick="toggleSortMenu()">
-								<div class="AppDropdown__label" id="currentSortLabel" style="--label-font-size: 14px;">
+							<button type="button" class="AppButton__button AppButton__button--style-plain" onclick="toggleSortMenu(this)">
+								<div class="AppDropdown__label" style="--label-font-size: 14px;">
 									과거 구매순
 								</div>
 								<svg xmlns="http://www.w3.org/2000/svg" class="AppSvgIcon AppDropdown__icon" style="width: 9px; height: 8px;" viewBox="0 0 12 12">
@@ -73,29 +73,85 @@
 							</button>
 						</div>
 
-						<div id="sortMenu" class="sm-salomon__dropdown-menu">
-							<div class="sm-salomon__dropdown-item" onclick="selectSort('과거 구매순')">과거 구매순</div>
-							<div class="sm-salomon__dropdown-item" onclick="selectSort('최근 구매순')">최근 구매순</div>
-							<div class="sm-salomon__dropdown-item" onclick="selectSort('작성기한 임박순')">작성기한 임박순</div>
+						<div class="sm-salomon__dropdown-menu">
+							<div class="sm-salomon__dropdown-item" onclick="selectSort(this, '과거 구매순')">과거 구매순</div>
+							<div class="sm-salomon__dropdown-item" onclick="selectSort(this, '최근 구매순')">최근 구매순</div>
+							<div class="sm-salomon__dropdown-item" onclick="selectSort(this, '작성기한 임박순')">작성기한 임박순</div>
 						</div>
 					</div>
 					
 					<div class="PendingReviews__max-mileage-divider"></div>
 				</div>
-				<div class="no-data-msg" style="padding: 60px 0;">
-					작성 가능한 리뷰가 없습니다.
-				</div>
+
+				<c:choose>
+					<c:when test="${not empty list}">
+						<c:forEach var="dto" items="${list}">
+							<div class="review-target-card">
+								<div class="review-target-header">
+									<div class="date-status">
+										<strong>${dto.orderDate}</strong> 
+										<span style="color:#000;">배송완료</span>
+									</div>
+									<div class="order-no">No. ${dto.orderNum}</div>
+								</div>
+
+								<div class="review-target-body">
+									<div class="review-prod-img">
+										<img src="${pageContext.request.contextPath}/uploads/product/${dto.imageFilename}" 
+										     onerror="this.src='${pageContext.request.contextPath}/dist/images/no-image.png'" 
+										     alt="상품이미지">
+									</div>
+									<div class="review-prod-info">
+										<div class="review-prod-name">${dto.productName}</div>
+										<div class="review-prod-opt">
+											[옵션] ${not empty dto.colorName ? dto.colorName : '-'} / ${not empty dto.sizeName ? dto.sizeName : '-'}
+										</div>
+										<div class="review-price">
+											<fmt:formatNumber value="${dto.totalAmount}" pattern="#,###"/>원
+										</div>
+									</div>
+								</div>
+
+								<div class="review-action-bar">
+									<div class="action-label">선택 &gt;</div>
+									<div class="action-btn-group">
+										<a href="${pageContext.request.contextPath}/product/detail?productNum=${dto.productNum}" class="action-btn">
+											상품상세
+										</a>
+										<a href="#" onclick="alert('리뷰 작성 폼을 연결해주세요.'); return false;" class="action-btn write-btn">
+											리뷰쓰기
+										</a>
+										<a href="#" class="action-btn">
+											스타일올리기
+										</a>
+									</div>
+								</div>
+							</div>
+						</c:forEach>
+					</c:when>
+					<c:otherwise>
+						<div class="no-data-msg" style="padding: 60px 0;">
+							작성 가능한 리뷰가 없습니다.
+						</div>
+					</c:otherwise>
+				</c:choose>
 			</div>
 
 			<div id="tab-written" class="review-tab-content">
 				<div class="PendingReviews__header">
 					<div class="PendingReviews__order_dropdown">
-						<button type="button" class="AppButton__button AppButton__button--style-plain">
+						<button type="button" class="AppButton__button AppButton__button--style-plain" onclick="toggleSortMenu(this)">
 							<div class="AppDropdown__label">최신순</div>
 							<svg xmlns="http://www.w3.org/2000/svg" class="AppSvgIcon AppDropdown__icon" style="width: 9px; height: 8px;" viewBox="0 0 12 12">
 								<path d="M2 4l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
 							</svg>
 						</button>
+						
+						<div class="sm-salomon__dropdown-menu">
+							<div class="sm-salomon__dropdown-item" onclick="selectSort(this, '최신순')">최신순</div>
+							<div class="sm-salomon__dropdown-item" onclick="selectSort(this, '평점 높은순')">평점 높은순</div>
+							<div class="sm-salomon__dropdown-item" onclick="selectSort(this, '평점 낮은순')">평점 낮은순</div>
+						</div>
 					</div>
 				</div>
 
@@ -139,38 +195,63 @@
 			}
 		}
 
-		// 2. 드롭다운 토글
-		function toggleSortMenu() {
-			const menu = document.getElementById('sortMenu');
-			const dropdown = document.querySelector('.PendingReviews__order_dropdown');
+		/* =========================================
+		   [수정] ID 의존성 제거한 드롭다운 로직
+		   ========================================= */
+
+		// 2. 드롭다운 토글 (클릭한 버튼 기준)
+		function toggleSortMenu(btn) {
+			// 클릭한 버튼의 가장 가까운 컨테이너(.PendingReviews__order_dropdown) 찾기
+			const dropdown = btn.closest('.PendingReviews__order_dropdown');
 			
+			// 그 컨테이너 안에 있는 메뉴(.sm-salomon__dropdown-menu) 찾기
+			const menu = dropdown.querySelector('.sm-salomon__dropdown-menu');
+			
+			// 현재 열려있는 다른 메뉴들은 닫아주기 (옵션)
+			document.querySelectorAll('.PendingReviews__order_dropdown').forEach(d => {
+				if(d !== dropdown) {
+					d.classList.remove('open');
+					const m = d.querySelector('.sm-salomon__dropdown-menu');
+					if(m) m.classList.remove('active');
+				}
+			});
+
+			// 클래스 토글
 			menu.classList.toggle('active');
-			dropdown.classList.toggle('open'); // 화살표 회전용 클래스 추가
+			dropdown.classList.toggle('open'); 
 		}
 
-		// 3. 정렬 선택
-		function selectSort(sortName) {
-			document.getElementById('currentSortLabel').innerText = sortName;
+		// 3. 정렬 선택 (클릭한 항목 기준)
+		function selectSort(item, sortName) {
+			// 클릭한 항목의 컨테이너 찾기
+			const dropdown = item.closest('.PendingReviews__order_dropdown');
 			
-			const menu = document.getElementById('sortMenu');
-			const dropdown = document.querySelector('.PendingReviews__order_dropdown');
+			// 라벨 찾아서 텍스트 변경
+			const label = dropdown.querySelector('.AppDropdown__label');
+			label.innerText = sortName;
 			
+			// 메뉴 닫기
+			const menu = dropdown.querySelector('.sm-salomon__dropdown-menu');
 			menu.classList.remove('active');
 			dropdown.classList.remove('open');
 			
 			console.log("정렬 변경됨: " + sortName);
+			
+			// 여기에 AJAX 호출이나 페이지 이동 로직 추가 가능
+			// ex) location.href = '?sort=' + sortName;
 		}
 
 		// 4. 외부 클릭 시 닫기
 		document.addEventListener('click', function(event) {
-			const dropdown = document.querySelector('.PendingReviews__order_dropdown');
-			const menu = document.getElementById('sortMenu');
-			
-			// 버튼 내부 클릭이 아니면 닫기
-			if (dropdown && !dropdown.contains(event.target)) {
-				if(menu) menu.classList.remove('active');
-				if(dropdown) dropdown.classList.remove('open');
-			}
+			// 모든 열린 드롭다운을 확인
+			document.querySelectorAll('.PendingReviews__order_dropdown.open').forEach(dropdown => {
+				// 드롭다운 내부를 클릭한 게 아니라면
+				if (!dropdown.contains(event.target)) {
+					dropdown.classList.remove('open');
+					const menu = dropdown.querySelector('.sm-salomon__dropdown-menu');
+					if(menu) menu.classList.remove('active');
+				}
+			});
 		});
 	</script>
 
