@@ -95,10 +95,10 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public MemberDTO findById(String userId) {
+	public MemberDTO findByIdx(Long memberIdx) {
 		MemberDTO dto = null;
 		try {
-			dto = mapper.findById(userId);
+			dto = mapper.findByIdx(memberIdx);
 			
 			if(dto != null && dto.getEmail() != null) {
 				String[] ss = dto.getEmail().split("@");
