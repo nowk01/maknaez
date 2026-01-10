@@ -43,6 +43,8 @@
 		SELECT * FROM dual
     </update>
     
+    <!-- 아이디 -> 고유번호로 찾는걸로 변경 -->
+    <!--  
 	<select id="findById" parameterType="String" resultType="com.maknaez.model.MemberDTO">
 		SELECT memberIdx, m1.userId, userPwd, userName,
 			enabled, userLevel, register_date, modify_date,
@@ -52,6 +54,17 @@
 		LEFT OUTER JOIN member2 m2 ON m1.userId = m2.userId
 		WHERE m1.userId = #{userId}
 	</select>
+	-->
+	<select id="findByIdx" parameterType="Long" resultType="com.maknaez.model.MemberDTO">
+	    SELECT m1.memberIdx, m1.userId, m1.userName, m1.userPwd, m1.userLevel, 
+           TO_CHAR(m1.birth, 'YYYY-MM-DD') as birth, m1.register_date, m1.modify_date,
+           m2.email, m2.tel
+	    FROM member1 m1
+	    LEFT JOIN member2 m2 ON m1.memberIdx = m2.memberIdx
+	    WHERE m1.memberIdx = #{memberIdx}
+	</select>
+	    
+	    
 	    
 	<update id="updateMember1" parameterType="com.maknaez.model.MemberDTO">
 		UPDATE member1 SET userPwd = #{userPwd}, modify_date = SYSDATE
@@ -145,8 +158,30 @@
                                       AND TO_DATE(#{endDate}, 'YYYY-MM-DD') + 0.99999
             </if>
             <if test="userLevel != null and userLevel != '' and userLevel != '전체 등급'">
-                 AND m1.userLevel = #{userLevel}
-            </if>
+			    <choose>
+			        <when test="userLevel == 'IRON'">
+			            AND m1.userLevel BETWEEN 1 AND 10
+			        </when>
+			        <when test="userLevel == 'BRONZE'">
+			            AND m1.userLevel BETWEEN 11 AND 20
+			        </when>
+			        <when test="userLevel == 'SILVER'">
+			            AND m1.userLevel BETWEEN 21 AND 30
+			        </when>
+			        <when test="userLevel == 'GOLD'">
+			            AND m1.userLevel BETWEEN 31 AND 40
+			        </when>
+			        <when test="userLevel == 'PLATINUM'">
+			            AND m1.userLevel BETWEEN 41 AND 50
+			        </when>
+			        <when test="userLevel == 'ADMIN'">
+			            AND m1.userLevel >= 51
+			        </when>
+			        <otherwise>
+			            AND m1.userLevel = #{userLevel}
+			        </otherwise>
+			    </choose>
+			</if>
             <if test="searchValue != null and searchValue != ''">
                 AND <include refid="where-list"/>
             </if>
@@ -166,8 +201,30 @@
                                       AND TO_DATE(#{endDate}, 'YYYY-MM-DD') + 0.99999
             </if>
             <if test="userLevel != null and userLevel != '' and userLevel != '전체 등급'">
-                 AND m1.userLevel = #{userLevel}
-            </if>
+			    <choose>
+			        <when test="userLevel == 'IRON'">
+			            AND m1.userLevel BETWEEN 1 AND 10
+			        </when>
+			        <when test="userLevel == 'BRONZE'">
+			            AND m1.userLevel BETWEEN 11 AND 20
+			        </when>
+			        <when test="userLevel == 'SILVER'">
+			            AND m1.userLevel BETWEEN 21 AND 30
+			        </when>
+			        <when test="userLevel == 'GOLD'">
+			            AND m1.userLevel BETWEEN 31 AND 40
+			        </when>
+			        <when test="userLevel == 'PLATINUM'">
+			            AND m1.userLevel BETWEEN 41 AND 50
+			        </when>
+			        <when test="userLevel == 'ADMIN'">
+			            AND m1.userLevel >= 51
+			        </when>
+			        <otherwise>
+			            AND m1.userLevel = #{userLevel}
+			        </otherwise>
+			    </choose>
+			</if>
             <if test="searchValue != null and searchValue != ''">
                 AND <include refid="where-list"/>
             </if>
