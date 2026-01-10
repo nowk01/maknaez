@@ -38,9 +38,6 @@ public class BoardController {
     private BoardService service = new BoardServiceImpl();
     private FileManager fileManager = new FileManager();
 
-    // ==========================================
-    // 1:1 문의 (Inquiry) - 리스트 화면 진입
-    // ==========================================
     @GetMapping("list")
     public ModelAndView list(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession();
@@ -66,6 +63,7 @@ public class BoardController {
             Map<String, Object> map = new HashMap<>();
             map.put("condition", condition);
             map.put("keyword", keyword);
+            map.put("userId", info.getUserId()); // ★ 핵심: 로그인한 사용자 ID 전달 ★
             
             int dataCount = service.dataCount(map);
             int total_page = dataCount / size + (dataCount % size > 0 ? 1 : 0);
@@ -116,6 +114,7 @@ public class BoardController {
             Map<String, Object> map = new HashMap<>();
             map.put("condition", "all");
             map.put("keyword", "");
+            map.put("userId", info.getUserId()); // ★ 핵심: 여기서도 ID 전달해야 무한스크롤때 남의 글 안나옴 ★
             map.put("offset", offset);
             map.put("size", size);
             
@@ -229,6 +228,13 @@ public class BoardController {
                 return new ModelAndView("redirect:/cs/list?" + query);
             }
             
+            if(!dto.getUserId().equals(info.getUserId()) && info.getUserLevel() < 51) {
+                resp.setContentType("text/html;charset=utf-8");
+                PrintWriter out = resp.getWriter();
+                out.print("<script>alert('접근 권한이 없습니다.'); location.href='/cs/list';</script>");
+                return null;
+            }
+            
             dto.setContent(dto.getContent().replaceAll("\n", "<br>"));
             
             if(dto.getReplyContent() != null) {
@@ -256,6 +262,63 @@ public class BoardController {
         }
         
         return new ModelAndView("redirect:/cs/list?" + query);
+    }
+    
+    @ResponseBody
+    @GetMapping("detailData")
+    public void detailData(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        HttpSession session = req.getSession();
+        SessionInfo info = (SessionInfo) session.getAttribute("member");
+        
+        resp.setContentType("application/json; charset=utf-8");
+        JSONObject jobj = new JSONObject();
+
+        // 1. 관리자 권한 체크 (필수)
+        if(info == null || info.getUserLevel() < 51) {
+            jobj.put("status", "permission_denied");
+            resp.getWriter().print(jobj.toString());
+            return;
+        }
+
+        try {
+            long num = Long.parseLong(req.getParameter("num"));
+            
+            // 게시글 정보 가져오기
+            BoardDTO dto = service.findById(num);
+            
+            if(dto != null) {
+                jobj.put("status", "success");
+                jobj.put("num", dto.getNum());
+                jobj.put("subject", dto.getSubject());
+                jobj.put("content", dto.getContent()); // 엔터값 그대로 전송 (JS에서 처리)
+                jobj.put("userId", dto.getUserId());
+                jobj.put("userName", dto.getUserName());
+                jobj.put("reg_date", dto.getReg_date());
+                
+                // 파일 정보 (있다면)
+                if(dto.getOriginalFilename() != null) {
+                    jobj.put("originalFilename", dto.getOriginalFilename());
+                    jobj.put("saveFilename", dto.getSaveFilename());
+                }
+                
+                // 답변 여부 및 내용
+                boolean isAnswered = (dto.getReplyDate() != null && !dto.getReplyDate().isEmpty());
+                jobj.put("isAnswered", isAnswered);
+                if(isAnswered) {
+                    jobj.put("replyContent", dto.getReplyContent());
+                    jobj.put("replyDate", dto.getReplyDate());
+                }
+            } else {
+                jobj.put("status", "not_found");
+            }
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            jobj.put("status", "error");
+        }
+        
+        PrintWriter out = resp.getWriter();
+        out.print(jobj.toString());
     }
     
     @GetMapping("download")
