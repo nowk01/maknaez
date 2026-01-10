@@ -8,7 +8,9 @@ import java.util.Map;
 import com.maknaez.model.MemberDTO;
 import com.maknaez.mvc.annotation.Controller;
 import com.maknaez.mvc.annotation.GetMapping;
+import com.maknaez.mvc.annotation.PostMapping;
 import com.maknaez.mvc.annotation.RequestMapping;
+import com.maknaez.mvc.annotation.ResponseBody;
 import com.maknaez.mvc.view.ModelAndView;
 import com.maknaez.service.MemberService;
 import com.maknaez.service.MemberServiceImpl;
@@ -115,6 +117,87 @@ public class MemberManageController {
 
 	    return mav;
 	}
+	
+	// 1. 회원 상세 정보 조회 (AJAX)
+    @ResponseBody
+    @GetMapping("detail")
+    public Map<String, Object> detail(HttpServletRequest req, HttpServletResponse resp) {
+        Map<String, Object> model = new HashMap<>();
+        
+        try {
+            long memberIdx = Long.parseLong(req.getParameter("memberIdx"));
+            MemberDTO dto = service.findByIdx(memberIdx);
+            
+            if (dto != null) {
+                model.put("state", "true");
+                model.put("dto", dto);
+            } else {
+                model.put("state", "false");
+            }
+        } catch (Exception e) {
+            model.put("state", "false");
+            e.printStackTrace();
+        }
+        
+        return model;
+    }
+    
+    // 2. 회원 추가 처리 (AJAX)
+    @ResponseBody
+    @PostMapping("write")
+    public Map<String, Object> write(HttpServletRequest req, HttpServletResponse resp) {
+        Map<String, Object> model = new HashMap<>();
+        
+        try {
+            MemberDTO dto = new MemberDTO();
+            
+            // 파라미터 매핑
+            dto.setUserId(req.getParameter("userId"));
+            dto.setUserPwd(req.getParameter("userPwd"));
+            dto.setUserName(req.getParameter("userName"));
+            dto.setBirth(req.getParameter("birth")); 
+            dto.setEmail(req.getParameter("email"));
+            dto.setTel(req.getParameter("tel"));
+            dto.setUserLevel(Integer.parseInt(req.getParameter("userLevel")));
+            
+            service.insertMember(dto);
+            
+            model.put("state", "true");
+        } catch (Exception e) {
+            model.put("state", "false");
+            e.printStackTrace();
+        }
+        
+        return model;
+    }
+    
+    // 3. 회원 수정 처리 (AJAX)
+    @ResponseBody
+    @PostMapping("update")
+    public Map<String, Object> update(HttpServletRequest req, HttpServletResponse resp) {
+        Map<String, Object> model = new HashMap<>();
+        
+        try {
+            MemberDTO dto = new MemberDTO();
+            
+            dto.setMemberIdx(Long.parseLong(req.getParameter("memberIdx")));
+            dto.setUserPwd(req.getParameter("userPwd"));
+            dto.setUserName(req.getParameter("userName"));
+            dto.setBirth(req.getParameter("birth"));
+            dto.setEmail(req.getParameter("email"));
+            dto.setTel(req.getParameter("tel"));
+            dto.setUserLevel(Integer.parseInt(req.getParameter("userLevel")));
+
+            service.updateMember(dto);
+            
+            model.put("state", "true");
+        } catch (Exception e) {
+            model.put("state", "false");
+            e.printStackTrace();
+        }
+        
+        return model;
+    }
 	
 	@GetMapping("point_manage")
 	public ModelAndView pointManage(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
