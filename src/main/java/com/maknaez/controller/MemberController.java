@@ -520,4 +520,47 @@ public class MemberController {
 		
 		return mav;
 	}
+	
+	/* MemberController.java 내부에 추가 */
+
+	/* [수정] 상품 리뷰 페이지 - 배송완료된 목록 가져오기 */
+	@GetMapping("mypage/review")
+	public ModelAndView review(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		ModelAndView mav = new ModelAndView("mypage/review");
+		HttpSession session = req.getSession();
+		
+		SessionInfo info = (SessionInfo) session.getAttribute("member");
+		if (info == null) {
+			return new ModelAndView("redirect:/member/login");
+		}
+		
+		OrderMapper mapper = MapperContainer.get(OrderMapper.class);
+		
+		try {
+			Map<String, Object> map = new HashMap<>();
+			map.put("memberIdx", info.getMemberIdx());
+			
+			// ★ 핵심: '배송완료'된 상품만 가져와서 리뷰 작성 목록으로 보여줍니다.
+			map.put("orderState", "배송완료");
+			
+			// 페이징 없이 최근 100개만 가져옴 (필요 시 페이징 추가 가능)
+			map.put("start", 1);
+			map.put("end", 100);
+			
+			List<OrderDTO> list = mapper.listOrder(map);
+			int dataCount = mapper.dataCount(map); // 작성 가능한 리뷰 개수
+			
+			mav.addObject("list", list);
+			mav.addObject("dataCount", dataCount);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return mav;
+	}
+	
+	
+	
+	
 }
