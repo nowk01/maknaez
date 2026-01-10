@@ -63,7 +63,7 @@ public class BoardController {
             Map<String, Object> map = new HashMap<>();
             map.put("condition", condition);
             map.put("keyword", keyword);
-            map.put("userId", info.getUserId()); // ★ 핵심: 로그인한 사용자 ID 전달 ★
+            map.put("userId", info.getUserId());
             
             int dataCount = service.dataCount(map);
             int total_page = dataCount / size + (dataCount % size > 0 ? 1 : 0);
@@ -114,7 +114,7 @@ public class BoardController {
             Map<String, Object> map = new HashMap<>();
             map.put("condition", "all");
             map.put("keyword", "");
-            map.put("userId", info.getUserId()); // ★ 핵심: 여기서도 ID 전달해야 무한스크롤때 남의 글 안나옴 ★
+            map.put("userId", info.getUserId());
             map.put("offset", offset);
             map.put("size", size);
             
