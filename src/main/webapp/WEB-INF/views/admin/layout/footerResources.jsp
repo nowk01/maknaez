@@ -5,3 +5,5 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="${pageContext.request.contextPath}/dist/js/admin.js"></script>
+<script src="${pageContext.request.contextPath}/dist/js/util.js"></script>
+<script src="${pageContext.request.contextPath}/dist/js/util-jquery.js"></script>
