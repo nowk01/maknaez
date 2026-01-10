@@ -10,7 +10,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> 남성 신발 | MAKNAEZ</title>
+    <!-- [수정 1] 타이틀: 컨트롤러에서 보낸 categoryName 출력 -->
+    <title> ${categoryName} | MAKNAEZ</title>
 
     <jsp:include page="/WEB-INF/views/layout/headerResources.jsp" />
     
@@ -57,17 +58,19 @@
     <div class="container-fluid" style="max-width: 1600px; padding: 0 40px; margin-top: 100px;">
         <div class="page-header">
             <div class="breadcrumbs">
-                <a href="${pageContext.request.contextPath}/">Home</a> / <span style="color:#1a1a1a">남성 신발</span>
+                <!-- [수정 2] 브레드크럼: 현재 카테고리명 표시 -->
+                <a href="${pageContext.request.contextPath}/">Home</a> / <span style="color:#1a1a1a">${categoryName}</span>
             </div>
             <div class="d-flex justify-content-between align-items-end">
                 <h1 class="collection-title">
-                    남성 신발 <span class="collection-count">[12]</span> <!-- 더미 개수 -->
+                    <!-- [수정 3] 메인 타이틀: 동적으로 변경 -->
+                    ${categoryName} <span class="collection-count">[12]</span> <!-- 더미 개수 -->
                 </h1>
                 <div class="sort-wrapper" style="margin-bottom:0;">
                     <select id="sortSelect" class="sort-select" onchange="changeSort(this.value)">
-                        <option value="new" ${sort == 'new' ? 'selected' : ''}>신상품순</option>
-                        <option value="price_asc" ${sort == 'price_asc' ? 'selected' : ''}>낮은가격순</option>
-                        <option value="price_desc" ${sort == 'price_desc' ? 'selected' : ''}>높은가격순</option>
+                        <option value="new" ${param.sort == 'new' ? 'selected' : ''}>신상품순</option>
+                        <option value="price_asc" ${param.sort == 'price_asc' ? 'selected' : ''}>낮은가격순</option>
+                        <option value="price_desc" ${param.sort == 'price_desc' ? 'selected' : ''}>높은가격순</option>
                     </select>
                 </div>
             </div>
@@ -76,8 +79,10 @@
         <div class="row">
             <!-- Left Sidebar-->
             <aside class="col-lg-2 d-none d-lg-block sidebar-container">
-                <form name="searchForm" action="${pageContext.request.contextPath}/collections/list.jsp" method="post">
+                <form name="searchForm" action="${pageContext.request.contextPath}/collections/list" method="post">
                     <input type="hidden" name="page" value="1">
+                    <!-- [수정 4] 중요: 필터 검색 시 현재 카테고리(men/women 등)가 유지되도록 hidden 값 설정 -->
+                    <input type="hidden" name="category" value="${categoryCode}">
 
                     <div class="sidebar-header">
                         <span class="sidebar-title">필터</span>
@@ -181,7 +186,7 @@
                         </div>
                     </details>
 
-                    <input type="hidden" name="sort" id="hiddenSort" value="${sort}">
+                    <input type="hidden" name="sort" id="hiddenSort" value="${param.sort}">
                 </form>
             </aside>
 
@@ -190,31 +195,31 @@
                 <!-- Sorting -->
                 <div class="sort-wrapper">
                     <select id="sortSelect" class="sort-select" onchange="changeSort(this.value)">
-                        <option value="new" ${sort == 'new' ? 'selected' : ''}>신상품순</option>
-                        <option value="price_asc" ${sort == 'price_asc' ? 'selected' : ''}>낮은가격순</option>
-                        <option value="price_desc" ${sort == 'price_desc' ? 'selected' : ''}>높은가격순</option>
+                        <option value="new" ${param.sort == 'new' ? 'selected' : ''}>신상품순</option>
+                        <option value="price_asc" ${param.sort == 'price_asc' ? 'selected' : ''}>낮은가격순</option>
+                        <option value="price_desc" ${param.sort == 'price_desc' ? 'selected' : ''}>높은가격순</option>
                     </select>
                 </div>
 
                 <!-- 상품 목록 영역 -->
                 <div id="productList" class="row gx-4 gy-5">
                     
-                    <%-- 백단 작업 전 가라 데이터 --%>
+                    <%-- 백단 작업 전 가라 데이터 (화면 확인용 더미 루프) --%>
                     <c:forEach var="i" begin="1" end="12">
                         <div class="col-6 col-md-4 col-lg-3">
-                            <!-- 링크 연결: productNo=${i} 로 더미 파라미터 전달 -->
                             <div class="product-card" onclick="location.href='${pageContext.request.contextPath}/product/detail?productNo=${i}'">
                                 <div class="product-img-box">
                                     <c:if test="${i % 3 == 0}">
                                         <span class="badge-new">NEW</span>    
                                     </c:if>
-                                    <!-- 이미지 대신 텍스트로 위치 잡기 --> 
                                     <div class="placeholder-div">
-                                        <span class="placeholder-text">신발 ${i}</span>
+                                        <!-- [수정 5] 상품 이미지 텍스트도 카테고리에 맞춰 변경 -->
+                                        <span class="placeholder-text">${categoryName} ${i}</span>
                                     </div>
                                 </div>
                                 <div class="product-info">
-                                    <div class="product-meta">남성 라이프스타일</div>
+                                    <!-- [수정 6] 상품 설명 텍스트도 카테고리에 맞춰 변경 -->
+                                    <div class="product-meta">${categoryName} 라이프스타일</div>
                                     <h3 class="product-name">나이키 에어 포스 1 '07 (${i}번)</h3>
                                     <div class="product-price">₩<fmt:formatNumber value="${139000 + (i * 1000)}" pattern="#,###" /></div>
                                 </div>
@@ -222,35 +227,16 @@
                         </div>
                     </c:forEach>
                     
-                    <%-- 실제 데이터 처리단 --%>
+                    <%-- 실제 데이터 처리단 (나중에 주석 해제하여 사용) --%>
                     <%--
                     <c:choose>
                         <c:when test="${not empty list}">
                             <c:forEach var="dto" items="${list}">
-                                <div class="col-6 col-md-4 col-lg-3">
-                                    <div class="product-card" onclick="location.href='${pageContext.request.contextPath}/product/detail?productNo=${dto.productNo}'">
-                                        <div class="product-img-box">
-                                            <c:if test="${dto.isNew}">
-                                                <span class="badge-new">NEW</span>	
-                                            </c:if>
-                                            <div class="placeholder-div">
-                                                상품 이미지 
-                                            </div>
-                                        </div>
-                                        <div class="product-info">
-                                            <div class="product-meta">${dto.category}</div>
-                                            <h3 class="product-name">${dto.name}</h3>
-                                            <div class="product-price">₩<fmt:formatNumber value="${dto.price}" pattern="#,###" /></div>
-                                        </div>
-                                    </div>
-                                </div>
+                                ... 기존 코드 ...
                             </c:forEach>
                         </c:when>
                         <c:otherwise>
-                            <div class="col-12 text-center py-5">
-                                <h4>조건에 맞는 상품이 없습니다.</h4>
-                                <p class="text-muted">필터를 변경하거나 초기화해보세요.</p>
-                            </div>
+                            ... 기존 코드 ...
                         </c:otherwise>
                     </c:choose>
                     --%>
@@ -269,16 +255,20 @@
     
     <script>
         function changeSort(val) {
-            location.href = '?sort=' + val;
+            // 현재 URL 파라미터(카테고리 등)를 유지하면서 sort만 변경
+            const urlParams = new URLSearchParams(window.location.search);
+            urlParams.set('sort', val);
+            location.href = '?' + urlParams.toString();
         }
         function resetFilters() {
-            location.href = 'list.jsp';
+            // 필터 초기화 시 현재 카테고리는 유지하고 초기 상태로 이동
+            location.href = '${pageContext.request.contextPath}/collections/list?category=${categoryCode}';
         }
         
-        // 간단한 검색용 JS 함수 (실제 구현 시 form submit으로 변경)
         function searchList() {
-            // document.searchForm.submit(); // DB 연동 시 주석 해제
-            console.log("필터 변경됨");
+            // 필터 변경 시 폼 제출 (POST 방식으로 컨트롤러에 전달됨)
+            const f = document.searchForm;
+            f.submit(); 
         }
     </script>
 </body>

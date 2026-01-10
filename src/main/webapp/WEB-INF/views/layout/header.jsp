@@ -34,7 +34,7 @@
                             <div class="link-col">
                                 <h3>CATEGORY</h3>
                                 <ul>
-                                    <li><a href="#">전체보기</a></li>
+                                    <li><a href="${pageContext.request.contextPath}/collections/list?category=men">전체보기</a></li>
                                     <li><a href="#">트레일 러닝</a></li>
                                     <li><a href="#">로드 러닝</a></li>
                                     <li><a href="#">하이킹 & 아웃도어</a></li>
@@ -56,7 +56,7 @@
             </li>
 
             <li class="nav-item">
-                <a href="/shop/women" class="nav-link">WOMEN</a>
+                <a href="${pageContext.request.contextPath}/collections/list?category=women" class="nav-link">WOMEN</a>
                 <div class="mega-menu">
                     <div class="mega-container">
                         <div class="mega-promo">
@@ -102,7 +102,7 @@
             </li>
 
             <li class="nav-item">
-                <a href="/shop/sportstyle" class="nav-link">SPORTSTYLE</a>
+                <a href="${pageContext.request.contextPath}/collections/list?category=sports" class="nav-link">SPORTSTYLE</a>
                 <div class="mega-menu">
                     <div class="mega-container" style="display: flex; justify-content: center; align-items: center; padding: 40px 0;">
                          <div style="text-align: center;">
@@ -115,7 +115,7 @@
             </li>
 
             <li class="nav-item">
-                <a href="/shop/sale" class="nav-link" style="color: #ff4e00;">SALE</a>
+                <a href="${pageContext.request.contextPath}/collections/list?category=sale" class="nav-link" style="color: #ff4e00;">SALE</a>
                 <div class="mega-menu">
                     <div class="mega-container">
                         <div class="mega-promo">
