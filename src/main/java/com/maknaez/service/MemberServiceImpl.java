@@ -93,6 +93,27 @@ public class MemberServiceImpl implements MemberService {
 			throw e;
 		}
 	}
+	
+	@Override
+	public MemberDTO findById(String memberId) {
+		MemberDTO dto = null;
+		try {
+			dto = mapper.findById(memberId);
+			
+			if(dto != null && dto.getEmail() != null) {
+				String[] ss = dto.getEmail().split("@");
+				if(ss.length == 2) {
+					dto.setEmail1(ss[0]);
+					dto.setEmail2(ss[1]);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			
+			throw e;
+		}
+		return dto;
+	}
 
 	@Override
 	public MemberDTO findByIdx(Long memberIdx) {
@@ -145,5 +166,7 @@ public class MemberServiceImpl implements MemberService {
 		}
 		return list;
 	}
+
+
 
 }
