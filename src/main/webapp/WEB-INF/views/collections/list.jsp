@@ -10,7 +10,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- [수정 1] 타이틀: 컨트롤러에서 보낸 categoryName 출력 -->
     <title> ${categoryName} | MAKNAEZ</title>
 
     <jsp:include page="/WEB-INF/views/layout/headerResources.jsp" />
@@ -26,9 +25,9 @@
     <style>
         /* 임시 이미지 플레이스홀더 스타일 */
         .placeholder-div {
-            background-color: #f8f9fa; /* 밝은 회색 배경 */
+            background-color: #f8f9fa; 
             width: 100%;
-            padding-bottom: 100%; /* 1:1 비율 유지 */
+            padding-bottom: 100%; 
             position: relative;
             margin-bottom: 15px;
             border-radius: 4px;
