@@ -520,4 +520,24 @@ public class MemberController {
 		
 		return mav;
 	}
+	
+	/* MemberController.java 내부에 추가 */
+
+	@GetMapping("mypage/review")
+	public ModelAndView review(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		ModelAndView mav = new ModelAndView("mypage/review");
+		HttpSession session = req.getSession();
+		
+		// 1. 로그인 체크
+		SessionInfo info = (SessionInfo) session.getAttribute("member");
+		if (info == null) {
+			return new ModelAndView("redirect:/member/login");
+		}
+		
+		// 2. 리뷰 데이터 가져오기 (추후 구현 필요)
+		// 현재는 화면 UI 확인을 위해 빈 상태로 둡니다.
+		// 나중에 service.listReviewable(map), service.listWritten(map) 등을 호출해야 합니다.
+		
+		return mav;
+	}
 }
