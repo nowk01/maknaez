@@ -5,3 +5,6 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/admin.css" type="text/css">
+
+<!-- Vendor JS Files -->
+<script src="${pageContext.request.contextPath}/dist/vendor/jquery/js/jquery.min.js"></script>
