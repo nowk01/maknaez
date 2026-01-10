@@ -662,23 +662,15 @@ function shareKakao() {
         return;
     }
 
-    // [개발 편의성] localhost로 접속 중이라도 공유 링크는 IP 주소로 변환
-    let shareUrl = window.location.href;
-    const myPublicIP = "61.73.115.26:9090"; // ★ 실제 IP
-    
-    if (shareUrl.includes("localhost")) {
-        shareUrl = shareUrl.replace("localhost:9090", myPublicIP);
-    }
-
     Kakao.Share.sendDefault({
         objectType: 'feed',
         content: {
             title: "<c:out value='${dto.productName}'/>", 
-            description: 'MAKNAEZ에서 이 상품을 확인해보세요!',
+            description: 'MAKNAEZ에서 이 상품을 확인해보세요!' + window.location.href,
             imageUrl: 'https://placehold.co/800x600?text=Maknaez+Product', 
             link: {
-                mobileWebUrl: shareUrl,
-                webUrl: shareUrl,
+                mobileWebUrl: window.location.href,
+                webUrl: window.location.href,
             },
         },
         fail: function(err) {
@@ -686,10 +678,10 @@ function shareKakao() {
         },
         buttons: [
             {
-                title: '웹으로 보기',
-                link: {
-                    mobileWebUrl: shareUrl,
-                    webUrl: shareUrl,
+              title: '구매하기',
+              link: {
+                mobileWebUrl: window.location.href,
+                webUrl: window.location.href,
                 },
             },
         ],
