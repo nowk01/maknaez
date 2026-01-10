@@ -20,6 +20,7 @@ public interface MemberMapper {
 	public void deleteMember1(Map<String, Object> map) throws SQLException;
 	public void deleteMember2(Map<String, Object> map) throws SQLException;
 	
+	public MemberDTO findById(String userId);
 	public MemberDTO findByIdx(Long memberIdx);	
 	public List<Map<String, Object>> listAgeSection();
 	

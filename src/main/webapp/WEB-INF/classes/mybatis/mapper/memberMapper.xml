@@ -44,7 +44,6 @@
     </update>
     
     <!-- 아이디 -> 고유번호로 찾는걸로 변경 -->
-    <!--  
 	<select id="findById" parameterType="String" resultType="com.maknaez.model.MemberDTO">
 		SELECT memberIdx, m1.userId, userPwd, userName,
 			enabled, userLevel, register_date, modify_date,
@@ -54,12 +53,13 @@
 		LEFT OUTER JOIN member2 m2 ON m1.userId = m2.userId
 		WHERE m1.userId = #{userId}
 	</select>
-	-->
+	
 	<select id="findByIdx" parameterType="Long" resultType="com.maknaez.model.MemberDTO">
-	    SELECT m1.memberIdx, m1.userId, m1.userName, m1.userPwd, m1.userLevel, 
-           TO_CHAR(m1.birth, 'YYYY-MM-DD') as birth, m1.register_date, m1.modify_date,
+	    SELECT m1.memberIdx, m1.userId, m2.userName, m1.userPwd, m1.userLevel, 
+           TO_CHAR(m1.birth, 'YYYY-MM-DD') as birth, m3.register_date, m1.modify_date,
            m2.email, m2.tel
 	    FROM member1 m1
+	    JOIN member3 m3 ON m1.memberIdx = m3.memberIdx
 	    LEFT JOIN member2 m2 ON m1.memberIdx = m2.memberIdx
 	    WHERE m1.memberIdx = #{memberIdx}
 	</select>
