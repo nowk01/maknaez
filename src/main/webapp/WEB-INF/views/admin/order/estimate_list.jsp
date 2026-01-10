@@ -210,7 +210,7 @@
                             <li class="page-item"><a class="page-link" href="#">NEXT</a></li>
                         </ul>
                     </div>
-                </div>
+                </div> 
             </div>
         </div>
     </div>

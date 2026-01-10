@@ -192,8 +192,7 @@
 
             </div>
         </div>
-    </div>
-  
+    </div>  
     <jsp:include page="/WEB-INF/views/admin/layout/footerResources.jsp" />
 </body>
 </html>
