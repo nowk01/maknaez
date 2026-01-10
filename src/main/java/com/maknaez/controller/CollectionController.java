@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.sql.SQLException;
 
 import com.maknaez.mvc.annotation.Controller;
-import com.maknaez.mvc.annotation.GetMapping;
 import com.maknaez.mvc.annotation.RequestMapping;
 import com.maknaez.mvc.view.ModelAndView;
 
@@ -18,23 +17,48 @@ public class CollectionController {
     public CollectionController() {
     }
 
-    @GetMapping("/collections/list")
+    
+    @RequestMapping("/collections/list")
     public ModelAndView list(HttpServletRequest req, HttpServletResponse resp) throws SQLException, IOException {
         String category = req.getParameter("category");
+        String sub = req.getParameter("sub");
         
+        // 2. 카테고리가 없으면 기본값 설정
         if (category == null || category.isEmpty()) {
             category = "men";
         }
 
-        String categoryName = category.equalsIgnoreCase("women") ? "여성" : category.equalsIgnoreCase("kids") ? "아동":"남성";
+        String categoryName = "전체 상품"; // 기본 제목
+        
+        switch (category.toLowerCase()) {
+            case "men":
+                categoryName = "남성";
+                break;
+            case "women":
+                categoryName = "여성";
+                break;
+            case "sports":
+                categoryName = "스포츠 스타일";
+                break;
+            case "sale":
+                categoryName = "세일";
+                break;
+            default:
+                categoryName = "남성"; // 잘못된 접근 시 기본값
+                category = "men";
+                break;
+        }
+
+        if (sub != null && !sub.isEmpty()) {
+        }
+
         String viewName = "collections/list"; 
         
         ModelAndView mav = new ModelAndView(viewName);
-        mav.addObject("categoryCode", category.toLowerCase());
-        mav.addObject("categoryName", categoryName);
+        
+        mav.addObject("categoryCode", category.toLowerCase()); 
+        mav.addObject("categoryName", categoryName);           
         
         return mav;
     }
-
-
 }

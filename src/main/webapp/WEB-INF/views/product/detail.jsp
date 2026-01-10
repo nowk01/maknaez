@@ -38,17 +38,12 @@
 			<!-- ================= LEFT COLUMN (상세 정보) ================= -->
 			<div class="col-lg-8 detail-left-section">
 				
-				<!-- 좌-상: 제품 이미지 그리드 (2-2-1 배치) -->
+				<!-- 좌-상: 제품 이미지 그리드 -->
 				<div class="product-image-grid">
-					<!-- 1행: 이미지 2개 -->
 					<img src="https://via.placeholder.com/800x600?text=Product+Image+1" alt="Product Image 1">
 					<img src="https://via.placeholder.com/800x600?text=Product+Image+2" alt="Product Image 2">
-					
-                    <!-- 2행: 이미지 2개 -->
 					<img src="https://via.placeholder.com/800x600?text=Product+Image+3" alt="Product Image 3">
                     <img src="https://via.placeholder.com/800x600?text=Product+Image+4" alt="Product Detail Cut">
-                    
-                    <!-- 3행: 이미지 1개 (가운데 배치, 크기는 1개 컬럼만큼) -->
                     <img src="https://via.placeholder.com/800x600?text=Product+Image+5+(Center)" alt="Product Feature">
 				</div>
 
@@ -70,41 +65,36 @@
 					<div class="tab-pane fade show active" id="info-pane" role="tabpanel">
 						<div class="product-info-content">
 							${dto.content}
-							
 							<c:if test="${empty dto.content}">
 								<p>상세 정보가 없습니다.</p>
                                 <br>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                                <p>Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                                <p>최상의 퍼포먼스를 위한 러닝화. 가볍고 통기성이 뛰어난 메쉬 소재로 제작되어 쾌적한 착화감을 제공합니다.</p>
                                 <img src="https://via.placeholder.com/700x500?text=Detail+Description+Image" class="img-fluid my-3">
-                                <p>이제 스크롤 없이 전체 내용이 그대로 표시됩니다.</p>
-                                <c:forEach var="tt" begin="0" end="50">
-								    <p>${tt} 스크롤 테스트용 텍스트입니다. 높이 제한은 800px입니다.</p>
-								</c:forEach>
+                                <p>충격 흡수가 뛰어난 미드솔과 접지력이 우수한 아웃솔이 적용되어 안정적인 러닝을 도와줍니다.</p>
 							</c:if>
 						</div>
 					</div>
 				</div>
 
-				<!-- 좌-하1: 제품 특징 -->
+				<!-- 좌-하1: 제품 특징 (테이블 스타일) -->
 				<div class="product-features">
 					<h4>제품 특징</h4>
-					<p>
-						<strong>쿠셔닝:</strong> 맥시멀<br>
-						<strong>신발 너비:</strong> 기본<br>
-						<strong>지형:</strong> 로드, 혼합<br>
-					</p>
+					<table class="detail-table">
+						<tr><th>쿠셔닝</th><td>맥시멀 - 부드럽고 풍부한 쿠셔닝</td></tr>
+						<tr><th>신발 너비</th><td>기본 - 발을 편안하게 감싸는 핏</td></tr>
+						<tr><th>지형</th><td>로드, 혼합 - 다양한 노면 환경 대응</td></tr>
+					</table>
 				</div>
 
-				<!-- 좌-하2: 고시 정보 -->
+				<!-- 좌-하2: 고시 정보 (테이블 스타일) -->
 				<div class="product-notice">
-					<h4>상품 제공 고시 정보</h4>
-					<table class="notice-table">
-						<tr><th>소재</th><td>폴리에스테르 100%</td></tr>
+					<h4>상품 고시 정보</h4>
+					<table class="detail-table">
+						<tr><th>소재</th><td>갑피: 폴리에스테르 100%, 밑창: 합성고무</td></tr>
 						<tr><th>제조국</th><td>베트남</td></tr>
 						<tr><th>제조년월</th><td>2024.01</td></tr>
-						<tr><th>수입원</th><td>(주)살로몬 코리아</td></tr>
-						<tr><th>A/S 책임자</th><td>1588-0000</td></tr>
+						<tr><th>수입원</th><td>(주)세미프로젝트 코리아</td></tr>
+						<tr><th>A/S 책임자</th><td>고객센터 1588-0000</td></tr>
 						<tr><th>품질보증기준</th><td>관련 법 및 소비자 분쟁해결 규정에 따름</td></tr>
 					</table>
 				</div>
@@ -120,11 +110,11 @@
 
 					<div class="product-actions-top">
 						<div class="star-rating">
-							<i class="bi bi-star-fill"></i>
-							<i class="bi bi-star-fill"></i>
-							<i class="bi bi-star-fill"></i>
-							<i class="bi bi-star-fill"></i>
-							<i class="bi bi-star-half"></i>
+							<i class="bi bi-star-fill text-warning"></i>
+							<i class="bi bi-star-fill text-warning"></i>
+							<i class="bi bi-star-fill text-warning"></i>
+							<i class="bi bi-star-fill text-warning"></i>
+							<i class="bi bi-star-half text-warning"></i>
 							<span class="text-dark ms-1">(4.8)</span>
 						</div>
 						<div class="action-icons">
@@ -136,15 +126,9 @@
 					<div class="color-options">
 						<div class="color-label">컬러 : Black / Silver</div>
 						<div class="color-thumbs">
-							<div class="color-thumb active">
-								<img src="https://via.placeholder.com/60/000000/FFFFFF?text=BK" alt="Black">
-							</div>
-							<div class="color-thumb" onclick="location.href='#'">
-								<img src="https://via.placeholder.com/60/FFFFFF/000000?text=WH" alt="White">
-							</div>
-							<div class="color-thumb" onclick="location.href='#'">
-								<img src="https://via.placeholder.com/60/FF0000/FFFFFF?text=RD" alt="Red">
-							</div>
+							<div class="color-thumb active"><img src="https://via.placeholder.com/60/000000/FFFFFF?text=BK" alt="Black"></div>
+							<div class="color-thumb"><img src="https://via.placeholder.com/60/FFFFFF/000000?text=WH" alt="White"></div>
+							<div class="color-thumb"><img src="https://via.placeholder.com/60/FF0000/FFFFFF?text=RD" alt="Red"></div>
 						</div>
 					</div>
 
@@ -153,7 +137,6 @@
 							<span class="fw-bold">사이즈</span>
 							<a href="#" class="text-decoration-underline text-muted" style="font-size:0.8rem;">사이즈 가이드</a>
 						</div>
-						
 						<div class="size-grid">
 							<c:set var="sizes" value="220,225,230,235,240,245,250,255,260,265,270,275,280,285,290,295,300,305,310"/>
 							<c:forTokens items="${sizes}" delims="," var="size" varStatus="st">
@@ -174,9 +157,9 @@
 					</div>
 
 					<div class="restock-alert d-flex justify-content-between align-items-center mb-4">
-                        <span class="restock-text-left">원하시는 옵션이 없으신가요?</span>
-						<button type="button" class="restock-btn" data-bs-toggle="modal" data-bs-target="#restockModal">
-							<i class="bi bi-bell"></i> 입고알림신청하기
+                        <span class="restock-text-left" style="font-size:0.85rem; color:#666;">원하시는 옵션이 없으신가요?</span>
+						<button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#restockModal">
+							<i class="bi bi-bell"></i> 입고알림신청
 						</button>
 					</div>
 
@@ -189,32 +172,53 @@
                             </div>
 							<button type="button" class="btn btn-cart-custom" onclick="addToCart()">장바구니</button>
 						</div>
-						
-						<div class="purchase-row-bottom">
-							<button type="button" class="btn btn-buy-custom" onclick="buyNow()">구매하기</button>
-						</div>
+						<button type="button" class="btn btn-buy-custom" onclick="buyNow()">구매하기</button>
 					</div>
 
-				</div> <!-- End Sticky Sidebar -->
-			</div> <!-- End Right Column -->
-		</div> <!-- End Row -->
-
-		<div id="sentinelNode" class="sentinel-point"></div>
-
-		<div id="reviewSection" class="review-section">
-			<h3>Reviews <span class="text-muted">(120)</span></h3>
-			<div class="alert alert-secondary text-center mt-4">
-				리뷰 영역입니다. (추후 구현)
+				</div>
 			</div>
 		</div>
 
-		<div id="recommendSection" class="recommend-section">
+		<div id="sentinelNode" class="sentinel-point"></div>
+
+		<!-- 
+             ===========================================================
+             [REVIEW SECTION] 
+             ===========================================================
+        -->
+		<div id="reviewSection" class="review-wrapper">
+            
+            <!-- [Header] -->
+            <div class="review-header-container">
+                <h3 class="review-header-title">Reviews <span id="reviewTotalCount" style="font-weight:400; font-size:0.9em; color:#888;">(0)</span></h3>
+                
+                <div class="review-search-box">
+                    <input type="text" id="reviewKeyword" placeholder="리뷰 키워드 검색" onkeyup="if(window.event.keyCode==13){searchReview()}">
+                    <i class="bi bi-search" onclick="searchReview()"></i>
+                </div>
+            </div>
+
+            <!-- [Content Area] -->
+            <div id="reviewContentArea">
+                <div class="text-center py-5">
+                    <div class="spinner-border text-secondary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- [Pagination] -->
+            <div id="reviewPagination" class="mt-4 d-flex justify-content-center"></div>
+
+		</div>
+
+		<div id="recommendSection" class="recommend-section mt-5 pt-5 border-top">
 			<h3>추천 상품</h3>
 			<div class="recommend-carousel mt-4">
 				<div class="row">
 					<div class="col-3">
 						<div class="card border-0">
-							<img src="https://via.placeholder.com/300x300" class="card-img-top" alt="...">
+							<img src="https://via.placeholder.com/300x300" class="card-img-top" alt="Rec 1">
 							<div class="card-body px-0">
 								<h6 class="card-title">SPEEDCROSS 6</h6>
 								<p class="card-text text-muted">198,000 원</p>
@@ -223,7 +227,7 @@
 					</div>
 					<div class="col-3">
 						<div class="card border-0">
-							<img src="https://via.placeholder.com/300x300" class="card-img-top" alt="...">
+							<img src="https://via.placeholder.com/300x300" class="card-img-top" alt="Rec 2">
 							<div class="card-body px-0">
 								<h6 class="card-title">XT-WINGS 2</h6>
 								<p class="card-text text-muted">210,000 원</p>
@@ -244,62 +248,52 @@
 <jsp:include page="/WEB-INF/views/layout/footerResources.jsp"/>
 
 <script>
+// 전역 변수 선언
+const contextPath = "${pageContext.request.contextPath}";
+const productNum = "${dto.productNo}"; 
+let currentReviewPage = 1;
+
+// 문서 로드 시 실행
 $(document).ready(function() {
+    // 1. 기존 UI 이벤트 (스티키바, 수량조절, 장바구니 등)
 	const sidebar = document.getElementById('stickySidebar');
 	const sentinel = document.getElementById('sentinelNode');
 	
-	const observer = new IntersectionObserver((entries) => {
-		entries.forEach(entry => {
-			if (entry.isIntersecting) {
-				console.log("Review section reached");
-			}
-		});
-	});
-	
-	if(sentinel) observer.observe(sentinel);
+    if(sentinel) {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) console.log("Review section reached");
+            });
+        });
+        observer.observe(sentinel);
+    }
 
 	$('input[name="optionDetailNum"]').change(function() {
-		let size = $(this).val();
-		$('#selectedDetailNum').val(size); 
-		
-		if($(this).is(':disabled')) {
-			alert("품절된 상품입니다.");
-			return;
-		}
+		$('#selectedDetailNum').val($(this).val());
 	});
 
 	$('.plus').click(function() {
 		let q = parseInt($('.qty-input').val());
-		if(q < 10) {
-            $('.qty-input').val(q + 1);
-            $('#selectedQty').val(q + 1);
-        }
+		if(q < 10) { $('.qty-input').val(q + 1); $('#selectedQty').val(q + 1); }
 	});
 	
 	$('.minus').click(function() {
 		let q = parseInt($('.qty-input').val());
-		if(q > 1) {
-            $('.qty-input').val(q - 1);
-            $('#selectedQty').val(q - 1);
-        }
+		if(q > 1) { $('.qty-input').val(q - 1); $('#selectedQty').val(q - 1); }
 	});
 
 	window.addToCart = function() {
 		if(!checkSelection()) return;
-		let data = $('form[name="buyForm"]').serialize();
 		alert("장바구니에 담았습니다 (기능 미구현)");
 	};
 
 	window.buyNow = function() {
 		if(!checkSelection()) return;
-		let f = document.buyForm;
-		f.action = "${pageContext.request.contextPath}/order/payment"; 
 		alert("구매 페이지로 이동합니다 (기능 미구현)");
 	};
 
 	function checkSelection() {
-		let size = $('input[name="optionDetailNum"]:checked').val();
-		if(!size) {
+		if(!$('input[name="optionDetailNum"]:checked').val()) {
 			alert("사이즈를 선택해주세요.");
 			return false;
 		}
@@ -309,16 +303,200 @@ $(document).ready(function() {
 	$('#wishBtn').click(function() {
 		$(this).toggleClass('bi-heart bi-heart-fill text-danger');
 	});
+
+    // 2. 리뷰 데이터 강제 로드 호출 (딜레이 없이 즉시 실행)
+    loadReviews(1);
 });
 
-function scrollToReview() {
-	document.getElementById('reviewSection').scrollIntoView({ behavior: 'smooth' });
+function scrollToReview() { document.getElementById('reviewSection').scrollIntoView({ behavior: 'smooth' }); }
+function scrollToRecommend() { document.getElementById('recommendSection').scrollIntoView({ behavior: 'smooth' }); }
+
+/* =========================================================
+   [REVIEW LOGIC] - 데이터 강제 주입 로직
+   ========================================================= */
+function searchReview() {
+    currentReviewPage = 1;
+    loadReviews(1);
 }
-function scrollToRecommend() {
-	document.getElementById('recommendSection').scrollIntoView({ behavior: 'smooth' });
+
+function loadReviews(page) {
+    currentReviewPage = page;
+    let keyword = $('#reviewKeyword').val() || ""; // null 방지
+    
+    // AJAX 호출 부분 (백엔드 연동 시 주석 해제)
+    /*
+    $.ajax({
+        url: contextPath + "/review/list",
+        data: { productNum: productNum, page: page, keyword: keyword },
+        dataType: "json",
+        success: function(data) { renderReviews(data); },
+        error: function(e) { console.log(e.responseText); }
+    });
+    */
+    
+    // [강제 실행] 가짜 데이터를 0.1초 뒤에 렌더링 (화면 깜빡임 최소화)
+    setTimeout(function() {
+        let mockData = generateMockReviews(keyword);
+        renderReviews(mockData);
+    }, 100);
+}
+
+// 가짜 데이터 생성기 (생동감 있는 데이터)
+function generateMockReviews(keyword) {
+    // 키워드가 있고 '없음'이라고 검색하면 빈 데이터 리턴 테스트
+    if(keyword && keyword === "없음") return { count: 0, list: [], photoList: [] };
+
+    // 다양한 리뷰 텍스트 풀
+    const contents = [
+        "배송도 빠르고 포장도 꼼꼼합니다. 실물이 훨씬 예쁘네요! 정사이즈 추천합니다.",
+        "발볼이 넓은 편인데 반업하니까 딱 좋습니다. 쿠션감이 예술이네요.",
+        "고민하다 샀는데 진작 살 걸 그랬어요. 색감이 화면이랑 똑같고 어디에나 잘 어울립니다.",
+        "선물용으로 구매했는데 받는 친구가 너무 좋아해요. 역시 믿고 사는 브랜드!",
+        "가볍고 착화감이 좋아서 데일리로 신기 딱 좋습니다. 마감 처리도 깔끔해요.",
+        "재입고 기다렸다가 바로 샀습니다. 기다린 보람이 있네요. 강력 추천!",
+        "디자인이 유니크해서 마음에 듭니다. 신었을 때 발이 작아 보이는 효과가 있어요.",
+        "생각보다 굽이 있어서 키높이 효과도 있네요. 하루 종일 걸어도 발이 안 아파요."
+    ];
+    
+    const userIds = ["run_lover", "daily_look", "shoaholic", "happy_day", "sky_blue", "star_dust"];
+    const sizes = ["230mm", "235mm", "240mm", "260mm", "270mm"];
+    const footTypes = ["정사이즈", "발볼 넓음", "칼발", "발등 높음"];
+
+    let list = [];
+    // 5개의 리뷰 생성
+    for(let i=0; i<5; i++) {
+        let contentIdx = Math.floor(Math.random() * contents.length);
+        let idIdx = Math.floor(Math.random() * userIds.length);
+        
+        list.push({
+            reviewNo: i,
+            memberId: userIds[idIdx] + (Math.floor(Math.random()*100)), // 랜덤 아이디
+            optionValue: sizes[Math.floor(Math.random() * sizes.length)],
+            starRating: (i % 3 === 0) ? 4 : 5, // 대부분 5점
+            footSize: footTypes[Math.floor(Math.random() * footTypes.length)],
+            content: contents[contentIdx],
+            regDate: "2023-10-" + (10 + i),
+            isNew: i < 2, // 상위 2개는 NEW 뱃지
+            images: (i % 2 !== 0) ? ["dummy"] : [] // 홀수번째는 이미지 있음
+        });
+    }
+
+    return {
+        count: 128,
+        list: list,
+        photoList: ["p1","p2","p3","p4","p5","p6"] // 포토 요약용 더미
+    };
+}
+
+// 화면 렌더링 (HTML 조립)
+function renderReviews(data) {
+    let container = $('#reviewContentArea');
+    let html = "";
+    
+    $('#reviewTotalCount').text("("+data.count+")");
+
+    if (!data.list || data.list.length === 0) {
+        container.html('<div class="review-empty">리뷰가 없습니다.</div>');
+        return;
+    }
+
+    // 1. 포토 요약 영역 (데이터가 있을 때만)
+    if(data.photoList && data.photoList.length > 0) {
+        html += `
+        <div class="review-photo-summary">
+            <div class="photo-summary-header">
+                <span>포토&동영상 전체보기 <span style="color:#aaa;">></span></span>
+            </div>
+            <div class="photo-summary-list">`;
+        data.photoList.forEach((item, idx) => {
+            // 실제 이미지가 없으므로 회색 박스로 대체
+            html += `<div class="photo-summary-item" style="background:#eee; display:flex; align-items:center; justify-content:center; color:#999;"><i class="bi bi-image"></i></div>`;
+        });
+        html += `   </div>
+        </div>`;
+    }
+
+    // 2. 필터 바
+    let isChecked = $('#chkPhotoFirst').is(':checked') ? 'checked' : '';
+    html += `
+    <div class="review-filter-row">
+        <div class="filter-left">
+            <label class="round-checkbox-wrapper">
+                <input type="checkbox" id="chkPhotoFirst" onchange="loadReviews(1)" ${isChecked}>
+                <span class="round-checkbox-visual"></span>
+                포토/동영상 먼저보기
+            </label>
+        </div>
+        <div class="filter-right">
+            <select id="selFootSize" class="filter-select" onchange="loadReviews(1)">
+                <option value="">발 사이즈 선택</option>
+                <option value="small">작음</option>
+                <option value="fit">정사이즈</option>
+                <option value="big">큼</option>
+            </select>
+        </div>
+    </div>`;
+
+    // 3. 리뷰 리스트
+    html += '<div id="reviewListContainer">';
+    
+    data.list.forEach(item => {
+        // 아이디 마스킹
+        let maskedId = item.memberId.length > 3 ? item.memberId.substring(0,3) + "****" : item.memberId + "***";
+        
+        // 별점 HTML 생성
+        let stars = "";
+        for(let i=0; i<5; i++) {
+            stars += (i < item.starRating) 
+                ? '<i class="bi bi-star-fill text-warning"></i>' 
+                : '<i class="bi bi-star text-warning"></i>';
+        }
+        
+        let newBadge = item.isNew ? '<span class="review-badge-new">NEW</span>' : '';
+
+        html += `
+        <div class="review-item">
+            <div class="review-meta-top">
+                <div class="d-flex align-items-center">
+                    ${newBadge}
+                    <span>옵션 : ${item.optionValue}</span>
+                </div>
+                <div class="review-writer-id">${maskedId}</div>
+            </div>
+            
+            <div class="review-meta-mid">
+                <span class="d-flex align-items-center gap-1 me-3">${stars}</span>
+                <span class="foot-size-tag bg-light px-2 py-1 rounded text-secondary small">
+                    발 사이즈 : ${item.footSize}
+                </span>
+            </div>
+            
+            <div class="review-content">
+                ${item.content}
+                <div class="review-date">${item.regDate}</div>
+            </div>`;
+            
+            // 이미지 리뷰인 경우 썸네일 표시
+            if(item.images && item.images.length > 0) {
+                html += `
+                <div class="review-images-container">
+                    <div class="review-thumb" style="background:#f8f9fa; display:flex; align-items:center; justify-content:center;">
+                        <i class="bi bi-camera-fill text-muted"></i>
+                    </div>
+                </div>`;
+            }
+            
+        html += `</div>`;
+    });
+    
+    html += '</div>'; // End list container
+
+    // HTML 삽입
+    container.html(html);
 }
 </script>
 
+<!-- Restock Modal -->
 <div class="modal fade" id="restockModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
