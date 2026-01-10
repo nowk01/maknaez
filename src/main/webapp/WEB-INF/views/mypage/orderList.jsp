@@ -25,7 +25,7 @@
 					<li><a
 						href="${pageContext.request.contextPath}/member/mypage/orderList"
 						class="active">주문/배송조회</a></li>
-					<li><a href="#">취소/반품조회</a></li>
+					<li><a href="${pageContext.request.contextPath}/member/mypage/cancelList">취소/반품조회</a></li>
 				</ul>
 			</div>
 
@@ -65,49 +65,56 @@
 			</div>
 
 			<div class="sm-salomon__statusBar">
+				
 				<div class="sm-salomon__statusBarItem" data-status-bar-item="">
-					<span class="sm-salomon__statusBarItemTitle">전체</span> <span
-						class="sm-salomon__statusBarItemValue" data-status-total="">${dataCount}</span>
+					<span class="sm-salomon__statusBarItemTitle">전체</span> 
+					<span class="sm-salomon__statusBarItemValue" data-status-total="">
+						<c:out value="${dataCount}" default="0" />
+					</span>
 				</div>
 
 				<div class="sm-salomon__statusBarBorder">
 					<svg xmlns="http://www.w3.org/2000/svg" width="1" height="76"
 						viewBox="0 0 1 76" fill="none">
-            <line x1="0.5" y1="0" x2="0.5" y2="76" stroke="#E7E7E7"></line>
-        </svg>
+            			<line x1="0.5" y1="0" x2="0.5" y2="76" stroke="#E7E7E7"></line>
+        			</svg>
 				</div>
 
 				<div class="sm-salomon__statusBarItem" data-status-bar-item="">
-					<span class="sm-salomon__statusBarItemTitle">결제완료</span> <span
-						class="sm-salomon__statusBarItemValue" data-status-paid="">0</span>
+					<span class="sm-salomon__statusBarItemTitle">결제완료</span> 
+					<span class="sm-salomon__statusBarItemValue" data-status-paid="">
+						<c:out value="${paymentCount}" default="0" />
+					</span>
 				</div>
 
 				<div class="sm-salomon__statusBarBorder">
 					<svg xmlns="http://www.w3.org/2000/svg" width="1" height="76"
 						viewBox="0 0 1 76" fill="none">
-            <line x1="0.5" y1="0" x2="0.5" y2="76" stroke="#E7E7E7"></line>
-        </svg>
+            			<line x1="0.5" y1="0" x2="0.5" y2="76" stroke="#E7E7E7"></line>
+        			</svg>
 				</div>
 
 				<div class="sm-salomon__statusBarItem" data-status-bar-item="">
-					<span class="sm-salomon__statusBarItemTitle">배송중</span> <span
-						class="sm-salomon__statusBarItemValue" data-status-in-transit="">0</span>
+					<span class="sm-salomon__statusBarItemTitle">배송중</span> 
+					<span class="sm-salomon__statusBarItemValue" data-status-in-transit="">
+						<c:out value="${shippingCount}" default="0" />
+					</span>
 				</div>
 
 				<div class="sm-salomon__statusBarBorder">
 					<svg xmlns="http://www.w3.org/2000/svg" width="1" height="76"
 						viewBox="0 0 1 76" fill="none">
-            <line x1="0.5" y1="0" x2="0.5" y2="76" stroke="#E7E7E7"></line>
-        </svg>
+            			<line x1="0.5" y1="0" x2="0.5" y2="76" stroke="#E7E7E7"></line>
+        			</svg>
 				</div>
 
 				<div class="sm-salomon__statusBarItem" data-status-bar-item="">
-					<span class="sm-salomon__statusBarItemTitle">배송완료</span> <span
-						class="sm-salomon__statusBarItemValue" data-status-delivered="">0</span>
+					<span class="sm-salomon__statusBarItemTitle">배송완료</span> 
+					<span class="sm-salomon__statusBarItemValue" data-status-delivered="">
+						<c:out value="${completeCount}" default="0" />
+					</span>
 				</div>
 			</div>
-
-			<!-- 기간 필터 -->
 			<div class="filter-wrapper">
 				<div class="period-buttons">
 					<div class="sm-salomon__filterPill" data-period="1" data-selected>1개월</div>
@@ -122,22 +129,6 @@
 					<button type="button" class="btn-search">조회</button>
 				</div>
 			</div>
-
-			<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        const pills = document.querySelectorAll('.sm-salomon__filterPill');
-        
-        pills.forEach(pill => {
-            pill.addEventListener('click', () => {
-                // 1. 모든 버튼의 선택 상태 끄기 (속성 제거)
-                pills.forEach(p => p.removeAttribute('data-selected'));
-                
-                // 2. 클릭한 버튼만 선택 상태 켜기 (속성 추가)
-                pill.setAttribute('data-selected', '');
-            });
-        });
-    });
-</script>
 
 			<div class="order-list-area">
 				<c:choose>
@@ -191,12 +182,14 @@
 	<jsp:include page="/WEB-INF/views/layout/footerResources.jsp" />
 
 	<script>
-		const pills = document.querySelectorAll('.sm-salomon__filterPill');
-
-		pills.forEach(pill => {
-			pill.addEventListener('click', () => {
-				pills.forEach(p => p.removeAttribute('data-selected'));
-				pill.setAttribute('data-selected', '');
+		document.addEventListener("DOMContentLoaded", function() {
+			const pills = document.querySelectorAll('.sm-salomon__filterPill');
+	
+			pills.forEach(pill => {
+				pill.addEventListener('click', () => {
+					pills.forEach(p => p.removeAttribute('data-selected'));
+					pill.setAttribute('data-selected', '');
+				});
 			});
 		});
 	</script>

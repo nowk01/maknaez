@@ -38,13 +38,11 @@ public class MemberController {
 	
 	@GetMapping("consent")
 	public ModelAndView consentForm(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		// 약관 동의 폼
 		return new ModelAndView("member/consent");
 	}
 	
 	@GetMapping("login")
 	public ModelAndView loginForm(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		// 로그인 폼
 		return new ModelAndView("member/login");
 	}
 	
@@ -56,7 +54,6 @@ public class MemberController {
 
 	@PostMapping("login")
 	public ModelAndView loginSubmit(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		// 로그인 처리
 		HttpSession session = req.getSession();
 		
 		try {
@@ -70,20 +67,17 @@ public class MemberController {
 			MemberDTO dto = service.loginMember(map);
 			
 			if(dto == null) {
-				// 로그인 실패
 				ModelAndView mav = new ModelAndView("member/login");
 				mav.addObject("message", "아이디 또는 패스워드가 일치하지 않습니다.");
 				return mav;
 			}
 			
-			// 로그인 성공
-			session.setMaxInactiveInterval(20 * 60); // 20분
+			session.setMaxInactiveInterval(20 * 60); 
 
 			SessionInfo info = new SessionInfo();
 			info.setMemberIdx(dto.getMemberIdx());
 			info.setUserId(dto.getUserId());
 			
-			// [수정됨] 관리자 이름 처리 로직
 			if("admin".equals(dto.getUserId())) {
 				info.setUserName("관리자");
 			} else {
@@ -218,7 +212,6 @@ public class MemberController {
 			}
 			
 			if(mode.equals("delete")) {
-				// 회원 탈퇴 로직 (추가 필요 시 구현)
 				session.removeAttribute("member");
 				session.invalidate();
 			} else if(mode.equals("update")) {
@@ -273,7 +266,6 @@ public class MemberController {
 			
 			service.updateMember(dto);
 			
-			// 세션 정보 갱신 (특히 아바타 변경 시)
 			info.setAvatar(dto.getProfile_photo());
 			
 			session.setAttribute("mode", "update");
@@ -369,57 +361,162 @@ public class MemberController {
 		return model;
 	}
 	
+	/* =========================================================
+	   [수정됨] 주문/배송 조회 (상태별 카운트 추가)
+	   ========================================================= */
 	@GetMapping("mypage/orderList")
-    public ModelAndView orderList(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        ModelAndView mav = new ModelAndView("mypage/orderList");
-        HttpSession session = req.getSession();
-        
-        // 로그인 체크
-        SessionInfo info = (SessionInfo) session.getAttribute("member");
-        if (info == null) {
-            return new ModelAndView("redirect:/member/login");
-        }
-        
-        // Mapper 가져오기 (Service 레이어가 있다면 Service를 호출하세요)
-        OrderMapper mapper = MapperContainer.get(OrderMapper.class);
-        MyUtil util = new MyUtil(); // 페이징용 유틸
-        
-        try {
-            String page = req.getParameter("page");
-            int current_page = 1;
-            if (page != null) current_page = Integer.parseInt(page);
-            
-            // 파라미터 맵 설정
-            Map<String, Object> map = new HashMap<>();
-            map.put("memberIdx", info.getMemberIdx());
-            
-            // 페이징 처리
-            int dataCount = mapper.dataCount(map);
-            int size = 5; // 한 페이지에 5개씩
-            int total_page = util.pageCount(dataCount, size);
-            if (current_page > total_page) current_page = total_page;
-            
-            int start = (current_page - 1) * size + 1;
-            int end = current_page * size;
-            map.put("start", start);
-            map.put("end", end);
-            
-            // 리스트 가져오기
-            List<OrderDTO> list = mapper.listOrder(map);
-            
-            String listUrl = req.getContextPath() + "/member/mypage/orderList";
-            String paging = util.paging(current_page, total_page, listUrl);
-            
-            mav.addObject("list", list);
-            mav.addObject("dataCount", dataCount);
-            mav.addObject("paging", paging);
-            
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        
-        return mav;
-    }
+	public ModelAndView orderList(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		ModelAndView mav = new ModelAndView("mypage/orderList");
+		HttpSession session = req.getSession();
+		
+		SessionInfo info = (SessionInfo) session.getAttribute("member");
+		if (info == null) {
+			return new ModelAndView("redirect:/member/login");
+		}
+		
+		OrderMapper mapper = MapperContainer.get(OrderMapper.class);
+		MyUtil util = new MyUtil(); 
+		
+		try {
+			String page = req.getParameter("page");
+			int current_page = 1;
+			if (page != null) current_page = Integer.parseInt(page);
+			
+			// 1. 기본 파라미터 맵 설정
+			Map<String, Object> map = new HashMap<>();
+			map.put("memberIdx", info.getMemberIdx());
+			
+			// 2. 전체 주문 개수 (빨간색 숫자용)
+			int dataCount = mapper.dataCount(map);
+
+			// 3. [추가] 상태별 개수 구하기
+			// (주의: MyBatis Mapper XML에서 <if test="orderState!=null"> 로직이 있어야 동작합니다)
+			
+			// 결제완료
+			map.put("orderState", "결제완료");
+			int paymentCount = mapper.dataCount(map);
+			
+			// 배송중
+			map.put("orderState", "배송중");
+			int shippingCount = mapper.dataCount(map);
+			
+			// 배송완료
+			map.put("orderState", "배송완료");
+			int completeCount = mapper.dataCount(map);
+			
+			// ★ 중요: 리스트를 가져올 때는 상태 조건(orderState)을 지워야 전체 목록이 보입니다!
+			map.remove("orderState");
+			
+			// 4. 페이징 처리
+			int size = 5; 
+			int total_page = util.pageCount(dataCount, size);
+			if (current_page > total_page) current_page = total_page;
+			
+			int start = (current_page - 1) * size + 1;
+			int end = current_page * size;
+			map.put("start", start);
+			map.put("end", end);
+			
+			// 5. 리스트 가져오기
+			List<OrderDTO> list = mapper.listOrder(map);
+			
+			String listUrl = req.getContextPath() + "/member/mypage/orderList";
+			String paging = util.paging(current_page, total_page, listUrl);
+			
+			mav.addObject("list", list);
+			mav.addObject("dataCount", dataCount); // 전체
+			mav.addObject("paging", paging);
+			
+			// [추가] 상태별 개수 전달
+			mav.addObject("paymentCount", paymentCount);
+			mav.addObject("shippingCount", shippingCount);
+			mav.addObject("completeCount", completeCount);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return mav;
+	}
 	
-	
+	/* =========================================================
+	   [수정됨] 취소/반품 조회 (상태별 카운트 추가)
+	   ========================================================= */
+	@GetMapping("mypage/cancelList")
+	public ModelAndView cancelList(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		ModelAndView mav = new ModelAndView("mypage/cancelList");
+		HttpSession session = req.getSession();
+		
+		SessionInfo info = (SessionInfo) session.getAttribute("member");
+		if (info == null) {
+			return new ModelAndView("redirect:/member/login");
+		}
+		
+		OrderMapper mapper = MapperContainer.get(OrderMapper.class);
+		MyUtil util = new MyUtil();
+		
+		try {
+			String page = req.getParameter("page");
+			int current_page = 1;
+			if (page != null) current_page = Integer.parseInt(page);
+			
+			Map<String, Object> map = new HashMap<>();
+			map.put("memberIdx", info.getMemberIdx());
+			map.put("mode", "cancel"); // 기본 모드: 취소/반품 내역만 조회
+			
+			// 1. 전체 취소/반품 개수
+			int dataCount = mapper.dataCount(map);
+			
+			// 2. [추가] 취소/반품 상태별 개수 구하기
+			// (DB에 저장되는 실제 상태명에 맞춰주세요. 예: "주문취소", "반품신청" 등)
+			
+			// 취소 (주문취소 완료된 건)
+			map.put("orderState", "취소완료"); // 혹은 "주문취소"
+			int cancelCount = mapper.dataCount(map);
+			
+			// 반품신청 (조회)
+			map.put("orderState", "반품신청");
+			int returnCheckCount = mapper.dataCount(map);
+			
+			// 반품진행중
+			map.put("orderState", "반품중");
+			int returnIngCount = mapper.dataCount(map);
+
+			// 반품완료
+			map.put("orderState", "반품완료");
+			int returnDoneCount = mapper.dataCount(map);
+			
+			// ★ 중요: 리스트 조회 전 상태 조건 제거 (mode="cancel"은 유지)
+			map.remove("orderState");
+			
+			int size = 5;
+			int total_page = util.pageCount(dataCount, size);
+			if (current_page > total_page) current_page = total_page;
+			
+			int start = (current_page - 1) * size + 1;
+			int end = current_page * size;
+			map.put("start", start);
+			map.put("end", end);
+			
+			List<OrderDTO> list = mapper.listOrder(map);
+			
+			String listUrl = req.getContextPath() + "/member/mypage/cancelList";
+			String paging = util.paging(current_page, total_page, listUrl);
+			
+			mav.addObject("list", list);
+			mav.addObject("dataCount", dataCount);
+			mav.addObject("paging", paging);
+			
+			// [추가] 상태별 개수 전달
+			mav.addObject("cancelCount", cancelCount);
+			mav.addObject("returnCheckCount", returnCheckCount);
+			mav.addObject("returnIngCount", returnIngCount);
+			mav.addObject("returnDoneCount", returnDoneCount);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return mav;
+	}
 }
