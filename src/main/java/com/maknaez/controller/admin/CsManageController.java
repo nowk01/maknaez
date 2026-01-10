@@ -88,6 +88,7 @@ public class CsManageController {
 				resp.getWriter().print(jobj.toString());
 				return;
 			}
+			
 			long num = Long.parseLong(req.getParameter("num"));
 			BoardDTO dto = service.findById(num);
 
