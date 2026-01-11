@@ -1,0 +1,96 @@
+@charset "UTF-8";
+
+/* [MAKNAEZ] Product List Management - Best Style */
+body { 
+    background-color: #fafafa; 
+    color: #222; 
+    font-family: 'Inter', 'Pretendard', sans-serif;
+    letter-spacing: -0.02em;
+}
+
+.content-container { 
+    padding: 40px; 
+    animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* 베스트 디자인: 슬림 오렌지 바 헤더 */
+.page-header { 
+    margin-bottom: 45px; 
+    border-left: 5px solid #ff4e00; 
+    padding-left: 20px; 
+}
+.page-title { font-weight: 700; font-size: 25px; color: #000; }
+.page-desc { color: #888; font-size: 14px; margin-top: 5px; font-weight: 500; }
+
+/* 카드 디자인 */
+.card-box {
+    background: #ffffff;
+    border-radius: 2px;
+    border: 1px solid #eee;
+    padding: 35px;
+    margin-bottom: 30px;
+    transition: all 0.3s ease;
+}
+.card-box:hover { box-shadow: 0 5px 20px rgba(0,0,0,0.03); }
+
+/* 테이블 커스텀 */
+.table { vertical-align: middle; margin-bottom: 0; }
+.table thead th { 
+    border-top: none; 
+    border-bottom: 2px solid #111; 
+    font-weight: 800; 
+    font-size: 13px; 
+    padding: 18px 10px; 
+    color: #000;
+}
+.table tbody td { 
+    padding: 15px 10px; 
+    border-bottom: 1px solid #eee; 
+    font-size: 14px; 
+    font-weight: 500;
+}
+
+/* 썸네일 박스 */
+.prod-thumb {
+    width: 60px; height: 60px; 
+    background: #f8f8f8; 
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+/* 폼 컨트롤 */
+.form-label { font-weight: 700; color: #000; font-size: 13px; margin-bottom: 12px; display: block; }
+.form-control, .form-select {
+    border-radius: 0; border: none; border-bottom: 1px solid #ddd; 
+    height: 48px; font-size: 15px; font-weight: 500;
+    background-color: transparent !important; color: #222;
+}
+.form-control:focus { border-bottom: 1.5px solid #ff4e00; outline: none; }
+
+/* 버튼 그룹: 160x50 사이즈 통일 */
+.btn-group-custom { display: flex; justify-content: flex-end; gap: 12px; margin-top: 50px; }
+
+.btn-luxury {
+    width: 160px; height: 50px; font-weight: 700; font-size: 13px;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.3s ease;
+    border-radius: 1px;
+    text-transform: uppercase;
+}
+
+.btn-orange-main { background: #ff4e00; color: #fff; border: none; }
+.btn-orange-main:hover { background: #000; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+
+.btn-dark-sub { background: #111; color: #fff; border: none; }
+.btn-dark-sub:hover { background: #333; transform: translateY(-2px); }
+
+.btn-delete-sub { background: #fff; color: #999; border: 1px solid #eee; }
+.btn-delete-sub:hover { color: #e74c3c; border-color: #f5c6cb; transform: translateY(-2px); }
+
+/* 배지 스타일 */
+.badge-sale { color: #ff4e00; font-weight: 800; font-size: 12px; }

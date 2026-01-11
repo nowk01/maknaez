@@ -1,0 +1,45 @@
+@charset "UTF-8";
+
+/* [MAKNAEZ] Professional Footwear Registration - Final Polished */
+body { background-color: #fafafa; color: #111; font-family: 'Inter', 'Pretendard', sans-serif; letter-spacing: -0.03em; }
+.content-container { padding: 50px 60px; animation: fadeIn 0.4s ease-out; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+/* 헤더: 5px 슬림 오렌지 바 */
+.page-header { margin-bottom: 50px; border-left: 5px solid #ff4e00; padding-left: 25px; }
+.page-title { font-weight: 800; font-size: 28px; color: #000; }
+
+.card-box { background: #ffffff; border-radius: 2px; border: 1px solid #eee; padding: 45px; margin-bottom: 35px; box-shadow: 0 2px 12px rgba(0,0,0,0.02); }
+.section-title { font-size: 16px; font-weight: 800; color: #000; margin-bottom: 35px; padding-bottom: 12px; border-bottom: 2px solid #111; display: flex; align-items: center; }
+.section-num { color: #ff4e00; font-weight: 900; margin-right: 12px; font-style: italic; }
+
+.form-label { font-weight: 800; color: #000; font-size: 14px; margin-bottom: 15px; display: block; }
+.form-control, .form-select { border-radius: 0; border: none; border-bottom: 1px solid #ccc; height: 50px; font-size: 15.5px; font-weight: 500; background-color: transparent !important; color: #111; }
+.form-control:focus { border-bottom: 2.5px solid #ff4e00; outline: none; }
+
+/* 옵션 관리 테이블 - Stock 위치 고정 핵심 */
+.option-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+.option-table th { background: #fcfcfc; padding: 15px; font-size: 12px; font-weight: 800; color: #999; border-bottom: 1px solid #eee; text-align: center; }
+.option-table td { padding: 12px; border-bottom: 1px solid #f9f9f9; text-align: center; vertical-align: middle; }
+
+/* 입력창 정렬 */
+.input-stock { 
+    width: 100px !important; height: 38px !important; text-align: center; 
+    font-size: 14px !important; font-weight: 700 !important; 
+    border: 1px solid #eee !important; display: inline-block;
+}
+
+/* 이미지 업로드 그리드 */
+.img-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 15px; }
+.img-upload-box { aspect-ratio: 1/1; border: 1px dashed #ddd; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #fdfdfd; cursor: pointer; transition: 0.3s; }
+.img-upload-box.main { border: 2px solid #111; }
+.img-upload-box i { font-size: 20px; color: #ccc; margin-bottom: 8px; }
+.img-upload-box span { font-size: 11px; font-weight: 800; color: #bbb; }
+
+/* 상품 설명 텍스트 영역 */
+.desc-area { width: 100%; min-height: 200px; border: 1px solid #eee; padding: 20px; font-size: 15px; line-height: 1.6; resize: vertical; }
+
+.btn-footer { display: flex; justify-content: flex-end; gap: 15px; margin-top: 50px; padding-bottom: 100px; }
+.btn-luxury { width: 160px; height: 52px; font-weight: 800; font-size: 14px; display: flex; align-items: center; justify-content: center; transition: all 0.3s; border-radius: 1px; border: none; }
+.btn-orange { background: #ff4e00; color: #fff; }
+.btn-dark { background: #111; color: #fff; }

@@ -35,4 +35,11 @@ public class ProductManageController {
 		
 		return mav;
 	}
+	
+	@GetMapping("product_write")
+	public ModelAndView productWriteForm(HttpServletRequest req, HttpServletResponse resp) throws Exception {
+	    ModelAndView mav = new ModelAndView("admin/product/product_write");
+	 
+	    return mav;
+	}
 }
