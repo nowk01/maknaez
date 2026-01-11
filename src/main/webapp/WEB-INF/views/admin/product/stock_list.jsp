@@ -5,233 +5,99 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>재고 관리 - MAKNAEZ ADMIN</title>
+    <title>STOCK MANAGEMENT | MAKNAEZ</title>
     <jsp:include page="/WEB-INF/views/admin/layout/headerResources.jsp" />
-    
-    <style>
-        /* [공통 레이아웃] */
-        body { background-color: #f4f6f9; }
-        
-        .card-box {
-            background-color: #fff;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.05);
-            padding: 20px;
-            margin-bottom: 20px;
-            border: none;
-        }
-
-        .search-label {
-            font-weight: 600;
-            font-size: 14px;
-            color: #555;
-            margin-bottom: 8px;
-            display: block;
-        }
-
-        /* 테이블 스타일 */
-        .table th {
-            background-color: #f8f9fa;
-            font-weight: 600;
-            text-align: center;
-            border-bottom: 2px solid #dee2e6;
-            vertical-align: middle;
-        }
-        .table td {
-            vertical-align: middle;
-            text-align: center;
-            font-size: 14px;
-        }
-
-        /* [재고 관리 전용 스타일] */
-        .product-img-thumb {
-            width: 50px;
-            height: 50px;
-            object-fit: cover;
-            border-radius: 4px;
-            border: 1px solid #eee;
-        }
-        
-        .stock-input {
-            width: 80px;
-            text-align: center;
-            display: inline-block;
-        }
-
-        /* 재고 상태 배지 */
-        .badge-stock-out { background-color: #ffe3e3; color: #fa5252; } /* 품절 (빨강) */
-        .badge-stock-low { background-color: #fff3bf; color: #f08c00; } /* 부족 (노랑) */
-        .badge-stock-ok { background-color: #e6fcf5; color: #0ca678; }  /* 여유 (초록) */
-
-        .product-info-text {
-            text-align: left;
-            padding-left: 10px;
-        }
-        .option-badge {
-            font-size: 11px;
-            background-color: #f1f3f5;
-            color: #495057;
-            padding: 2px 6px;
-            border-radius: 3px;
-            margin-top: 4px;
-            display: inline-block;
-        }
-    </style>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/admin_stock.css?v=1.0">
 </head>
 <body>
-
     <div id="wrapper">
-        
         <jsp:include page="/WEB-INF/views/admin/layout/left.jsp" />
-
         <div id="page-content-wrapper">
-            
             <jsp:include page="/WEB-INF/views/admin/layout/header.jsp" />
 
             <div class="content-container">
-                
-                <h3 class="fw-bold mb-4">재고 관리</h3>
+                <div class="page-header">
+                    <h3 class="page-title">재고 현황 관리</h3>
+                    <p class="page-desc">Manage footwear inventory by color and size variants</p>
+                </div>
 
-                <div class="card-box">
-                    <div class="row g-3">
+                <div class="card-box mb-4">
+                    <form class="row g-3">
                         <div class="col-md-3">
-                            <label class="search-label">카테고리</label>
+                            <label class="form-label">카테고리</label>
                             <select class="form-select">
-                                <option selected>전체 카테고리</option>
-                                <option value="OUTER">OUTER</option>
-                                <option value="TOP">TOP</option>
-                                <option value="BOTTOM">BOTTOM</option>
+                                <option>전체 카테고리</option>
+                                <option>SNEAKERS</option>
+                                <option>BOOTS</option>
                             </select>
                         </div>
-                        
-                        <div class="col-md-3">
-                            <label class="search-label">재고 상태</label>
-                            <select class="form-select">
-                                <option selected>전체</option>
-                                <option value="soldout">품절 (0개)</option>
-                                <option value="low">부족 (10개 미만)</option>
-                                <option value="ok">여유</option>
-                            </select>
+                        <div class="col-md-7">
+                            <label class="form-label">상품명 검색</label>
+                            <input type="text" class="form-control" placeholder="상품명 또는 모델 코드를 입력하세요">
                         </div>
-                        
-                        <div class="col-md-6">
-                            <label class="search-label">상품 검색</label>
-                            <div class="input-group">
-                                <input type="text" class="form-control" placeholder="상품명, 상품코드 검색">
-                                <button class="btn btn-outline-secondary" type="button">🔍</button>
-                            </div>
+                        <div class="col-md-2 d-flex align-items-end">
+                            <button type="button" class="btn btn-luxury btn-dark w-100" style="height:52px;">SEARCH</button>
                         </div>
-                    </div>
+                    </form>
                 </div>
 
                 <div class="card-box">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <div>
-                            <h5 class="fw-bold m-0 d-inline-block me-2">재고 현황</h5>
-                            <span class="badge bg-danger bg-opacity-10 text-danger border border-danger p-1">품절 1건</span>
-                            <span class="badge bg-warning bg-opacity-10 text-warning border border-warning p-1">부족 1건</span>
-                        </div>
-                        <div>
-                            <button class="btn btn-outline-success btn-sm me-1" onclick="alert('변경사항이 저장되었습니다.')">💾 전체 저장</button>
-                            <button class="btn btn-dark btn-sm" style="font-size: 13px;">엑셀 다운로드</button>
-                        </div>
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h5 style="font-size:13px; font-weight:800; color:#bbb; letter-spacing:0.1em;">INVENTORY LIST</h5>
+                        <div style="font-size:12px; color:#ff4e00; font-weight:700;">* 재고 5개 미만 품목 자동 강조</div>
                     </div>
 
-                    <table class="table table-hover align-middle">
-                        <thead>
-                            <tr>
-                                <th width="40"><input type="checkbox" class="form-check-input"></th>
-                                <th width="80">이미지</th>
-                                <th>상품명 / 옵션</th>
-                                <th>판매가</th>
-                                <th width="150">현재 재고</th>
-                                <th width="100">상태</th>
-                                <th width="100">관리</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><input type="checkbox" class="form-check-input"></td>
-                                <td>
-                                    <div class="bg-light d-flex align-items-center justify-content-center product-img-thumb">
-                                        <i class="fas fa-tshirt text-secondary"></i>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="product-info-text">
-                                        <div class="fw-bold">베이직 코튼 티셔츠</div>
-                                        <span class="option-badge">Size: L / Color: White</span>
-                                    </div>
-                                </td>
-                                <td>19,000원</td>
-                                <td>
-                                    <input type="number" class="form-control form-control-sm stock-input border-danger" value="0">
-                                </td>
-                                <td><span class="badge badge-stock-out">품절</span></td>
-                                <td>
-                                    <button class="btn btn-sm btn-light border">입고</button>
-                                </td>
-                            </tr>
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th style="width:25%;">상품명 (Product)</th>
+                                    <th style="width:15%;">색상 (Color)</th>
+                                    <th style="width:15%;">사이즈 (Size)</th>
+                                    <th style="width:20%;">현재 재고 (Stock)</th>
+                                    <th style="width:15%;">상태 (Status)</th>
+                                    <th style="width:10%;">수정</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style="text-align:left; font-weight:800;">Court Classic Low-V1</td>
+                                    <td style="color:#666;">Triple White</td>
+                                    <td>265 mm</td>
+                                    <td><input type="number" class="form-control input-stock-edit" value="45"></td>
+                                    <td><span class="badge-status bg-onsale">정상판매</span></td>
+                                    <td><button class="btn btn-sm text-dark"><i class="fas fa-save"></i></button></td>
+                                </tr>
+                                <tr>
+                                    <td style="text-align:left; font-weight:800;">Retro High 2026</td>
+                                    <td style="color:#666;">Midnight Black</td>
+                                    <td>240 mm</td>
+                                    <td><input type="number" class="form-control input-stock-edit text-danger-custom" value="3"></td>
+                                    <td><span class="badge-status" style="background:#fff4f0; color:#ff4e00; border:1px solid #ff4e00;">품절임박</span></td>
+                                    <td><button class="btn btn-sm text-dark"><i class="fas fa-save"></i></button></td>
+                                </tr>
+                                <tr>
+                                    <td style="text-align:left; font-weight:800;">Walker Boots Brown</td>
+                                    <td style="color:#666;">Dark Tan</td>
+                                    <td>280 mm</td>
+                                    <td><input type="number" class="form-control input-stock-edit" value="0"></td>
+                                    <td><span class="badge-status bg-soldout">일시품절</span></td>
+                                    <td><button class="btn btn-sm text-dark"><i class="fas fa-save"></i></button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
 
-                            <tr>
-                                <td><input type="checkbox" class="form-check-input"></td>
-                                <td>
-                                    <div class="bg-light d-flex align-items-center justify-content-center product-img-thumb">
-                                        <i class="fas fa-tshirt text-secondary"></i>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="product-info-text">
-                                        <div class="fw-bold">와이드 데님 팬츠</div>
-                                        <span class="option-badge">Size: M / Color: Blue</span>
-                                    </div>
-                                </td>
-                                <td>39,000원</td>
-                                <td>
-                                    <input type="number" class="form-control form-control-sm stock-input border-warning" value="3">
-                                </td>
-                                <td><span class="badge badge-stock-low">부족</span></td>
-                                <td>
-                                    <button class="btn btn-sm btn-light border">입고</button>
-                                </td>
-                            </tr>
-
-                            <tr>
-                                <td><input type="checkbox" class="form-check-input"></td>
-                                <td>
-                                    <div class="bg-light d-flex align-items-center justify-content-center product-img-thumb">
-                                        <i class="fas fa-tshirt text-secondary"></i>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="product-info-text">
-                                        <div class="fw-bold">오버핏 체크 셔츠</div>
-                                        <span class="option-badge">Size: FREE / Color: Green</span>
-                                    </div>
-                                </td>
-                                <td>45,000원</td>
-                                <td>
-                                    <input type="number" class="form-control form-control-sm stock-input" value="150">
-                                </td>
-                                <td><span class="badge badge-stock-ok">여유</span></td>
-                                <td>
-                                    <button class="btn btn-sm btn-light border">입고</button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-
-                    <nav aria-label="Page navigation" class="mt-4">
-                        <ul class="pagination justify-content-center">
-                            <li class="page-item disabled"><a class="page-link" href="#">&lt;</a></li>
-                            <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                            <li class="page-item"><a class="page-link" href="#">2</a></li>
-                            <li class="page-item"><a class="page-link" href="#">3</a></li>
-                            <li class="page-item"><a class="page-link" href="#">&gt;</a></li>
-                        </ul>
-                    </nav>
-
-                </div> </div> </div> </div> <jsp:include page="/WEB-INF/views/admin/layout/footerResources.jsp" />
-
+                    <div class="btn-group-custom">
+                        <button type="button" class="btn btn-luxury btn-dark" onclick="downloadStockExcel()">EXCEL DOWNLOAD</button>
+                        <button type="button" class="btn btn-luxury btn-orange" onclick="updateAllStock()">SAVE CHANGES</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <jsp:include page="/WEB-INF/views/admin/layout/footerResources.jsp" />
+    <script src="${pageContext.request.contextPath}/dist/js/admin_stock.js"></script>
 </body>
 </html>
