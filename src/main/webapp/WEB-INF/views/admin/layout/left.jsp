@@ -277,7 +277,6 @@
             <div class="submenu">
                 <a href="${pageContext.request.contextPath}/admin/cs/notice_list" class="submenu-item">공지사항 (Notice)</a>
                 <a href="${pageContext.request.contextPath}/admin/cs/inquiry_list" class="submenu-item">1:1 문의 (Inquiry)</a>
-                <a href="${pageContext.request.contextPath}/admin/cs/qna_list" class="submenu-item">Q&A</a>
                 <a href="${pageContext.request.contextPath}/admin/cs/review_list" class="submenu-item">리뷰 관리 (Review)</a>
             </div>
         </div>
