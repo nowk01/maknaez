@@ -2,6 +2,8 @@ package com.maknaez.model;
 
 public class MemberDTO {
 	private Long memberIdx;
+	private String nickName;
+    private String gender;
 	private String userId;
 	private String userPwd;
 	private String userName;
@@ -127,5 +129,17 @@ public class MemberDTO {
 	}
 	public void setAddr2(String addr2) {
 		this.addr2 = addr2;
+	}
+	public String getNickName() {
+		return nickName;
+	}
+	public void setNickName(String nickName) {
+		this.nickName = nickName;
+	}
+	public String getGender() {
+		return gender;
+	}
+	public void setGender(String gender) {
+		this.gender = gender;
 	}
 }
