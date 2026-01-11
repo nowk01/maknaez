@@ -40,6 +40,10 @@
 		VALUES (#{userId}, #{email}, TO_DATE(#{birth}, 'YYYY-MM-DD'), #{tel}, 
 			#{profile_photo, jdbcType=VARCHAR}, #{zip, jdbcType=VARCHAR},
 			#{addr1, jdbcType=VARCHAR}, #{addr2, jdbcType=VARCHAR})
+		INTO member2(userId, email, birth, tel, profile_photo, zip, addr1, addr2)
+		VALUES (#{userId}, #{email}, TO_DATE(#{birth}, 'YYYY-MM-DD'), #{tel}, 
+			#{profile_photo, jdbcType=VARCHAR}, #{zip, jdbcType=VARCHAR},
+			#{addr1, jdbcType=VARCHAR}, #{addr2, jdbcType=VARCHAR})
 		SELECT * FROM dual
     </update>
     
@@ -189,7 +193,7 @@
     </select>
     
     <select id="listMember" parameterType="map" resultType="com.maknaez.model.MemberDTO">
-        SELECT m1.memberIdx, m1.userId, m1.userLevel, m1.enabled,
+        SELECT m1.memberIdx, m1.nickName, m1.userId, m1.userLevel, m1.enabled,
                m2.userName, m2.email,
                TO_CHAR(m3.register_date, 'YYYY-MM-DD') as register_date
         FROM member1 m1
