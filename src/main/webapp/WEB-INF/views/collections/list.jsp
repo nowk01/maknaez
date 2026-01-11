@@ -215,7 +215,7 @@
                         <summary class="filter-title">색상</summary>
                         <div class="filter-content">
                             <div class="color-list">
-                                <c:set var="colorList" value="${[{'name':'블랙','hex':'#000000'}, {'name':'화이트','hex':'#FFFFFF'}, {'name':'그레이','hex':'#808080'}, {'name':'레드','hex':'#E32526'}, {'name':'블루','hex':'#0057B8'}, {'name':'그린','hex':'#006F44'}, {'name':'베이지','hex':'#DBCFB6'}, {'name':'브라운','hex':'#6E4E37'}, {'name':'옐로우','hex':'#FFD100'}]}" />
+                                <%-- [수정됨] c:set 태그 삭제. 컨트롤러에서 colorList를 전달받아 바로 사용 --%>
                                 <c:forEach var="color" items="${colorList}">
                                     <c:set var="isColorChecked" value="false"/>
                                     <c:if test="${not empty paramValues.colors}">
