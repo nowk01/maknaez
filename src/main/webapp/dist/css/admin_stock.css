@@ -1,0 +1,89 @@
+@charset "UTF-8";
+
+/* [MAKNAEZ] Premium Stock Management Style */
+body { 
+    background-color: #fafafa; 
+    color: #111; 
+    font-family: 'Inter', 'Pretendard', sans-serif;
+    letter-spacing: -0.03em;
+}
+
+.content-container { 
+    padding: 40px; 
+    animation: fadeIn 0.4s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* 베스트 디자인: 5px 슬림 오렌지 바 헤더 */
+.page-header { 
+    margin-bottom: 45px; 
+    border-left: 5px solid #ff4e00; 
+    padding-left: 20px; 
+}
+.page-title { font-weight: 800; font-size: 25px; color: #000; }
+.page-desc { color: #888; font-size: 14px; margin-top: 5px; font-weight: 500; }
+
+/* 섹션 카드 */
+.card-box {
+    background: #ffffff;
+    border-radius: 2px;
+    border: 1px solid #eee;
+    padding: 35px;
+    margin-bottom: 30px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.02);
+}
+
+/* 테이블 레이아웃 및 가독성 */
+.table { vertical-align: middle; margin-bottom: 0; table-layout: fixed; }
+.table thead th { 
+    border-top: none; 
+    border-bottom: 2px solid #111; 
+    font-weight: 800; 
+    font-size: 13px; 
+    padding: 18px 10px; 
+    color: #999;
+    text-align: center;
+    text-transform: uppercase;
+}
+.table tbody td { 
+    padding: 15px 10px; 
+    border-bottom: 1px solid #f9f9f9; 
+    font-size: 14.5px; 
+    font-weight: 600;
+    text-align: center;
+}
+
+/* 재고 입력창 칼정렬 (상품 등록 페이지와 통일) */
+.input-stock-edit { 
+    width: 90px !important; 
+    height: 35px !important; 
+    text-align: center; 
+    font-size: 14px !important; 
+    font-weight: 700 !important; 
+    border: 1px solid #eee !important;
+    background-color: #fdfdfd !important;
+    display: inline-block;
+}
+.input-stock-edit:focus { border-color: #ff4e00 !important; background: #fffaf8 !important; outline: none; }
+
+/* 재고 위험 알림 (Low Stock) */
+.text-danger-custom { color: #ff4e00 !important; font-weight: 800; }
+.badge-status { padding: 4px 10px; font-size: 11px; font-weight: 800; border-radius: 1px; }
+.bg-soldout { background: #eee; color: #999; }
+.bg-onsale { background: #111; color: #fff; }
+
+/* 하단 버튼 바 */
+.btn-group-custom { display: flex; justify-content: flex-end; gap: 12px; margin-top: 50px; }
+.btn-luxury {
+    width: 160px; height: 52px; font-weight: 800; font-size: 14px;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.3s; border-radius: 1px; border: none;
+    text-transform: uppercase;
+}
+.btn-orange { background: #ff4e00; color: #fff; }
+.btn-orange:hover { background: #000; transform: translateY(-3px); }
+.btn-dark { background: #111; color: #fff; }
