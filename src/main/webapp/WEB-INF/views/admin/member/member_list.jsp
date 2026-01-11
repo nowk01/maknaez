@@ -218,7 +218,22 @@
 	                <form name="memberForm" id="memberForm">
 	                    <input type="hidden" name="memberIdx" id="modalMemberIdx" value="0">
 	                    <input type="hidden" name="mode" id="modalMode" value="add">
-	
+						
+						<div class="row mb-3">
+						    <div class="col-md-6">
+						        <label for="nickName" class="form-label">닉네임</label>
+						        <input type="text" class="form-control" name="nickName" id="nickName" required>
+						    </div>
+						    <div class="col-md-6">
+						        <label for="gender" class="form-label">성별</label>
+						        <select class="form-select" name="gender" id="gender">
+						            <option value="">선택</option>
+						            <option value="남자">남자</option>
+						            <option value="여자">여자</option>
+						        </select>
+						    </div>
+						</div>
+						
 	                    <div class="row mb-3">
 	                        <div class="col-md-6">
 	                            <label for="userId" class="form-label">아이디</label>

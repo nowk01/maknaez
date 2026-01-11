@@ -164,6 +164,8 @@ public class MemberManageController {
             dto.setUserId(req.getParameter("userId"));
             dto.setUserPwd(req.getParameter("userPwd"));
             dto.setUserName(req.getParameter("userName"));
+            dto.setNickName(req.getParameter("nickName"));
+            dto.setGender(req.getParameter("gender"));
             dto.setBirth(req.getParameter("birth")); 
             dto.setEmail(req.getParameter("email"));
             dto.setTel(req.getParameter("tel"));
@@ -192,6 +194,8 @@ public class MemberManageController {
             dto.setMemberIdx(Long.parseLong(req.getParameter("memberIdx")));
             dto.setUserPwd(req.getParameter("userPwd"));
             dto.setUserName(req.getParameter("userName"));
+            dto.setNickName(req.getParameter("nickName"));
+            dto.setGender(req.getParameter("gender"));
             dto.setBirth(req.getParameter("birth"));
             dto.setEmail(req.getParameter("email"));
             dto.setTel(req.getParameter("tel"));
