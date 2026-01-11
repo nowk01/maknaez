@@ -1,132 +1,120 @@
-document.addEventListener("DOMContentLoaded", () => {
-    
-    // 천단위 콤마 함수
-    const formatNumber = (num) => {
-        return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    };
+document.addEventListener('DOMContentLoaded', function() {
+    updateTotal();
 
-    // 콤마 제거 후 숫자로 변환
-    const parseNumber = (str) => {
-        return parseInt(str.replace(/,/g, ''), 10) || 0;
-    };
-
-    // 전체 합계 계산 함수
-    const updateCartTotal = () => {
-        let totalProductPrice = 0;
-        let totalDeliveryPrice = 0;
-
-        const rows = document.querySelectorAll('.cart-item');
-        
-        rows.forEach(row => {
-            const checkbox = row.querySelector('.check-item');
-            if (checkbox.checked) {
-                // 데이터 속성에서 단가, 배송비 가져오기
-                const unitPrice = parseInt(row.dataset.price); 
-                const deliveryPrice = parseInt(row.dataset.delivery);
-                const quantity = parseInt(row.querySelector('.quantity-input').value);
-
-                // 현재 행의 합계 업데이트 (화면 표시용)
-                const rowTotal = unitPrice * quantity;
-                row.querySelector('.item-total-price').textContent = formatNumber(rowTotal);
-
-                // 전체 합계 누적
-                totalProductPrice += rowTotal;
-                totalDeliveryPrice += deliveryPrice; // 배송비 정책에 따라 로직 수정 가능 (ex: 5만원 이상 무료)
-            }
-        });
-
-        // 최종 금액 표시
-        document.getElementById('total-product-price').textContent = formatNumber(totalProductPrice);
-        document.getElementById('total-delivery-price').textContent = formatNumber(totalDeliveryPrice);
-        document.getElementById('final-total-price').textContent = formatNumber(totalProductPrice + totalDeliveryPrice);
-    };
-
-    // 1. 수량 변경 (+, -) 버튼 이벤트
-    document.querySelectorAll('.btn-plus, .btn-minus').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            const row = e.target.closest('.cart-item');
-            const input = row.querySelector('.quantity-input');
-            let currentVal = parseInt(input.value);
-
-            if (e.target.classList.contains('btn-plus')) {
-                input.value = currentVal + 1;
-            } else {
-                if (currentVal > 1) {
-                    input.value = currentVal - 1;
-                } else {
-                    alert("최소 수량은 1개입니다.");
-                    return;
-                }
-            }
-            
-            // 수량 변경 시 합계 재계산
-            updateCartTotal();
-        });
-    });
-
-    // 2. 전체 선택 체크박스
+    // 1. 전체 선택 체크박스
     const checkAll = document.getElementById('check-all');
-    checkAll.addEventListener('change', (e) => {
-        const isChecked = e.target.checked;
-        document.querySelectorAll('.check-item').forEach(box => {
-            box.checked = isChecked;
-        });
-        updateCartTotal();
+    checkAll.addEventListener('change', function() {
+        const checkboxes = document.querySelectorAll('.check-item');
+        checkboxes.forEach(cb => cb.checked = checkAll.checked);
+        updateTotal();
     });
 
-    // 3. 개별 체크박스 변경 시
-    document.querySelectorAll('.check-item').forEach(box => {
-        box.addEventListener('change', () => {
-            updateCartTotal();
-            
-            // 개별 체크박스가 하나라도 해제되면 전체 선택 해제
-            const total = document.querySelectorAll('.check-item').length;
-            const checked = document.querySelectorAll('.check-item:checked').length;
-            checkAll.checked = (total === checked);
+    // 2. 개별 체크박스 변경 시
+    const checkboxes = document.querySelectorAll('.check-item');
+    checkboxes.forEach(cb => {
+        cb.addEventListener('change', updateTotal);
+    });
+
+    // 3. 수량 변경 (+/-)
+    document.querySelectorAll('.btn-plus').forEach(btn => {
+        btn.addEventListener('click', function() {
+            changeQuantity(this, 1);
         });
     });
 
-    // 4. 개별 삭제 버튼 (프론트엔드 처리만)
+    document.querySelectorAll('.btn-minus').forEach(btn => {
+        btn.addEventListener('click', function() {
+            changeQuantity(this, -1);
+        });
+    });
+
+    // 4. 상품 삭제 (개별)
     document.querySelectorAll('.btn-delete').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            if (confirm("해당 상품을 장바구니에서 삭제하시겠습니까?")) {
-                e.target.closest('.cart-item').remove();
-                updateCartTotal();
-                
-                // TODO: 여기에 Ajax를 사용하여 서버 DB에서도 삭제하는 로직 추가 필요
-            }
+        btn.addEventListener('click', function() {
+            if(!confirm('정말 삭제하시겠습니까?')) return;
+            const row = this.closest('tr');
+            row.remove();
+            updateTotal();
+            // TODO: Ajax로 DB 삭제 요청
         });
     });
 
-    // 5. 선택 삭제 버튼
-    document.getElementById('btn-delete-selected').addEventListener('click', () => {
+    // 5. 선택 상품 삭제
+    document.querySelector('#btn-delete-selected').addEventListener('click', function() {
         const checkedItems = document.querySelectorAll('.check-item:checked');
         if (checkedItems.length === 0) {
-            alert("삭제할 상품을 선택해주세요.");
+            alert('삭제할 상품을 선택해주세요.');
             return;
         }
 
-        if (confirm("선택한 상품을 삭제하시겠습니까?")) {
-            checkedItems.forEach(item => {
-                item.closest('.cart-item').remove();
-            });
-            updateCartTotal();
-            // TODO: Ajax로 일괄 삭제 요청
-        }
-    });
+        if(!confirm('선택한 상품을 삭제하시겠습니까?')) return;
 
+        checkedItems.forEach(cb => {
+            cb.closest('tr').remove();
+        });
+        updateTotal();
+        // TODO: Ajax로 DB 일괄 삭제 요청
+    });
+    
     // 6. 구매하기 버튼
-    document.getElementById('btn-order').addEventListener('click', () => {
+    document.querySelector('#btn-order').addEventListener('click', function() {
         const checkedItems = document.querySelectorAll('.check-item:checked');
         if (checkedItems.length === 0) {
-            alert("구매할 상품을 선택해주세요.");
+            alert('구매할 상품을 선택해주세요.');
             return;
         }
-        
-        alert("주문 페이지로 이동합니다.");
-        // location.href = "/order/sheet"; // 주문서 작성 페이지로 이동
+        alert('주문서 작성 페이지로 이동합니다.');
+        // location.href = '/order/sheet'; // 실제 이동 경로
+    });
+});
+
+// 수량 변경 함수
+function changeQuantity(btn, change) {
+    const row = btn.closest('tr');
+    const input = row.querySelector('.quantity-input');
+    let qty = parseInt(input.value);
+    
+    qty += change;
+    if (qty < 1) return; // 최소 1개
+
+    input.value = qty;
+
+    // 상품 금액 업데이트 (단가 * 수량)
+    const unitPrice = parseInt(row.dataset.price);
+    const totalPriceSpan = row.querySelector('.item-total-price');
+    const newPrice = unitPrice * qty;
+    
+    totalPriceSpan.textContent = newPrice.toLocaleString();
+    
+    updateTotal();
+    
+    // TODO: Ajax로 DB 수량 업데이트 요청
+}
+
+// 총 금액 계산 함수
+function updateTotal() {
+    let totalProduct = 0;
+    let totalDelivery = 0;
+
+    const rows = document.querySelectorAll('.cart-item');
+    rows.forEach(row => {
+        const checkbox = row.querySelector('.check-item');
+        if (checkbox.checked) {
+            const qty = parseInt(row.querySelector('.quantity-input').value);
+            const price = parseInt(row.dataset.price);
+            const delivery = parseInt(row.dataset.delivery);
+
+            totalProduct += (price * qty);
+            
+            // 배송비 로직 (상품별 배송비인 경우)
+            // 묶음 배송인 경우 로직 수정 필요
+            totalDelivery += delivery; 
+        }
     });
 
-    // 초기 로딩 시 합계 계산 실행
-    updateCartTotal();
-});
+    const finalTotal = totalProduct + totalDelivery;
+
+    document.getElementById('total-product-price').textContent = totalProduct.toLocaleString();
+    document.getElementById('total-delivery-price').textContent = totalDelivery.toLocaleString();
+    document.getElementById('final-total-price').textContent = finalTotal.toLocaleString();
+}
