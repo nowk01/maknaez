@@ -88,7 +88,7 @@ public class CsManageController {
 				resp.getWriter().print(jobj.toString());
 				return;
 			}
-			
+
 			long num = Long.parseLong(req.getParameter("num"));
 			BoardDTO dto = service.findById(num);
 
@@ -250,5 +250,63 @@ public class CsManageController {
 			e.printStackTrace();
 		}
 		return new ModelAndView("redirect:/admin/cs/notice_list");
+	}
+
+	// 아래 메서드들을 컨트롤러 클래스 내부에 추가하세요.
+
+	// 리뷰 관리 리스트 페이지
+	@GetMapping("review_list")
+	public ModelAndView reviewList(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException {
+		// 1:1 문의와 통일감을 주기 위해 inquiry_list와 유사한 구조로 생성
+		ModelAndView mav = new ModelAndView("admin/cs/review_list");
+
+		try {
+			String score = req.getParameter("score");
+			String keyword = req.getParameter("keyword");
+			if (score == null)
+				score = "0";
+			if (keyword == null)
+				keyword = "";
+
+			Map<String, Object> map = new HashMap<>();
+			map.put("score", Integer.parseInt(score));
+			map.put("keyword", keyword);
+
+			// TODO: BoardService에 listReview 메서드 구현 필요
+			// List<BoardDTO> list = service.listReview(map);
+			// mav.addObject("list", list);
+			mav.addObject("score", score);
+			mav.addObject("keyword", keyword);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return mav;
+	}
+
+	// 리뷰 상세 데이터 가져오기 (AJAX)
+	@ResponseBody
+	@GetMapping("review_detail")
+	public void reviewDetail(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		resp.setContentType("application/json; charset=utf-8");
+		JSONObject jobj = new JSONObject();
+		try {
+			long num = Long.parseLong(req.getParameter("num"));
+			// TODO: service.findReviewById(num) 구현 필요
+			// BoardDTO dto = service.findReviewById(num);
+
+			// 예시 데이터 (테스트용)
+			jobj.put("status", "success");
+			jobj.put("productName", "상품명 예시");
+			jobj.put("userName", "홍길동");
+			jobj.put("score", 5);
+			jobj.put("content", "리뷰 내용 예시");
+			jobj.put("reg_date", "2026-01-11");
+
+		} catch (Exception e) {
+			jobj.put("status", "error");
+		}
+		resp.getWriter().print(jobj.toString());
 	}
 }
