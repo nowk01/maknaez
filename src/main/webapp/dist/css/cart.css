@@ -1,0 +1,63 @@
+/* 장바구니 테이블 스타일 */
+.cart-table th {
+    padding: 15px 0;
+    font-weight: 600;
+    border-top: 2px solid #333;
+    border-bottom: 1px solid #ddd;
+}
+
+.cart-table td {
+    padding: 20px 0;
+    vertical-align: middle;
+}
+
+.cart-table img {
+    border: 1px solid #eee;
+}
+
+/* 수량 조절 버튼 */
+.quantity-input {
+    background-color: #fff !important;
+    border-left: 0;
+    border-right: 0;
+    font-weight: bold;
+}
+
+.btn-minus, .btn-plus {
+    border-color: #ced4da;
+    color: #555;
+    z-index: 0 !important; /* 부트스트랩 겹침 현상 방지 */
+}
+
+.btn-minus:hover, .btn-plus:hover {
+    background-color: #f8f9fa;
+    color: #333;
+    border-color: #ced4da;
+}
+
+.item-total-price {
+    color: #333;
+}
+
+/* 체크박스 크기 조절 */
+input[type=checkbox] {
+    transform: scale(1.2);
+    cursor: pointer;
+}
+
+/* 반응형 모바일 대응 */
+@media (max-width: 768px) {
+    .cart-table {
+        font-size: 14px;
+    }
+    
+    .cart-table img {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .btn-lg {
+        font-size: 1rem;
+        padding: 0.5rem 1rem;
+    }
+}

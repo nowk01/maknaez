@@ -160,26 +160,33 @@
         </ul>
     </nav>
 
-  <div class="user-actions">
-    <c:choose>
-        <c:when test="${not empty sessionScope.member}">
-            <c:if test="${sessionScope.member.userId == 'admin'}">
-                <a href="${pageContext.request.contextPath}/admin" class="icon-btn" title="관리자 페이지" style="color: #ff4e00;">
-                    <i class="ph ph-gear"></i> </a>
-            </c:if>
-            
-            <a href="${pageContext.request.contextPath}/member/mypage/main.do" class="icon-btn">
-                <i class="ph ph-user"></i>
-            </a>
-            <a href="${pageContext.request.contextPath}/member/logout" class="icon-btn">
-                <i class="ph ph-sign-out"></i>
-            </a>
-        </c:when>
-        <c:otherwise>
-            <a href="${pageContext.request.contextPath}/member/login" class="icon-btn">
-                <i class="ph ph-user"></i>
-            </a>
-        </c:otherwise>
-    </c:choose>
+    <div class="user-actions">
+        <!-- [Modified] 로그인/마이페이지 분기 처리가 먼저 오도록 위치 이동 -->
+        <c:choose>
+            <c:when test="${not empty sessionScope.member}">
+                <c:if test="${sessionScope.member.userId == 'admin'}">
+                    <a href="${pageContext.request.contextPath}/admin" class="icon-btn" title="관리자 페이지" style="color: #ff4e00;">
+                        <i class="ph ph-gear"></i> 
+                    </a>
+                </c:if>
+                
+                <a href="${pageContext.request.contextPath}/member/mypage/main.do" class="icon-btn" title="MyPage">
+                    <i class="ph ph-user"></i>
+                </a>
+                <a href="${pageContext.request.contextPath}/member/logout" class="icon-btn" title="Logout">
+                    <i class="ph ph-sign-out"></i>
+                </a>
+            </c:when>
+            <c:otherwise>
+                <a href="${pageContext.request.contextPath}/member/login" class="icon-btn" title="Login">
+                    <i class="ph ph-user"></i>
+                </a>
+            </c:otherwise>
+        </c:choose>
+
+        <!-- [Modified] 장바구니 아이콘을 가장 오른쪽으로 이동 -->
+        <a href="${pageContext.request.contextPath}/order/cart" class="icon-btn" title="Cart">
+            <i class="ph ph-shopping-cart"></i>
+        </a>
     </div>
 </header>
