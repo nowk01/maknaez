@@ -1,0 +1,184 @@
+@charset "UTF-8";
+
+body {
+	background-color: #fcfcfd;
+	color: #202224;
+	font-family: 'Pretendard', sans-serif;
+	letter-spacing: -0.5px;
+}
+
+.content-container {
+	padding: 40px;
+	animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {from { opacity:0;
+	transform: translateY(10px);
+}
+
+to {
+	opacity: 1;
+	transform: translateY(0);
+}
+
+}
+
+/* 타이틀 규격 26px 통일 */
+.page-header {
+	margin-bottom: 35px;
+	border-left: 5px solid #111;
+	padding-left: 20px;
+}
+
+.page-title {
+	font-weight: 800;
+	font-size: 26px;
+	color: #1a1c1e;
+	margin-bottom: 5px;
+}
+
+.page-desc {
+	color: #8a8a8a;
+	font-size: 14px;
+}
+
+/* 카드 박스 */
+.card-box {
+	background: #fff;
+	border-radius: 4px;
+	border: 1px solid #eee;
+	padding: 30px;
+	margin-bottom: 25px;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+}
+
+/* 검색 그리드 */
+.search-grid {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr) auto;
+	gap: 20px;
+	align-items: end;
+}
+
+.form-label {
+	font-weight: 700;
+	color: #4a5568;
+	font-size: 13px;
+	margin-bottom: 10px;
+	display: block;
+}
+
+.form-control, .form-select {
+	border-radius: 2px;
+	border: 1px solid #ddd;
+	height: 42px;
+	font-size: 14px;
+	padding: 0 15px;
+	outline: none;
+	background-color: #fcfcfc;
+	transition: 0.2s;
+}
+
+.form-control:focus, .form-select:focus {
+	border-color: #111;
+	background-color: #fff;
+}
+
+.btn-search-main {
+	background: #111;
+	color: #fff;
+	border: none;
+	padding: 0 40px;
+	font-weight: 700;
+	font-size: 14px;
+	height: 42px;
+	transition: 0.3s;
+	cursor: pointer;
+}
+
+.btn-search-main:hover {
+	background: #ff4e00;
+}
+
+/* 테이블 상단 */
+.list-ctrl {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 20px;
+}
+
+.stat-text {
+	font-size: 14px;
+	color: #718096;
+}
+
+.stat-text b {
+	color: #111;
+	font-weight: 800;
+}
+
+.btn-group-custom .btn {
+	font-size: 12.5px;
+	font-weight: 700;
+	padding: 8px 16px;
+	border: 1px solid #eee;
+	background: #fff;
+	color: #444;
+	margin-left: 5px;
+	cursor: pointer;
+	border-radius: 2px;
+}
+
+.btn-group-custom .btn:hover {
+	border-color: #111;
+	color: #111;
+}
+
+/* 테이블 스타일 */
+.custom-table {
+	width: 100%;
+	border-collapse: collapse;
+	border-top: 2px solid #111;
+}
+
+.custom-table thead th {
+	background: #fbfbfb;
+	padding: 16px;
+	font-size: 13px;
+	border-bottom: 1px solid #eee;
+	text-align: center;
+}
+
+.custom-table tbody td {
+	padding: 18px 16px;
+	border-bottom: 1px solid #f5f5f5;
+	text-align: center;
+	font-size: 14px;
+}
+
+.btn-sm-action {
+	background: #fff;
+	border: 1px solid #ddd;
+	padding: 4px 10px;
+	font-size: 12px;
+	cursor: pointer;
+	border-radius: 1px;
+}
+
+.btn-sm-action:hover {
+	border-color: #111;
+	color: #111;
+}
+
+/* 휴면 뱃지 */
+.k-badge.dormant {
+	font-size: 11px;
+	font-weight: 800;
+	padding: 4px 12px;
+	background-color: #f5f5f5;
+	color: #999;
+	border: 1px solid #ddd;
+	border-radius: 1px;
+	display: inline-block;
+}
