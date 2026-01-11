@@ -95,13 +95,13 @@
                 <div class="card-box">
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <h5 class="fw-bold m-0">회원 목록 <span class="text-muted fs-6">(${dataCount}명)</span></h5>
+                        <div style="float: right;">
+					        <button type="button" class="btn btn-primary" onclick="openMemberModal('add')">
+					            <i class="bi bi-person-plus"></i> 회원 추가
+					        </button>
+				    	</div>
                     </div>
-                    <div style="float: right;">
-				        <button type="button" class="btn btn-primary" onclick="openMemberModal('add')">
-				            <i class="bi bi-person-plus"></i> 회원 추가
-				        </button>
-				    </div>
-
+                    
                     <table class="table table-hover">
                         <thead>
                             <tr>
@@ -324,15 +324,22 @@
             if (mode === 'add') {
                 // [회원 추가 모드]
                 document.getElementById("memberModalLabel").innerText = "회원 추가";
-                document.getElementById("userId").readOnly = false; // 아이디 입력 가능
+                
+                document.getElementById("userId").readOnly = false;
+                document.getElementById("userName").readOnly = false;
+                
                 document.getElementById("modalMemberIdx").value = "0";
+                
                 
                 myModal.show(); // 빈 모달 바로 열기
 
             } else if (mode === 'update') {
                 // [회원 수정 모드]
                 document.getElementById("memberModalLabel").innerText = "회원 상세/수정";
-                document.getElementById("userId").readOnly = true; // 아이디 수정 불가
+                
+                document.getElementById("userId").readOnly = true;
+                document.getElementById("userName").readOnly = true;
+                
                 document.getElementById("modalMemberIdx").value = memberIdx;
 
                 // AJAX로 회원 상세 정보 가져오기
@@ -340,6 +347,9 @@
                 let query = "memberIdx=" + memberIdx;
 
                 const fn = function(data) {
+                	console.log("타입 확인:", typeof data.dto);
+                	console.log("값 확인:", data.dto);
+                	
                     if(data.state === "true") {
                         let dto = data.dto;
                         
@@ -351,12 +361,14 @@
                         $("#modalUserLevel").val(dto.userLevel);
 
                         // **날짜 포맷 처리 (가장 중요)**
-                        // DB에서 "2024-01-01 10:30:00" 처럼 올 경우 앞 10자리만 잘라서 넣어야 함
-                        if(dto.birth) {
-                            // 문자열인 경우 앞에서 10자리만 추출 (YYYY-MM-DD)
-                            let birthStr = dto.birth.substring(0, 10);
-                            $("#birth").val(birthStr);
-                        }
+                        // dto.birth가 null일 경우 substring에서 에러가 나므로 체크 로직 추가
+	                    if(dto.birth) {
+	                        // 문자열인 경우 YYYY-MM-DD만 추출
+	                        let birthStr = dto.birth.length >= 10 ? dto.birth.substring(0, 10) : dto.birth;
+	                        $("#birth").val(birthStr);
+	                    } else {
+	                        $("#birth").val(""); // 날짜가 없으면 빈 값
+	                    }
 
                         // 데이터 세팅 후 모달 열기
                         myModal.show();
