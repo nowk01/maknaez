@@ -8,8 +8,6 @@ public class OrderDTO {
     private String orderState;    // 주문상태 (status)
     private String productName;   // 상품명 (prod_name)
     private String thumbNail;     // 썸네일
-    
-    // [중요] 숫자형은 null 처리를 위해 Integer로 선언
     private Integer totalAmount;  // 결제금액
     private Integer qty;          // 수량
     private Integer price;        // 단가
