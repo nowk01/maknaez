@@ -47,7 +47,7 @@
 		SELECT * FROM dual
     </update>
     
-    <!-- 아이디 -> 고유번호로 찾는걸로 변경 -->
+   
 	<select id="findById" parameterType="String" resultType="com.maknaez.model.MemberDTO">
 		SELECT memberIdx, m1.userId, userPwd, userName,
 			enabled, userLevel, register_date, modify_date,
@@ -58,8 +58,9 @@
 		WHERE m1.userId = #{userId}
 	</select>
 	
+	<!-- 아이디 -> 고유번호로 찾는걸로 변경 -->
 	<select id="findByIdx" parameterType="Long" resultType="com.maknaez.model.MemberDTO">
-	    SELECT m1.memberIdx, m1.userId, m2.userName, m1.userPwd, m1.userLevel, 
+	    SELECT m1.memberIdx, m1.userId, m2.userName, m1.userPwd, m1.userLevel, m1.nickName, m1.gender,
            TO_CHAR(m1.birth, 'YYYY-MM-DD') as birth, m3.register_date, m1.modify_date,
            m2.email, m2.tel
 	    FROM member1 m1
@@ -193,7 +194,7 @@
     </select>
     
     <select id="listMember" parameterType="map" resultType="com.maknaez.model.MemberDTO">
-        SELECT m1.memberIdx, m1.nickName, m1.userId, m1.userLevel, m1.enabled,
+        SELECT m1.memberIdx, m1.nickName, m1.userId, m1.gender, m1.userLevel, m1.enabled, 
                m2.userName, m2.email,
                TO_CHAR(m3.register_date, 'YYYY-MM-DD') as register_date
         FROM member1 m1
@@ -236,4 +237,22 @@
         ORDER BY m1.memberIdx DESC
         OFFSET #{offset} ROWS FETCH NEXT #{size} ROWS ONLY
     </select>
+    
+    <!-- 
+    <insert id="insertMember1" parameterType="com.maknaez.model.MemberDTO">
+	    INSERT INTO member1(memberIdx, userId, userPwd, userName, nickName, gender, enabled, userLevel, 
+	                register_date, modify_date)
+	    VALUES (member_seq.NEXTVAL, #{userId}, #{userPwd}, #{userName}, #{nickName}, #{gender}, 
+	        1, 1, SYSDATE, SYSDATE) 
+	</insert>
+	
+	<update id="updateMember1" parameterType="com.maknaez.model.MemberDTO">
+	    UPDATE member1 
+	    SET userPwd = #{userPwd}, 
+	        nickName = #{nickName}, 
+	        gender = #{gender}, 
+	        modify_date = SYSDATE
+	    WHERE memberIdx = #{memberIdx}  
+	</update>
+    -->
 </mapper>
