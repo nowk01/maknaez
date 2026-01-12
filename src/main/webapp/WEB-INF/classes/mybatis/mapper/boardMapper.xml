@@ -47,7 +47,7 @@
 	</select>
 
 	<select id="listBoard" parameterType="map" resultType="com.maknaez.model.BoardDTO">
-		SELECT num, userId, userName, subject, content, reg_date, hitCount, saveFilename, 
+		SELECT num, userId, userName, subject, content, reg_date, hitCount, saveFilename, originalFilename,
                replyContent, replyDate
 		FROM board
 		<where>
@@ -120,13 +120,13 @@
 	</delete>
 
 	<select id="listNotice" parameterType="map" resultType="com.maknaez.model.BoardDTO">
-		SELECT num, subject, reg_date, hitCount, saveFilename, isNotice, isShow, userName
+		SELECT num, subject, reg_date, hitCount, saveFilename, originalFilename, isNotice, isShow, userName
 		FROM notice
 		<where>
 			<if test="keyword != null and keyword != ''">
-				<include refid="where-list" />
+				AND <include refid="where-list" />
 			</if>
-			<if test="isShow != null and isShow != ''">
+			<if test="isShow != null">
 				AND isShow = #{isShow}
 			</if>
 		</where>
@@ -138,9 +138,9 @@
 		SELECT NVL(COUNT(*), 0) FROM notice
 		<where>
 			<if test="keyword != null and keyword != ''">
-				<include refid="where-list" />
+				AND <include refid="where-list" />
 			</if>
-			<if test="isShow != null and isShow != ''">
+			<if test="isShow != null">
 				AND isShow = #{isShow}
 			</if>
 		</where>
@@ -167,7 +167,7 @@
 	</delete>
 
 	<select id="findByIdNotice" parameterType="Long" resultType="com.maknaez.model.BoardDTO">
-		SELECT num, subject, content, reg_date, hitCount, saveFilename, originalFilename, isNotice, isShow
+		SELECT num, subject, content, reg_date, hitCount, saveFilename, originalFilename, isNotice, isShow, userName
 		FROM notice WHERE num = #{num}
 	</select>
 
@@ -179,7 +179,7 @@
 		SELECT num, category, subject, content FROM faq
 		<where>
 			<if test="category != null and category != 'all'">
-				category = #{category}
+				AND category = #{category}
 			</if>
 		</where>
 		ORDER BY num DESC
