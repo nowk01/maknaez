@@ -374,6 +374,7 @@ REFERENCES qna_answer (
 	qna_id
 );
 
+
 /*
 CREATE SEQUENCE member_seq
        INCREMENT BY 1
@@ -384,4 +385,5 @@ CREATE SEQUENCE member_seq
        NOCACHE
        NOORDER;
 */
+
 
