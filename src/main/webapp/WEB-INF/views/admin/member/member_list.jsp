@@ -228,8 +228,8 @@
 						        <label for="gender" class="form-label">성별</label>
 						        <select class="form-select" name="gender" id="gender">
 						            <option value="">선택</option>
-						            <option value="남자">남자</option>
-						            <option value="여자">여자</option>
+						            <option value="0">남자</option>
+						            <option value="1">여자</option>
 						        </select>
 						    </div>
 						</div>
@@ -280,6 +280,14 @@
 	                             <option value="99">최고관리자 (Lv.99)</option>
 	                         </select>
 	                    </div>
+	                    
+	                    <div class="col-md-6" id="enabledDiv" style="display: none;">
+					        <label for="enabled" class="form-label">계정 상태</label>
+					        <select class="form-select" name="enabled" id="enabled">
+					            <option value="1">정상 (활성)</option>
+					            <option value="0">잠금/휴면 (비활성)</option>
+					        </select>
+					    </div>
 	                </form>
 	            </div>
 	            <div class="modal-footer">
@@ -345,6 +353,7 @@
                 
                 document.getElementById("modalMemberIdx").value = "0";
                 
+                document.getElementById("enabledDiv").style.display = "none";
                 
                 myModal.show(); // 빈 모달 바로 열기
 
@@ -356,25 +365,27 @@
                 document.getElementById("userName").readOnly = true;
                 
                 document.getElementById("modalMemberIdx").value = memberIdx;
+                
+                document.getElementById("enabledDiv").style.display = "block";
 
                 // AJAX로 회원 상세 정보 가져오기
                 let url = "${pageContext.request.contextPath}/admin/member/detail";
                 let query = "memberIdx=" + memberIdx;
 
                 const fn = function(data) {
-                	console.log("타입 확인:", typeof data.dto);
-                	console.log("값 확인:", data.dto);
-                	
                     if(data.state === "true") {
                         let dto = data.dto;
                         
                         // --- [핵심] 기존 정보 입력하기 ---
                         $("#userId").val(dto.userId);
                         $("#userName").val(dto.userName);
+                        $("#nickName").val(dto.nickName);
                         $("#email").val(dto.email);
+                        $("#gender").val(dto.gender);
                         $("#tel").val(dto.tel);
                         $("#modalUserLevel").val(dto.userLevel);
-
+                        $("#enabled").val(dto.enabled);
+                        
                         // **날짜 포맷 처리 (가장 중요)**
                         // dto.birth가 null일 경우 substring에서 에러가 나므로 체크 로직 추가
 	                    if(dto.birth) {
