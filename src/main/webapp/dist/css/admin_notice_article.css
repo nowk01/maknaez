@@ -1,0 +1,149 @@
+@charset "UTF-8";
+
+/* [MAKNAEZ ADMIN] 공지사항 상세 - 스타일 통합 */
+body {
+    background-color: #fcfcfd;
+    color: #202224;
+    font-family: 'Pretendard', sans-serif;
+    letter-spacing: -0.5px;
+}
+
+.content-container {
+    padding: 40px;
+    animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* 상단 헤더: 리스트와 동일한 포인트 */
+.page-header {
+    margin-bottom: 35px;
+    border-left: 5px solid #ff4e00;
+    padding-left: 20px;
+}
+
+.page-title {
+    font-weight: 800;
+    font-size: 26px;
+    color: #1a1c1e;
+    margin: 0;
+}
+
+/* 메인 카드 박스 */
+.article-box {
+    background: #fff;
+    border: 1px solid #eee;
+    padding: 40px;
+    border-radius: 2px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+}
+
+/* 제목 영역 */
+.article-header {
+    padding-bottom: 25px;
+    margin-bottom: 30px;
+    border-bottom: 2px solid #1a1c1e; /* 리스트 테이블 헤더와 통일감 */
+}
+
+.article-title {
+    font-size: 28px;
+    font-weight: 800;
+    color: #1a1c1e;
+    line-height: 1.4;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* 중요공지 배지: 리스트 배지 스타일 계승 */
+.badge-pin {
+    background: #ff4e00;
+    color: #fff;
+    padding: 3px 10px;
+    font-size: 12px;
+    font-weight: 800;
+    border-radius: 1px;
+    text-transform: uppercase;
+}
+
+/* 작성 정보 영역 */
+.article-info {
+    margin-top: 20px;
+    display: flex;
+    gap: 25px;
+    color: #888;
+    font-size: 14px;
+}
+
+.article-info span b {
+    color: #555;
+    margin-right: 6px;
+    font-weight: 700;
+}
+
+/* 본문 내용 영역 */
+.article-content {
+    min-height: 400px;
+    line-height: 1.8;
+    color: #333;
+    font-size: 16px;
+    padding: 20px 0;
+}
+
+/* 첨부파일 영역: 리스트 검색바 같은 직각형 디자인 */
+.file-box {
+    margin-top: 50px;
+    padding: 20px;
+    background-color: #fbfbfb;
+    border: 1px solid #eee;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.file-box strong {
+    font-size: 13px;
+    font-weight: 800;
+    color: #888;
+    text-transform: uppercase;
+}
+
+.file-box a {
+    color: #333;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+    transition: 0.2s;
+}
+
+.file-box a:hover {
+    color: #ff4e00;
+    text-decoration: underline;
+}
+
+/* 하단 버튼 영역 */
+.article-footer {
+    margin-top: 40px;
+    padding-top: 25px;
+    border-top: 1px solid #eee;
+    text-align: right;
+}
+
+/* [1] 목록으로 버튼: 리스트 SEARCH 버튼 스타일 계승 */
+.btn-list {
+    background: #ff4e00 !important;
+    color: #fff !important;
+    border: none !important;
+    padding: 12px 35px;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-list:hover {
+    background: #000 !important; /* 주황색 -> 검정 호버 효과 */
+}
