@@ -3,6 +3,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+<title>NOTICE | MAKNAEZ</title>
 <jsp:include page="/WEB-INF/views/layout/headerResources.jsp"/>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/cs.css">
 </head>
@@ -19,42 +20,52 @@
             <li><a href="#">Guide</a></li>
         </ul>
     </div>
-    <div class="cs-content">
-        <table class="view-table">
-            <tr><th colspan="2">${dto.subject}</th></tr>
-            <tr>
-                <td width="50%">
-                    <b>Author</b> : 
-                    <c:choose>
-                        <c:when test="${not empty dto.userName}">${dto.userName}</c:when>
-                        <c:otherwise>Admin</c:otherwise>
-                    </c:choose>
-                </td>
-                <td width="50%" align="right">
-                    ${dto.reg_date.substring(0, 10)} | Hit ${dto.hitCount}
-                </td>
-            </tr>
-            <c:if test="${not empty dto.saveFilename}">
-            <tr>
-                <td colspan="2">
-                    <b>File</b> : <a href="${pageContext.request.contextPath}/cs/download?num=${dto.num}">${dto.originalFilename}</a>
-                </td>
-             </tr>
-            </c:if>
-        </table>
-        
-        <div class="view-content">${dto.content}</div>
 
-        <div class="btn-area">
-            <a href="${pageContext.request.contextPath}/cs/notice?${query}" class="btn-cancel" style="text-decoration:none;">LIST</a>
+    <div class="cs-content">
+        <div class="notice-view-container">
+            <div class="view-header content-header">
+                <div class="view-subject-group">
+                    <c:if test="${dto.isNotice == 1}">
+                        <span class="view-badge">NOTICE</span>
+                    </c:if>
+                    <h1 class="view-subject">${dto.subject}</h1>
+                </div>
+            </div>
+
+            <div class="view-meta">
+                <div class="view-meta-left">
+                    <span><b>AUTHOR</b> ${not empty dto.userName ? dto.userName : 'ADMIN'}</span>
+                    <span><b>DATE</b> ${dto.reg_date.substring(0, 10)}</span>
+                </div>
+                <div class="view-meta-right">
+                    <span><b>VIEWS</b> ${dto.hitCount}</span>
+                </div>
+            </div>
+
+            <c:if test="${not empty dto.saveFilename}">
+                <div class="view-attachment">
+                    <span class="file-tag">FILES</span>
+                    <a href="${pageContext.request.contextPath}/cs/download?num=${dto.num}" class="file-name">
+                        ${dto.originalFilename}
+                    </a>
+                </div>
+            </c:if>
+            
+            <div class="view-body">
+                ${dto.content}
+            </div>
+
+            <div class="view-footer">
+                <button type="button" class="btn-list-back" 
+                        onclick="location.href='${pageContext.request.contextPath}/cs/notice?${query}'">
+                    BACK TO LIST
+                </button>
+            </div>
         </div>
     </div>
 </div>
 
 <jsp:include page="/WEB-INF/views/layout/footer.jsp"/>
-<script>
-    const contextPath = "${pageContext.request.contextPath}";
-</script>
 <script src="${pageContext.request.contextPath}/dist/js/cs.js"></script>
 </body>
 </html>
