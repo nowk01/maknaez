@@ -44,7 +44,7 @@
                             <input type="text" class="form-control" placeholder="아이디 또는 회원명 입력">
                         </div>
                         <div>
-                            <button type="button" class="btn-search-main" onclick="searchList()">검색</button>
+                            <button type="button" class="btn-search-main" onclick="searchList()">SEARCH</button>
                         </div>
                     </form>
                 </div>
