@@ -780,6 +780,246 @@ to {
     text-align: left;  
     padding-left: 20px;
 }
+
+
+/* 사이드바와 본문의 상단 시작 선을 일치시킴 */
+.notice-view-container {
+    width: 100%;
+    margin-top: 0; /* content-header의 선과 맞추기 위해 0으로 설정 */
+}
+
+/* 제목 영역: 리스트 상단 선(.content-header) 스타일 계승 */
+.view-header.content-header {
+    padding-bottom: 30px;
+    display: block; /* 가로 정렬 해제하여 제목이 넓게 퍼지게 함 */
+}
+
+.view-subject-group {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.view-badge {
+    display: inline-block;
+    background: #ff4e00;
+    color: #fff;
+    padding: 2px 8px;
+    font-size: 10px;
+    font-weight: 900;
+    letter-spacing: 1px;
+    width: fit-content;
+}
+
+.view-subject {
+    font-size: 36px;
+    font-weight: 800;
+    color: #000;
+    line-height: 1.2;
+    margin: 0;
+    letter-spacing: -1.5px;
+}
+
+/* 메타 정보: 얇은 구분선으로 세련미 강조 */
+.view-meta {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px 0;
+    border-bottom: 1px solid #eee;
+    font-size: 13px;
+    color: #999;
+}
+
+.view-meta b {
+    color: #333;
+    font-weight: 700;
+    margin-right: 8px;
+}
+
+/* 첨부파일: 본문 시작 전 슬림하게 배치 */
+.view-attachment {
+    padding: 15px 0;
+    border-bottom: 1px solid #f9f9f9;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.file-tag {
+    font-size: 9px;
+    font-weight: 900;
+    color: #ff4e00;
+    border: 1px solid #ff4e00;
+    padding: 1px 5px;
+}
+
+.file-name {
+    color: #666;
+    text-decoration: none;
+    font-size: 13px;
+}
+
+/* 본문: 충분한 여백과 높은 행간으로 고급스러움 유도 */
+.view-body {
+    padding: 60px 0;
+    min-height: 400px;
+    line-height: 1.9;
+    font-size: 17px;
+    color: #444;
+    font-weight: 300;
+}
+
+.view-body img {
+    max-width: 100%;
+    height: auto;
+    margin: 30px 0;
+}
+
+/* 하단 버튼: 미니멀한 블랙 앤 화이트 */
+.view-footer {
+    margin-top: 60px;
+    padding-top: 40px;
+    border-top: 1px solid #000;
+    text-align: center;
+}
+
+.btn-list-back {
+    background: #000;
+    color: #fff;
+    border: 1px solid #000;
+    padding: 18px 80px;
+    font-size: 13px;
+    font-weight: 800;
+    cursor: pointer;
+    letter-spacing: 2px;
+    transition: 0.3s;
+}
+
+.btn-list-back:hover {
+    background: #fff;
+    color: #000;
+}
+
+
+/* 사이드바와 본문의 상단 시작 선을 일치시킴 */
+.notice-view-container {
+    width: 100%;
+    margin-top: 0; /* content-header의 선과 맞추기 위해 0으로 설정 */
+}
+
+/* 제목 영역: 리스트 상단 선(.content-header) 스타일 계승 */
+.view-header.content-header {
+    padding-bottom: 30px;
+    display: block; /* 가로 정렬 해제하여 제목이 넓게 퍼지게 함 */
+}
+
+.view-subject-group {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.view-badge {
+    display: inline-block;
+    background: #ff4e00;
+    color: #fff;
+    padding: 2px 8px;
+    font-size: 10px;
+    font-weight: 900;
+    letter-spacing: 1px;
+    width: fit-content;
+}
+
+.view-subject {
+    font-size: 36px;
+    font-weight: 800;
+    color: #000;
+    line-height: 1.2;
+    margin: 0;
+    letter-spacing: -1.5px;
+}
+
+/* 메타 정보: 얇은 구분선으로 세련미 강조 */
+.view-meta {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px 0;
+    border-bottom: 1px solid #eee;
+    font-size: 13px;
+    color: #999;
+}
+
+.view-meta b {
+    color: #333;
+    font-weight: 700;
+    margin-right: 8px;
+}
+
+/* 첨부파일: 본문 시작 전 슬림하게 배치 */
+.view-attachment {
+    padding: 15px 0;
+    border-bottom: 1px solid #f9f9f9;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.file-tag {
+    font-size: 9px;
+    font-weight: 900;
+    color: #ff4e00;
+    border: 1px solid #ff4e00;
+    padding: 1px 5px;
+}
+
+.file-name {
+    color: #666;
+    text-decoration: none;
+    font-size: 13px;
+}
+
+/* 본문: 충분한 여백과 높은 행간으로 고급스러움 유도 */
+.view-body {
+    padding: 60px 0;
+    min-height: 400px;
+    line-height: 1.9;
+    font-size: 17px;
+    color: #444;
+    font-weight: 300;
+}
+
+.view-body img {
+    max-width: 100%;
+    height: auto;
+    margin: 30px 0;
+}
+
+/* 하단 버튼: 미니멀한 블랙 앤 화이트 */
+.view-footer {
+    margin-top: 60px;
+    padding-top: 40px;
+    border-top: 1px solid #000;
+    text-align: center;
+}
+
+.btn-list-back {
+    background: #000;
+    color: #fff;
+    border: 1px solid #000;
+    padding: 18px 80px;
+    font-size: 13px;
+    font-weight: 800;
+    cursor: pointer;
+    letter-spacing: 2px;
+    transition: 0.3s;
+}
+
+.btn-list-back:hover {
+    background: #fff;
+    color: #000;
+}
+
+
 /* =========================================
    [Common] 페이지네이션 (일반 게시판용)
    ========================================= */
