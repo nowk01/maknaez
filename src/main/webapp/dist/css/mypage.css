@@ -957,4 +957,136 @@
     .sm-salomon__statusBarBorder {
         display: none;
     }
+    /* [추가] 관심 상품(Wishlist) 리스트 스타일 */
+.as-wishlist__contentWrap {
+    width: 100%;
+    padding: 0 20px;
+}
+
+.as-wishlist__pageTitle {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 30px;
+    color: #000;
+}
+
+.as-wishlist__productList {
+    width: 100%;
+}
+
+.as-wishlist__productCount {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 15px;
+    text-align: right; /* 우측 정렬 */
+}
+
+/* 그리드 레이아웃 */
+.as-wishlist__products {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 한 줄에 3개 */
+    gap: 20px;
+}
+
+.as-wishlist__productItem {
+    position: relative;
+    background: #fff;
+    margin-bottom: 30px;
+}
+
+/* 이미지 영역 */
+.as-wishlist__productImageWrap {
+    position: relative;
+    width: 100%;
+    padding-top: 100%; /* 1:1 비율 */
+    overflow: hidden;
+    background-color: #f4f4f4;
+    margin-bottom: 15px;
+}
+
+.as-wishlist__productImageInnerWrap {
+    position: absolute;
+    top: 0; left: 0; bottom: 0; right: 0;
+}
+
+.as-wishlist__productImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+.as-wishlist__productItem:hover .as-wishlist__productImage {
+    transform: scale(1.05);
+}
+
+/* 하트 아이콘 (삭제 버튼 등) */
+.as-wishlist__iconContainer {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    z-index: 10;
+    cursor: pointer;
+}
+.as-wishlist__icons svg {
+    width: 24px;
+    height: 24px;
+}
+
+/* 텍스트 정보 */
+.as-wishlist__productTitle {
+    font-size: 15px;
+    font-weight: 600;
+    color: #000;
+    margin: 0 0 5px 0;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.as-wishlist__productType {
+    font-size: 12px;
+    color: #888;
+    margin-bottom: 8px;
+}
+
+.as-wishlist__productPrice {
+    font-size: 15px;
+    font-weight: 700;
+    color: #000;
+}
+
+/* 비어있을 때 */
+.as-wishlist__productError {
+    text-align: center;
+    padding: 100px 0;
+    background-color: #f9f9f9;
+}
+.as-wishlist__errorText {
+    font-size: 16px;
+    color: #555;
+    margin-bottom: 5px;
+}
+.as-wishlist__button {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 12px 30px;
+    background-color: #000;
+    color: #fff;
+    text-decoration: none;
+    font-weight: 600;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+.as-wishlist__button:hover {
+    background-color: #333;
+}
+
+/* 유틸리티 */
+.hidden { display: none !important; }
+
+@media (max-width: 768px) {
+    .as-wishlist__products {
+        grid-template-columns: repeat(2, 1fr); /* 모바일 2열 */
+    }
+}
 }
