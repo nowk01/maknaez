@@ -378,6 +378,7 @@
                         
                         // --- [핵심] 기존 정보 입력하기 ---
                         $("#userId").val(dto.userId);
+                        $("#userPwd").val(dto.userPwd);
                         $("#userName").val(dto.userName);
                         $("#nickName").val(dto.nickName);
                         $("#email").val(dto.email);
@@ -421,7 +422,7 @@
             
             // jQuery serialize()를 사용하여 폼 데이터 직렬화 (readonly 필드도 포함됨)
             let query = $(f).serialize(); 
-
+            
             // 콜백 함수 정의
             const fn = function(data) {
                 if(data.state === "true") {
