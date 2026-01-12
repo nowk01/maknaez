@@ -1,6 +1,15 @@
 @charset "UTF-8";
 
 /* =========================================
+   0. 공통 변수 (살로몬 스타일)
+   ========================================= */
+:root {
+    --font-primary: "SALOMON Sans", "Noto Sans KR", sans-serif;
+    --color-grey-02: #888888;
+    --text-uppercase: uppercase;
+}
+
+/* =========================================
    1. 전체 레이아웃 & 사이드바
    ========================================= */
 .mypage-container {
@@ -75,31 +84,142 @@
 }
 
 /* =========================================
-   3. 🔥 살로몬 스타일 대시보드 (Status Bar)
+   3-1. [NEW] 마이페이지 메인: 회원 등급 카드
+   ========================================= */
+.sm-salomon__detailsCustomersTag {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 48px 64px;
+    margin-top: 20px;
+    margin-bottom: 60px;
+    background-color: #fff !important;
+    box-sizing: border-box;
+}
+
+.sm-salomon__detailsCustomersCard {
+    display: flex;
+    align-items: center;
+    background: transparent !important;
+}
+
+.sm-salomon__detailsCustomersTier--tier {
+    flex: 2;
+    gap: 50px;
+    border-right: 1px solid #eee;
+    padding-right: 40px;
+    margin-right: 40px;
+    background: transparent !important;
+}
+
+.sm-salomon__detailsCustomersTierImage {
+    background: transparent !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100px;
+}
+
+.sm-salomon__detailsImage {
+    width: 100px !important;
+    height: 100px !important;
+    object-fit: contain;
+    background: transparent !important;
+}
+
+.sm-salomon__detailsCustomersTierName {
+    margin: 4px 0 12px;
+    color: #000;
+    font-family: var(--font-primary);
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 1;
+    text-transform: var(--text-uppercase);
+    background: transparent !important;
+}
+
+.sm-salomon__detailsCustomersTierName::first-letter {
+    background: transparent !important;
+    background-color: transparent !important;
+    color: inherit !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border: none !important;
+}
+
+.sm-salomon__detailsCustomerName {
+    font-size: 14px;
+    color: #666;
+    font-weight: 500;
+    margin: 0;
+}
+
+.sm-salomon__detailsCustomersTierNameRating {
+    font-size: 14px;
+    font-weight: normal;
+    color: var(--color-grey-02);
+    margin-left: 4px;
+}
+
+.sm-salomon__detailsCustomersTierLink {
+    font-size: 13px;
+    color: #333;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.sm-salomon__detailsCustomersTier--orderCount {
+    flex: 1;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    background: transparent !important;
+}
+
+.sm-salomon__detailsCustomersCardCount {
+    font-size: 14px;
+    color: #666;
+    font-weight: 500;
+    margin: 0;
+}
+
+.sm-salomon__detailsCustomersCardCounter {
+    font-size: 32px;
+    font-weight: 700;
+    color: #000;
+    margin: 0;
+}
+
+/* =========================================
+   3-2. [NEW] 주문/취소 목록: 현황판 (Status Bar)
+   (여기가 누락되어 깨졌던 부분입니다)
    ========================================= */
 .sm-salomon__statusBar {
     display: flex;
     justify-content: center;
     align-items: center;
-    
-    /* 4개 항목 기준 살로몬 스타일 */
-    padding: 28px 94px;
-    gap: 96px;
+    padding: 28px 0;
+    gap: 0; /* 내부 요소 간격은 border로 조절 */
     border-radius: 8px;
     border: 1px solid #e7e7e7;
     background-color: #fff;
-    margin-bottom: 64px;
+    margin-bottom: 50px;
     width: 100%;
-    box-sizing: border-box; 
+    box-sizing: border-box;
 }
 
-/* 개별 아이템 정렬 */
+/* 개별 아이템 (전체, 취소, 반품중 등) */
 .sm-salomon__statusBarItem {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    min-width: 60px; 
+    min-width: 100px;
+    flex: 1;
 }
 
 /* 타이틀 */
@@ -118,7 +238,7 @@
     line-height: 1;
 }
 
-/* 전체 숫자만 붉은색 포인트 (#fd6464) */
+/* 전체 숫자만 붉은색 포인트 */
 .sm-salomon__statusBarItemValue[data-status-total] {
     color: #fd6464;
 }
@@ -127,8 +247,11 @@
 .sm-salomon__statusBarBorder {
     display: flex;
     align-items: center;
+    justify-content: center;
     height: 76px;
+    width: 1px;
 }
+
 
 /* =========================================
    4. 필터 영역
@@ -240,57 +363,96 @@
     align-items: center;
 }
 
-.product-img-box img {
-    width: 100px;
-    height: 100px;
-    object-fit: cover;
+.order-item-card {
+    border: 1px solid #eee;
     border-radius: 8px;
-    margin-right: 20px;
-}
-
-.product-info {
-    flex: 1;
-}
-
-.order-status-text {
-    color: #28a745;
-    font-weight: bold;
-    margin-bottom: 5px;
-}
-
-.product-name {
-    font-size: 16px;
-    margin-bottom: 5px;
-}
-
-.product-price {
-    color: #555;
-}
-
-.order-actions {
+    padding: 20px;
+    margin-bottom: 16px;
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    background: #fff;
 }
 
-.btn-action {
-    padding: 8px 15px;
-    border: 1px solid #ddd;
-    background: #fff;
+.card-head {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+    border-bottom: 1px solid #f5f5f5;
+    padding-bottom: 10px;
+}
+
+.card-head .date {
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.card-head .order-no {
+    font-size: 13px;
+    color: #888;
+}
+
+.card-content {
+    display: flex;
+    gap: 20px;
+}
+
+.thumb img {
+    width: 90px;
+    height: 90px;
+    object-fit: cover;
     border-radius: 4px;
+    border: 1px solid #eee;
+}
+
+.info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.state-text {
+    font-weight: bold;
+    color: #222;
+    margin-bottom: 6px;
+    font-size: 14px;
+}
+
+.prod-name {
+    font-size: 15px;
+    color: #333;
+    margin-bottom: 4px;
+    line-height: 1.3;
+}
+
+.options {
+    font-size: 13px;
+    color: #888;
+    margin-bottom: 8px;
+}
+
+.price-qty {
+    font-size: 14px;
+}
+
+.buttons {
+    display: flex;
+    align-items: center;
+}
+
+.btn-basic {
+    padding: 8px 16px;
+    border: 1px solid #ccc;
+    background: #fff;
     font-size: 13px;
     cursor: pointer;
-    min-width: 120px;
+    border-radius: 4px;
 }
 
-.btn-action.primary {
-    border-color: #007bff;
-    color: #007bff;
+.btn-basic:hover {
+    background: #f9f9f9;
 }
 
-.btn-action:hover {
-    background: #f8f9fa;
-}
 
 /* =========================================
    6. 기타 (페이징, 데이터 없음)
@@ -301,6 +463,7 @@
     color: #666;
     font-size: 14px;
     font-weight: 500;
+    border-bottom: 1px solid #eee;
 }
 
 .page-navigation {
@@ -682,7 +845,6 @@
 
 /* =========================================
    🔥 [Final] 살로몬 스타일 '카오스' 애니메이션
-   (순서: 리스트/카드 -> 제목 -> 사이드바/헤더 -> 대시보드 -> 데이터없음)
    ========================================= */
 
 /* 1. 애니메이션 정의 */
@@ -701,11 +863,11 @@
 .sidebar,
 .page-title,
 .notice-box,
-.sm-salomon__statusBar,
+.sm-salomon__detailsCustomersTag, /* 회원 등급 카드 */
+.sm-salomon__statusBar,         /* [NEW] 현황판 */
 .filter-wrapper,
 .order-list-area,
 .no-data-msg,
-/* [추가] 리뷰 페이지 요소들 */
 .sm-salomon__accountSidebar,
 .review-tabs,
 .PendingReviews__header,
@@ -740,7 +902,8 @@
 }
 
 /* [4순위] 대시보드 및 필터 */
-.sm-salomon__statusBar {
+.sm-salomon__detailsCustomersTag,
+.sm-salomon__statusBar { 
     animation-delay: 0.7s;
 }
 .filter-wrapper {
@@ -753,4 +916,40 @@
 }
 .no-data-msg {
     animation-delay: 1.0s; 
+}
+
+/* 반응형 (화면 작아지면 세로로 배치) */
+@media (max-width: 768px) {
+    .sm-salomon__detailsCustomersTag {
+        flex-direction: column;
+        padding: 30px;
+        gap: 30px;
+        text-align: center;
+    }
+    .sm-salomon__detailsCustomersTier--tier {
+        flex-direction: column;
+        border-right: none;
+        border-bottom: 1px solid #eee;
+        padding-right: 0;
+        margin-right: 0;
+        padding-bottom: 30px;
+        width: 100%;
+    }
+    .sm-salomon__detailsCustomersTier--orderCount {
+        width: 100%;
+    }
+    
+    .sm-salomon__statusBar {
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+    
+    .sm-salomon__statusBarItem {
+        min-width: 50%;
+        margin-bottom: 20px;
+    }
+    
+    .sm-salomon__statusBarBorder {
+        display: none;
+    }
 }
