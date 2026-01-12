@@ -4,501 +4,222 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
-    <title>회원 조회 - MAKNAEZ ADMIN</title>
-    <jsp:include page="/WEB-INF/views/admin/layout/headerResources.jsp" />
-    <style>
-        body { background-color: #f4f6f9; }
-        
-        .card-box {
-            background-color: #fff;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.05);
-            padding: 20px;
-            margin-bottom: 20px;
-            border: none;
-        }
-        .search-label { font-weight: 600; font-size: 14px; color: #555; margin-bottom: 8px; display: block; }
-        .table th { background-color: #f8f9fa; font-weight: 600; text-align: center; border-bottom: 2px solid #dee2e6; }
-        .table td { vertical-align: middle; text-align: center; }
-        .badge-status { padding: 5px 10px; border-radius: 4px; font-size: 12px; font-weight: 500; }
-        .status-normal { background-color: #e6fcf5; color: #0ca678; }
-        .status-dormant { background-color: #fff4e6; color: #f76707; }
-        .status-block { background-color: #ffe3e3; color: #fa5252; }
-        
-        /* 페이징 영역 스타일 */
-        .page-navigation-wrap {
-            display: flex;
-            justify-content: center;
-            margin-top: 20px;
-        }
-    </style>
+<meta charset="UTF-8">
+<title>회원 조회 - MAKNAEZ ADMIN</title>
+<jsp:include page="/WEB-INF/views/admin/layout/headerResources.jsp" />
+<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/admin_member_list.css">
 </head>
 <body>
 
-    <div id="wrapper">
-        
-        <jsp:include page="/WEB-INF/views/admin/layout/left.jsp" />
+	<div id="wrapper">
+		<jsp:include page="/WEB-INF/views/admin/layout/left.jsp" />
+		<div id="page-content-wrapper">
+			<jsp:include page="/WEB-INF/views/admin/layout/header.jsp" />
 
-        <div id="page-content-wrapper">
-            
-            <jsp:include page="/WEB-INF/views/admin/layout/header.jsp" />
+			<div class="content-container">
+				
+				<%-- 헤더 영역: 26px 규격 및 세로바 포인트 --%>
+				<div class="page-header">
+					<h3 class="page-title">회원 조회</h3>
+					<p class="page-desc">Member Account Configuration & Management</p>
+				</div>
 
-            <div class="content-container">
-                
-                <h3 class="fw-bold mb-4">회원 조회</h3>
-
-                <div class="card-box">
-                    <form name="searchForm" onsubmit="return false;">
-                        <div class="row g-3">
-                            <div class="col-md-4">
-                                <label class="search-label">가입 기간</label>
-                                <div class="input-group">
-                                    <input type="date" class="form-control" name="startDate" id="startDate" value="${startDate}">
-                                    <span class="input-group-text">~</span>
-                                    <input type="date" class="form-control" name="endDate" id="endDate" value="${endDate}">
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-							    <label class="search-label">회원 등급 검색</label>
-							    <select class="form-select" name="userLevel" id="userLevel">
-							        <option value="전체 등급" ${userLevel == '전체 등급' ? 'selected' : ''}>전체 등급</option>
-							        
-							        <option value="IRON" ${userLevel == 'IRON' ? 'selected' : ''}>아이언 (Lv.1~10)</option>
-							        <option value="BRONZE" ${userLevel == 'BRONZE' ? 'selected' : ''}>브론즈 (Lv.11~20)</option>
-							        <option value="SILVER" ${userLevel == 'SILVER' ? 'selected' : ''}>실버 (Lv.21~30)</option>
-							        <option value="GOLD" ${userLevel == 'GOLD' ? 'selected' : ''}>골드 (Lv.31~40)</option>
-							        <option value="PLATINUM" ${userLevel == 'PLATINUM' ? 'selected' : ''}>플레티넘 (Lv.41~50)</option>
-							        
-							        <option value="ADMIN" ${userLevel == 'ADMIN' ? 'selected' : ''}>관리자 (Lv.51~)</option>
-							        <option value="99" ${userLevel == '99' ? 'selected' : ''}>최고 관리자 (Lv.99)</option>
-							    </select>
+				<%-- 검색 필터 영역: 각진 네모 스타일 --%>
+				<div class="card-box">
+					<form name="searchForm" class="search-grid" onsubmit="return false;">
+						<div>
+							<label class="form-label">가입 기간</label>
+							<div class="input-group">
+								<input type="date" class="form-control" name="startDate" id="startDate" value="${startDate}"> 
+								<span class="input-group-text">~</span> 
+								<input type="date" class="form-control" name="endDate" id="endDate" value="${endDate}">
 							</div>
-                            <div class="col-md-5">
-                                <label class="search-label">검색어</label>
-                                <div class="input-group">
-                                    <select class="form-select" style="max-width: 120px;" name="searchKey" id="searchKey">
-                                        <option value="all" ${searchKey == 'all' ? 'selected' : ''}>전체</option>
-                                        <option value="userId" ${searchKey == 'userId' ? 'selected' : ''}>아이디</option>
-                                        <option value="userName" ${searchKey == 'userName' ? 'selected' : ''}>이름</option>
-                                        <option value="email" ${searchKey == 'email' ? 'selected' : ''}>이메일</option>
-                                    </select>
-                                    <input type="text" class="form-control" name="searchValue" id="searchValue" 
-                                           placeholder="검색어 입력" value="${searchValue}">
-                                    <button class="btn btn-outline-secondary" type="button" onclick="searchList()">🔍</button>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-
-                <div class="card-box">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h5 class="fw-bold m-0">회원 목록 <span class="text-muted fs-6">(${dataCount}명)</span></h5>
-                        <div style="float: right;">
-					        <button type="button" class="btn btn-primary" onclick="openMemberModal('add')">
-					            <i class="bi bi-person-plus"></i> 회원 추가
-					        </button>
-					        <button type="button" class="btn btn-danger me-2" onclick="deleteList();">
-						        <i class="bi bi-trash"></i> 회원 삭제
-						    </button>
-				    	</div>
-                    </div>
-                    
-                    <table class="table table-hover">
-                        <thead>
-                            <tr>
-                            	<th width="40">
-						            <input type="checkbox" id="chkAll" class="form-check-input" onclick="checkAll();">
-						        </th>
-                                <th>ID</th>
-                                <th>이름</th>
-                                <th>이메일</th>
-                                <th>등급</th>
-                                <th>가입일</th>
-                                <th>상태</th>
-                                <th>관리</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <c:choose>
-                                <c:when test="${empty list}">
-                                    <tr>
-                                        <td colspan="7" class="text-center p-5 text-muted">
-                                            등록된 회원이 없거나 검색 결과가 없습니다.
-                                        </td>
-                                    </tr>
-                                </c:when>
-                                <c:otherwise>
-                                    <c:forEach var="dto" items="${list}" varStatus="status">
-                                        <tr>
-                                        	<td>
-									            <input type="checkbox" name="chk" class="form-check-input" value="${dto.memberIdx}">
-									        </td>
-                                            <td>${dto.userId}</td>
-                                            <td>${dto.userName}</td>
-                                            <td>${dto.email}</td>
-                                            
-                                            <%-- 회원 등급 표시 --%>
-											<td>
-											    <c:choose>
-											        <%-- 99 이상: 최고 관리자 --%>
-											        <c:when test="${dto.userLevel >= 99}">
-											            <span class="badge bg-danger">최고관리자</span>
-											        </c:when>
-											        
-											        <%-- 51 ~ 98: 관리자 --%>
-											        <c:when test="${dto.userLevel >= 51}">
-											            <span class="badge bg-primary">관리자</span>
-											        </c:when>
-											        
-											        <%-- 41 ~ 50: 플레티넘 --%>
-											        <c:when test="${dto.userLevel >= 41}">
-											            <span class="badge bg-info text-dark">플레티넘</span>
-											        </c:when>
-											        
-											        <%-- 31 ~ 40: 골드 --%>
-											        <c:when test="${dto.userLevel >= 31}">
-											            <span class="badge bg-warning text-dark">골드</span>
-											        </c:when>
-											        
-											        <%-- 21 ~ 30: 실버 --%>
-											        <c:when test="${dto.userLevel >= 21}">
-											            <span class="badge" style="background-color: #c0c0c0; color: #000;">실버</span>
-											        </c:when>
-											        
-											        <%-- 11 ~ 20: 브론즈 --%>
-											        <c:when test="${dto.userLevel >= 11}">
-											            <span class="badge" style="background-color: #cd7f32; color: #fff;">브론즈</span>
-											        </c:when>
-											        
-											        <%-- 1 ~ 10: 아이언 (그 외) --%>
-											        <c:otherwise>
-											            <span class="badge bg-secondary">아이언</span>
-											        </c:otherwise>
-											    </c:choose>
-											</td>
-                                            
-                                            <td>${dto.register_date}</td>
-                                            
-                                            <%-- 계정 상태 표시 (enabled: 1=정상, 0=잠금/휴면) --%>
-                                            <td>
-                                                <c:choose>
-                                                    <c:when test="${dto.enabled == 1}">
-                                                        <span class="badge-status status-normal">정상</span>
-                                                    </c:when>
-                                                    <c:otherwise>
-                                                        <span class="badge-status status-block">잠금/휴면</span>
-                                                    </c:otherwise>
-                                                </c:choose>
-                                            </td>
-                                            
-                                            <%-- 관리 버튼 (상세보기) --%>
-                                            <td>
-									            <button type="button" class="btn btn-sm btn-light border" title="상세보기"
-									                    onclick="openMemberModal('update', '${dto.memberIdx}');">
-									                📝
-									            </button>
-									        </td>
-                                        </tr>
-                                    </c:forEach>
-                                </c:otherwise>
-                            </c:choose>
-                        </tbody>
-                    </table>
-                    
-                    <div class="page-navigation-wrap">
-                        ${paging} 
-                    </div>
-                </div>
-
-            </div> 
-        </div> 
-    </div> 
-    
-    <div class="modal fade" id="memberModal" tabindex="-1" aria-labelledby="memberModalLabel" aria-hidden="true">
-	    <div class="modal-dialog modal-lg">
-	        <div class="modal-content">
-	            <div class="modal-header">
-	                <h5 class="modal-title" id="memberModalLabel">회원 관리</h5>
-	                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-	            </div>
-	            <div class="modal-body">
-	                <form name="memberForm" id="memberForm">
-	                    <input type="hidden" name="memberIdx" id="modalMemberIdx" value="0">
-	                    <input type="hidden" name="mode" id="modalMode" value="add">
-						
-						<div class="row mb-3">
-						    <div class="col-md-6">
-						        <label for="nickName" class="form-label">닉네임</label>
-						        <input type="text" class="form-control" name="nickName" id="nickName" required>
-						    </div>
-						    <div class="col-md-6">
-						        <label for="gender" class="form-label">성별</label>
-						        <select class="form-select" name="gender" id="gender">
-						            <option value="">선택</option>
-						            <option value="0">남자</option>
-						            <option value="1">여자</option>
-						        </select>
-						    </div>
 						</div>
-						
-	                    <div class="row mb-3">
-	                        <div class="col-md-6">
-	                            <label for="userId" class="form-label">아이디</label>
-	                            <input type="text" class="form-control" name="userId" id="userId" required>
-	                        </div>
-	                        <div class="col-md-6">
-	                            <label for="userPwd" class="form-label">비밀번호</label>
-	                            <input type="password" class="form-control" name="userPwd" id="userPwd">
-	                            <small class="text-muted" style="font-size:12px;">※ 수정 시 입력하면 비밀번호가 변경됩니다.</small>
-	                        </div>
-	                    </div>
-	                    
-	                    <div class="row mb-3">
-	                        <div class="col-md-6">
-	                            <label for="userName" class="form-label">이름</label>
-	                            <input type="text" class="form-control" name="userName" id="userName" required>
-	                        </div>
-	                        <div class="col-md-6">
-	                            <label for="birth" class="form-label">생년월일</label>
-	                            <input type="date" class="form-control" name="birth" id="birth" required>
-	                        </div>
-	                    </div>
-	
-	                    <div class="row mb-3">
-	                        <div class="col-md-6">
-	                            <label for="email" class="form-label">이메일</label>
-	                            <input type="email" class="form-control" name="email" id="email">
-	                        </div>
-	                        <div class="col-md-6">
-	                            <label for="tel" class="form-label">전화번호</label>
-	                            <input type="text" class="form-control" name="tel" id="tel">
-	                        </div>
-	                    </div>
-	
-	                    <div class="mb-3">
-	                         <label for="modalUserLevel" class="form-label">회원 등급</label>
-	                         <select class="form-select" name="userLevel" id="modalUserLevel">
-	                             <option value="1">아이언 (Lv.1)</option>
-	                             <option value="11">브론즈 (Lv.11)</option>
-	                             <option value="21">실버 (Lv.21)</option>
-	                             <option value="31">골드 (Lv.31)</option>
-	                             <option value="41">플레티넘 (Lv.41)</option>
-	                             <option value="51">관리자 (Lv.51)</option>
-	                             <option value="99">최고관리자 (Lv.99)</option>
-	                         </select>
-	                    </div>
-	                    
-	                    <div class="col-md-6" id="enabledDiv" style="display: none;">
-					        <label for="enabled" class="form-label">계정 상태</label>
-					        <select class="form-select" name="enabled" id="enabled">
-					            <option value="1">정상 (활성)</option>
-					            <option value="0">잠금/휴면 (비활성)</option>
-					        </select>
-					    </div>
-	                </form>
-	            </div>
-	            <div class="modal-footer">
-	                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-	                <button type="button" class="btn btn-primary" onclick="submitMember()">저장</button>
-	            </div>
-	        </div>
-	    </div>
+						<div>
+							<label class="form-label">회원 등급</label> 
+							<select class="form-select" name="userLevel" id="userLevel">
+								<option value="전체 등급" ${userLevel == '전체 등급' ? 'selected' : ''}>전체 등급</option>
+								<option value="IRON" ${userLevel == 'IRON' ? 'selected' : ''}>아이언 (Lv.1~10)</option>
+								<option value="BRONZE" ${userLevel == 'BRONZE' ? 'selected' : ''}>브론즈 (Lv.11~20)</option>
+								<option value="SILVER" ${userLevel == 'SILVER' ? 'selected' : ''}>실버 (Lv.21~30)</option>
+								<option value="GOLD" ${userLevel == 'GOLD' ? 'selected' : ''}>골드 (Lv.31~40)</option>
+								<option value="PLATINUM" ${userLevel == 'PLATINUM' ? 'selected' : ''}>플레티넘 (Lv.41~50)</option>
+								<option value="ADMIN" ${userLevel == 'ADMIN' ? 'selected' : ''}>관리자 (Lv.51~)</option>
+								<option value="99" ${userLevel == '99' ? 'selected' : ''}>최고 관리자 (Lv.99)</option>
+							</select>
+						</div>
+						<div>
+							<label class="form-label">회원 검색</label>
+							<div class="input-group">
+								<select class="form-select" style="max-width: 100px;" name="searchKey" id="searchKey">
+									<option value="all" ${searchKey == 'all' ? 'selected' : ''}>전체</option>
+									<option value="userId" ${searchKey == 'userId' ? 'selected' : ''}>아이디</option>
+									<option value="userName" ${searchKey == 'userName' ? 'selected' : ''}>이름</option>
+								</select> 
+								<input type="text" class="form-control" name="searchValue" id="searchValue" placeholder="검색어 입력" value="${searchValue}">
+							</div>
+						</div>
+						<div>
+							<button class="btn-search-main" type="button" onclick="searchList()">SEARCH</button>
+						</div>
+					</form>
+				</div>
+
+				<%-- 회원 목록 영역 --%>
+				<div class="card-box">
+					<div class="list-ctrl">
+						<div class="stat-text">조회된 회원 <b>${dataCount}</b>명</div>
+						<div class="btn-group-custom">
+							<button type="button" class="btn" onclick="openMemberModal('add')">회원 추가</button>
+							<button type="button" class="btn" onclick="deleteList();">선택 삭제</button>
+						</div>
+					</div>
+
+					<table class="custom-table">
+						<thead>
+							<tr>
+								<th width="45"><input type="checkbox" id="chkAll" onclick="checkAll();"></th>
+								<th>ID</th>
+								<th>이름</th>
+								<th>이메일</th>
+								<th>등급</th>
+								<th>가입일</th>
+								<th>상태</th>
+								<th width="100">관리</th>
+							</tr>
+						</thead>
+						<tbody>
+							<c:choose>
+								<c:when test="${empty list}">
+									<tr><td colspan="8" class="text-center py-5 text-muted">등록된 회원이 없습니다.</td></tr>
+								</c:when>
+								<c:otherwise>
+									<c:forEach var="dto" items="${list}">
+										<tr>
+											<td><input type="checkbox" name="chk" value="${dto.memberIdx}"></td>
+											<td class="fw-bold">${dto.userId}</td>
+											<td>${dto.userName}</td>
+											<td>${dto.email}</td>
+											<td>
+												<c:choose>
+													<c:when test="${dto.userLevel >= 99}"><span class="k-badge level-99">최고관리자</span></c:when>
+													<c:when test="${dto.userLevel >= 51}"><span class="k-badge level-admin">관리자</span></c:when>
+													<c:otherwise><span class="k-badge level-user">Lv.${dto.userLevel}</span></c:otherwise>
+												</c:choose>
+											</td>
+											<td>${dto.register_date}</td>
+											<td>
+												<c:choose>
+													<c:when test="${dto.enabled == 1}"><span style="color:#2f855a; font-weight:700;">정상</span></c:when>
+													<c:otherwise><span class="k-badge dormant">잠금/휴면</span></c:otherwise>
+												</c:choose>
+											</td>
+											<td>
+												<%-- 아이콘 대신 텍스트 수정 버튼 --%>
+												<button type="button" class="btn-sm-action" onclick="openMemberModal('update', '${dto.memberIdx}');">수정</button>
+											</td>
+										</tr>
+									</c:forEach>
+								</c:otherwise>
+							</c:choose>
+						</tbody>
+					</table>
+					
+					<%-- 페이징 --%>
+					<div class="page-navigation-wrap">${paging}</div>
+				</div>
+			</div>
+		</div>
 	</div>
-	    
-    <jsp:include page="/WEB-INF/views/admin/layout/footerResources.jsp" />
 
-	<script type="text/javascript">
-		function checkAll() {
-		    const chkAll = document.getElementById("chkAll");
-		    const chks = document.getElementsByName("chk");
-		    
-		    for(let chk of chks) {
-		        chk.checked = chkAll.checked;
-		    }
-		}
-        // 검색 기능
-        function searchList() {
-            const f = document.searchForm;
-            let startDate = document.getElementById("startDate").value;
-            let endDate = document.getElementById("endDate").value;
-            let userLevel = document.getElementById("userLevel").value;
-            let searchKey = document.getElementById("searchKey").value;
-            let searchValue = document.getElementById("searchValue").value;
+	<%-- 회원 모달 (3번/4번 이미지 스타일 박스 적용) --%>
+	<div class="modal fade" id="memberModal" tabindex="-1" aria-hidden="true">
+		<div class="modal-dialog modal-lg modal-dialog-centered">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="memberModalLabel">MEMBER CONFIGURATION</h5>
+					<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<form name="memberForm" id="memberForm">
+						<input type="hidden" name="memberIdx" id="modalMemberIdx" value="0"> 
+						<input type="hidden" name="mode" id="modalMode" value="add">
 
-            let url = "${pageContext.request.contextPath}/admin/member/member_list";
-            let query = "page=1";
-            
-            if(startDate && endDate) {
-                query += "&startDate=" + startDate + "&endDate=" + endDate;
-            }
-            
-            if(userLevel !== "전체 등급") {
-                query += "&userLevel=" + encodeURIComponent(userLevel);
-            }
-            
-            if(searchValue) {
-                query += "&searchKey=" + searchKey + "&searchValue=" + encodeURIComponent(searchValue);
-            }
-            
-            location.href = url + "?" + query;
-        }
-        
-     	// 모달 열기 (모드에 따라 처리)
-        function openMemberModal(mode, memberIdx) {
-            // 1. 모달 인스턴스 가져오기
-            let modalEl = document.getElementById('memberModal');
-            let myModal = bootstrap.Modal.getInstance(modalEl);
-            if (!myModal) {
-                myModal = new bootstrap.Modal(modalEl);
-            }
+						<div class="modal-section-card">
+							<div class="card-tag">ACCOUNT</div>
+							<div class="row g-4">
+								<div class="col-md-6">
+									<label class="modal-label">아이디</label> 
+									<input type="text" class="form-control modal-input" name="userId" id="userId" required>
+								</div>
+								<div class="col-md-6">
+									<label class="modal-label">비밀번호</label> 
+									<input type="password" class="form-control modal-input" name="userPwd" id="userPwd">
+								</div>
+								<div class="col-md-6">
+									<label class="modal-label">이름</label> 
+									<input type="text" class="form-control modal-input" name="userName" id="userName" required>
+								</div>
+								<div class="col-md-6">
+									<label class="modal-label">닉네임</label> 
+									<input type="text" class="form-control modal-input" name="nickName" id="nickName" required>
+								</div>
+							</div>
+						</div>
 
-            const form = document.getElementById("memberForm");
-            
-            // 2. 폼 초기화
-            form.reset();
-            document.getElementById("modalMode").value = mode;
+						<div class="modal-section-card">
+							<div class="card-tag">PERSONAL</div>
+							<div class="row g-4">
+								<div class="col-md-6">
+									<label class="modal-label">이메일</label> 
+									<input type="email" class="form-control modal-input" name="email" id="email">
+								</div>
+								<div class="col-md-6">
+									<label class="modal-label">전화번호</label> 
+									<input type="text" class="form-control modal-input" name="tel" id="tel">
+								</div>
+								<div class="col-md-4">
+									<label class="modal-label">성별</label> 
+									<select class="form-select modal-input" name="gender" id="gender">
+										<option value="">선택</option>
+										<option value="0">남자</option>
+										<option value="1">여자</option>
+									</select>
+								</div>
+								<div class="col-md-4">
+									<label class="modal-label">생년월일</label> 
+									<input type="date" class="form-control modal-input" name="birth" id="birth" required>
+								</div>
+								<div class="col-md-4">
+									<label class="modal-label">회원 등급</label> 
+									<select class="form-select modal-input" name="userLevel" id="modalUserLevel">
+										<option value="1">Lv.1 (IRON)</option>
+										<option value="51">Lv.51 (ADMIN)</option>
+										<option value="99">Lv.99 (MASTER)</option>
+									</select>
+								</div>
+							</div>
+						</div>
 
-            // 3. 모드별 처리
-            if (mode === 'add') {
-                // [회원 추가 모드]
-                document.getElementById("memberModalLabel").innerText = "회원 추가";
-                
-                document.getElementById("userId").readOnly = false;
-                document.getElementById("userName").readOnly = false;
-                
-                document.getElementById("modalMemberIdx").value = "0";
-                
-                document.getElementById("enabledDiv").style.display = "none";
-                
-                myModal.show(); // 빈 모달 바로 열기
+						<div class="modal-section-card" id="enabledDiv" style="display: none;">
+							<div class="card-tag">STATUS</div>
+							<select class="form-select modal-input" name="enabled" id="enabled">
+								<option value="1">정상 사용 (ACTIVE)</option>
+								<option value="0">잠금/휴면 (BLOCKED)</option>
+							</select>
+						</div>
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-modal-close" data-bs-dismiss="modal">닫기</button>
+					<button type="button" class="btn btn-orange-main" onclick="submitMember()" style="border:none; color:#fff; font-weight:800; padding:10px 25px; cursor:pointer;">저장하기</button>
+				</div>
+			</div>
+		</div>
+	</div>
 
-            } else if (mode === 'update') {
-                // [회원 수정 모드]
-                document.getElementById("memberModalLabel").innerText = "회원 상세/수정";
-                
-                document.getElementById("userId").readOnly = true;
-                document.getElementById("userName").readOnly = true;
-                
-                document.getElementById("modalMemberIdx").value = memberIdx;
-                
-                document.getElementById("enabledDiv").style.display = "block";
-
-                // AJAX로 회원 상세 정보 가져오기
-                let url = "${pageContext.request.contextPath}/admin/member/detail";
-                let query = "memberIdx=" + memberIdx;
-
-                const fn = function(data) {
-                    if(data.state === "true") {
-                        let dto = data.dto;
-                        
-                        // --- [핵심] 기존 정보 입력하기 ---
-                        $("#userId").val(dto.userId);
-                        $("#userPwd").val(dto.userPwd);
-                        $("#userName").val(dto.userName);
-                        $("#nickName").val(dto.nickName);
-                        $("#email").val(dto.email);
-                        $("#gender").val(dto.gender);
-                        $("#tel").val(dto.tel);
-                        $("#modalUserLevel").val(dto.userLevel);
-                        $("#enabled").val(dto.enabled);
-                        
-                        // **날짜 포맷 처리 (가장 중요)**
-                        // dto.birth가 null일 경우 substring에서 에러가 나므로 체크 로직 추가
-	                    if(dto.birth) {
-	                        // 문자열인 경우 YYYY-MM-DD만 추출
-	                        let birthStr = dto.birth.length >= 10 ? dto.birth.substring(0, 10) : dto.birth;
-	                        $("#birth").val(birthStr);
-	                    } else {
-	                        $("#birth").val(""); // 날짜가 없으면 빈 값
-	                    }
-
-                        // 데이터 세팅 후 모달 열기
-                        myModal.show();
-                    } else {
-                        alert("회원 정보를 불러올 수 없습니다.");
-                    }
-                };
-
-                ajaxRequest(url, "GET", query, "json", fn);
-            }
-        }
-
-        // 회원 저장 (추가 또는 수정)
-        function submitMember() {
-            const f = document.getElementById("memberForm");
-            let mode = f.mode.value;
-            
-            // 유효성 검사
-            if(!f.userId.value) { alert("아이디를 입력하세요."); f.userId.focus(); return; }
-            if(!f.userName.value) { alert("이름을 입력하세요."); f.userName.focus(); return; }
-            if(!f.birth.value) { alert("생년월일을 입력하세요."); f.birth.focus(); return; }
-
-            let url = "${pageContext.request.contextPath}/admin/member/" + (mode === "add" ? "write" : "update");
-            
-            // jQuery serialize()를 사용하여 폼 데이터 직렬화 (readonly 필드도 포함됨)
-            let query = $(f).serialize(); 
-
-            // 콜백 함수 정의
-            const fn = function(data) {
-                if(data.state === "true") {
-                    alert("처리가 완료되었습니다.");
-                    location.reload(); // 성공 시 리스트 갱신
-                } else {
-                    alert("작업에 실패했습니다.");
-                }
-            };
-
-            ajaxRequest(url, "POST", query, "json", fn);
-        }
-        
-   		 // 선택 삭제 기능
-        function deleteList() {
-            // 1. 체크된 항목 수집
-            let cnt = 0;
-            let memberIdxs = []; // 변수명 변경 (userIds -> memberIdxs)
-            const chks = document.getElementsByName("chk");
-            
-            for(let chk of chks) {
-                if(chk.checked) {
-                    cnt++;
-                    memberIdxs.push(chk.value); // 이제 여기엔 번호(숫자)가 들어갑니다.
-                }
-            }
-            
-            // 2. 유효성 검사
-            if(cnt === 0) {
-                alert("삭제할 회원을 선택하세요.");
-                return;
-            }
-            
-            // 3. 확인 알림
-            if(!confirm("선택한 " + cnt + "명의 회원을 정말 삭제하시겠습니까?\n(삭제 후 복구할 수 없습니다)")) {
-                return;
-            }
-            
-            // 4. 서버 전송
-            let url = "${pageContext.request.contextPath}/admin/member/deleteList";
-            
-            // [중요] 파라미터 이름을 'memberIdxs'로 변경하여 전송
-            let query = $.param({ memberIdxs: memberIdxs }, true);
-            
-            const fn = function(data) {
-                if(data.state === "true") {
-                    alert("삭제되었습니다.");
-                    location.reload(); 
-                } else {
-                    alert("삭제 처리에 실패했습니다.");
-                }
-            };
-            
-            ajaxRequest(url, "POST", query, "json", fn);
-        }
-
-
-    </script>
-    
-    
+	<jsp:include page="/WEB-INF/views/admin/layout/footerResources.jsp" />
+	<script>const contextPath = "${pageContext.request.contextPath}";</script>
+	<script src="${pageContext.request.contextPath}/dist/js/admin_member_list.js"></script>
 </body>
 </html>
