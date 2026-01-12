@@ -20,9 +20,8 @@
     	<selectKey keyProperty="memberIdx" resultType="Long" order="BEFORE">
 	        SELECT member_seq.NEXTVAL FROM dual
 	    </selectKey>
-	    INSERT INTO member1(memberIdx, userId, userPwd, , nickName, gender, enabled, userLevel, modify_date)
-	    VALUES (#{memberIdx}, #{userId}, #{userPwd}, #{nickName}, #{gender}, 
-	        1, #{userLevel}, SYSDATE) 
+	    INSERT INTO member1(memberIdx, userId, birth, userPwd, nickName, gender, enabled, userLevel, modify_date)
+	    VALUES (#{memberIdx}, #{userId}, #{birth}, #{userPwd}, #{nickName}, #{gender}, 1, #{userLevel}, SYSDATE) 
 	</insert>
 
     <insert id="insertMember2" parameterType="com.maknaez.model.MemberDTO">
@@ -66,7 +65,7 @@
     <update id="updateMember2" parameterType="com.maknaez.model.MemberDTO">
 		UPDATE member2 SET userName = #{userName}, email = #{email},  
 			tel = #{tel, jdbcType=VARCHAR} 
-		WHERE userId = #{userId}
+		WHERE memberIdx = #{memberIdx}
     </update>
     
     <update id="updateMemberLevel" parameterType="map">
