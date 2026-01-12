@@ -212,6 +212,32 @@ public class MemberManageController {
         
         return model;
     }
+    
+    @ResponseBody
+    @PostMapping("deleteList")
+    public Map<String, Object> deleteList(HttpServletRequest req, HttpServletResponse resp) {
+        Map<String, Object> model = new HashMap<>();
+        
+        try {
+            String[] memberIdxs = req.getParameterValues("memberIdxs");
+            
+            if (memberIdxs != null) {
+                for (String memberIdx : memberIdxs) {
+                    Map<String, Object> map = new HashMap<>();
+                    map.put("memberIdx", memberIdx);
+                    
+                    service.deleteMember(map);
+                }
+            }
+            model.put("state", "true");
+            
+        } catch (Exception e) {
+            model.put("state", "false");
+            e.printStackTrace();
+        }
+        
+        return model;
+    }
 	
 	@GetMapping("point_manage")
 	public ModelAndView pointManage(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

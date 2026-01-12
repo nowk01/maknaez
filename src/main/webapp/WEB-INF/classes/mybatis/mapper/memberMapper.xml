@@ -51,7 +51,7 @@
            m2.email, m2.tel
 	    FROM member1 m1
 	    JOIN member3 m3 ON m1.memberIdx = m3.memberIdx
-	    LEFT JOIN member2 m2 ON m1.memberIdx = m2.memberIdx
+	    JOIN member2 m2 ON m1.memberIdx = m2.memberIdx
 	    WHERE m1.memberIdx = #{memberIdx}
 	</select>
 	    
@@ -80,12 +80,12 @@
 
     <update id="deleteMember1" parameterType="map">
 		UPDATE member1 SET enabled = 0, userLevel = 0
-		WHERE userId = #{userId}
+		WHERE memberIdx = #{memberIdx}
     </update>
     
     <delete id="deleteMember2" parameterType="map">
 		DELETE FROM member2
-		WHERE userId = #{userId}
+		WHERE memberIdx = #{memberIdx}
     </delete>
     
 	<select id="listAgeSection" resultType="map">
