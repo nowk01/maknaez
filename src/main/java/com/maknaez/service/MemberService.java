@@ -21,6 +21,8 @@ public interface MemberService {
 	public Integer dataCount(Map<String, Object> map);
 	public List<MemberDTO> listMember(Map<String, Object> map);
 	
-	public List<MemberDTO> listDormantMembers();
 	public void releaseDormantMembers(List<Long> idxList) throws Exception;
+	
+	public List<MemberDTO> listDormantMembers(Map<String, Object> map) throws Exception;
+	public Integer dataCountDormant(Map<String, Object> map);
 }
