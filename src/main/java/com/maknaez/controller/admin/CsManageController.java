@@ -24,11 +24,13 @@ import com.maknaez.util.FileManager;
 import com.maknaez.util.MyMultipartFile;
 
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.Part;
 
+@MultipartConfig
 @Controller
 @RequestMapping("/admin/cs/*")
 public class CsManageController {
@@ -211,50 +213,95 @@ public class CsManageController {
 		return mav;
 	}
 
-	// 공지사항 작성 폼
 	@GetMapping("notice_write")
-	public ModelAndView noticeWriteForm(HttpServletRequest req) {
-		return new ModelAndView("admin/cs/notice_write");
+	public ModelAndView noticeWriteForm(HttpServletRequest req, HttpServletResponse resp) {
+	    return new ModelAndView("admin/cs/notice_write");
 	}
 
-	// 공지사항 등록 처리 (파일 업로드 기능 포함)
 	@PostMapping("notice_write")
 	public ModelAndView noticeWriteSubmit(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
-		HttpSession session = req.getSession();
-		SessionInfo info = (SessionInfo) session.getAttribute("member");
+	        throws ServletException, IOException {
+	    HttpSession session = req.getSession();
+	    SessionInfo info = (SessionInfo) session.getAttribute("member");
 
-		String root = session.getServletContext().getRealPath("/");
-		String pathname = root + "uploads" + File.separator + "notice";
-		File f = new File(pathname);
-		if (!f.exists())
-			f.mkdirs();
+	    // 1. 세션 체크 (관리자 확인)
+	    if (info == null) {
+	        return new ModelAndView("redirect:/admin/login");
+	    }
 
-		try {
-			BoardDTO dto = new BoardDTO();
-			dto.setUserName(info.getUserName());
-			dto.setSubject(req.getParameter("subject"));
-			dto.setContent(req.getParameter("content"));
-			dto.setIsNotice(req.getParameter("isNotice") != null ? 1 : 0);
-			dto.setIsShow(req.getParameter("isShow") != null ? 1 : 0);
+	    // 2. 경로 설정 (서버 내 uploads/notice 폴더)
+	    String root = session.getServletContext().getRealPath("/");
+	    String pathname = root + "uploads" + File.separator + "notice";
+	    
+	    try {
+	        File f = new File(pathname);
+	        if (!f.exists()) {
+	            f.mkdirs(); // 폴더 생성 시도
+	        }
 
-			Part p = req.getPart("selectFile");
-			if (p != null && p.getSize() > 0) {
-				MyMultipartFile mp = fileManager.doFileUpload(p, pathname);
-				if (mp != null) {
-					dto.setSaveFilename(mp.getSaveFilename());
-					dto.setOriginalFilename(mp.getOriginalFilename());
-				}
-			}
+	        BoardDTO dto = new BoardDTO();
+	        dto.setUserName(info.getUserName());
+	        dto.setSubject(req.getParameter("subject"));
+	        dto.setContent(req.getParameter("content"));
+	        dto.setIsNotice(req.getParameter("isNotice") != null ? 1 : 0);
+	        dto.setIsShow(req.getParameter("isShow") != null ? 1 : 0);
 
-			service.insertNotice(dto);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+	        // 3. 파일 업로드 처리 (파일이 없거나 에러나도 중단되지 않음)
+	        try {
+	            Part p = req.getPart("selectFile");
+	            if (p != null && p.getSize() > 0) {
+	                MyMultipartFile mp = fileManager.doFileUpload(p, pathname);
+	                if (mp != null) {
+	                    dto.setSaveFilename(mp.getSaveFilename());
+	                    dto.setOriginalFilename(mp.getOriginalFilename());
+	                }
+	            }
+	        } catch (Exception fe) {
+	            System.out.println("파일 업로드 중 오류 발생 (무시하고 진행): " + fe.getMessage());
+	        }
 
-		return new ModelAndView("redirect:/admin/cs/notice_list");
+	        // 4. DB 저장 실행
+	        service.insertNotice(dto);
+	        
+	    } catch (Exception e) {
+	        System.out.println("공지사항 등록에 오류가 발생하였습니다.");
+	        e.printStackTrace();
+	    }
+
+	    return new ModelAndView("redirect:/admin/cs/notice_list");
 	}
+	// 공지사항 상세 보기
+    @GetMapping("notice_article")
+    public ModelAndView noticeArticle(HttpServletRequest req, HttpServletResponse resp) {
+        String numStr = req.getParameter("num");
+        if (numStr == null || numStr.isEmpty()) {
+            return new ModelAndView("redirect:/admin/cs/notice_list");
+        }
 
+        try {
+            long num = Long.parseLong(numStr);
+
+            service.updateHitCount(num);
+
+            BoardDTO dto = service.findById(num);
+
+            if (dto == null) {
+                return new ModelAndView("redirect:/admin/cs/notice_list");
+            }
+
+            ModelAndView mav = new ModelAndView("admin/cs/notice_article");
+            mav.addObject("dto", dto);
+            
+            mav.addObject("query", req.getQueryString());
+
+            return mav;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ModelAndView("redirect:/admin/cs/notice_list");
+        }
+    }
+    
 	// 공지사항 삭제
 	@GetMapping("notice_delete")
 	public ModelAndView noticeDelete(HttpServletRequest req) {
@@ -297,7 +344,6 @@ public class CsManageController {
 		resp.setContentType("application/json; charset=utf-8");
 		JSONObject jobj = new JSONObject();
 		try {
-			// 임시 샘플 데이터 (원본 로직 유지)
 			jobj.put("status", "success");
 			jobj.put("productName", "상품명 예시");
 			jobj.put("userName", "홍길동");

@@ -61,23 +61,22 @@
                         </thead>
                         <tbody>
                             <c:forEach var="dto" items="${list}">
-                                <tr class="${dto.notice == 1 ? 'row-notice' : ''}">
+                                <tr class="${dto.isNotice == 1 ? 'row-notice' : ''}">
                                     <td><input type="checkbox" name="nums" value="${dto.num}" class="chk"></td>
                                     <td>
                                         <c:choose>
-                                            <c:when test="${dto.notice == 1}"><span class="badge-pin">NOTICE</span></c:when>
-                                            <c:otherwise>${dto.listNum}</c:otherwise>
-                                        </c:choose>
+                                            <c:when test="${dto.isNotice == 1}"><span class="badge-pin">NOTICE</span></c:when>
+                                            <c:otherwise>${dto.num}</c:otherwise> </c:choose>
                                     </td>
                                     <td class="text-start">
-                                        <a href="${articleUrl}&num=${dto.num}" class="subject-link">${dto.subject}</a>
+                                        <a href="${pageContext.request.contextPath}/admin/cs/notice_article?num=${dto.num}" class="subject-link">${dto.subject}</a>
                                     </td>
                                     <td>${dto.userName}</td>
                                     <td>${dto.reg_date}</td>
                                     <td>${dto.hitCount}</td>
                                 </tr>
                             </c:forEach>
-                            <c:if test="${list.size() == 0}">
+                            <c:if test="${empty list}">
                                 <tr><td colspan="6" style="padding:50px;">등록된 공지사항이 없습니다.</td></tr>
                             </c:if>
                         </tbody>

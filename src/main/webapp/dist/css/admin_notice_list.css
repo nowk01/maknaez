@@ -1,199 +1,204 @@
 @charset "UTF-8";
 
+/* [MAKNAEZ ADMIN] 공지사항 관리 - 스타일 통합본 */
 body {
-	background-color: #fcfcfd;
-	color: #202224;
-	font-family: 'Pretendard', sans-serif;
-	letter-spacing: -0.5px;
+    background-color: #fcfcfd;
+    color: #202224;
+    font-family: 'Pretendard', sans-serif;
+    letter-spacing: -0.5px;
 }
 
 .content-container {
-	padding: 40px;
-	animation: fadeIn 0.5s ease-out;
+    padding: 40px;
+    animation: fadeIn 0.5s ease-out;
 }
 
-@keyframes fadeIn {from { opacity:0;
-	transform: translateY(10px);
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
-to {
-	opacity: 1;
-	transform: translateY(0);
-}
-
-}
-
-/* 상단 타이틀 26px / 14px */
+/* 상단 헤더 */
 .page-header {
-	margin-bottom: 35px;
-	border-left: 5px solid #ff4e00;
-	padding-left: 20px;
+    margin-bottom: 35px;
+    border-left: 5px solid #ff4e00;
+    padding-left: 20px;
 }
 
 .page-title {
-	font-weight: 800;
-	font-size: 26px;
-	color: #1a1c1e;
-	margin: 0;
+    font-weight: 800;
+    font-size: 26px;
+    color: #1a1c1e;
+    margin: 0;
 }
 
 .page-desc {
-	color: #8a8a8a;
-	font-size: 14px;
-	margin-top: 4px;
-	text-transform: uppercase;
-	letter-spacing: 1px;
+    color: #8a8a8a;
+    font-size: 14px;
+    margin-top: 4px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
 .card-box {
-	background: #fff;
-	border: 1px solid #eee;
-	padding: 30px;
-	border-radius: 2px;
-	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
-	margin-bottom: 30px;
+    background: #fff;
+    border: 1px solid #eee;
+    padding: 30px;
+    border-radius: 2px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+    margin-bottom: 30px;
 }
 
-/* 검색바 */
+/* 검색바 그리드 */
 .search-grid {
-	display: grid;
-	grid-template-columns: 1fr 2.5fr auto;
-	gap: 15px;
-	align-items: flex-end;
+    display: grid;
+    grid-template-columns: 1fr 2.5fr auto;
+    gap: 15px;
+    align-items: flex-end;
 }
 
 .filter-group label {
-	display: block;
-	font-size: 11px;
-	font-weight: 800;
-	color: #888;
-	margin-bottom: 8px;
+    display: block;
+    font-size: 11px;
+    font-weight: 800;
+    color: #888;
+    margin-bottom: 8px;
 }
 
 .form-select, .form-control {
-	border-radius: 0;
-	border: 1px solid #ddd;
-	height: 40px;
-	font-size: 13px;
+    border-radius: 0;
+    border: 1px solid #ddd;
+    height: 40px;
+    font-size: 13px;
 }
 
+/* [1] SEARCH 버튼: 주황색 -> 호버 시 검정 (요청 스타일) */
 .btn-search {
-	background: #111;
-	color: #fff;
-	border: none;
-	height: 40px;
-	padding: 0 35px;
-	font-weight: 700;
-	cursor: pointer;
+    background: #ff4e00 !important;
+    color: #fff !important;
+    border: none !important;
+    width: 120px;
+    height: 40px;
+    font-weight: 700;
+    font-size: 13px;
+    cursor: pointer;
+    transition: 0.3s;
 }
 
 .btn-search:hover {
-	background: #ff4e00;
+    background: #000 !important;
 }
 
-/* 리스트 헤더 */
+/* 리스트 상단 컨트롤바 */
 .list-header {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
 }
 
 .list-count {
-	font-size: 14px;
-	font-weight: 600;
+    font-size: 14px;
+    font-weight: 600;
 }
 
-.btn-ctrl {
-	background: #fff;
-	border: 1px solid #ddd;
-	padding: 7px 18px;
-	font-size: 12px;
-	font-weight: 700;
-	cursor: pointer;
-	margin-left: 5px;
+.action-btns {
+    display: flex;
+    gap: 8px;
 }
 
-.btn-write {
-	background: #ff4e00;
-	color: #fff;
-	border: none;
-	padding: 7px 20px;
-	font-size: 12px;
-	font-weight: 700;
-	cursor: pointer;
+/* [2] 공지 등록 & 선택 삭제 버튼: 흰색 배경 + 테두리 -> 호버 시 주황색 (요청 스타일) */
+.action-btns .btn-write,
+.action-btns .btn-ctrl {
+    background: #fff !important; /* 평소엔 흰색 */
+    color: #555 !important;
+    border: 1px solid #ddd !important; /* 테두리 */
+    font-size: 12px;
+    font-weight: 600;
+    padding: 8px 18px;
+    border-radius: 0;
+    cursor: pointer;
+    transition: all 0.2s ease;
 }
 
-/* 테이블 */
+/* 마우스 올렸을 때만 주황색으로 채우기 */
+.action-btns .btn-write:hover,
+.action-btns .btn-ctrl:hover {
+    background: #ff4e00 !important;
+    border-color: #ff4e00 !important;
+    color: #fff !important;
+}
+
+/* 테이블 디자인 */
 .table {
-	width: 100%;
-	border-top: 2px solid #1a1c1e;
-	border-collapse: collapse;
+    width: 100%;
+    border-top: 2px solid #1a1c1e;
+    border-collapse: collapse;
 }
 
 .table th {
-	background: #fbfbfb;
-	padding: 15px;
-	font-size: 13px;
-	font-weight: 700;
-	border-bottom: 1px solid #eee;
+    background: #fbfbfb;
+    padding: 15px;
+    font-size: 13px;
+    font-weight: 700;
+    border-bottom: 1px solid #eee;
 }
 
 .table td {
-	padding: 18px 10px;
-	border-bottom: 1px solid #f5f5f5;
-	text-align: center;
-	font-size: 14px;
-	vertical-align: middle;
+    padding: 18px 10px;
+    border-bottom: 1px solid #f5f5f5;
+    text-align: center;
+    font-size: 14px;
+    vertical-align: middle;
 }
 
 .text-start {
-	text-align: left !important;
-	padding-left: 20px !important;
+    text-align: left !important;
+    padding-left: 20px !important;
 }
 
-/* 중요 공지 포인트 */
+/* 중요 공지 행 강조 */
 .row-notice {
-	background-color: #fffaf7;
+    background-color: #fffaf7;
 }
 
 .badge-pin {
-	background: #ff4e00;
-	color: #fff;
-	padding: 2px 8px;
-	font-size: 11px;
-	font-weight: 800;
-	border-radius: 1px;
+    background: #ff4e00;
+    color: #fff;
+    padding: 2px 8px;
+    font-size: 11px;
+    font-weight: 800;
+    border-radius: 1px;
 }
 
 .subject-link {
-	text-decoration: none;
-	color: #333;
-	font-weight: 600;
+    text-decoration: none;
+    color: #333;
+    font-weight: 600;
 }
 
 .subject-link:hover {
-	color: #ff4e00;
-	text-decoration: underline;
+    color: #ff4e00;
+    text-decoration: underline;
 }
 
 /* 페이징 */
 .pagination {
-	display: flex;
-	justify-content: center;
-	margin-top: 35px;
-	gap: 8px;
+    display: flex;
+    justify-content: center;
+    margin-top: 35px;
+    gap: 8px;
 }
 
 .pagination a, .pagination span {
-	text-decoration: none;
-	color: #aaa;
-	font-size: 14px;
-	font-weight: 700;
-	padding: 5px 12px;
+    text-decoration: none;
+    color: #aaa;
+    font-size: 14px;
+    font-weight: 700;
+    padding: 5px 12px;
 }
 
 .pagination .active {
-	color: #ff4e00;
-	border-bottom: 2px solid #ff4e00;
+    color: #ff4e00;
+    border-bottom: 2px solid #ff4e00;
 }
