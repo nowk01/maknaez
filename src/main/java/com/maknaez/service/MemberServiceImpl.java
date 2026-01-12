@@ -28,12 +28,10 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	public void insertMember(MemberDTO dto) throws Exception {
 		try {
-			/*
 			mapper.insertMember1(dto);
 			mapper.insertMember2(dto);
-			*/
+			mapper.insertMember3(dto);
 			
-			mapper.insertMember12(dto);
 		} catch (Exception e) {
 			// 트랜잭션 처리
 			SqlSessionManager.setRollbackOnly();

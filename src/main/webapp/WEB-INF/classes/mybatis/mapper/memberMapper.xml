@@ -11,42 +11,29 @@
 	
 	<insert id="insertLoginLog" parameterType="com.maknaez.model.MemberDTO">
 		INSERT INTO login_history(memberIdx, userId, userPwd, userName, enabled, userLevel, 
-					register_date, modify_date)
+					, modify_date)
 		VALUES (member_seq.NEXTVAL, #{userId}, #{userPwd}, #{userName}, 
 			1, 1, SYSDATE, SYSDATE) 
     </insert>
 	
     <insert id="insertMember1" parameterType="com.maknaez.model.MemberDTO">
-		INSERT INTO member1(memberIdx, userId, userPwd, userName, enabled, userLevel, 
-					register_date, modify_date)
-		VALUES (member_seq.NEXTVAL, #{userId}, #{userPwd}, #{userName}, 
-			1, 1, SYSDATE, SYSDATE) 
-    </insert>
+    	<selectKey keyProperty="memberIdx" resultType="Long" order="BEFORE">
+	        SELECT member_seq.NEXTVAL FROM dual
+	    </selectKey>
+	    INSERT INTO member1(memberIdx, userId, userPwd, , nickName, gender, enabled, userLevel, modify_date)
+	    VALUES (#{memberIdx}, #{userId}, #{userPwd}, #{nickName}, #{gender}, 
+	        1, #{userLevel}, SYSDATE) 
+	</insert>
 
     <insert id="insertMember2" parameterType="com.maknaez.model.MemberDTO">
-		INSERT INTO member2(userId, email, birth, tel, profile_photo, zip, addr1, addr2)
-		VALUES (#{userId}, #{email}, TO_DATE(#{birth}, 'YYYY-MM-DD'), #{tel}, 
-			#{profile_photo, jdbcType=VARCHAR}, #{zip, jdbcType=VARCHAR},
-			#{addr1, jdbcType=VARCHAR}, #{addr2, jdbcType=VARCHAR})
+		INSERT INTO member2(memberIdx, userName, email, tel)
+		VALUES (#{memberIdx}, #{userName}, #{email}, #{tel})
     </insert>
-	
-    <update id="insertMember12" parameterType="com.maknaez.model.MemberDTO">
-		INSERT ALL
-		INTO member1(memberIdx, userId, userPwd, userName, enabled, userLevel, 
-					register_date, modify_date)
-		VALUES (member_seq.NEXTVAL, #{userId}, #{userPwd}, #{userName}, 
-			1, 1, SYSDATE, SYSDATE)
-		INTO member2(userId, email, birth, tel, profile_photo, zip, addr1, addr2)
-		VALUES (#{userId}, #{email}, TO_DATE(#{birth}, 'YYYY-MM-DD'), #{tel}, 
-			#{profile_photo, jdbcType=VARCHAR}, #{zip, jdbcType=VARCHAR},
-			#{addr1, jdbcType=VARCHAR}, #{addr2, jdbcType=VARCHAR})
-		INTO member2(userId, email, birth, tel, profile_photo, zip, addr1, addr2)
-		VALUES (#{userId}, #{email}, TO_DATE(#{birth}, 'YYYY-MM-DD'), #{tel}, 
-			#{profile_photo, jdbcType=VARCHAR}, #{zip, jdbcType=VARCHAR},
-			#{addr1, jdbcType=VARCHAR}, #{addr2, jdbcType=VARCHAR})
-		SELECT * FROM dual
-    </update>
     
+    <insert id="insertMember3">
+    	INSERT INTO member3(memberIdx, register_date)
+    	VALUES(#{memberIdx}, SYSDATE)
+    </insert>
    
 	<select id="findById" parameterType="String" resultType="com.maknaez.model.MemberDTO">
 		SELECT memberIdx, m1.userId, userPwd, userName,
@@ -60,7 +47,7 @@
 	
 	<!-- 아이디 -> 고유번호로 찾는걸로 변경 -->
 	<select id="findByIdx" parameterType="Long" resultType="com.maknaez.model.MemberDTO">
-	    SELECT m1.memberIdx, m1.userId, m2.userName, m1.userPwd, m1.userLevel, m1.nickName, m1.gender,
+	    SELECT m1.memberIdx, m1.userId, m2.userName, m1.userPwd, m1.userLevel, m1.nickName, m1.gender, m1.enabled,
            TO_CHAR(m1.birth, 'YYYY-MM-DD') as birth, m3.register_date, m1.modify_date,
            m2.email, m2.tel
 	    FROM member1 m1
@@ -69,19 +56,16 @@
 	    WHERE m1.memberIdx = #{memberIdx}
 	</select>
 	    
-	    
-	    
 	<update id="updateMember1" parameterType="com.maknaez.model.MemberDTO">
-		UPDATE member1 SET userPwd = #{userPwd}, modify_date = SYSDATE
-		WHERE userId = #{userId}
-    </update>
+	    UPDATE member1 
+	    SET userPwd = #{userPwd}, nickName = #{nickName}, birth = TO_DATE(#{birth},'YYYY-MM-DD'), gender = #{gender}, 
+	    modify_date = SYSDATE, userLevel = #{userLevel}, enabled = #{enabled}
+	    WHERE memberIdx = #{memberIdx}  
+	</update>
 	
     <update id="updateMember2" parameterType="com.maknaez.model.MemberDTO">
-		UPDATE member2 SET email = #{email}, birth = TO_DATE(#{birth},'YYYY-MM-DD'), 
-			tel = #{tel, jdbcType=VARCHAR}, 
-			profile_photo = #{profile_photo, jdbcType=VARCHAR}, 
-			zip = #{zip, jdbcType=VARCHAR},
-			addr1 = #{addr1, jdbcType=VARCHAR}, addr2 = #{addr2, jdbcType=VARCHAR}
+		UPDATE member2 SET userName = #{userName}, email = #{email},  
+			tel = #{tel, jdbcType=VARCHAR} 
 		WHERE userId = #{userId}
     </update>
     

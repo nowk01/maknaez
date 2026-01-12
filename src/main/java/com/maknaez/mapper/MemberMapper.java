@@ -12,7 +12,7 @@ public interface MemberMapper {
 	
 	public void insertMember1(MemberDTO dto) throws SQLException;
 	public void insertMember2(MemberDTO dto) throws SQLException;
-	public void insertMember12(MemberDTO dto) throws SQLException;
+	public void insertMember3(MemberDTO dto) throws SQLException;
 	public void updateMember1(MemberDTO dto) throws SQLException;
 	public void updateMember2(MemberDTO dto) throws SQLException;
 	public void updateMemberLevel(Map<String, Object> map) throws SQLException;
