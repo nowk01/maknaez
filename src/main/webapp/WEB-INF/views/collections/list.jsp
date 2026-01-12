@@ -106,11 +106,12 @@
                         </button>
                     </div>
 
-                    <!-- 1. 컬렉션 -->
+                    <!-- 1. 컬렉션 (카테고리) -->
                     <details class="filter-group" open>
                         <summary class="filter-title">카테고리</summary>
                         <div class="filter-content">
-                            <c:forEach var="sport" items="${['로드러닝', '트레일러닝', '하이킹', '스포츠스타일', '샌들/워터슈즈']}">
+                            <%-- [수정됨] 직접 배열 입력 방식 -> Controller에서 sportList 받아서 사용 --%>
+                            <c:forEach var="sport" items="${sportList}">
                                 <c:set var="isSportChecked" value="false"/>
                                 <c:if test="${not empty paramValues.sports}">
                                     <c:forEach var="val" items="${paramValues.sports}">
@@ -142,7 +143,8 @@
                     <details class="filter-group" open>
                         <summary class="filter-title">성별</summary>
                         <div class="filter-content">
-                            <c:forEach var="g" items="${['남성', '여성', 'Unisex']}">
+                            <%-- [수정됨] 직접 배열 입력 방식 -> Controller에서 genderList 받아서 사용 --%>
+                            <c:forEach var="g" items="${genderList}">
                                 <c:set var="isGenderChecked" value="false"/>
                                 <c:if test="${not empty paramValues.genders}">
                                     <c:forEach var="val" items="${paramValues.genders}">
@@ -215,7 +217,6 @@
                         <summary class="filter-title">색상</summary>
                         <div class="filter-content">
                             <div class="color-list">
-                                <%-- [수정됨] c:set 태그 삭제. 컨트롤러에서 colorList를 전달받아 바로 사용 --%>
                                 <c:forEach var="color" items="${colorList}">
                                     <c:set var="isColorChecked" value="false"/>
                                     <c:if test="${not empty paramValues.colors}">
