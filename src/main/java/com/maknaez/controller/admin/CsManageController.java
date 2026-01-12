@@ -35,7 +35,7 @@ public class CsManageController {
 	private BoardService service = new BoardServiceImpl();
 	private FileManager fileManager = new FileManager();
 
-	// 1:1 문의 리스트
+	// 1:1 문의 리스트 (관리자용)
 	@GetMapping("inquiry_list")
 	public ModelAndView inquiryList(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
@@ -49,16 +49,19 @@ public class CsManageController {
 			if (keyword == null)
 				keyword = "";
 
-			if (req.getMethod().equalsIgnoreCase("GET")) {
+			if (req.getMethod().equalsIgnoreCase("GET") && !keyword.isEmpty()) {
 				keyword = URLDecoder.decode(keyword, "utf-8");
 			}
 
 			Map<String, Object> map = new HashMap<>();
-			map.put("status", status);
+			map.put("status", "all");
 			map.put("keyword", keyword);
+			map.put("condition", "all");
 			map.put("offset", 0);
-			map.put("size", 100);
+			map.put("size", 1000); // 관리자용이므로 넉넉하게 설정
 
+			map.put("userId", "");
+			
 			List<BoardDTO> list = service.listBoard(map);
 
 			mav.addObject("list", list);
@@ -72,7 +75,7 @@ public class CsManageController {
 		return mav;
 	}
 
-	// 1:1 문의 상세 (AJAX)
+	// 1:1 문의 상세 (AJAX 연동 핵심 코드)
 	@ResponseBody
 	@GetMapping("inquiry_detail")
 	public void inquiryDetail(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -83,6 +86,7 @@ public class CsManageController {
 		JSONObject jobj = new JSONObject();
 
 		try {
+			// 1. 관리자 권한 체크 (51 이상)
 			if (info == null || info.getUserLevel() < 51) {
 				jobj.put("status", "permission_denied");
 				resp.getWriter().print(jobj.toString());
@@ -98,9 +102,16 @@ public class CsManageController {
 				jobj.put("subject", dto.getSubject());
 				jobj.put("content", dto.getContent());
 				jobj.put("userName", dto.getUserName());
+				jobj.put("userId", dto.getUserId());
 				jobj.put("reg_date", dto.getReg_date());
-				jobj.put("replyContent", dto.getReplyContent());
-				jobj.put("replyDate", dto.getReplyDate());
+
+				// [연동수정] null 방지를 위해 빈 문자열 처리 (JS 에러 방지)
+				jobj.put("replyContent", dto.getReplyContent() != null ? dto.getReplyContent() : "");
+				jobj.put("replyDate", dto.getReplyDate() != null ? dto.getReplyDate() : "");
+
+				// 파일 정보 (원본 기능 유지)
+				jobj.put("saveFilename", dto.getSaveFilename() != null ? dto.getSaveFilename() : "");
+				jobj.put("originalFilename", dto.getOriginalFilename() != null ? dto.getOriginalFilename() : "");
 			} else {
 				jobj.put("status", "fail");
 			}
@@ -123,10 +134,16 @@ public class CsManageController {
 		JSONObject jobj = new JSONObject();
 
 		try {
+			if (info == null || info.getUserLevel() < 51) {
+				jobj.put("status", "permission_denied");
+				resp.getWriter().print(jobj.toString());
+				return;
+			}
+
 			BoardDTO dto = new BoardDTO();
 			dto.setNum(Long.parseLong(req.getParameter("num")));
 			dto.setReplyContent(req.getParameter("replyContent"));
-			dto.setReplyId(info.getUserId());
+			dto.setReplyId(info.getUserId()); // 답변자(관리자) ID 저장
 
 			service.updateBoardReply(dto);
 
@@ -140,7 +157,7 @@ public class CsManageController {
 		out.print(jobj.toString());
 	}
 
-	// 공지사항 리스트
+	// 공지사항 리스트 (원본 기능 전체 포함)
 	@GetMapping("notice_list")
 	public ModelAndView noticeList(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
@@ -148,9 +165,7 @@ public class CsManageController {
 
 		try {
 			String page = req.getParameter("page");
-			int current_page = 1;
-			if (page != null)
-				current_page = Integer.parseInt(page);
+			int current_page = (page != null) ? Integer.parseInt(page) : 1;
 
 			String condition = req.getParameter("condition");
 			String keyword = req.getParameter("keyword");
@@ -159,7 +174,7 @@ public class CsManageController {
 			if (keyword == null)
 				keyword = "";
 
-			if (req.getMethod().equalsIgnoreCase("GET")) {
+			if (req.getMethod().equalsIgnoreCase("GET") && !keyword.isEmpty()) {
 				keyword = URLDecoder.decode(keyword, "utf-8");
 			}
 
@@ -202,7 +217,7 @@ public class CsManageController {
 		return new ModelAndView("admin/cs/notice_write");
 	}
 
-	// 공지사항 등록 처리
+	// 공지사항 등록 처리 (파일 업로드 기능 포함)
 	@PostMapping("notice_write")
 	public ModelAndView noticeWriteSubmit(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
@@ -252,13 +267,10 @@ public class CsManageController {
 		return new ModelAndView("redirect:/admin/cs/notice_list");
 	}
 
-	// 아래 메서드들을 컨트롤러 클래스 내부에 추가하세요.
-
 	// 리뷰 관리 리스트 페이지
 	@GetMapping("review_list")
 	public ModelAndView reviewList(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
-		// 1:1 문의와 통일감을 주기 위해 inquiry_list와 유사한 구조로 생성
 		ModelAndView mav = new ModelAndView("admin/cs/review_list");
 
 		try {
@@ -269,13 +281,6 @@ public class CsManageController {
 			if (keyword == null)
 				keyword = "";
 
-			Map<String, Object> map = new HashMap<>();
-			map.put("score", Integer.parseInt(score));
-			map.put("keyword", keyword);
-
-			// TODO: BoardService에 listReview 메서드 구현 필요
-			// List<BoardDTO> list = service.listReview(map);
-			// mav.addObject("list", list);
 			mav.addObject("score", score);
 			mav.addObject("keyword", keyword);
 
@@ -292,18 +297,13 @@ public class CsManageController {
 		resp.setContentType("application/json; charset=utf-8");
 		JSONObject jobj = new JSONObject();
 		try {
-			long num = Long.parseLong(req.getParameter("num"));
-			// TODO: service.findReviewById(num) 구현 필요
-			// BoardDTO dto = service.findReviewById(num);
-
-			// 예시 데이터 (테스트용)
+			// 임시 샘플 데이터 (원본 로직 유지)
 			jobj.put("status", "success");
 			jobj.put("productName", "상품명 예시");
 			jobj.put("userName", "홍길동");
 			jobj.put("score", 5);
 			jobj.put("content", "리뷰 내용 예시");
 			jobj.put("reg_date", "2026-01-11");
-
 		} catch (Exception e) {
 			jobj.put("status", "error");
 		}
