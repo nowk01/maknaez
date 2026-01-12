@@ -14,34 +14,40 @@
 <jsp:include page="/WEB-INF/views/layout/header.jsp" />
 
 <div class="mypage-container">
-    <aside class="sidebar">
-        <h2>마이페이지</h2>
-        <div class="menu-group">
-            <span class="menu-title">쇼핑 정보</span>
-            <ul>
-                <li><a href="${pageContext.request.contextPath}/member/mypage/orderList">주문/배송 조회</a></li>
-                <li><a href="${pageContext.request.contextPath}/member/mypage/cancelList">취소/반품/교환 내역</a></li>
-                <li><a href="#">찜한 상품</a></li>
-            </ul>
-        </div>
-        <div class="menu-group">
-            <span class="menu-title">혜택 관리</span>
-            <ul>
-                <li><a href="#">쿠폰함</a></li>
-                <li><a href="#">포인트</a></li>
-                <li><a href="${pageContext.request.contextPath}/member/mypage/review">상품 리뷰</a></li>
-            </ul>
-        </div>
-        <div class="menu-group">
-            <span class="menu-title">회원 정보</span>
-            <ul>
-                <li><a href="#">회원정보 수정</a></li>
-                <li><a href="#">배송지 관리</a></li>
-                <li><a href="#">회원탈퇴</a></li>
-            </ul>
-        </div>
-    </aside>
+    
+    <div class="sm-salomon__accountSidebar">
+        <h1 class="h2 feature-header" data-cc-animate>마이페이지</h1>
+        <div class="sm-salomon__accountSidebarList" data-cc-animate>
 
+            <div class="sm-salomon__accountCard">
+                <h3 class="sm-salomon__accountCardHeading">구매내역</h3>
+                <a href="${pageContext.request.contextPath}/member/mypage/orderList" class="sm-salomon__accountCardLink">주문/배송조회</a> 
+                <a href="${pageContext.request.contextPath}/member/mypage/cancelList" class="sm-salomon__accountCardLink">취소/반품조회</a>
+            </div>
+
+            <div class="sm-salomon__accountCard">
+                <h3 class="sm-salomon__accountCardHeading">혜택내역</h3>
+                <a href="${pageContext.request.contextPath}/member/mypage/review" class="sm-salomon__accountCardLink">상품 리뷰</a> 
+                <a href="#" class="sm-salomon__accountCardLink">포인트/쿠폰</a>
+            </div>
+
+            <div class="sm-salomon__accountCard">
+                <h3 class="sm-salomon__accountCardHeading">상품내역</h3>
+                <a href="#" class="sm-salomon__accountCardLink">최근 본 상품</a> 
+                <a href="${pageContext.request.contextPath}/member/mypage/wishList" class="sm-salomon__accountCardLink">관심 상품</a>
+            </div>
+
+            <div class="sm-salomon__accountCard">
+                <h3 class="sm-salomon__accountCardHeading">회원정보</h3>
+                <a href="#" class="sm-salomon__accountCardLink">내 정보 관리</a> 
+                <a href="#" class="sm-salomon__accountCardLink">배송지 관리</a> 
+                <a href="#" class="sm-salomon__accountCardLink" style="font-weight: 700;">회원등급</a> 
+                <a href="#" class="sm-salomon__accountCardLink">문의하기</a>
+            </div>
+
+            <a href="${pageContext.request.contextPath}/member/logout" class="sm-salomon__accountCardLink">로그아웃</a>
+        </div>
+    </div>
     <main class="main-content">
         <h1 class="page-title">마이페이지</h1>
 
@@ -94,7 +100,8 @@
                 </div>
             </div>
         </div>
-    </main>
+        
+        </main>
 </div>
 
 <jsp:include page="/WEB-INF/views/layout/footer.jsp" />

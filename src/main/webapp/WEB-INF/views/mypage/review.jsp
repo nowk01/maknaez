@@ -40,7 +40,7 @@
 				<div class="sm-salomon__accountCard">
 					<h3 class="sm-salomon__accountCardHeading">상품내역</h3>
 					<a href="#" class="sm-salomon__accountCardLink">최근 본 상품</a> <a
-						href="#" class="sm-salomon__accountCardLink">관심 상품</a>
+						href="${pageContext.request.contextPath}/member/mypage/wishList" class="sm-salomon__accountCardLink">관심 상품</a>
 				</div>
 
 				<div class="sm-salomon__accountCard">

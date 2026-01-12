@@ -39,7 +39,7 @@
 				<span class="menu-title">상품내역</span>
 				<ul>
 					<li><a href="#">최근 본 상품</a></li>
-					<li><a href="#">관심 상품</a></li>
+					<li><a href="${pageContext.request.contextPath}/member/mypage/wishList">관심 상품</a></li>
 				</ul>
 			</div>
 
