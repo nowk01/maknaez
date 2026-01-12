@@ -604,6 +604,10 @@
     border-bottom: 1px solid #ebeff5;
     padding-bottom: 16px;
     margin-bottom: 20px;
+    
+    /* 🔥 추가할 코드: 헤더를 공중부양 시켜서 제일 위로 올립니다 */
+    position: relative; 
+    z-index: 50;
 }
 
 .AppButton__button--style-plain {
@@ -671,6 +675,7 @@
 .PendingReviews__order_dropdown {
     position: relative;
     height: 100%;
+    z-index: 60;
 }
 
 .sm-salomon__dropdown-menu {
