@@ -248,20 +248,82 @@ public class MemberManageController {
 	}
 	
 	@GetMapping("dormant_manage")
-	public ModelAndView dormantManage(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		ModelAndView mav = new ModelAndView("admin/member/dormant_manage");
-        
-        try {
-            List<MemberDTO> list = service.listDormantMembers();
-            
-            mav.addObject("list", list);
-            mav.addObject("count", list.size()); // 총 인원수
-            
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        
-        return mav;
+	public ModelAndView dormantManage(HttpServletRequest req, HttpServletResponse resp) throws Exception {
+	    ModelAndView mav = new ModelAndView("admin/member/dormant_manage");
+	    
+	    // 1. 파라미터 수신 및 초기값 설정
+	    String page = req.getParameter("page");
+	    int current_page = 1;
+	    if(page != null) current_page = Integer.parseInt(page);
+	    
+	    String startDate = req.getParameter("startDate");
+	    String endDate = req.getParameter("endDate");
+	    String sortType = req.getParameter("sortType"); // 정렬 기준
+	    String keyword = req.getParameter("keyword");   // 통합 검색어
+
+	    if(startDate == null) startDate = "";
+	    if(endDate == null) endDate = "";
+	    if(sortType == null) sortType = "latestDormant"; // 기본값: 최근 휴면 순
+	    if(keyword == null) keyword = "";
+
+	    // GET 방식 한글 처리
+	    if(req.getMethod().equalsIgnoreCase("GET")) {
+	        keyword = java.net.URLDecoder.decode(keyword, "UTF-8");
+	    }
+
+	    // 2. Map에 파라미터 저장
+	    Map<String, Object> map = new HashMap<>();
+	    map.put("startDate", startDate);
+	    map.put("endDate", endDate);
+	    map.put("sortType", sortType);
+	    map.put("keyword", keyword);
+
+	    // 3. 페이징 처리
+	    int size = 10;
+	    int dataCount = service.dataCountDormant(map);
+	    int total_page = util.pageCount(dataCount, size);
+	    
+	    if(current_page > total_page) current_page = total_page;
+	    
+	    int offset = (current_page - 1) * size;
+	    if(offset < 0) offset = 0;
+
+	    map.put("offset", offset);
+	    map.put("size", size);
+
+	    // 4. 데이터 조회
+	    List<MemberDTO> list = service.listDormantMembers(map);
+
+	    // 5. 페이징 URL 및 Query String 생성
+	    String cp = req.getContextPath();
+	    String listUrl = cp + "/admin/member/dormant_manage";
+	    String query = "";
+
+	    if(keyword.length() != 0 || startDate.length() != 0 || !sortType.equals("latestDormant")) {
+	        query = "startDate=" + startDate + "&endDate=" + endDate + 
+	                "&sortType=" + sortType + 
+	                "&keyword=" + java.net.URLEncoder.encode(keyword, "UTF-8");
+	    }
+
+	    if(query.length() != 0) {
+	        listUrl += "?" + query;
+	    }
+
+	    String paging = util.paging(current_page, total_page, listUrl);
+
+	    // 6. View로 데이터 전송
+	    mav.addObject("list", list);
+	    mav.addObject("dataCount", dataCount);
+	    mav.addObject("page", current_page);
+	    mav.addObject("paging", paging);
+	    
+	    // 검색 조건 유지를 위해 전송
+	    mav.addObject("startDate", startDate);
+	    mav.addObject("endDate", endDate);
+	    mav.addObject("sortType", sortType);
+	    mav.addObject("keyword", keyword);
+
+	    return mav;
 	}
 	
 	@ResponseBody

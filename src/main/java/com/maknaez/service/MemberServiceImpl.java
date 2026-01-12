@@ -147,6 +147,7 @@ public class MemberServiceImpl implements MemberService {
 		
 		try {
 			result = mapper.dataCount(map);
+			return result;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -167,17 +168,6 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public List<MemberDTO> listDormantMembers() {
-		List<MemberDTO> list = null;
-	    try {
-	        list = mapper.listDormantMembers();
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	    }
-	    return list;
-	}
-
-	@Override
 	public void releaseDormantMembers(List<Long> idxList) throws Exception {
 		try {
 	        for(Long memberIdx : idxList) {
@@ -191,5 +181,31 @@ public class MemberServiceImpl implements MemberService {
 	        e.printStackTrace();
 	        throw e;
 	    }
+	}
+
+	@Override
+	public List<MemberDTO> listDormantMembers(Map<String, Object> map) throws Exception {
+		List<MemberDTO> list = null;
+		try {
+			list = mapper.listDormantMembers(map);
+			return list;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
+
+	@Override
+	public Integer dataCountDormant(Map<String, Object> map) {
+		int result = 0;
+		
+		try {
+			result = mapper.dataCountDormant(map);
+			return result;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return result;
 	}
 }

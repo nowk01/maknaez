@@ -14,28 +14,56 @@
 		VALUES (loginLog_seq.NEXTVAL, SYSDATE, #{ip_info}, #{memberIdx}) 
     </insert>
     
-    <select id="listDormantMembers" resultType="com.maknaez.model.MemberDTO">
-        SELECT 
-            m1.memberIdx,
-            m1.userId,
-            m2.userName,
-            m2.email,
-            m1.enabled,
-            m1.modify_date,
-            L.LOG_DATE AS lastLoginDate
+    <select id="listDormantMembers" parameterType="map" resultType="com.maknaez.model.MemberDTO">
+        SELECT m1.memberIdx, m1.userId, m2.userName, m2.email, m1.enabled, m1.modify_date, lh.LOG_DATE AS lastLoginDate
         FROM member1 m1
         JOIN member2 m2 ON m1.memberIdx = m2.memberIdx
-        LEFT JOIN (
-            SELECT MEMBERIDX, LOG_DATE
-            FROM (
-                SELECT MEMBERIDX, LOG_DATE,
-                       ROW_NUMBER() OVER(PARTITION BY MEMBERIDX ORDER BY LOG_DATE DESC) AS RN
-                FROM LOGIN_HISTORY
-            )
-            WHERE RN = 1
-        ) L ON m1.memberIdx = L.MEMBERIDX
-        WHERE m1.enabled = 0  
-        ORDER BY lastLoginDate ASC NULLS FIRST
+        LEFT OUTER JOIN (
+            SELECT memberIdx, MAX(log_date) as LOG_DATE
+            FROM login_history
+            GROUP BY memberIdx
+        ) lh ON m1.memberIdx = lh.memberIdx
+        <where>
+            m1.enabled = 0 <if test="startDate != null and startDate != '' and endDate != null and endDate != ''">
+                AND m1.modify_date BETWEEN TO_DATE(#{startDate}, 'YYYY-MM-DD') AND TO_DATE(#{endDate}, 'YYYY-MM-DD') + 0.99999
+            </if>
+            <if test="keyword != null and keyword != ''">
+                AND (
+                    INSTR(m1.userId, #{keyword}) &gt; 0 
+                    OR INSTR(m2.userName, #{keyword}) &gt; 0
+                )
+            </if>
+        </where>
+        <choose>
+            <when test="sortType == 'longestInactive'">
+                ORDER BY lh.LOG_DATE ASC NULLS FIRST, m1.modify_date DESC
+            </when>
+            <when test="sortType == 'nameOrder'">
+                ORDER BY m2.userName ASC, m1.modify_date DESC
+            </when>
+            <otherwise> ORDER BY m1.modify_date DESC
+            </otherwise>
+        </choose>
+        OFFSET #{offset} ROWS FETCH NEXT #{size} ROWS ONLY
+    </select>
+    
+    <select id="dataCountDormant" parameterType="map" resultType="Integer">
+        SELECT COUNT(*)
+        FROM member1 m1
+        JOIN member2 m2 ON m1.memberIdx = m2.memberIdx
+        <where>
+            m1.enabled = 0
+            <if test="startDate != null and startDate != '' and endDate != null and endDate != ''">
+                AND m1.modify_date BETWEEN TO_DATE(#{startDate}, 'YYYY-MM-DD') 
+                                       AND TO_DATE(#{endDate}, 'YYYY-MM-DD') + 0.99999
+            </if>
+            <if test="keyword != null and keyword != ''">
+                AND (
+                    INSTR(m1.userId, #{keyword}) &gt; 0 
+                    OR INSTR(m2.userName, #{keyword}) &gt; 0
+                )
+            </if>
+        </where>
     </select>
     
     <insert id="insertMember1" parameterType="com.maknaez.model.MemberDTO">
