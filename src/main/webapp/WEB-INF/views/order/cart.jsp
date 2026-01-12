@@ -549,7 +549,7 @@ function deleteSelected() {
 
 function orderAll() {
     if($(".chk-item:checked").length == 0) return alert("주문할 상품을 선택해주세요.");
-    location.href = "${pageContext.request.contextPath}/order/sheet";
+    location.href = "${pageContext.request.contextPath}/order/payment";
 }
 </script>
 
