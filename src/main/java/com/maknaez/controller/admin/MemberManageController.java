@@ -165,7 +165,7 @@ public class MemberManageController {
             dto.setUserPwd(req.getParameter("userPwd"));
             dto.setUserName(req.getParameter("userName"));
             dto.setNickName(req.getParameter("nickName"));
-            dto.setGender(req.getParameter("gender"));
+            dto.setGender(Integer.parseInt(req.getParameter("gender")));
             dto.setBirth(req.getParameter("birth")); 
             dto.setEmail(req.getParameter("email"));
             dto.setTel(req.getParameter("tel"));
@@ -193,13 +193,14 @@ public class MemberManageController {
             
             dto.setMemberIdx(Long.parseLong(req.getParameter("memberIdx")));
             dto.setUserPwd(req.getParameter("userPwd"));
-            dto.setUserName(req.getParameter("userName"));
             dto.setNickName(req.getParameter("nickName"));
-            dto.setGender(req.getParameter("gender"));
+            dto.setGender(Integer.parseInt(req.getParameter("gender")));
             dto.setBirth(req.getParameter("birth"));
+            dto.setEnabled(Integer.parseInt(req.getParameter("enabled")));
+            dto.setUserLevel(Integer.parseInt(req.getParameter("userLevel")));
+            dto.setUserName(req.getParameter("userName"));
             dto.setEmail(req.getParameter("email"));
             dto.setTel(req.getParameter("tel"));
-            dto.setUserLevel(Integer.parseInt(req.getParameter("userLevel")));
 
             service.updateMember(dto);
             
