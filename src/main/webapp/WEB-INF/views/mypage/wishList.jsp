@@ -1,4 +1,4 @@
-<%@ page contentType="text/html; charset=UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
@@ -16,44 +16,54 @@
 
 <div class="mypage-container">
 
-    <div class="sm-salomon__accountSidebar">
-        <h1 class="h2 feature-header" data-cc-animate>마이페이지</h1>
-        <div class="sm-salomon__accountSidebarList" data-cc-animate>
+    <aside class="sidebar">
+        <h2>마이페이지</h2>
 
-            <div class="sm-salomon__accountCard">
-                <h3 class="sm-salomon__accountCardHeading">구매내역</h3>
-                <a href="${pageContext.request.contextPath}/member/mypage/orderList" class="sm-salomon__accountCardLink">주문/배송조회</a> 
-                <a href="${pageContext.request.contextPath}/member/mypage/cancelList" class="sm-salomon__accountCardLink">취소/반품조회</a>
-            </div>
-
-            <div class="sm-salomon__accountCard">
-                <h3 class="sm-salomon__accountCardHeading">혜택내역</h3>
-                <a href="${pageContext.request.contextPath}/member/mypage/review" class="sm-salomon__accountCardLink">상품 리뷰</a> 
-                <a href="#" class="sm-salomon__accountCardLink">포인트/쿠폰</a>
-            </div>
-
-            <div class="sm-salomon__accountCard">
-                <h3 class="sm-salomon__accountCardHeading">상품내역</h3>
-                <a href="#" class="sm-salomon__accountCardLink">최근 본 상품</a> 
-                <a href="${pageContext.request.contextPath}/member/mypage/wishList" class="sm-salomon__accountCardLink" style="font-weight: 700;">관심 상품</a>
-            </div>
-
-            <div class="sm-salomon__accountCard">
-                <h3 class="sm-salomon__accountCardHeading">회원정보</h3>
-                <a href="#" class="sm-salomon__accountCardLink">내 정보 관리</a> 
-                <a href="#" class="sm-salomon__accountCardLink">배송지 관리</a> 
-                <a href="#" class="sm-salomon__accountCardLink">회원등급</a> 
-                <a href="#" class="sm-salomon__accountCardLink">문의하기</a>
-            </div>
-
-            <a href="${pageContext.request.contextPath}/member/logout" class="sm-salomon__accountCardLink">로그아웃</a>
+        <div class="menu-group">
+            <span class="menu-title">구매내역</span>
+            <ul>
+                <li><a href="${pageContext.request.contextPath}/member/mypage/orderList">주문/배송조회</a></li>
+                <li><a href="${pageContext.request.contextPath}/member/mypage/cancelList">취소/반품조회</a></li>
+            </ul>
         </div>
-    </div>
+
+        <div class="menu-group">
+            <span class="menu-title">혜택내역</span>
+            <ul>
+                <li><a href="${pageContext.request.contextPath}/member/mypage/review">상품 리뷰</a></li>
+                <li><a href="#">포인트/쿠폰</a></li>
+            </ul>
+        </div>
+
+        <div class="menu-group">
+            <span class="menu-title">상품내역</span>
+            <ul>
+                <li><a href="#">최근 본 상품</a></li>
+                <li><a href="${pageContext.request.contextPath}/member/mypage/wishList" class="active">관심 상품</a></li>
+            </ul>
+        </div>
+
+        <div class="menu-group">
+            <span class="menu-title">회원정보</span>
+            <ul>
+                <li><a href="#">내 정보 관리</a></li>
+                <li><a href="#">배송지 관리</a></li>
+                <li><a href="#">회원등급</a></li>
+                <li><a href="#">문의하기</a></li>
+            </ul>
+        </div>
+        
+        <div class="menu-group">
+             <ul>
+                <li><a href="${pageContext.request.contextPath}/member/logout" style="color:#999;">로그아웃</a></li>
+             </ul>
+        </div>
+    </aside>
     
     <main class="main-content">
         <div class="as-wishlist__contentWrap">
             
-            <h2 class="page-title">관심 상품</h2> 
+            <h1 class="page-title">관심 상품</h1> 
             
             <div class="as-wishlist__productList">
                 
@@ -119,7 +129,21 @@
     function deleteWish(productNo) {
         if(!confirm("관심 상품에서 삭제하시겠습니까?")) return;
         
-        // AJAX 구현 필요
+        // 실제 백엔드 연동 시 아래 주석 해제하여 사용
+        /*
+        $.ajax({
+            type: "POST",
+            url: "${pageContext.request.contextPath}/member/mypage/deleteWish",
+            data: { productNo: productNo },
+            dataType: "json",
+            success: function(data) {
+                location.reload();
+            },
+            error: function(e) {
+                console.log(e);
+            }
+        });
+        */
         alert("삭제 기능은 백엔드 구현이 필요합니다. (상품번호: " + productNo + ")");
     }
 </script>
