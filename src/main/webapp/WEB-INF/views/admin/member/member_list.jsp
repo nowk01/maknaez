@@ -99,12 +99,18 @@
 					        <button type="button" class="btn btn-primary" onclick="openMemberModal('add')">
 					            <i class="bi bi-person-plus"></i> 회원 추가
 					        </button>
+					        <button type="button" class="btn btn-danger me-2" onclick="deleteList();">
+						        <i class="bi bi-trash"></i> 회원 삭제
+						    </button>
 				    	</div>
                     </div>
                     
                     <table class="table table-hover">
                         <thead>
                             <tr>
+                            	<th width="40">
+						            <input type="checkbox" id="chkAll" class="form-check-input" onclick="checkAll();">
+						        </th>
                                 <th>ID</th>
                                 <th>이름</th>
                                 <th>이메일</th>
@@ -126,6 +132,9 @@
                                 <c:otherwise>
                                     <c:forEach var="dto" items="${list}" varStatus="status">
                                         <tr>
+                                        	<td>
+									            <input type="checkbox" name="chk" class="form-check-input" value="${dto.memberIdx}">
+									        </td>
                                             <td>${dto.userId}</td>
                                             <td>${dto.userName}</td>
                                             <td>${dto.email}</td>
@@ -301,6 +310,14 @@
     <jsp:include page="/WEB-INF/views/admin/layout/footerResources.jsp" />
 
 	<script type="text/javascript">
+		function checkAll() {
+		    const chkAll = document.getElementById("chkAll");
+		    const chks = document.getElementsByName("chk");
+		    
+		    for(let chk of chks) {
+		        chk.checked = chkAll.checked;
+		    }
+		}
         // 검색 기능
         function searchList() {
             const f = document.searchForm;
@@ -435,6 +452,51 @@
 
             ajaxRequest(url, "POST", query, "json", fn);
         }
+        
+   		 // 선택 삭제 기능
+        function deleteList() {
+            // 1. 체크된 항목 수집
+            let cnt = 0;
+            let memberIdxs = []; // 변수명 변경 (userIds -> memberIdxs)
+            const chks = document.getElementsByName("chk");
+            
+            for(let chk of chks) {
+                if(chk.checked) {
+                    cnt++;
+                    memberIdxs.push(chk.value); // 이제 여기엔 번호(숫자)가 들어갑니다.
+                }
+            }
+            
+            // 2. 유효성 검사
+            if(cnt === 0) {
+                alert("삭제할 회원을 선택하세요.");
+                return;
+            }
+            
+            // 3. 확인 알림
+            if(!confirm("선택한 " + cnt + "명의 회원을 정말 삭제하시겠습니까?\n(삭제 후 복구할 수 없습니다)")) {
+                return;
+            }
+            
+            // 4. 서버 전송
+            let url = "${pageContext.request.contextPath}/admin/member/deleteList";
+            
+            // [중요] 파라미터 이름을 'memberIdxs'로 변경하여 전송
+            let query = $.param({ memberIdxs: memberIdxs }, true);
+            
+            const fn = function(data) {
+                if(data.state === "true") {
+                    alert("삭제되었습니다.");
+                    location.reload(); 
+                } else {
+                    alert("삭제 처리에 실패했습니다.");
+                }
+            };
+            
+            ajaxRequest(url, "POST", query, "json", fn);
+        }
+
+
     </script>
     
     
