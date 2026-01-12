@@ -58,6 +58,7 @@
 .main-content {
     flex: 1;
     padding-left: 60px;
+    min-width: 0; /* 레이아웃 깨짐 방지 필수 */
 }
 
 /* =========================================
@@ -84,7 +85,7 @@
 }
 
 /* =========================================
-   3-1. [NEW] 마이페이지 메인: 회원 등급 카드
+   3. 마이페이지 컴포넌트 (등급, 현황판 등)
    ========================================= */
 .sm-salomon__detailsCustomersTag {
     display: flex;
@@ -116,7 +117,6 @@
 }
 
 .sm-salomon__detailsCustomersTierImage {
-    background: transparent !important;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -127,7 +127,6 @@
     width: 100px !important;
     height: 100px !important;
     object-fit: contain;
-    background: transparent !important;
 }
 
 .sm-salomon__detailsCustomersTierName {
@@ -138,16 +137,6 @@
     font-weight: 700;
     line-height: 1;
     text-transform: var(--text-uppercase);
-    background: transparent !important;
-}
-
-.sm-salomon__detailsCustomersTierName::first-letter {
-    background: transparent !important;
-    background-color: transparent !important;
-    color: inherit !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    border: none !important;
 }
 
 .sm-salomon__detailsCustomerName {
@@ -177,7 +166,6 @@
     align-items: center;
     justify-content: center;
     gap: 10px;
-    background: transparent !important;
 }
 
 .sm-salomon__detailsCustomersCardCount {
@@ -194,16 +182,13 @@
     margin: 0;
 }
 
-/* =========================================
-   3-2. [NEW] 주문/취소 목록: 현황판 (Status Bar)
-   (여기가 누락되어 깨졌던 부분입니다)
-   ========================================= */
+/* 현황판 (Status Bar) */
 .sm-salomon__statusBar {
     display: flex;
     justify-content: center;
     align-items: center;
     padding: 28px 0;
-    gap: 0; /* 내부 요소 간격은 border로 조절 */
+    gap: 0;
     border-radius: 8px;
     border: 1px solid #e7e7e7;
     background-color: #fff;
@@ -212,7 +197,6 @@
     box-sizing: border-box;
 }
 
-/* 개별 아이템 (전체, 취소, 반품중 등) */
 .sm-salomon__statusBarItem {
     display: flex;
     flex-direction: column;
@@ -222,7 +206,6 @@
     flex: 1;
 }
 
-/* 타이틀 */
 .sm-salomon__statusBarItemTitle {
     font-size: 14px;
     font-weight: 600;
@@ -230,7 +213,6 @@
     margin-bottom: 12px;
 }
 
-/* 숫자 값 */
 .sm-salomon__statusBarItemValue {
     font-size: 32px;
     font-weight: 700;
@@ -238,12 +220,10 @@
     line-height: 1;
 }
 
-/* 전체 숫자만 붉은색 포인트 */
 .sm-salomon__statusBarItemValue[data-status-total] {
     color: #fd6464;
 }
 
-/* 구분선 (SVG 감싸는 div) */
 .sm-salomon__statusBarBorder {
     display: flex;
     align-items: center;
@@ -252,9 +232,8 @@
     width: 1px;
 }
 
-
 /* =========================================
-   4. 필터 영역
+   4. 필터 및 주문 리스트
    ========================================= */
 .filter-wrapper {
     display: flex;
@@ -265,13 +244,8 @@
     border-bottom: 2px solid #333;
 }
 
-.period-buttons {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-}
+.period-buttons { display: flex; gap: 8px; align-items: center; }
 
-/* 필터 알약 버튼 */
 .sm-salomon__filterPill {
     display: flex;
     align-items: center;
@@ -286,807 +260,237 @@
     font-weight: 500;
     cursor: pointer;
     transition: all 0.2s ease;
-    user-select: none;
-    white-space: nowrap;
 }
 
-.sm-salomon__filterPill:hover {
-    background-color: #f7f7f7;
-    border-color: #ccc;
-}
+.sm-salomon__filterPill:hover { background-color: #f7f7f7; border-color: #ccc; }
+.sm-salomon__filterPill[data-selected] { border: 1px solid #4a4a53; background: #000; color: #fff; font-weight: 600; }
 
-/* 선택된 상태 */
-.sm-salomon__filterPill[data-selected] {
-    border: 1px solid #4a4a53;  
-    background: #000;
-    color: #fff;
-    font-weight: 600;
-}
-
-/* 날짜 입력창 */
-.date-inputs {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-}
-
-.input-date {
-    border: 1px solid #d5d5d5;
-    padding: 6px 10px;
-    font-size: 13px;
-    color: #333;
-    width: 125px;
-    height: 38px;
-    box-sizing: border-box;
-}
-
+.date-inputs { display: flex; align-items: center; gap: 5px; }
+.input-date { border: 1px solid #d5d5d5; padding: 6px 10px; font-size: 13px; color: #333; width: 125px; height: 38px; box-sizing: border-box; }
 .tilde { margin: 0 5px; color: #888; }
+.btn-search { background: #333; color: #fff; border: 1px solid #333; padding: 0 20px; height: 38px; font-size: 13px; cursor: pointer; }
 
-.btn-search {
-    background: #333;
-    color: #fff;
-    border: 1px solid #333;
-    padding: 0 20px;
-    height: 38px;
-    font-size: 13px;
-    cursor: pointer;
-}
+/* 주문 카드 */
+.order-card { border: 1px solid #eee; border-radius: 10px; margin-bottom: 20px; overflow: hidden; }
+.order-card-header { background: #fdfdfd; padding: 12px 20px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; font-weight: 600; }
+.order-detail-link { font-size: 13px; color: #888; text-decoration: none; }
+.order-card-body { padding: 20px; display: flex; align-items: center; }
+.order-item-card { border: 1px solid #eee; border-radius: 8px; padding: 20px; margin-bottom: 16px; display: flex; flex-direction: column; background: #fff; }
+.card-head { display: flex; justify-content: space-between; margin-bottom: 15px; border-bottom: 1px solid #f5f5f5; padding-bottom: 10px; }
+.card-head .date { font-size: 15px; font-weight: bold; }
+.card-head .order-no { font-size: 13px; color: #888; }
+.card-content { display: flex; gap: 20px; }
+.thumb img { width: 90px; height: 90px; object-fit: cover; border-radius: 4px; border: 1px solid #eee; }
+.info { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+.state-text { font-weight: bold; color: #222; margin-bottom: 6px; font-size: 14px; }
+.prod-name { font-size: 15px; color: #333; margin-bottom: 4px; line-height: 1.3; }
+.options { font-size: 13px; color: #888; margin-bottom: 8px; }
+.price-qty { font-size: 14px; }
+.buttons { display: flex; align-items: center; }
+.btn-basic { padding: 8px 16px; border: 1px solid #ccc; background: #fff; font-size: 13px; cursor: pointer; border-radius: 4px; }
+.btn-basic:hover { background: #f9f9f9; }
 
-/* =========================================
-   5. 주문 리스트 카드
-   ========================================= */
-.order-card {
-    border: 1px solid #eee;
-    border-radius: 10px;
-    margin-bottom: 20px;
-    overflow: hidden;
-}
-
-.order-card-header {
-    background: #fdfdfd;
-    padding: 12px 20px;
-    border-bottom: 1px solid #eee;
-    display: flex;
-    justify-content: space-between;
-    font-weight: 600;
-}
-
-.order-detail-link {
-    font-size: 13px;
-    color: #888;
-    text-decoration: none;
-}
-
-.order-card-body {
-    padding: 20px;
-    display: flex;
-    align-items: center;
-}
-
-.order-item-card {
-    border: 1px solid #eee;
-    border-radius: 8px;
-    padding: 20px;
-    margin-bottom: 16px;
-    display: flex;
-    flex-direction: column;
-    background: #fff;
-}
-
-.card-head {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 15px;
-    border-bottom: 1px solid #f5f5f5;
-    padding-bottom: 10px;
-}
-
-.card-head .date {
-    font-size: 15px;
-    font-weight: bold;
-}
-
-.card-head .order-no {
-    font-size: 13px;
-    color: #888;
-}
-
-.card-content {
-    display: flex;
-    gap: 20px;
-}
-
-.thumb img {
-    width: 90px;
-    height: 90px;
-    object-fit: cover;
-    border-radius: 4px;
-    border: 1px solid #eee;
-}
-
-.info {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-}
-
-.state-text {
-    font-weight: bold;
-    color: #222;
-    margin-bottom: 6px;
-    font-size: 14px;
-}
-
-.prod-name {
-    font-size: 15px;
-    color: #333;
-    margin-bottom: 4px;
-    line-height: 1.3;
-}
-
-.options {
-    font-size: 13px;
-    color: #888;
-    margin-bottom: 8px;
-}
-
-.price-qty {
-    font-size: 14px;
-}
-
-.buttons {
-    display: flex;
-    align-items: center;
-}
-
-.btn-basic {
-    padding: 8px 16px;
-    border: 1px solid #ccc;
-    background: #fff;
-    font-size: 13px;
-    cursor: pointer;
-    border-radius: 4px;
-}
-
-.btn-basic:hover {
-    background: #f9f9f9;
-}
-
+.no-data-msg { padding: 80px 0; text-align: center; color: #666; font-size: 14px; font-weight: 500; border-bottom: 1px solid #eee; }
+.page-navigation { margin-top: 30px; text-align: center; }
 
 /* =========================================
-   6. 기타 (페이징, 데이터 없음)
+   5. 사이드바 및 리뷰 관련 (스타일 갱신)
    ========================================= */
-.no-data-msg {
-    padding: 80px 0;
-    text-align: center;
-    color: #666;
-    font-size: 14px;
-    font-weight: 500;
-    border-bottom: 1px solid #eee;
-}
+.sm-salomon__accountSidebar { width: 200px; flex-shrink: 0; text-align: left; }
+.sm-salomon__accountSidebar .h2 { font-size: 24px; font-weight: 700; margin-bottom: 35px; color: #000; }
+.sm-salomon__accountCard { margin-bottom: 24px; }
+.sm-salomon__accountCardHeading { font-size: 15px; font-weight: 700; margin-bottom: 12px; display: block; }
+.sm-salomon__accountCardLink { display: block; color: #000; font-size: 14px; text-decoration: none; margin-bottom: 8px; transition: opacity 0.3s; }
+.sm-salomon__accountCardLink:hover { opacity: 0.7; }
 
-.page-navigation {
-    margin-top: 30px;
-    text-align: center;
-}
+/* 리뷰 탭 */
+.review-tabs { display: flex; gap: 20px; border-bottom: 1px solid #ddd; margin-bottom: 30px; }
+.tab-btn { background: none; border: none; padding: 10px 5px; font-size: 15px; color: #888; cursor: pointer; font-weight: 500; position: relative; }
+.tab-btn.active { color: #000; font-weight: 700; }
+.tab-btn.active::after { content: ''; position: absolute; bottom: -1px; left: 0; width: 100%; height: 2px; background-color: #000; }
+.review-tab-content { display: none; min-height: 200px; }
+.review-tab-content.active { display: block; }
+
+/* 유의사항 */
+.notice-container { background-color: #f8f8f8; padding: 30px; margin-top: 60px; border-radius: 4px; }
+.notice-container h3 { font-size: 16px; font-weight: 700; margin-bottom: 15px; color: #000; }
+.notice-container ul { list-style: none; padding: 0; margin: 0; }
+.notice-container li { font-size: 13px; color: #555; margin-bottom: 8px; padding-left: 10px; position: relative; line-height: 1.6; }
+.notice-container li::before { content: '·'; position: absolute; left: 0; font-weight: bold; }
+
+/* 리뷰 정렬 헤더 */
+.PendingReviews__header { display: flex; align-items: center; gap: 16px; border-bottom: 1px solid #ebeff5; padding-bottom: 16px; margin-bottom: 20px; position: relative; z-index: 50; }
+.AppButton__button--style-plain { background: none; border: none; padding: 0; cursor: pointer; display: flex; align-items: center; gap: 4px; }
+.AppDropdown__label { font-size: 14px; color: #333; font-weight: 500; font-family: 'Noto Sans KR', sans-serif; }
+.AppButton__button--style-plain:hover .AppDropdown__label { color: #000; font-weight: 700; }
+
+.PendingReviews__order_dropdown { position: relative; height: 100%; z-index: 60; }
+.sm-salomon__dropdown-menu { display: none; position: absolute; top: 100%; left: 0; background-color: #fff; border: 1px solid #ebeff5; border-radius: 4px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); min-width: 140px; z-index: 100; margin-top: 8px; padding: 8px 0; }
+.sm-salomon__dropdown-menu.active { display: block; }
+.sm-salomon__dropdown-item { padding: 10px 16px; font-size: 13px; color: #333; cursor: pointer; }
+.sm-salomon__dropdown-item:hover { background-color: #f7f7f7; font-weight: 600; }
+
+/* 리뷰 작성 카드 */
+.review-target-card { border: 1px solid #e7e7e7; margin-bottom: 24px; background: #fff; }
+.review-target-header { background-color: #f9f9f9; padding: 12px 20px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; font-size: 13px; color: #666; }
+.review-target-header .date-status strong { color: #000; margin-right: 8px; font-weight: 700; }
+.review-target-header .order-no { font-family: 'Roboto', 'Noto Sans KR', sans-serif; color: #888; letter-spacing: 0.5px; }
+.review-target-body { padding: 24px; display: flex; align-items: flex-start; gap: 24px; }
+.review-prod-img { width: 110px; height: 110px; background: #f4f4f4; overflow: hidden; flex-shrink: 0; position: relative; }
+.review-prod-img img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease; }
+.review-target-card:hover .review-prod-img img { transform: scale(1.05); }
+.review-prod-info { flex: 1; display: flex; flex-direction: column; justify-content: center; padding-top: 4px; }
+.review-prod-name { font-size: 16px; font-weight: 800; color: #000; margin-bottom: 8px; line-height: 1.3; }
+.review-prod-opt { font-size: 13px; color: #777; margin-bottom: 16px; }
+.review-price { font-size: 18px; font-weight: 800; color: #000; font-family: 'Roboto', sans-serif; }
+.review-action-bar { border-top: 1px solid #eee; display: flex; align-items: stretch; height: 50px; }
+.action-label { background: #fff; padding: 0 24px; display: flex; align-items: center; font-size: 12px; font-weight: 800; color: #000; border-right: 1px solid #eee; }
+.action-btn-group { flex: 1; display: flex; }
+.action-btn { flex: 1; display: flex; align-items: center; justify-content: center; font-size: 13px; color: #333; text-decoration: none; border-right: 1px solid #eee; transition: all 0.2s ease; background: #fff; font-weight: 600; }
+.action-btn:last-child { border-right: none; }
+.action-btn:hover { background: #000; color: #fff; }
+.action-btn.write-btn { font-weight: 800; }
 
 /* =========================================
-   [NEW] 리뷰 페이지 & 새로운 사이드바 스타일
+   6. [최종 수정] 관심 상품 (Wishlist)
+   (JSP 내부 스타일을 이곳으로 옮겨와 통합)
    ========================================= */
 
-/* 1. 새로운 사이드바 스타일 */
-.sm-salomon__accountSidebar {
-    width: 200px;
-    flex-shrink: 0;
-    text-align: left;
-}
+.as-wishlist__contentWrap { width: 100%; padding: 0 20px; box-sizing: border-box; }
+.as-wishlist__productList { width: 100%; }
+.as-wishlist__productCount { font-size: 14px; color: #666; margin-bottom: 15px; text-align: right; }
 
-.sm-salomon__accountSidebar .h2 {
-    font-size: 24px;
-    font-weight: 700;
-    margin-bottom: 35px;
-    color: #000;
-}
-
-.sm-salomon__accountCard {
-    margin-bottom: 24px;
-}
-
-.sm-salomon__accountCardHeading {
-    font-size: 15px;
-    font-weight: 700;
-    margin-bottom: 12px;
-    display: block;
-}
-
-.sm-salomon__accountCardLink {
-    display: block;
-    color: #000;
-    font-size: 14px;
-    text-decoration: none;
-    margin-bottom: 8px;
-    transition: opacity 0.3s;
-}
-
-.sm-salomon__accountCardLink:hover {
-    opacity: 0.7;
-}
-
-/* 2. 리뷰 탭 (Tab) 스타일 */
-.review-tabs {
+/* 플렉스 레이아웃 (Grid 대신 Flex 사용) */
+.as-wishlist__products {
     display: flex;
-    gap: 20px;
-    border-bottom: 1px solid #ddd;
-    margin-bottom: 30px;
-}
-
-.tab-btn {
-    background: none;
-    border: none;
-    padding: 10px 5px;
-    font-size: 15px;
-    color: #888;
-    cursor: pointer;
-    font-weight: 500;
-    position: relative;
-}
-
-.tab-btn.active {
-    color: #000;
-    font-weight: 700;
-}
-
-.tab-btn.active::after {
-    content: '';
-    position: absolute;
-    bottom: -1px; /* 선 굵기만큼 내림 */
-    left: 0;
+    flex-wrap: wrap;
+    gap: 52px 24px; /* 세로 52px, 가로 24px */
     width: 100%;
-    height: 2px;
-    background-color: #000;
+    margin-top: 20px;
 }
 
-.review-tab-content {
-    display: none;
-    min-height: 200px;
-}
-
-.review-tab-content.active {
-    display: block;
-}
-
-/* 3. 유의사항 박스 (Notice Container) */
-.notice-container {
-    background-color: #f8f8f8;
-    padding: 30px;
-    margin-top: 60px;
-    border-radius: 4px;
-}
-
-.notice-container h3 {
-    font-size: 16px;
-    font-weight: 700;
-    margin-bottom: 15px;
-    color: #000;
-}
-
-.notice-container ul {
-    list-style: none;
-    padding: 0;
+/* 개별 상품 아이템 (4등분 계산) */
+.as-wishlist__productItem {
+    display: flex;
+    flex-direction: column;
+    /* (100% - 24px * 3) / 4 */
+    width: calc((100% - 72px) / 4);
+    max-width: none;
     margin: 0;
-}
-
-.notice-container li {
-    font-size: 13px;
-    color: #555;
-    margin-bottom: 8px;
-    padding-left: 10px;
     position: relative;
-    line-height: 1.6;
-}
-
-.notice-container li::before {
-    content: '·';
-    position: absolute;
-    left: 0;
-    font-weight: bold;
-}
-
-/* =========================================
-   [NEW] 리뷰 페이지 - 정렬 헤더 (PendingReviews)
-   ========================================= */
-
-.PendingReviews__header {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    border-bottom: 1px solid #ebeff5;
-    padding-bottom: 16px;
-    margin-bottom: 20px;
-    
-    /* 🔥 추가할 코드: 헤더를 공중부양 시켜서 제일 위로 올립니다 */
-    position: relative; 
-    z-index: 50;
-}
-
-.AppButton__button--style-plain {
-    background: none;
-    border: none;
-    padding: 0;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 4px;
-}
-
-.AppDropdown__label {
-    font-size: 14px;
-    color: #333;
-    font-weight: 500;
-    font-family: 'Noto Sans KR', sans-serif;
-}
-
-.AppSvgIcon {
-    width: 10px;
-    height: 10px;
-    fill: #333;
-    transition: transform 0.2s;
-}
-
-.AppButton__button--style-plain:hover .AppDropdown__label {
-    color: #000;
-    font-weight: 700;
-}
-
-/* 살로몬 원본 스타일 정렬 버튼 리셋 */
-.AppButton__button {
-    background: transparent;
-    border: 0;
-    margin: 0;
-    padding: 0;
-    cursor: pointer;
-    font-family: 'Noto Sans KR', sans-serif;
-    line-height: 1;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
     box-sizing: border-box;
 }
 
-.AppDropdown__label {
-    font-size: 14px;
-    font-weight: 400;
-    margin-right: 6px;
-    display: block;
-}
-
-.AppDropdown__icon {
-    width: 9px; 
-    height: 8px;
-    fill: #000;
-    transition: transform 0.2s ease;
-}
-
-.PendingReviews__order_dropdown.open .AppDropdown__icon {
-    transform: rotate(180deg);
-}
-
-.PendingReviews__order_dropdown {
-    position: relative;
-    height: 100%;
-    z-index: 60;
-}
-
-.sm-salomon__dropdown-menu {
-    display: none;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    background-color: #fff;
-    border: 1px solid #ebeff5;
-    border-radius: 4px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    min-width: 140px;
-    z-index: 100;
-    margin-top: 8px;
-    padding: 8px 0;
-}
-
-.sm-salomon__dropdown-menu.active {
-    display: block;
-}
-
-.sm-salomon__dropdown-item {
-    padding: 10px 16px;
-    font-size: 13px;
-    color: #333;
-    cursor: pointer;
-}
-
-.sm-salomon__dropdown-item:hover {
-    background-color: #f7f7f7;
-    font-weight: 600;
-}
-
-/* =========================================
-   [NEW] 리뷰 작성 리스트 (살로몬 스타일 카드)
-   ========================================= */
-
-.review-target-card {
-    border: 1px solid #e7e7e7;
-    margin-bottom: 24px;
-    background: #fff;
-}
-
-.review-target-header {
-    background-color: #f9f9f9;
-    padding: 12px 20px;
-    border-bottom: 1px solid #eee;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 13px;
-    color: #666;
-}
-
-.review-target-header .date-status strong {
-    color: #000;
-    margin-right: 8px;
-    font-weight: 700;
-}
-
-.review-target-header .order-no {
-    font-family: 'Roboto', 'Noto Sans KR', sans-serif;
-    color: #888;
-    letter-spacing: 0.5px;
-}
-
-.review-target-body {
-    padding: 24px;
-    display: flex;
-    align-items: flex-start;
-    gap: 24px;
-}
-
-.review-prod-img {
-    width: 110px;
-    height: 110px;
-    background: #f4f4f4;
-    overflow: hidden;
-    flex-shrink: 0;
-    position: relative;
-}
-
-.review-prod-img img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.4s ease;
-}
-
-.review-target-card:hover .review-prod-img img {
-    transform: scale(1.05);
-}
-
-.review-prod-info {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding-top: 4px;
-}
-
-.review-prod-name {
-    font-size: 16px;
-    font-weight: 800;
-    color: #000;
-    margin-bottom: 8px;
-    line-height: 1.3;
-}
-
-.review-prod-opt {
-    font-size: 13px;
-    color: #777;
-    margin-bottom: 16px;
-}
-
-.review-price {
-    font-size: 18px;
-    font-weight: 800;
-    color: #000;
-    font-family: 'Roboto', sans-serif;
-}
-
-.review-action-bar {
-    border-top: 1px solid #eee;
-    display: flex;
-    align-items: stretch;
-    height: 50px;
-}
-
-.action-label {
-    background: #fff;
-    padding: 0 24px;
-    display: flex;
-    align-items: center;
-    font-size: 12px;
-    font-weight: 800;
-    color: #000;
-    border-right: 1px solid #eee;
-}
-
-.action-btn-group {
-    flex: 1;
-    display: flex;
-}
-
-.action-btn {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 13px;
-    color: #333;
-    text-decoration: none;
-    border-right: 1px solid #eee;
-    transition: all 0.2s ease;
-    background: #fff;
-    font-weight: 600;
-}
-
-.action-btn:last-child {
-    border-right: none;
-}
-
-.action-btn:hover {
-    background: #000;
-    color: #fff;
-}
-
-.action-btn.write-btn {
-    font-weight: 800;
-}
-
-/* =========================================
-   🔥 [Final] 살로몬 스타일 '카오스' 애니메이션
-   ========================================= */
-
-/* 1. 애니메이션 정의 */
-@keyframes salomonChaos {
-    0% {
-        opacity: 0;
-        transform: translateY(15px) scale(0.99); 
-    }
-    100% {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-    }
-}
-
-/* 2. 애니메이션 적용 대상 */
-.sidebar,
-.page-title,
-.notice-box,
-.sm-salomon__detailsCustomersTag, /* 회원 등급 카드 */
-.sm-salomon__statusBar,         /* [NEW] 현황판 */
-.filter-wrapper,
-.order-list-area,
-.no-data-msg,
-.sm-salomon__accountSidebar,
-.review-tabs,
-.PendingReviews__header,
-.review-target-card,
-.notice-container { 
-    opacity: 0; 
-    animation: salomonChaos 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
-}
-
-/* 3. 🔥 순서 뒤섞기 (딜레이 설정) */
-
-/* [1순위] 메인 콘텐츠 리스트 (가장 중요) */
-.order-list-area, 
-.review-target-card { 
-    animation-delay: 0.1s;
-}
-
-/* [2순위] 제목 및 탭 */
-.page-title {
-    animation-delay: 0.3s;
-}
-.review-tabs, 
-.notice-box {
-    animation-delay: 0.4s;
-}
-
-/* [3순위] 사이드바 및 필터 헤더 */
-.sidebar, 
-.sm-salomon__accountSidebar,
-.PendingReviews__header {
-    animation-delay: 0.5s;
-}
-
-/* [4순위] 대시보드 및 필터 */
-.sm-salomon__detailsCustomersTag,
-.sm-salomon__statusBar { 
-    animation-delay: 0.7s;
-}
-.filter-wrapper {
-    animation-delay: 0.8s;
-}
-
-/* [5순위] 하단 안내 및 데이터 없음 메시지 */
-.notice-container {
-    animation-delay: 0.9s;
-}
-.no-data-msg {
-    animation-delay: 1.0s; 
-}
-
-/* 반응형 (화면 작아지면 세로로 배치) */
-@media (max-width: 768px) {
-    .sm-salomon__detailsCustomersTag {
-        flex-direction: column;
-        padding: 30px;
-        gap: 30px;
-        text-align: center;
-    }
-    .sm-salomon__detailsCustomersTier--tier {
-        flex-direction: column;
-        border-right: none;
-        border-bottom: 1px solid #eee;
-        padding-right: 0;
-        margin-right: 0;
-        padding-bottom: 30px;
-        width: 100%;
-    }
-    .sm-salomon__detailsCustomersTier--orderCount {
-        width: 100%;
-    }
-    
-    .sm-salomon__statusBar {
-        flex-direction: row;
-        flex-wrap: wrap;
-    }
-    
-    .sm-salomon__statusBarItem {
-        min-width: 50%;
-        margin-bottom: 20px;
-    }
-    
-    .sm-salomon__statusBarBorder {
-        display: none;
-    }
-    /* [추가] 관심 상품(Wishlist) 리스트 스타일 */
-.as-wishlist__contentWrap {
-    width: 100%;
-    padding: 0 20px;
-}
-
-.as-wishlist__pageTitle {
-    font-size: 24px;
-    font-weight: 700;
-    margin-bottom: 30px;
-    color: #000;
-}
-
-.as-wishlist__productList {
-    width: 100%;
-}
-
-.as-wishlist__productCount {
-    font-size: 14px;
-    color: #666;
-    margin-bottom: 15px;
-    text-align: right; /* 우측 정렬 */
-}
-
-/* 그리드 레이아웃 */
-.as-wishlist__products {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr); /* 한 줄에 3개 */
-    gap: 20px;
-}
-
-.as-wishlist__productItem {
-    position: relative;
-    background: #fff;
-    margin-bottom: 30px;
-}
-
-/* 이미지 영역 */
+/* 이미지 1:1 비율 */
 .as-wishlist__productImageWrap {
     position: relative;
     width: 100%;
-    padding-top: 100%; /* 1:1 비율 */
-    overflow: hidden;
+    aspect-ratio: 1 / 1;
     background-color: #f4f4f4;
-    margin-bottom: 15px;
-}
-
-.as-wishlist__productImageInnerWrap {
-    position: absolute;
-    top: 0; left: 0; bottom: 0; right: 0;
+    overflow: hidden;
+    margin-bottom: 12px;
 }
 
 .as-wishlist__productImage {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    display: block;
     transition: transform 0.3s ease;
 }
-.as-wishlist__productItem:hover .as-wishlist__productImage {
-    transform: scale(1.05);
-}
+.as-wishlist__productItem:hover .as-wishlist__productImage { transform: scale(1.05); }
 
-/* 하트 아이콘 (삭제 버튼 등) */
+/* 하트 아이콘 */
 .as-wishlist__iconContainer {
     position: absolute;
-    top: 15px;
-    right: 15px;
+    top: 12px;
+    right: 12px;
     z-index: 10;
     cursor: pointer;
-}
-.as-wishlist__icons svg {
-    width: 24px;
-    height: 24px;
 }
 
 /* 텍스트 정보 */
 .as-wishlist__productTitle {
-    font-size: 15px;
-    font-weight: 600;
+    font-size: 14px;
+    font-weight: 700;
     color: #000;
-    margin: 0 0 5px 0;
-    text-overflow: ellipsis;
+    margin: 0 0 4px 0;
+    line-height: 1.4;
     white-space: nowrap;
     overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .as-wishlist__productType {
     font-size: 12px;
     color: #888;
-    margin-bottom: 8px;
+    margin-bottom: 6px;
+    text-transform: uppercase;
 }
 
 .as-wishlist__productPrice {
-    font-size: 15px;
-    font-weight: 700;
+    font-size: 14px;
+    font-weight: 600;
     color: #000;
+    margin: 0;
 }
 
-/* 비어있을 때 */
-.as-wishlist__productError {
-    text-align: center;
-    padding: 100px 0;
-    background-color: #f9f9f9;
-}
-.as-wishlist__errorText {
-    font-size: 16px;
-    color: #555;
-    margin-bottom: 5px;
-}
-.as-wishlist__button {
-    display: inline-block;
-    margin-top: 20px;
-    padding: 12px 30px;
-    background-color: #000;
-    color: #fff;
-    text-decoration: none;
-    font-weight: 600;
-    border-radius: 4px;
-    transition: background-color 0.2s;
-}
-.as-wishlist__button:hover {
-    background-color: #333;
-}
+/* 데이터 없음 */
+.as-wishlist__productError { text-align: center; padding: 100px 0; background-color: #f9f9f9; }
+.as-wishlist__errorText { font-size: 16px; color: #555; margin-bottom: 5px; }
+.as-wishlist__button { display: inline-block; margin-top: 20px; padding: 12px 30px; background-color: #000; color: #fff; text-decoration: none; font-weight: 600; border-radius: 4px; transition: background-color 0.2s; }
+.as-wishlist__button:hover { background-color: #333; }
 
 /* 유틸리티 */
 .hidden { display: none !important; }
 
-@media (max-width: 768px) {
-    .as-wishlist__products {
-        grid-template-columns: repeat(2, 1fr); /* 모바일 2열 */
+/* =========================================
+   7. 애니메이션
+   ========================================= */
+@keyframes salomonChaos {
+    0% { opacity: 0; transform: translateY(15px) scale(0.99); }
+    100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.sidebar, .page-title, .notice-box, .sm-salomon__detailsCustomersTag, 
+.sm-salomon__statusBar, .filter-wrapper, .order-list-area, .no-data-msg, 
+.sm-salomon__accountSidebar, .review-tabs, .PendingReviews__header, 
+.review-target-card, .notice-container, .as-wishlist__products { 
+    opacity: 0; 
+    animation: salomonChaos 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+.order-list-area, .review-target-card, .as-wishlist__products { animation-delay: 0.1s; }
+.page-title { animation-delay: 0.3s; }
+.review-tabs, .notice-box { animation-delay: 0.4s; }
+.sidebar, .sm-salomon__accountSidebar, .PendingReviews__header { animation-delay: 0.5s; }
+.sm-salomon__detailsCustomersTag, .sm-salomon__statusBar { animation-delay: 0.7s; }
+.filter-wrapper { animation-delay: 0.8s; }
+.notice-container { animation-delay: 0.9s; }
+.no-data-msg { animation-delay: 1.0s; }
+
+
+/* =========================================
+   8. 반응형 (Media Queries)
+   ========================================= */
+@media (max-width: 1024px) {
+    /* 관심상품: 3열 */
+    .as-wishlist__productItem {
+        width: calc((100% - 48px) / 3);
     }
 }
+
+@media (max-width: 768px) {
+    .sm-salomon__detailsCustomersTag { flex-direction: column; padding: 30px; gap: 30px; text-align: center; }
+    .sm-salomon__detailsCustomersTier--tier { flex-direction: column; border-right: none; border-bottom: 1px solid #eee; padding-right: 0; margin-right: 0; padding-bottom: 30px; width: 100%; }
+    .sm-salomon__detailsCustomersTier--orderCount { width: 100%; }
+    .sm-salomon__statusBar { flex-direction: row; flex-wrap: wrap; }
+    .sm-salomon__statusBarItem { min-width: 50%; margin-bottom: 20px; }
+    .sm-salomon__statusBarBorder { display: none; }
+    
+    .main-content { padding-left: 0; }
+    
+    /* 관심상품: 2열 */
+    .as-wishlist__products { gap: 30px 10px; }
+    .as-wishlist__productItem { width: calc((100% - 10px) / 2); }
 }

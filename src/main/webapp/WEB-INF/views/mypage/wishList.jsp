@@ -1,6 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8"%>
-<%@ taglib prefix="c" uri="jakarta.tags.core" %>
-<%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -49,10 +49,13 @@
             <a href="${pageContext.request.contextPath}/member/logout" class="sm-salomon__accountCardLink">로그아웃</a>
         </div>
     </div>
+    
     <main class="main-content">
         <div class="as-wishlist__contentWrap">
             
-            <h2 class="page-title">관심 상품</h2> <div class="as-wishlist__productList">
+            <h2 class="page-title">관심 상품</h2> 
+            
+            <div class="as-wishlist__productList">
                 
                 <div class="as-wishlist__productCount">
                     <span style="font-weight:700;">${dataCount}</span>개 제품
@@ -116,12 +119,7 @@
     function deleteWish(productNo) {
         if(!confirm("관심 상품에서 삭제하시겠습니까?")) return;
         
-        // AJAX 삭제 요청 (추후 구현)
-        /*
-        $.post("${pageContext.request.contextPath}/member/mypage/deleteWish", {productNo: productNo}, function(data){
-            location.reload();
-        });
-        */
+        // AJAX 구현 필요
         alert("삭제 기능은 백엔드 구현이 필요합니다. (상품번호: " + productNo + ")");
     }
 </script>
