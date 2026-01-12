@@ -53,6 +53,7 @@ function openMemberModal(mode, memberIdx) {
                 $("#modalMemberIdx").val(d.memberIdx);
                 $("#userId").val(d.userId);
                 $("#userName").val(d.userName);
+				$("#userPwd").val(d.userPwd);
                 $("#nickName").val(d.nickName);
                 $("#email").val(d.email);
                 $("#gender").val(d.gender);
