@@ -78,7 +78,6 @@
                                 <th>미접속 일수</th>
                                 <th>휴면 전환일</th>
                                 <th>상태</th>
-                                <th style="width: 100px;">관리</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -108,13 +107,8 @@
 		                                        ${dto.dormantDays}일 경과
 		                                    </td>
 		                                    
-		                                    <td><span class="badge bg-secondary">휴면</span></td>
-		                                    
-		                                    <td>
-		                                        <button type="button" class="btn btn-sm btn-outline-primary btn-restore" data-idx="${dto.memberIdx}">
-		                                            복구
-		                                        </button>
-		                                    </td>
+		                                    <td><span class="badge bg-secondary">${dto.modify_date}</span></td>
+											<td><button class="btn-sm-action btn-restore" data-idx="${dto.memberIdx}">복구</button></td>
 		                                </tr>
 		                            </c:forEach>
 		                        </c:when>
@@ -146,8 +140,6 @@
     <script type="text/javascript">
     $(function() {
 
-        // 1. 전체 선택 / 해제
-        // (헤더 체크박스 id="chkAll" 이라고 가정)
         $("#chkAll").click(function() {
             if($(this).is(":checked")) {
                 $("input[name=memberIdxs]").prop("checked", true);
@@ -156,9 +148,6 @@
             }
         });
 
-        // ============================================================
-        // 2. [선택 복구] 버튼 기능
-        // ============================================================
         $("#btnRestoreSelected").click(function() {
             let cnt = $("input[name=memberIdxs]:checked").length;
 
@@ -194,9 +183,6 @@
             });
         });
 
-        // ============================================================
-        // 3. [선택 삭제] 버튼 기능
-        // ============================================================
         $("#btnDeleteSelected").click(function() {
             let cnt = $("input[name=memberIdxs]:checked").length;
 
@@ -229,10 +215,7 @@
                 }
             });
         });
-
-        // ============================================================
-        // 4. 리스트 내부 개별 [복구] 버튼 (옵션)
-        // ============================================================
+        
         $(".btn-restore").click(function() {
             let memberIdx = $(this).data("idx");
             
@@ -258,9 +241,6 @@
             });
         });
         
-         // ============================================================
-        // 5. 리스트 내부 개별 [삭제] 버튼 (옵션)
-        // ============================================================
         $(".btn-delete").click(function() {
             let memberIdx = $(this).data("idx");
             let userName = $(this).closest("tr").find("td:eq(3)").text(); 
