@@ -341,7 +341,8 @@
                                 
                                 <!-- 호버 시 나타나는 메뉴 -->
                                 <div class="share-options">
-                                    <button type="button" class="share-btn" onclick="shareKakao()" title="카카오톡 공유">
+                                    <!-- [수정] onclick 제거하고 data-kakao-share 속성 추가 -->
+                                    <button type="button" class="share-btn" data-kakao-share title="카카오톡 공유">
                                         <i class="bi bi-chat-fill"></i>
                                     </button>
                                     
@@ -656,48 +657,56 @@ try {
     console.log("카카오 SDK 초기화 실패 (키 미입력)");
 }
 
-function shareKakao() {
-    if (!Kakao.isInitialized()) {
-        alert("카카오톡 공유 기능을 사용하려면 API 키 설정이 필요합니다.\n(개발자 도구에서 키를 설정해주세요)");
-        return;
-    }
+        // [중요] 현재 페이지 주소를 그대로 사용
+        // 단, 카카오 개발자 센터의 '사이트 도메인'에 등록된 주소여야만 버튼 링크가 동작합니다.
+        let pageUrl = window.location.href;
+        
+        // 상품명 안전 처리 (따옴표 등으로 인한 스크립트 오류 방지)
+        var safeProductName = "<c:out value='${dto.productName}' escapeXml='true'/>";
+        
+        // 가격 처리 (소수점 제거 및 정수화)
+        var safePrice = ${not empty dto.price ? dto.price : 0};
+        safePrice = Math.floor(safePrice);
 
-    // [개발 편의성] localhost로 접속 중이라도 공유 링크는 IP 주소로 변환
-    let shareUrl = window.location.href;
-    const myPublicIP = "61.73.115.26:9090"; // ★ 실제 IP
-    
-    if (shareUrl.includes("localhost")) {
-        shareUrl = shareUrl.replace("localhost:9090", myPublicIP);
-    }
+        // 디버깅: 공유 URL 확인 (콘솔창 F12)
+        console.log("Kakao Share URL:", pageUrl);
 
-    Kakao.Share.sendDefault({
-        objectType: 'feed',
-        content: {
-            title: "<c:out value='${dto.productName}'/>", 
-            description: 'MAKNAEZ에서 이 상품을 확인해보세요!',
-            imageUrl: 'https://placehold.co/800x600?text=Maknaez+Product', 
-            link: {
-                mobileWebUrl: shareUrl,
-                webUrl: shareUrl,
-            },
-        },
-        fail: function(err) {
-            alert('카카오톡 공유 실패: ' + JSON.stringify(err));
-        },
-        buttons: [
-            {
-                title: '웹으로 보기',
+        Kakao.Share.sendDefault({
+            objectType: 'commerce',
+            content: {
+                title: safeProductName, 
+                imageUrl: 'https://placehold.co/800x600?text=Maknaez+Product', 
                 link: {
-                    mobileWebUrl: shareUrl,
-                    webUrl: shareUrl,
+                    mobileWebUrl: pageUrl,
+                    webUrl: pageUrl,
                 },
             },
-        ],
-    });
-}
+            commerce: {
+                productName: safeProductName, 
+                regularPrice: safePrice, 
+                currencyUnit: '₩',
+                currencyUnitPosition: 1,
+            },
+            buttons: [
+                {
+                    title: '구매하기',
+                    link: {
+                        mobileWebUrl: pageUrl,
+                        webUrl: pageUrl,
+                    },
+                },
+            ],
+            // [추가] 전송 성공/실패 핸들링
+            fail: function(err) {
+                alert('카카오톡 공유 실패: ' + JSON.stringify(err));
+            },
+        });
+    }
+});
+
 // ===================================================================
 
-// 문서 로드 시 실행
+// 문서 로드 시 실행 (jQuery Legacy Support)
 $(document).ready(function() {
     // 1. 기존 UI 이벤트 (스티키바, 수량조절, 장바구니 등)
 	const sidebar = document.getElementById('stickySidebar');
@@ -939,24 +948,3 @@ function renderReviews(data) {
     container.html(html);
 }
 </script>
-
-<!-- Restock Modal -->
-<div class="modal fade" id="restockModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">입고 알림 신청</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <p>원하시는 사이즈가 품절인가요?<br>입고 시 알림톡을 보내드립니다.</p>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-dark w-100">신청하기</button>
-      </div>
-    </div>
-  </div>	
-</div>
-
-</body>
-</html>
