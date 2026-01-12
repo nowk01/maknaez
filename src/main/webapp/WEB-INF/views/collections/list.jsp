@@ -110,7 +110,6 @@
                     <details class="filter-group" open>
                         <summary class="filter-title">카테고리</summary>
                         <div class="filter-content">
-                            <%-- [수정됨] 직접 배열 입력 방식 -> Controller에서 sportList 받아서 사용 --%>
                             <c:forEach var="sport" items="${sportList}">
                                 <c:set var="isSportChecked" value="false"/>
                                 <c:if test="${not empty paramValues.sports}">
@@ -143,7 +142,6 @@
                     <details class="filter-group" open>
                         <summary class="filter-title">성별</summary>
                         <div class="filter-content">
-                            <%-- [수정됨] 직접 배열 입력 방식 -> Controller에서 genderList 받아서 사용 --%>
                             <c:forEach var="g" items="${genderList}">
                                 <c:set var="isGenderChecked" value="false"/>
                                 <c:if test="${not empty paramValues.genders}">
