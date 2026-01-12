@@ -153,7 +153,7 @@
     </button>
 
     <form name="loginForm" method="post">
-        <input type="text" name="userId" class="form-input slide-item" placeholder="이메일">
+        <input type="text" name="userId" class="form-input slide-item" placeholder="아이디">
         <input type="password" name="userPwd" class="form-input slide-item" placeholder="비밀번호">
 
         <div class="login-options slide-item">
