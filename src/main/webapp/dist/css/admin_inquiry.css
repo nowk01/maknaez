@@ -265,3 +265,29 @@ to {
 	justify-content: center;
 	color: #ddd;
 }
+
+/* 답변 상태 배지 스타일 */
+.badge {
+    display: inline-block;
+    padding: 2px 6px;
+    font-size: 11px;
+    font-weight: bold;
+    border-radius: 3px;
+    margin-right: 5px;
+    vertical-align: middle;
+}
+
+.badge-wait {
+    background-color: #ff4e00; /* 강조색: 대기 중 */
+    color: #fff;
+}
+
+.badge-done {
+    background-color: #e0e0e0; /* 연한 회색: 처리 완료 */
+    color: #777;
+}
+
+/* 답변 대기 중인 항목은 리스트에서 조금 더 눈에 띄게 (선택사항) */
+.inquiry-item:has(.badge-wait) {
+    background-color: #fffefb;
+}
