@@ -52,7 +52,21 @@ public class CollectionController {
                 break;
         }
 
-        // 소트 색상 전달 
+        // 1. 스포츠 카테고리 리스트 생성 (추가됨)
+        List<String> sportList = new ArrayList<>();
+        sportList.add("로드러닝");
+        sportList.add("트레일러닝");
+        sportList.add("하이킹");
+        sportList.add("스포츠스타일");
+        sportList.add("샌들/워터슈즈");
+
+        // 2. 성별 리스트 생성 (추가됨)
+        List<String> genderList = new ArrayList<>();
+        genderList.add("남성");
+        genderList.add("여성");
+        genderList.add("Unisex");
+
+        // 3. 색상 리스트 생성
         List<Map<String, String>> colorList = new ArrayList<>();
         String[] colors = {"블랙", "화이트", "그레이", "레드", "블루", "그린", "베이지", "브라운", "옐로우"};
         String[] hexes = {"#000000", "#FFFFFF", "#808080", "#E32526", "#0057B8", "#006F44", "#DBCFB6", "#6E4E37", "#FFD100"};
@@ -70,7 +84,11 @@ public class CollectionController {
         
         mav.addObject("categoryCode", category.toLowerCase()); 
         mav.addObject("categoryName", categoryName);
-        mav.addObject("colorList", colorList); 
+        
+        // 모델에 리스트 추가
+        mav.addObject("sportList", sportList);   // JSP로 스포츠 리스트 전달
+        mav.addObject("genderList", genderList); // JSP로 성별 리스트 전달
+        mav.addObject("colorList", colorList);   // JSP로 색상 리스트 전달
         
         return mav;
     }
