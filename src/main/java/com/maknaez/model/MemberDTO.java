@@ -3,7 +3,7 @@ package com.maknaez.model;
 public class MemberDTO {
 	private Long memberIdx;
 	private String nickName;
-    private String gender;
+    private int gender;
 	private String userId;
 	private String userPwd;
 	private String userName;
@@ -136,10 +136,10 @@ public class MemberDTO {
 	public void setNickName(String nickName) {
 		this.nickName = nickName;
 	}
-	public String getGender() {
+	public int getGender() {
 		return gender;
 	}
-	public void setGender(String gender) {
+	public void setGender(int gender) {
 		this.gender = gender;
 	}
 }
