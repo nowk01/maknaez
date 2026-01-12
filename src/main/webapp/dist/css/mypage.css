@@ -1,6 +1,15 @@
 @charset "UTF-8";
 
 /* =========================================
+   0. 공통 변수 (살로몬 스타일)
+   ========================================= */
+:root {
+    --font-primary: "SALOMON Sans", "Noto Sans KR", sans-serif;
+    --color-grey-02: #888888;
+    --text-uppercase: uppercase;
+}
+
+/* =========================================
    1. 전체 레이아웃 & 사이드바
    ========================================= */
 .mypage-container {
@@ -75,60 +84,151 @@
 }
 
 /* =========================================
-   3. 🔥 살로몬 스타일 대시보드 (Status Bar)
+   3. [NEW] 살로몬 스타일 대시보드 (수정 완료)
    ========================================= */
-.sm-salomon__statusBar {
+
+/* 전체 컨테이너 */
+.sm-salomon__detailsCustomersTag {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    
-    /* 4개 항목 기준 살로몬 스타일 */
-    padding: 28px 94px;
-    gap: 96px;
-    border-radius: 8px;
-    border: 1px solid #e7e7e7;
-    background-color: #fff;
-    margin-bottom: 64px;
     width: 100%;
-    box-sizing: border-box; 
+    align-items: center;
+    justify-content: space-between;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 48px 64px;
+    margin-top: 20px;
+    margin-bottom: 60px;
+    background-color: #fff !important; /* 배경 흰색 강제 */
+    box-sizing: border-box;
 }
 
-/* 개별 아이템 정렬 */
-.sm-salomon__statusBarItem {
+/* 카드 공통 스타일 (배경 투명화) */
+.sm-salomon__detailsCustomersCard {
     display: flex;
+    align-items: center;
+    background: transparent !important;
+    background-color: transparent !important;
+}
+
+/* 왼쪽: 등급 섹션 */
+.sm-salomon__detailsCustomersTier--tier {
+    flex: 2;
+    gap: 50px;
+    border-right: 1px solid #eee;
+    padding-right: 40px;
+    margin-right: 40px;
+    background: transparent !important;
+}
+
+/* 로고 이미지 컨테이너 (배경 제거) */
+.sm-salomon__detailsCustomersTierImage {
+    background: transparent !important;
+    background-color: transparent !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100px; /* 너비 고정 */
+}
+
+/* 로고 이미지 (60px 고정) */
+.sm-salomon__detailsImage {
+    width: 100px !important;
+    height: 100px !important;
+    object-fit: contain;
+    background: transparent !important;
+    background-color: transparent !important;
+}
+
+/* 등급 텍스트 및 회색 네모(::first-letter) 제거 */
+.sm-salomon__detailsCustomersTierName {
+    margin: 4px 0 12px;
+    color: #000;
+    font-family: var(--font-primary);
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 1;
+    text-transform: var(--text-uppercase);
+    background: transparent !important;
+}
+
+/* ★ 여기가 회색 박스 지우는 핵심 코드입니다 ★ */
+.sm-salomon__detailsCustomersTierName::first-letter {
+    background: transparent !important;
+    background-color: transparent !important;
+    color: inherit !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border: none !important;
+}
+
+.sm-salomon__detailsCustomerName {
+    font-size: 14px;
+    color: #666;
+    font-weight: 500;
+    margin: 0;
+}
+
+.sm-salomon__detailsCustomersTierNameRating {
+    font-size: 14px;
+    font-weight: normal;
+    color: var(--color-grey-02);
+    margin-left: 4px;
+}
+
+/* 링크 스타일 */
+.sm-salomon__detailsCustomersTierLink {
+    font-size: 13px;
+    color: #333;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+/* 오른쪽: 주문배송 섹션 (중앙 정렬) */
+.sm-salomon__detailsCustomersTier--orderCount {
+    flex: 1;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    min-width: 60px; 
+    gap: 10px;
+    background: transparent !important;
 }
 
-/* 타이틀 */
-.sm-salomon__statusBarItemTitle {
+.sm-salomon__detailsCustomersCardCount {
     font-size: 14px;
-    font-weight: 600;
-    color: #333;
-    margin-bottom: 12px;
+    color: #666;
+    font-weight: 500;
+    margin: 0;
 }
 
-/* 숫자 값 */
-.sm-salomon__statusBarItemValue {
+.sm-salomon__detailsCustomersCardCounter {
     font-size: 32px;
     font-weight: 700;
     color: #000;
-    line-height: 1;
+    margin: 0;
 }
 
-/* 전체 숫자만 붉은색 포인트 (#fd6464) */
-.sm-salomon__statusBarItemValue[data-status-total] {
-    color: #fd6464;
+/* 반응형 처리 */
+@media (max-width: 768px) {
+    .sm-salomon__detailsCustomersTag {
+        flex-direction: column;
+        padding: 30px;
+        gap: 30px;
+        text-align: center;
+    }
+    .sm-salomon__detailsCustomersTier--tier {
+        flex-direction: column;
+        border-right: none;
+        border-bottom: 1px solid #eee;
+        padding-right: 0;
+        margin-right: 0;
+        padding-bottom: 30px;
+        width: 100%;
+    }
+    .sm-salomon__detailsCustomersTier--orderCount {
+        width: 100%;
+    }
 }
 
-/* 구분선 (SVG 감싸는 div) */
-.sm-salomon__statusBarBorder {
-    display: flex;
-    align-items: center;
-    height: 76px;
-}
 
 /* =========================================
    4. 필터 영역
@@ -682,7 +782,6 @@
 
 /* =========================================
    🔥 [Final] 살로몬 스타일 '카오스' 애니메이션
-   (순서: 리스트/카드 -> 제목 -> 사이드바/헤더 -> 대시보드 -> 데이터없음)
    ========================================= */
 
 /* 1. 애니메이션 정의 */
@@ -701,11 +800,10 @@
 .sidebar,
 .page-title,
 .notice-box,
-.sm-salomon__statusBar,
+.sm-salomon__detailsCustomersTag, /* 대시보드 */
 .filter-wrapper,
 .order-list-area,
 .no-data-msg,
-/* [추가] 리뷰 페이지 요소들 */
 .sm-salomon__accountSidebar,
 .review-tabs,
 .PendingReviews__header,
@@ -740,7 +838,7 @@
 }
 
 /* [4순위] 대시보드 및 필터 */
-.sm-salomon__statusBar {
+.sm-salomon__detailsCustomersTag { /* 대시보드 */
     animation-delay: 0.7s;
 }
 .filter-wrapper {
