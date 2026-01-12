@@ -10,10 +10,8 @@
 	</select>
 	
 	<insert id="insertLoginLog" parameterType="com.maknaez.model.MemberDTO">
-		INSERT INTO login_history(memberIdx, userId, userPwd, userName, enabled, userLevel, 
-					, modify_date)
-		VALUES (member_seq.NEXTVAL, #{userId}, #{userPwd}, #{userName}, 
-			1, 1, SYSDATE, SYSDATE) 
+		INSERT INTO login_history(log_id, log_date, ip_info, memberIdx)
+		VALUES (loginLog_seq.NEXTVAL, SYSDATE, #{ip_info}, #{memberIdx}) 
     </insert>
 	
     <insert id="insertMember1" parameterType="com.maknaez.model.MemberDTO">
@@ -71,6 +69,11 @@
     <update id="updateMemberLevel" parameterType="map">
 		UPDATE member1 SET userLevel = #{userLevel}
 		WHERE userId = #{userId}
+    </update>
+    
+    <update id="updateEnabled" parameterType="map">
+		UPDATE member1 SET enabled = #{enabled}
+		WHERE memberIdx = #{memberIdx}
     </update>
     
 	<update id="deleteProfilePhoto" parameterType="map">

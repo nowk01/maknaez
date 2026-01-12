@@ -21,7 +21,28 @@ public class MemberDTO {
 	private String zip;
 	private String addr1;
 	private String addr2;
+	private String log_id;
+	private String log_date;
+	private String ip_info;
 
+	public String getLog_id() {
+		return log_id;
+	}
+	public void setLog_id(String log_id) {
+		this.log_id = log_id;
+	}
+	public String getLog_date() {
+		return log_date;
+	}
+	public void setLog_date(String log_date) {
+		this.log_date = log_date;
+	}
+	public String getIp_info() {
+		return ip_info;
+	}
+	public void setIp_info(String ip_info) {
+		this.ip_info = ip_info;
+	}
 	public Long getMemberIdx() {
 		return memberIdx;
 	}
