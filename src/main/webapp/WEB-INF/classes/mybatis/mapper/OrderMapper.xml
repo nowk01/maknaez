@@ -30,4 +30,10 @@
         ) WHERE rnum &gt;= #{start}
     </select>
 
+<!-- OderItems 관리요  -->
+
+
+
+
+
 </mapper>
