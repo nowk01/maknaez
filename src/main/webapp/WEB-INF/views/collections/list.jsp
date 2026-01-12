@@ -239,14 +239,7 @@
 
             <!-- Main Content -->
             <main class="col-12 col-lg-10">
-                <!-- Sorting -->
-                <div class="sort-wrapper">
-                    <select id="sortSelect" class="sort-select" onchange="changeSort(this.value)">
-                        <option value="new" ${param.sort == 'new' ? 'selected' : ''}>신상품순</option>
-                        <option value="price_asc" ${param.sort == 'price_asc' ? 'selected' : ''}>낮은가격순</option>
-                        <option value="price_desc" ${param.sort == 'price_desc' ? 'selected' : ''}>높은가격순</option>
-                    </select>
-                </div>
+                
 
                 <!-- 상품 목록 영역 (Ajax로 교체될 영역) -->
                 <div id="productList" class="row gx-4 gy-5">
