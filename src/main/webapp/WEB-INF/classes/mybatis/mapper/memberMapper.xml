@@ -14,16 +14,30 @@
 		VALUES (loginLog_seq.NEXTVAL, SYSDATE, #{ip_info}, #{memberIdx}) 
     </insert>
     
-    <select id="">
-    	SELECT LOG_ID, LOG_DATE, IP_INFO, MEMBERIDX
-			FROM (
-			    SELECT LOG_ID, LOG_DATE, IP_INFO, MEMBERIDX,
-			        ROW_NUMBER() OVER(PARTITION BY MEMBERIDX ORDER BY LOG_DATE DESC) AS RN
-			    FROM LOGIN_LOG
-			)
-		WHERE RN = 1 AND memberIdx = #{memberIdx};
-	</select>
-	
+    <select id="listDormantMembers" resultType="com.maknaez.model.MemberDTO">
+        SELECT 
+            m1.memberIdx,
+            m1.userId,
+            m2.userName,
+            m2.email,
+            m1.enabled,
+            m1.modify_date,
+            L.LOG_DATE AS lastLoginDate
+        FROM member1 m1
+        JOIN member2 m2 ON m1.memberIdx = m2.memberIdx
+        LEFT JOIN (
+            SELECT MEMBERIDX, LOG_DATE
+            FROM (
+                SELECT MEMBERIDX, LOG_DATE,
+                       ROW_NUMBER() OVER(PARTITION BY MEMBERIDX ORDER BY LOG_DATE DESC) AS RN
+                FROM LOGIN_HISTORY
+            )
+            WHERE RN = 1
+        ) L ON m1.memberIdx = L.MEMBERIDX
+        WHERE m1.enabled = 0  
+        ORDER BY lastLoginDate ASC NULLS FIRST
+    </select>
+    
     <insert id="insertMember1" parameterType="com.maknaez.model.MemberDTO">
     	<selectKey keyProperty="memberIdx" resultType="Long" order="BEFORE">
 	        SELECT member_seq.NEXTVAL FROM dual
@@ -234,21 +248,4 @@
         OFFSET #{offset} ROWS FETCH NEXT #{size} ROWS ONLY
     </select>
     
-    <!-- 
-    <insert id="insertMember1" parameterType="com.maknaez.model.MemberDTO">
-	    INSERT INTO member1(memberIdx, userId, userPwd, userName, nickName, gender, enabled, userLevel, 
-	                register_date, modify_date)
-	    VALUES (member_seq.NEXTVAL, #{userId}, #{userPwd}, #{userName}, #{nickName}, #{gender}, 
-	        1, 1, SYSDATE, SYSDATE) 
-	</insert>
-	
-	<update id="updateMember1" parameterType="com.maknaez.model.MemberDTO">
-	    UPDATE member1 
-	    SET userPwd = #{userPwd}, 
-	        nickName = #{nickName}, 
-	        gender = #{gender}, 
-	        modify_date = SYSDATE
-	    WHERE memberIdx = #{memberIdx}  
-	</update>
-    -->
 </mapper>

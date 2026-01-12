@@ -1,5 +1,6 @@
 package com.maknaez.service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -165,6 +166,30 @@ public class MemberServiceImpl implements MemberService {
 		return list;
 	}
 
+	@Override
+	public List<MemberDTO> listDormantMembers() {
+		List<MemberDTO> list = null;
+	    try {
+	        list = mapper.listDormantMembers();
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	    return list;
+	}
 
-
+	@Override
+	public void releaseDormantMembers(List<Long> idxList) throws Exception {
+		try {
+	        for(Long memberIdx : idxList) {
+	            Map<String, Object> map = new HashMap<>();
+	            map.put("memberIdx", memberIdx);
+	            map.put("enabled", 1); 
+	            
+	            mapper.updateEnabled(map);
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        throw e;
+	    }
+	}
 }

@@ -1,6 +1,7 @@
 package com.maknaez.controller.admin;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -249,7 +250,49 @@ public class MemberManageController {
 	@GetMapping("dormant_manage")
 	public ModelAndView dormantManage(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		ModelAndView mav = new ModelAndView("admin/member/dormant_manage");
-		
-		return mav;
+        
+        try {
+            List<MemberDTO> list = service.listDormantMembers();
+            
+            mav.addObject("list", list);
+            mav.addObject("count", list.size()); // 총 인원수
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        return mav;
 	}
+	
+	@ResponseBody
+    @PostMapping("releaseDormantList")
+    public Map<String, Object> releaseDormantList(HttpServletRequest req, HttpServletResponse resp) {
+        Map<String, Object> model = new HashMap<>();
+        
+        try {
+            String[] memberIdxs = req.getParameterValues("memberIdxs");
+            
+            if (memberIdxs != null && memberIdxs.length > 0) {
+                List<Long> list = new ArrayList<>();
+                for (String idx : memberIdxs) {
+                    list.add(Long.parseLong(idx));
+                }
+                
+                service.releaseDormantMembers(list);
+                
+                model.put("state", "true");
+                model.put("count", list.size());
+            } else {
+                model.put("state", "false");
+                model.put("message", "선택된 회원이 없습니다.");
+            }
+            
+        } catch (Exception e) {
+            model.put("state", "false");
+            model.put("message", "에러가 발생했습니다.");
+            e.printStackTrace();
+        }
+        
+        return model;
+    }
 }

@@ -1,5 +1,10 @@
 package com.maknaez.model;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
+import java.util.Date;
+
 public class MemberDTO {
 	private Long memberIdx;
 	private String nickName;
@@ -24,7 +29,27 @@ public class MemberDTO {
 	private String log_id;
 	private String log_date;
 	private String ip_info;
+	private Date lastLoginDate;
 
+	public long getDormantDays() {
+        if (this.lastLoginDate == null) {
+            return 0; 
+        }
+
+        LocalDate lastLogin = this.lastLoginDate.toInstant()
+                                  .atZone(ZoneId.systemDefault())
+                                  .toLocalDate();
+        LocalDate today = LocalDate.now();
+
+        return lastLogin.until(today, ChronoUnit.DAYS);
+    }	
+	
+	public Date getLastLoginDate() {
+		return lastLoginDate;
+	}
+	public void setLastLoginDate(Date lastLoginDate) {
+		this.lastLoginDate = lastLoginDate;
+	}
 	public String getLog_id() {
 		return log_id;
 	}
