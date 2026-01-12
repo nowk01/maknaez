@@ -26,4 +26,7 @@ public interface MemberMapper {
 	
 	public Integer dataCount(Map<String, Object> map);
 	public List<MemberDTO> listMember(Map<String, Object> map);
+	
+	public List<MemberDTO> listDormantMembers() throws SQLException;
+	public void updateEnabled(Map<String, Object> map) throws SQLException;
 }
