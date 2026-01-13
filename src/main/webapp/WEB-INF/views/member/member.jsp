@@ -3,217 +3,305 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<title>회원가입 | MAKNAEZ</title>
+<title>CREATE ACCOUNT | MAKNAEZ</title>
 <jsp:include page="/WEB-INF/views/layout/headerResources.jsp" />
-<link rel="stylesheet"
-	href="${pageContext.request.contextPath}/dist/css/my_info.css">
 <style>
-.signup-container {
-    max-width: 600px;
-    margin: 120px auto 80px; 
-    padding: 0 20px;
-}
+    /* 1. 글로벌 스타일: 살로몬 특유의 묵직하고 강렬한 무드 */
+    .signup-container {
+        max-width: 440px;
+        margin: 120px auto 100px;
+        padding: 0 25px;
+        font-family: 'Inter', 'Pretendard', sans-serif;
+        color: #000;
+    }
 
-.form-group {
-    margin-bottom: 25px;
-}
+    .signup-header {
+        margin-bottom: 60px;
+        border-left: 6px solid #000; /* 살로몬 포인트 라인 */
+        padding-left: 20px;
+    }
 
-.form-label {
-	font-weight: 600;
-	margin-bottom: 8px;
-	display: block;
-	font-size: 14px;
-}
+    .signup-header h2 {
+        font-size: 28px;
+        font-weight: 900;
+        letter-spacing: -0.5px;
+        margin: 0;
+        line-height: 1;
+    }
 
-.input-control {
-	width: 100%;
-	height: 50px;
-	border: 1px solid #ddd;
-	padding: 0 15px;
-	border-radius: 4px;
-}
+    /* 2. 필드 레이아웃: 장식을 뺀 테크니컬 구조 */
+    .form-group {
+        margin-bottom: 35px;
+        position: relative;
+    }
 
-.email-group {
-	display: flex;
-	gap: 10px;
-	align-items: center;
-}
+    .form-label {
+        font-weight: 800;
+        font-size: 11px;
+        color: #000;
+        margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
 
-.btn-check {
-	background: #000;
-	color: #fff;
-	border: none;
-	padding: 0 20px;
-	height: 50px;
-	border-radius: 4px;
-	cursor: pointer;
-	white-space: nowrap;
-}
+    .form-label::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: #eee;
+    }
 
-.btn-submit {
-	width: 100%;
-	height: 55px;
-	background: #000;
-	color: #fff;
-	border: none;
-	border-radius: 30px;
-	font-weight: 700;
-	font-size: 16px;
-	margin-top: 40px;
-	cursor: pointer;
-}
+    /* 3. 입력창 스타일: 면이 아닌 선의 미학 */
+    .input-row {
+        display: flex;
+        align-items: center;
+        gap: 0;
+        border-bottom: 1px solid #e5e5e5;
+        transition: all 0.3s;
+    }
 
-.msg-error {
-	color: #e74c3c;
-	font-size: 12px;
-	margin-top: 5px;
-	display: none;
-}
-/* 성별 라디오 버튼 스타일 */
-.gender-group {
-	display: flex;
-	gap: 30px;
-	align-items: center;
-	padding-top: 5px;
-}
+    .input-row:focus-within {
+        border-bottom-color: #000;
+    }
 
-.gender-item {
-	display: flex;
-	align-items: center;
-	gap: 8px;
-	cursor: pointer;
-	font-weight: 400;
-}
+    .input-minimal {
+        flex: 1;
+        border: none;
+        outline: none;
+        padding: 12px 0;
+        font-size: 15px;
+        font-weight: 500;
+        background: transparent;
+        width: 100%;
+        color: #000;
+    }
 
-.gender-item input[type="radio"] {
-	width: 18px;
-	height: 18px;
-	accent-color: #000;
-}
+    /* 4. 중복확인 / 주소검색 버튼: 살로몬의 유틸리티 버튼 감성 */
+    .btn-utility {
+        background: #000;
+        color: #fff;
+        border: none;
+        padding: 6px 14px;
+        font-size: 11px;
+        font-weight: 700;
+        cursor: pointer;
+        margin-left: 10px;
+        border-radius: 0;
+        white-space: nowrap;
+        height: 30px;
+        transition: background 0.2s;
+    }
+
+    .btn-utility:hover { background: #333; }
+
+    /* 5. 전화번호: 3칸 분할 & 묵직한 하이픈 */
+    .tel-wrap {
+        display: flex;
+        align-items: center;
+        width: 100%;
+    }
+    .tel-part {
+        flex: 1;
+        text-align: center;
+        font-weight: 600;
+    }
+    .tel-sep {
+        width: 20px;
+        text-align: center;
+        color: #ddd;
+        font-weight: 300;
+    }
+
+    /* 6. 성별 선택: 강렬한 대비 */
+    .gender-wrap {
+        display: flex;
+        gap: 20px;
+    }
+    .gender-chip {
+        flex: 1;
+        position: relative;
+    }
+    .gender-chip input {
+        position: absolute;
+        opacity: 0;
+    }
+    .gender-chip label {
+        display: block;
+        border: 1px solid #e5e5e5;
+        padding: 12px;
+        text-align: center;
+        font-size: 12px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+    .gender-chip input:checked + label {
+        background: #000;
+        color: #fff;
+        border-color: #000;
+    }
+
+    /* 7. 최종 제출 버튼: 압도적 볼드함 */
+    .btn-submit-all {
+        width: 100%;
+        height: 65px;
+        background: #000;
+        color: #fff;
+        border: none;
+        font-size: 15px;
+        font-weight: 900;
+        letter-spacing: 2px;
+        margin-top: 50px;
+        cursor: pointer;
+        text-transform: uppercase;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 15px;
+    }
+
+    .btn-submit-all:hover { background: #1a1a1a; }
+    
+    .status-msg {
+        font-size: 10px;
+        font-weight: 600;
+        margin-top: 6px;
+        position: absolute;
+    }
 </style>
 </head>
 <body>
 
-	<jsp:include page="/WEB-INF/views/layout/header.jsp" />
+<jsp:include page="/WEB-INF/views/layout/header.jsp" />
 
-	<div class="signup-container">
-		<h2 class="text-center mb-5" style="font-weight: 700;">회원가입</h2>
+<div class="signup-container">
+    <div class="signup-header">
+        <h2>계정 생성</h2>
+        <p style="font-size: 12px; color: #888; margin-top: 8px;">SIGN UP FOR MAKNAEZ</p>
+    </div>
 
-		<form name="memberForm"
-			action="${pageContext.request.contextPath}/member/account"
-			method="post">
+    <form name="memberForm" action="${pageContext.request.contextPath}/member/account" method="post">
 
-			<div class="form-group">
-				<label class="form-label">아이디</label>
-				<div class="d-flex gap-2">
-					<input type="text" name="userId" id="userId" class="input-control"
-						placeholder="아이디 입력" required>
-					<button type="button" class="btn-check" onclick="checkId();">중복확인</button>
-				</div>
-				<p id="idMsg" class="msg-error"></p>
-			</div>
+        <div class="form-group">
+            <label class="form-label">아이디 ID</label>
+            <div class="input-row">
+                <input type="text" name="userId" id="userId" class="input-minimal" placeholder="아이디를 입력하세요" required>
+                <button type="button" class="btn-utility" onclick="checkId();">중복확인</button>
+            </div>
+            <p id="idMsg" class="status-msg"></p>
+        </div>
 
-			<div class="form-group">
-				<label class="form-label">닉네임</label> <input type="text"
-					name="nickName" id="nickName" class="input-control"
-					placeholder="닉네임 입력" required>
-			</div>
+        <div class="form-group">
+            <label class="form-label">비밀번호 PASSWORD</label>
+            <div class="input-row">
+                <input type="password" name="userPwd" class="input-minimal" placeholder="영문, 숫자 포함 8자 이상" required>
+            </div>
+        </div>
 
-			<div class="form-group">
-				<label class="form-label">비밀번호</label> <input type="password"
-					name="userPwd" id="userPwd" class="input-control"
-					placeholder="영문, 숫자 포함 8자 이상" required>
-			</div>
+        <div class="form-group">
+            <label class="form-label">성별 GENDER</label>
+            <div class="gender-wrap">
+                <div class="gender-chip">
+                    <input type="radio" name="gender" value="male" id="g-male" checked>
+                    <label for="g-male">남성 MALE</label>
+                </div>
+                <div class="gender-chip">
+                    <input type="radio" name="gender" value="female" id="g-female">
+                    <label for="g-female">여성 FEMALE</label>
+                </div>
+            </div>
+        </div>
 
-			<div class="form-group">
-				<label class="form-label">성별</label>
-				<div class="gender-group">
-					<label class="gender-item"> <input type="radio"
-						name="gender" value="male" checked> 남성
-					</label> <label class="gender-item"> <input type="radio"
-						name="gender" value="female"> 여성
-					</label>
-				</div>
-			</div>
+        <div class="form-group">
+            <label class="form-label">이름 NAME / 닉네임 NICKNAME</label>
+            <div class="input-row" style="margin-bottom:15px;">
+                <input type="text" name="userName" class="input-minimal" placeholder="실명을 입력하세요" required>
+            </div>
+            <div class="input-row">
+                <input type="text" name="nickName" class="input-minimal" placeholder="닉네임을 입력하세요" required>
+            </div>
+        </div>
 
-			<div class="form-group">
-				<label class="form-label">이름</label> <input type="text"
-					name="userName" class="input-control" placeholder="이름을 입력하세요"
-					required>
-			</div>
+        <div class="form-group">
+            <label class="form-label">생년월일 BIRTHDAY</label>
+            <div class="input-row">
+                <input type="text" name="birth" class="input-minimal" placeholder="YYYYMMDD (예: 19950101)" maxlength="8" required>
+            </div>
+        </div>
 
-			<div class="form-group">
-				<label class="form-label">생년월일</label> <input type="text"
-					name="birth" class="input-control" placeholder="예: 19990101"
-					required>
-			</div>
+        <div class="form-group">
+            <label class="form-label">이메일 EMAIL</label>
+            <div style="display:flex; align-items:center;">
+                <div class="input-row" style="flex:1;"><input type="text" name="email1" class="input-minimal" required></div>
+                <span style="padding: 0 8px; font-size: 14px; color: #ddd;">@</span>
+                <div class="input-row" style="flex:1;"><input type="text" name="email2" id="email2" class="input-minimal" required></div>
+                <select class="input-minimal" style="width:100px; flex:none; font-size:11px; margin-left:10px; border-bottom:1px solid #e5e5e5;" onchange="document.getElementById('email2').value=this.value;">
+                    <option value="">직접입력</option>
+                    <option value="naver.com">naver.com</option>
+                    <option value="gmail.com">gmail.com</option>
+                </select>
+            </div>
+        </div>
 
-			<div class="form-group">
-				<label class="form-label">이메일 주소</label>
-				<div class="email-group">
-					<input type="text" name="email1" class="input-control" required>
-					<span>@</span> <input type="text" name="email2" id="email2"
-						class="input-control" required> <select
-						class="input-control"
-						onchange="document.getElementById('email2').value=this.value;">
-						<option value="">직접입력</option>
-						<option value="naver.com">naver.com</option>
-						<option value="gmail.com">gmail.com</option>
-						<option value="daum.net">daum.net</option>
-					</select>
-				</div>
-			</div>
+        <div class="form-group">
+            <label class="form-label">휴대전화 PHONE</label>
+            <div class="tel-wrap">
+                <div class="input-row tel-part"><input type="text" name="tel1" class="input-minimal" style="text-align:center;" maxlength="3" value="010"></div>
+                <span class="tel-sep">-</span>
+                <div class="input-row tel-part"><input type="text" name="tel2" class="input-minimal" style="text-align:center;" maxlength="4"></div>
+                <span class="tel-sep">-</span>
+                <div class="input-row tel-part"><input type="text" name="tel3" class="input-minimal" style="text-align:center;" maxlength="4"></div>
+            </div>
+        </div>
 
-			<div class="form-group">
-				<label class="form-label">휴대전화</label> <input type="tel" name="tel"
-					class="input-control" placeholder="'-' 제외하고 입력" required>
-			</div>
+        <div class="form-group">
+            <label class="form-label">주소 ADDRESS</label>
+            <div class="input-row" style="margin-bottom:15px;">
+                <input type="text" name="zip" id="zip" class="input-minimal" readonly placeholder="우편번호">
+                <button type="button" class="btn-utility" onclick="daumPostcode();">주소찾기</button>
+            </div>
+            <div class="input-row" style="margin-bottom:15px;">
+                <input type="text" name="addr1" id="addr1" class="input-minimal" readonly placeholder="기본주소">
+            </div>
+            <div class="input-row">
+                <input type="text" name="addr2" id="addr2" class="input-minimal" placeholder="상세주소 입력">
+            </div>
+        </div>
 
-			<div class="form-group">
-				<label class="form-label">주소</label>
-				<div class="d-flex gap-2 mb-2">
-					<input type="text" name="zip" id="zip" class="input-control"
-						readonly>
-					<button type="button" class="btn-check" onclick="daumPostcode();">우편번호</button>
-				</div>
-				<input type="text" name="addr1" id="addr1"
-					class="input-control mb-2" readonly placeholder="기본주소"> <input
-					type="text" name="addr2" id="addr2" class="input-control"
-					placeholder="상세주소 입력">
-			</div>
+        <button type="button" class="btn-submit-all" onclick="submitForm();">
+            회원가입 완료 CREATE ACCOUNT
+        </button>
+    </form>
+</div>
 
-			<button type="button" class="btn-submit" onclick="submitForm();">가입하기</button>
+<jsp:include page="/WEB-INF/views/layout/footer.jsp" />
 
-			<c:if test="${not empty message}">
-				<p class="text-danger text-center mt-3">${message}</p>
-			</c:if>
-		</form>
-	</div>
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<script>
+    let isIdChecked = false;
 
-	<jsp:include page="/WEB-INF/views/layout/footer.jsp" />
-
-	<script
-		src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
-	<script>
     function checkId() {
         const userId = document.getElementById('userId').value;
-        if(!userId) return;
+        const msgEl = document.getElementById('idMsg');
+        if(!userId || userId.length < 4) { alert("아이디를 4자 이상 입력하세요."); return; }
 
         fetch('${pageContext.request.contextPath}/member/userIdCheck', {
             method: 'POST',
             headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-            body: 'userId=' + userId
+            body: 'userId=' + encodeURIComponent(userId)
         })
-        .then(response => response.json())
+        .then(res => res.json())
         .then(data => {
-            const msgEl = document.getElementById('idMsg');
             msgEl.style.display = 'block';
-            if(data.passed === 'true') {
-                msgEl.innerText = '사용 가능한 아이디입니다.';
-                msgEl.style.color = '#2ecc71';
+            if(data.passed === true || data.passed === 'true') {
+                msgEl.innerText = "사용 가능한 아이디입니다.";
+                msgEl.style.color = "#000";
+                isIdChecked = true;
             } else {
-                msgEl.innerText = '이미 사용 중인 아이디입니다.';
-                msgEl.style.color = '#e74c3c';
+                msgEl.innerText = "이미 사용중인 아이디입니다.";
+                msgEl.style.color = "#ff4d4d";
+                isIdChecked = false;
             }
         });
     }
@@ -229,11 +317,9 @@
     }
 
     function submitForm() {
-        const f = document.memberForm;
-        if(!f.userId.value) return;
-        f.submit();
+        if(!isIdChecked) { alert("아이디 중복확인을 완료해주세요."); return; }
+        document.memberForm.submit();
     }
 </script>
-
 </body>
 </html>
