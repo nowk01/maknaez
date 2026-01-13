@@ -133,7 +133,7 @@ CREATE TABLE board_posts (
 CREATE TABLE category (
     cate_code   NUMBER          NOT NULL, 
     cate_name   VARCHAR2(50)    NULL,
-    cate_parent NUMBER          NOT NULL,           -- FK: category.cate_code (자기 자신 참조, 상위 카테고리)
+    cate_parent NUMBER          NULL,           -- FK: category.cate_code (자기 자신 참조, 상위 카테고리)
     depth       NUMBER          NULL                -- 카테고리 깊이 (1차, 2차...)
 );
 
