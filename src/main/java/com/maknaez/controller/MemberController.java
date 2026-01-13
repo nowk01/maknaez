@@ -2,11 +2,14 @@ package com.maknaez.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.json.JSONObject;
 
 import com.maknaez.util.FileManager;
 import com.maknaez.util.MyMultipartFile;
@@ -385,17 +388,23 @@ public class MemberController {
 		return model;
 	}
 	
-	@ResponseBody
-	@PostMapping("nickNameCheck") // 이 경로가 JSP의 fetch 경로와 일치해야 합니다.
-	public Map<String, Object> nickNameCheck(HttpServletRequest req, HttpServletResponse resp) {
-	    Map<String, Object> model = new HashMap<>();
-	    String nickName = req.getParameter("nickName");
-	    
-	    MemberDTO dto = service.findByNickName(nickName); 
+	@PostMapping("nickNameCheck")
+	public void nickNameCheck(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+		String nickName = req.getParameter("nickName");
 
-	    String passed = (dto == null) ? "true" : "false";
-	    model.put("passed", passed);
-	    return model;
+		
+		MemberDTO dto = service.findByNickName(nickName);
+		boolean isPassed = (dto == null);
+
+		
+		JSONObject json = new JSONObject();
+		json.put("passed", isPassed);
+		
+		resp.setContentType("application/json; charset=UTF-8");
+		PrintWriter out = resp.getWriter();
+		out.print(json.toString());
+		out.flush();
+		out.close();
 	}
 
 	@ResponseBody

@@ -358,6 +358,7 @@
         const nickNameEl = document.getElementById('nickName');
         const msgEl = document.getElementById('nickMsg');
         
+        // 유효성 검사
         if(!nickNameEl.value || nickNameEl.value.trim().length < 2) { 
             alert("닉네임을 2자 이상 입력하세요."); 
             return; 
@@ -365,17 +366,20 @@
 
         const nickName = nickNameEl.value.trim();
 
+        // 서버 요청
         fetch('${pageContext.request.contextPath}/member/nickNameCheck', {
             method: 'POST',
             headers: {'Content-Type': 'application/x-www-form-urlencoded'},
             body: 'nickName=' + encodeURIComponent(nickName)
         })
-        .then(res => res.json())
+        .then(res => res.json()) // 이제 서버가 JSON을 확실히 보내므로 바로 변환
         .then(data => {
             msgEl.style.display = 'block';
+            
+            // 서버에서 보낸 {"passed": true/false} 처리
             if(data.passed === true || data.passed === 'true') {
                 msgEl.innerText = "사용 가능한 닉네임입니다.";
-                msgEl.style.color = "#000";
+                msgEl.style.color = "blue"; 
                 isNickChecked = true;
             } else {
                 msgEl.innerText = "이미 사용중인 닉네임입니다.";
@@ -384,7 +388,7 @@
             }
         })
         .catch(err => {
-            console.error(err);
+            console.error("닉네임 확인 에러:", err);
             alert("닉네임 중복확인 중 오류가 발생했습니다.");
         });
     }
