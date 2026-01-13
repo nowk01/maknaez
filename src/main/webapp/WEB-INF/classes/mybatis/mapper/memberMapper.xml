@@ -129,14 +129,19 @@
 		WHERE m1.memberIdx = #{memberIdx}
 	</select>
 
-	<update id="updateMember1"
-		parameterType="com.maknaez.model.MemberDTO">
-		UPDATE member1
-		SET userPwd = #{userPwd},
-		nickName = #{nickName},
-		gender = #{gender},
-		modify_date = SYSDATE
-		WHERE memberIdx = #{memberIdx}
+	<update id="updateMember1" parameterType="com.maknaez.model.MemberDTO">
+	    UPDATE member1
+	    SET userPwd = #{userPwd},
+	        nickName = #{nickName},
+	        gender = #{gender},
+	        modify_date = SYSDATE
+	    <if test="userLevel != null">
+	        , userLevel = #{userLevel}
+	    </if>
+	    <if test="enabled != null">
+	        , enabled = #{enabled}
+	    </if>
+	    WHERE memberIdx = #{memberIdx}
 	</update>
 
 	<update id="updateMember2"
