@@ -1,0 +1,163 @@
+@charset "UTF-8";
+
+/* [MAKNAEZ] Premium Admin Point Theme - Minimal Luxury Final */
+body {
+	background-color: #fcfcfd;
+	color: #202224;
+	font-family: 'Pretendard', 'Inter', sans-serif;
+	letter-spacing: -0.5px;
+}
+
+/* 1. 전체 컨테이너 애니메이션 */
+.content-container {
+	padding: 40px;
+	animation: fadeInContainer 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+@keyframes fadeInContainer {
+	from { opacity: 0; transform: translateY(15px); }
+	to { opacity: 1; transform: translateY(0); }
+}
+
+/* 2. 시그니처 오렌지 헤더 */
+.page-header {
+	margin-bottom: 35px;
+	border-left: 5px solid #ff4e00;
+	padding-left: 20px;
+}
+.page-title { font-weight: 800; font-size: 26px; color: #1a1c1e; margin: 0; }
+.page-desc { color: #8a8a8a; font-size: 13px; margin-top: 4px; text-transform: uppercase; letter-spacing: 1px; }
+
+/* 3. 카드 박스 디자인 */
+.card-box, .search-filter-card {
+	background: #ffffff;
+	border-radius: 0;
+	border: 1px solid #eee;
+	box-shadow: 0 10px 30px rgba(0, 0, 0, 0.02);
+	padding: 30px;
+	margin-bottom: 25px;
+}
+
+/* 4. 검색 폼 요소 */
+.search-label { font-size: 11px; font-weight: 700; color: #1a1c1e; margin-bottom: 8px; display: block; text-transform: uppercase; }
+.form-control, .form-select, .input-group-text {
+	border-radius: 0 !important;
+	border: 1px solid #ddd !important;
+	height: 40px;
+	font-size: 13px;
+	background-color: #fbfbfb;
+	transition: all 0.2s;
+}
+.form-control:focus, .form-select:focus { border-color: #ff4e00 !important; background-color: #fff !important; box-shadow: none !important; }
+
+/* 5. SEARCH 버튼 */
+.btn-dark {
+	background: #111 !important;
+	border: none !important;
+	border-radius: 0 !important;
+	font-weight: 800;
+	font-size: 13px;
+	height: 40px;
+	transition: all 0.3s;
+}
+.btn-dark:hover { background: #ff4e00 !important; transform: translateY(-1px); }
+
+/* 6. 목록으로 버튼 및 액션 버튼 디자인 */
+.btn-detail-sm, .btn-outline-secondary {
+	background: #fff !important;
+	border: 1px solid #ddd !important;
+	padding: 8px 18px;
+	font-size: 12px;
+	color: #444 !important;
+	text-decoration: none;
+	border-radius: 0 !important;
+	transition: all 0.2s;
+}
+.btn-detail-sm:hover, .btn-outline-secondary:hover { background: #111 !important; color: #fff !important; border-color: #111 !important; }
+
+/* 7. 프리미엄 테이블 스타일 */
+.table { width: 100%; border-top: 2px solid #1a1c1e !important; vertical-align: middle; }
+.table thead th { background: #fbfbfb !important; color: #222 !important; font-weight: 700 !important; font-size: 13px !important; padding: 15px !important; border-bottom: 1px solid #eee !important; }
+.table tbody td { padding: 18px 15px !important; border-bottom: 1px solid #f5f5f5 !important; font-size: 14px; }
+.table tbody tr:hover { background-color: #fcfcfc !important; }
+
+/* 8. 포인트 텍스트 */
+.text-orange, .point-plus, .text-primary { color: #ff4e00 !important; font-weight: 800; }
+.point-minus, .text-danger { color: #111 !important; font-weight: 800; }
+
+/* 9. [해결] 퀵 액션 버튼 - 모달 실행 보장 */
+.action-btn {
+	width: 42px !important;
+	height: 42px !important;
+	border-radius: 0 !important;
+	display: inline-flex !important;
+	align-items: center !important;
+	justify-content: center !important;
+	border: none !important;
+	transition: all 0.2s !important;
+	margin-left: 5px !important;
+	cursor: pointer !important;
+	position: relative !important;
+	z-index: 10 !important;
+}
+.btn-success.action-btn { background-color: #ff4e00 !important; color: #fff !important; }
+.btn-danger.action-btn { background-color: #111 !important; color: #fff !important; }
+.action-btn:hover { transform: translateY(-3px) !important; filter: brightness(1.1); }
+
+/* 10. [해결] 페이지네이션 - 가로 정렬 및 밑줄 포인트 */
+.pagination {
+	display: flex !important;
+	flex-direction: row !important;
+	justify-content: center !important;
+	align-items: center !important;
+	margin-top: 50px !important;
+	gap: 20px !important;
+	border: none !important;
+	list-style: none !important;
+	padding: 0 !important;
+}
+.pagination li { display: inline-block !important; border: none !important; margin: 0 !important; }
+
+.pagination a, .pagination span, .pagination .page-link {
+	display: inline-flex !important;
+	align-items: center !important;
+	justify-content: center !important;
+	min-width: 32px !important;
+	height: 38px !important;
+	font-size: 16px !important;
+	font-weight: 700 !important;
+	color: #999 !important;
+	background-color: transparent !important;
+	border: none !important;
+	padding: 5px 0 !important;
+	transition: all 0.2s ease !important;
+	text-decoration: none !important;
+	box-shadow: none !important;
+}
+
+/* 현재 페이지 활성화 */
+.pagination .active a, 
+.pagination .active span, 
+.pagination .page-item.active .page-link {
+	color: #ff4e00 !important;
+	border-bottom: 3px solid #ff4e00 !important;
+	background-color: transparent !important;
+}
+.pagination a:hover:not(.active) { color: #111 !important; }
+.pagination .prev, .pagination .next { color: #bbb !important; font-weight: 500 !important; }
+
+/* 11. 모달 스타일 */
+.modal-backdrop { z-index: 1040 !important; }
+.modal { z-index: 1050 !important; }
+.modal-content { border-radius: 0 !important; border: none; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); animation: modalSlideUp 0.4s ease-out; }
+@keyframes modalSlideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+.modal-header { background: #1a1c1e !important; color: #fff !important; border-radius: 0 !important; border: none; }
+.modal-header .btn-close { filter: invert(1); }
+.modal-body { padding: 30px !important; }
+.modal-footer { display: flex !important; padding: 0 30px 30px 30px !important; border: none !important; gap: 10px; }
+.modal-footer .btn { flex: 1; height: 48px; border-radius: 0 !important; font-size: 14px; font-weight: 700; margin: 0 !important; transition: all 0.2s ease; }
+.modal-footer .btn-secondary { background-color: #eee !important; color: #444 !important; border: none !important; }
+.modal-footer .btn-primary { background-color: #ff4e00 !important; color: #fff !important; border: none !important; }
+.modal-footer .btn-primary:hover { background-color: #111 !important; transform: translateY(-2px); }
+
+#selectedMembers, .border-dashed { border: 1px dashed #ddd !important; background-color: #f9fafb !important; padding: 15px !important; }
