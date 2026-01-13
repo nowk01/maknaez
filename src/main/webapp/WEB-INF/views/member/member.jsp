@@ -181,7 +181,7 @@
         <p style="font-size: 12px; color: #888; margin-top: 8px;">SIGN UP FOR MAKNAEZ</p>
     </div>
 
-    <form name="memberForm" action="${pageContext.request.contextPath}/member/account" method="post">
+   <form name="memberForm" action="${pageContext.request.contextPath}/member/account" method="post" enctype="multipart/form-data">
 
         <div class="form-group">
             <label class="form-label">아이디 ID</label>
