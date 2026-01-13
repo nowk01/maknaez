@@ -256,4 +256,37 @@ input[readonly] {
     border: 1px solid #e0e0e0; /* 테두리 추가 */
     box-sizing: border-box;
 }
+/* =====================================================
+   DASHBOARD ANIMATION (FADE IN)
+   적용: #customer_detail 영역이 서서히 나타나는 효과
+   ===================================================== */
+
+/* 1. 애니메이션 동작 정의 (Keyframes) */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px); /* 20px 아래에서 시작 */
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0); /* 원래 위치로 */
+    }
+}
+
+/* 2. 타겟 요소에 애니메이션 적용 */
+#customer_detail {
+    /* 초기 상태를 투명하게 설정하여 깜빡임 방지 */
+    opacity: 0;
+    
+    /* 애니메이션 실행: 
+       - 이름: fadeInUp
+       - 시간: 0.8초 (속도 조절 가능)
+       - 가속도: ease-out (끝날 때 부드럽게)
+       - forwards: 애니메이션이 끝난 상태(opacity:1) 유지
+    */
+    animation: fadeInUp 0.8s ease-out forwards;
+    
+    /* (선택사항) 딜레이가 필요하면 아래 주석 해제 */
+    /* animation-delay: 0.2s; */
+}
 
