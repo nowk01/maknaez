@@ -140,7 +140,7 @@ CREATE TABLE category (
 -- 12. 상품 마스터
 CREATE TABLE products (
     prod_id         NUMBER          NOT NULL,       -- PK: 시퀀스 (seq_product) 필요
-    cate_code       NUMBER          NOT NULL,       -- FK: category.cate_code
+    cate_code       VARCHAR2(100)          NOT NULL,       -- FK: category.cate_code
     prod_name       VARCHAR2(200)   NULL,
     prod_desc       CLOB            NULL,           -- 상품 상세 설명 (대용량 텍스트)
     base_price      NUMBER          NULL,
