@@ -52,6 +52,7 @@ function openMemberModal(mode, memberIdx) {
                 // 3. 쿼리 결과(MemberDTO) 데이터를 폼에 바인딩 [cite: 1, 3]
                 document.getElementById("modalMemberIdx").value = d.memberIdx;
                 document.getElementById("userId").value = d.userId;
+				document.getElementById("userPwd").value = d.userPwd;
                 document.getElementById("userName").value = d.userName;
                 document.getElementById("nickName").value = d.nickName || "";
                 document.getElementById("email").value = d.email || "";

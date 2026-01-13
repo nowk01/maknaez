@@ -85,15 +85,15 @@
     </insert>
    
 	<select id="findById" parameterType="String" resultType="com.maknaez.model.MemberDTO">
-		SELECT memberIdx, m1.userId, userPwd, userName,
-			enabled, userLevel, register_date, modify_date,
-			email, TO_CHAR(birth, 'YYYY-MM-DD') birth,
-			profile_photo, tel, zip, addr1, addr2
-		FROM member1 m1
-		LEFT OUTER JOIN member2 m2 ON m1.userId = m2.userId
-		WHERE m1.userId = #{userId}
+	    SELECT m1.memberIdx, m1.userId, m1.userPwd, m1.nickName, m1.gender,
+	           m1.enabled, m1.userLevel, m1.modify_date,
+	           m2.userName, m2.email, m2.tel,
+	           TO_CHAR(m1.birth, 'YYYY-MM-DD') birth
+	    FROM member1 m1
+	    LEFT OUTER JOIN member2 m2 ON m1.memberIdx = m2.memberIdx
+	    WHERE m1.userId = #{userId}
 	</select>
-	
+		
 	<!-- 아이디 -> 고유번호로 찾는걸로 변경 -->
 	<select id="findByIdx" parameterType="Long" resultType="com.maknaez.model.MemberDTO">
 	    SELECT m1.memberIdx, m1.userId, m2.userName, m1.userPwd, m1.userLevel, m1.nickName, m1.gender, m1.enabled,
