@@ -324,5 +324,33 @@
 		ORDER BY m1.memberIdx DESC
 		OFFSET #{offset} ROWS FETCH NEXT #{size} ROWS ONLY
 	</select>
+<insert id="insertAddress" parameterType="com.maknaez.model.AddressDTO">
+		INSERT INTO address (
+			addr_id, memberIdx, addr_name, receiver_name, receiver_tel, 
+			zip_code, addr1, addr2, isbasic
+		) VALUES (
+			addr_seq.NEXTVAL, #{memberIdx}, #{addrName, jdbcType=VARCHAR}, #{receiverName}, #{receiverTel},
+			#{zipCode}, #{addr1}, #{addr2}, #{isBasic}
+		)
+	</insert>
 
+	<select id="listAddress" parameterType="Long" resultType="com.maknaez.model.AddressDTO">
+		SELECT 
+			addr_id AS addrId,
+			memberIdx,
+			addr_name AS addrName,
+			receiver_name AS receiverName,
+			receiver_tel AS receiverTel,
+			zip_code AS zipCode,
+			addr1,
+			addr2,
+			isbasic AS isBasic
+		FROM address
+		WHERE memberIdx = #{memberIdx}
+		ORDER BY isbasic DESC, addr_id DESC
+	</select>
+
+	<delete id="deleteAddress" parameterType="Long">
+		DELETE FROM address WHERE addr_id = #{addrId}
+	</delete>
 </mapper>
