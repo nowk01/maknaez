@@ -343,18 +343,30 @@ public class MemberManageController {
     public ModelAndView pointHistory(HttpServletRequest req, HttpServletResponse resp) throws Exception {
         ModelAndView mav = new ModelAndView("admin/member/point_history");
 
+        // 1. 필수 파라미터 수신
         String memberIdxStr = req.getParameter("memberIdx");
         long memberIdx = Long.parseLong(memberIdxStr);
-        String userId = req.getParameter("userId"); // 화면 표시용
+        String userId = req.getParameter("userId"); 
 
+        // 2. 검색 조건 파라미터 수신 (추가된 부분)
+        String startDate = req.getParameter("startDate");
+        String endDate = req.getParameter("endDate");
+        String reason = req.getParameter("reason");
+
+        // 3. 페이지 번호 처리
         String page = req.getParameter("page");
         int current_page = 1;
         if (page != null) current_page = Integer.parseInt(page);
 
+        // 4. Map에 파라미터 저장
         int size = 10;
         Map<String, Object> map = new HashMap<>();
         map.put("memberIdx", memberIdx);
+        map.put("startDate", startDate); // Mapper로 전달
+        map.put("endDate", endDate);     // Mapper로 전달
+        map.put("reason", reason);       // Mapper로 전달
 
+        // 5. 데이터 개수 조회 (검색 조건 포함)
         int dataCount = pointService.dataCountPointHistory(map);
         int total_page = util.pageCount(dataCount, size);
         if (current_page > total_page) current_page = total_page;
@@ -364,17 +376,38 @@ public class MemberManageController {
         map.put("start", start);
         map.put("end", end);
 
+        // 6. 리스트 조회
         List<PointDTO> list = pointService.listPointHistory(map);
         
-        String listUrl = req.getContextPath() + "/admin/member/point_history?memberIdx=" + memberIdx + "&userId=" + userId;
+        // 7. 페이징 URL 생성 (검색 조건 유지 로직 추가)
+        String query = "memberIdx=" + memberIdx + "&userId=" + userId;
+        
+        if (startDate != null && !startDate.isEmpty()) {
+            query += "&startDate=" + startDate;
+        }
+        if (endDate != null && !endDate.isEmpty()) {
+            query += "&endDate=" + endDate;
+        }
+        if (reason != null && !reason.isEmpty()) {
+            // 한글 깨짐 방지를 위해 인코딩 처리
+            query += "&reason=" + URLEncoder.encode(reason, "UTF-8");
+        }
+
+        String listUrl = req.getContextPath() + "/admin/member/point_history?" + query;
         String paging = util.paging(current_page, total_page, listUrl);
 
+        // 8. View로 데이터 전송
         mav.addObject("list", list);
         mav.addObject("page", current_page);
         mav.addObject("dataCount", dataCount);
         mav.addObject("paging", paging);
         mav.addObject("memberIdx", memberIdx);
         mav.addObject("userId", userId);
+        
+        // JSP input창에 검색어를 유지하기 위해 다시 보냄
+        mav.addObject("startDate", startDate);
+        mav.addObject("endDate", endDate);
+        mav.addObject("reason", reason);
 
         return mav;
     }
@@ -383,45 +416,41 @@ public class MemberManageController {
     @PostMapping("updatePoint")
     public Map<String, Object> updatePoint(HttpServletRequest req, HttpServletResponse resp) {
         Map<String, Object> model = new HashMap<>();
-        
         try {
-            // [변경] 배열 대신 문자열로 받아서 쉼표로 분리
-            String memberIdxsParam = req.getParameter("memberIdxs");
-            String mode = req.getParameter("mode");
-            String amountStr = req.getParameter("amount");
+            // 파라미터 수신
+            String mode = req.getParameter("mode"); // '적립' or '차감' or 'plus' or 'minus'
+            String amountStr = req.getParameter("point_amount");
             String reason = req.getParameter("reason");
-
-            if (memberIdxsParam == null || memberIdxsParam.isBlank()) {
+            String[] memberIdxsStr = req.getParameterValues("memberIdxs");
+            
+            int amount = 0;
+            if(amountStr != null && !amountStr.isEmpty()) {
+                amount = Integer.parseInt(amountStr);
+            }
+            
+            // 차감 모드일 경우 금액을 음수로 변환
+            if ("minus".equals(mode) || "차감".equals(mode)) {
+                amount = -Math.abs(amount); 
+            }
+            
+            if (memberIdxsStr != null && memberIdxsStr.length > 0 && amount != 0) {
+                List<Long> list = new ArrayList<>();
+                for (String idx : memberIdxsStr) {
+                    list.add(Long.parseLong(idx));
+                }
+                
+                // PointService를 통해 DB 저장
+                pointService.insertPointList(list, amount, reason);
+                
+                model.put("state", "true");
+            } else {
                 model.put("state", "false");
-                model.put("message", "선택된 회원이 없습니다.");
-                return model;
+                model.put("message", "잘못된 요청 데이터입니다.");
             }
-
-            // 쉼표로 구분된 문자열을 분리하여 리스트에 담기
-            String[] idxArray = memberIdxsParam.split(",");
-            List<Long> memberIdxs = new ArrayList<>();
-            for (String idx : idxArray) {
-                memberIdxs.add(Long.parseLong(idx.trim()));
-            }
-
-            int amount = Integer.parseInt(amountStr);
-
-            // 차감 모드일 경우 음수로 변환
-            if ("차감".equals(mode)) {
-                amount = -amount;
-            }
-
-            // 서비스 호출
-            pointService.insertPointList(memberIdxs, amount, reason);
-
-            model.put("state", "true");
-
         } catch (Exception e) {
-            e.printStackTrace();
             model.put("state", "false");
-            model.put("error", e.getMessage());
+            e.printStackTrace();
         }
-
         return model;
     }
 	
