@@ -16,7 +16,7 @@
     
     <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/header.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/footer.css">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/list-sidebar.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/list.css">
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

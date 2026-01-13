@@ -1,47 +1,123 @@
-
 -- ---------------------------------------------
--- Categry 데이터 삽입 ( 2026.01.13 ) 
+-- product 데이터 삽입 ( 2026.01.13 ) 
 -- ---------------------------------------------
+-- '&' 문자 인식 오류 방지
+SET DEFINE OFF;
+-- ========================================================
+-- [1] MEN 카테고리 데이터
+-- ========================================================
 
-ALTER TABLE category    ADD CONSTRAINT FK_category_TO_category  FOREIGN KEY (cate_parent) REFERENCES category(cate_code);
-ALTER TABLE products    ADD CONSTRAINT FK_category_TO_products  FOREIGN KEY (cate_code)   REFERENCES category(cate_code);
+-- 1-1. MEN_TRAIL (트레일러닝)
+INSERT INTO PRODUCTS (prod_id, cate_code, prod_name, prod_desc, base_price, is_displayed, thumb_nail, prod_date, shipped_date)
+VALUES (product_seq.NEXTVAL, 'MEN_TRAIL', '제네시스 트레일 GTX', '최상의 접지력을 제공하는 고어택스 트레일 러닝화. 험한 지형에서도 안정적인 주행이 가능합니다.', 189000, 1, 'men_trail_1.jpg', SYSDATE, SYSDATE);
 
--- 대체어 취소용
-set define off;
+INSERT INTO PRODUCTS (prod_id, cate_code, prod_name, prod_desc, base_price, is_displayed, thumb_nail, prod_date, shipped_date)
+VALUES (product_seq.NEXTVAL, 'MEN_TRAIL', '펄사 트레일 프로 S/LAB', '선수들을 위한 초경량 퍼포먼스 모델. 에너지 블레이드 기술이 적용되었습니다.', 210000, 1, 'men_trail_2.jpg', SYSDATE-5, SYSDATE-5);
 
--- -----------------------------------------------------------
--- 1. 대분류 (Depth 1)
--- -----------------------------------------------------------
-INSERT INTO CATEGORY (cate_code, cate_name, cate_parent, depth) VALUES ('MEN', '남성', NULL, 1);
-INSERT INTO CATEGORY (cate_code, cate_name, cate_parent, depth) VALUES ('WOMEN', '여성', NULL, 1);
-INSERT INTO CATEGORY (cate_code, cate_name, cate_parent, depth) VALUES ('SPORTSTYLE', '스포츠스타일(Unisex)', NULL, 1);
+INSERT INTO PRODUCTS (prod_id, cate_code, prod_name, prod_desc, base_price, is_displayed, thumb_nail, prod_date, shipped_date)
+VALUES (product_seq.NEXTVAL, 'MEN_TRAIL', '센스 라이드 5', '입문자부터 전문가까지 모두를 만족시키는 올라운드 트레일화.', 150000, 1, 'men_trail_3.jpg', SYSDATE-10, SYSDATE-10);
 
--- -----------------------------------------------------------
--- 2. 중분류 (Depth 2) - MEN
--- -----------------------------------------------------------
-INSERT INTO CATEGORY (cate_code, cate_name, cate_parent, depth) VALUES ('MEN_TRAIL', '트레일러닝', 'MEN', 2);
-INSERT INTO CATEGORY (cate_code, cate_name, cate_parent, depth) VALUES ('MEN_OUTDOOR', '아웃도어', 'MEN', 2);
-INSERT INTO CATEGORY (cate_code, cate_name, cate_parent, depth) VALUES ('MEN_ROAD', '로드러닝', 'MEN', 2);
-INSERT INTO CATEGORY (cate_code, cate_name, cate_parent, depth) VALUES ('MEN_SPORTSTYLE', '스포츠스타일', 'MEN', 2);
-INSERT INTO CATEGORY (cate_code, cate_name, cate_parent, depth) VALUES ('MEN_RECOVERY', '리커버리', 'MEN', 2);
-INSERT INTO CATEGORY (cate_code, cate_name, cate_parent, depth) VALUES ('MEN_SANDAL', '샌들&워터슈즈', 'MEN', 2);
+INSERT INTO PRODUCTS (prod_id, cate_code, prod_name, prod_desc, base_price, is_displayed, thumb_nail, prod_date, shipped_date)
+VALUES (product_seq.NEXTVAL, 'MEN_TRAIL', '썬더크로스', '진흙과 젖은 노면을 위한 강력한 그립력.', 175000, 1, 'men_trail_4.jpg', SYSDATE-20, SYSDATE-20);
 
--- -----------------------------------------------------------
--- 2. 중분류 (Depth 2) - WOMEN
--- -----------------------------------------------------------
-INSERT INTO CATEGORY (cate_code, cate_name, cate_parent, depth) VALUES ('WOMEN_TRAIL', '트레일러닝', 'WOMEN', 2);
-INSERT INTO CATEGORY (cate_code, cate_name, cate_parent, depth) VALUES ('WOMEN_OUTDOOR', '아웃도어', 'WOMEN', 2);
-INSERT INTO CATEGORY (cate_code, cate_name, cate_parent, depth) VALUES ('WOMEN_ROAD', '로드러닝', 'WOMEN', 2);
-INSERT INTO CATEGORY (cate_code, cate_name, cate_parent, depth) VALUES ('WOMEN_SPORTSTYLE', '스포츠스타일', 'WOMEN', 2);
-INSERT INTO CATEGORY (cate_code, cate_name, cate_parent, depth) VALUES ('WOMEN_RECOVERY', '리커버리', 'WOMEN', 2);
-INSERT INTO CATEGORY (cate_code, cate_name, cate_parent, depth) VALUES ('WOMEN_SANDAL', '샌들&워터슈즈', 'WOMEN', 2);
 
--- -----------------------------------------------------------
--- 2. 중분류 (Depth 2) - SPORTSTYLE
--- -----------------------------------------------------------
-INSERT INTO CATEGORY (cate_code, cate_name, cate_parent, depth) VALUES ('SPORTSTYLE_SNEAKERS', '스니커즈', 'SPORTSTYLE', 2);
-INSERT INTO CATEGORY (cate_code, cate_name, cate_parent, depth) VALUES ('SPORTSTYLE_ADVANCED', '어드밴스드', 'SPORTSTYLE', 2);
-INSERT INTO CATEGORY (cate_code, cate_name, cate_parent, depth) VALUES ('SPORTSTYLE_INTERSECTION', '인터섹션', 'SPORTSTYLE', 2);
+-- 1-2. MEN_ROAD (로드러닝)
+INSERT INTO PRODUCTS (prod_id, cate_code, prod_name, prod_desc, base_price, is_displayed, thumb_nail, prod_date, shipped_date)
+VALUES (product_seq.NEXTVAL, 'MEN_ROAD', '판타즘 2 S/LAB', '도로 위의 스피드 레이싱화. 카본 플레이트가 폭발적인 추진력을 줍니다.', 230000, 1, 'men_road_1.jpg', SYSDATE, SYSDATE);
+
+INSERT INTO PRODUCTS (prod_id, cate_code, prod_name, prod_desc, base_price, is_displayed, thumb_nail, prod_date, shipped_date)
+VALUES (product_seq.NEXTVAL, 'MEN_ROAD', '에어로 글라이드', '구름 위를 걷는 듯한 맥스 쿠셔닝 로드화.', 160000, 1, 'men_road_2.jpg', SYSDATE-15, SYSDATE-15);
+
+INSERT INTO PRODUCTS (prod_id, cate_code, prod_name, prod_desc, base_price, is_displayed, thumb_nail, prod_date, shipped_date)
+VALUES (product_seq.NEXTVAL, 'MEN_ROAD', '스펙터', '훈련과 레이싱 모두에 적합한 경량 로드 러닝화.', 145000, 1, 'men_road_3.jpg', SYSDATE-30, SYSDATE-30);
+
+
+-- 1-3. MEN_OUTDOOR (아웃도어)
+INSERT INTO PRODUCTS (prod_id, cate_code, prod_name, prod_desc, base_price, is_displayed, thumb_nail, prod_date, shipped_date)
+VALUES (product_seq.NEXTVAL, 'MEN_OUTDOOR', '퀘스트 4 GTX', '장거리 백패킹을 위한 최고의 안정성을 제공하는 고어택스 등산화.', 280000, 1, 'men_outdoor_1.jpg', SYSDATE, SYSDATE);
+
+INSERT INTO PRODUCTS (prod_id, cate_code, prod_name, prod_desc, base_price, is_displayed, thumb_nail, prod_date, shipped_date)
+VALUES (product_seq.NEXTVAL, 'MEN_OUTDOOR', 'X 울트라 4 미드 GTX', '트레일 러닝화의 민첩성과 등산화의 보호 기능을 결합.', 220000, 1, 'men_outdoor_2.jpg', SYSDATE-5, SYSDATE-5);
+
+INSERT INTO PRODUCTS (prod_id, cate_code, prod_name, prod_desc, base_price, is_displayed, thumb_nail, prod_date, shipped_date)
+VALUES (product_seq.NEXTVAL, 'MEN_OUTDOOR', '엘릭서 미드 GTX', '프리미엄 쿠셔닝과 방수 기능을 갖춘 럭셔리 하이킹화.', 250000, 1, 'men_outdoor_3.jpg', SYSDATE-10, SYSDATE-10);
+
+
+-- 1-4. MEN_SANDAL (샌들&워터슈즈)
+INSERT INTO PRODUCTS (prod_id, cate_code, prod_name, prod_desc, base_price, is_displayed, thumb_nail, prod_date, shipped_date)
+VALUES (product_seq.NEXTVAL, 'MEN_SANDAL', 'RX 슬라이드 3.0', '운동 전후 발의 피로를 풀어주는 리커버리 슬라이드.', 89000, 1, 'men_sandal_1.jpg', SYSDATE-60, SYSDATE-60);
+
+INSERT INTO PRODUCTS (prod_id, cate_code, prod_name, prod_desc, base_price, is_displayed, thumb_nail, prod_date, shipped_date)
+VALUES (product_seq.NEXTVAL, 'MEN_SANDAL', '테크 샌들', '계곡 트레킹과 물놀이에 최적화된 테크니컬 샌들.', 95000, 1, 'men_sandal_2.jpg', SYSDATE-50, SYSDATE-50);
+
+
+-- ========================================================
+-- [2] WOMEN 카테고리 데이터
+-- ========================================================
+
+-- 2-1. WOMEN_TRAIL (트레일러닝)
+INSERT INTO PRODUCTS (prod_id, cate_code, prod_name, prod_desc, base_price, is_displayed, thumb_nail, prod_date, shipped_date)
+VALUES (product_seq.NEXTVAL, 'WOMEN_TRAIL', '스피드크로스 6 W', '전설적인 그립력. 진흙과 젖은 지형에서 탁월한 성능을 발휘합니다.', 175000, 1, 'women_trail_1.jpg', SYSDATE-1, SYSDATE-1);
+
+INSERT INTO PRODUCTS (prod_id, cate_code, prod_name, prod_desc, base_price, is_displayed, thumb_nail, prod_date, shipped_date)
+VALUES (product_seq.NEXTVAL, 'WOMEN_TRAIL', '센스 라이드 5 W', '여성의 발 모양에 최적화된 핏을 제공하는 올라운드 트레일화.', 150000, 1, 'women_trail_2.jpg', SYSDATE-3, SYSDATE-3);
+
+INSERT INTO PRODUCTS (prod_id, cate_code, prod_name, prod_desc, base_price, is_displayed, thumb_nail, prod_date, shipped_date)
+VALUES (product_seq.NEXTVAL, 'WOMEN_TRAIL', '펄사 트레일 GTX W', '방수 기능을 갖춘 여성용 경량 트레일 러닝화.', 195000, 1, 'women_trail_3.jpg', SYSDATE-20, SYSDATE-20);
+
+INSERT INTO PRODUCTS (prod_id, cate_code, prod_name, prod_desc, base_price, is_displayed, thumb_nail, prod_date, shipped_date)
+VALUES (product_seq.NEXTVAL, 'WOMEN_TRAIL', '울트라 글라이드 2 W', '장거리 러닝을 위해 설계된 여성용 맥스 쿠셔닝 슈즈.', 190000, 1, 'women_trail_4.jpg', SYSDATE-25, SYSDATE-25);
+
+
+-- 2-2. WOMEN_ROAD (로드러닝)
+INSERT INTO PRODUCTS (prod_id, cate_code, prod_name, prod_desc, base_price, is_displayed, thumb_nail, prod_date, shipped_date)
+VALUES (product_seq.NEXTVAL, 'WOMEN_ROAD', '에어로 볼트 W', '통기성이 뛰어난 초경량 데일리 러닝화.', 150000, 1, 'women_road_1.jpg', SYSDATE-10, SYSDATE-10);
+
+INSERT INTO PRODUCTS (prod_id, cate_code, prod_name, prod_desc, base_price, is_displayed, thumb_nail, prod_date, shipped_date)
+VALUES (product_seq.NEXTVAL, 'WOMEN_ROAD', '스펙터 W', '부드러운 전환과 추진력을 제공하는 로드 러닝화.', 140000, 1, 'women_road_2.jpg', SYSDATE-12, SYSDATE-12);
+
+INSERT INTO PRODUCTS (prod_id, cate_code, prod_name, prod_desc, base_price, is_displayed, thumb_nail, prod_date, shipped_date)
+VALUES (product_seq.NEXTVAL, 'WOMEN_ROAD', 'DRX 블리스 W', '안정적인 지지력과 편안함을 동시에 제공합니다.', 160000, 1, 'women_road_3.jpg', SYSDATE-40, SYSDATE-40);
+
+
+-- 2-3. WOMEN_OUTDOOR (아웃도어)
+INSERT INTO PRODUCTS (prod_id, cate_code, prod_name, prod_desc, base_price, is_displayed, thumb_nail, prod_date, shipped_date)
+VALUES (product_seq.NEXTVAL, 'WOMEN_OUTDOOR', 'X 울트라 4 GTX W', '여성 전용 핏으로 설계된 고어택스 하이킹화.', 240000, 1, 'women_outdoor_1.jpg', SYSDATE-5, SYSDATE-5);
+
+INSERT INTO PRODUCTS (prod_id, cate_code, prod_name, prod_desc, base_price, is_displayed, thumb_nail, prod_date, shipped_date)
+VALUES (product_seq.NEXTVAL, 'WOMEN_OUTDOOR', '퀘스트 엘리먼트 GTX W', '거친 지형에서도 발을 보호하는 하이컷 등산화.', 270000, 1, 'women_outdoor_2.jpg', SYSDATE-15, SYSDATE-15);
+
+
+-- 2-4. WOMEN_RECOVERY (리커버리)
+INSERT INTO PRODUCTS (prod_id, cate_code, prod_name, prod_desc, base_price, is_displayed, thumb_nail, prod_date, shipped_date)
+VALUES (product_seq.NEXTVAL, 'WOMEN_RECOVERY', 'RX 모크 3.0 W', '운동 전후 편안한 휴식을 제공하는 리커버리 슈즈.', 95000, 1, 'women_recovery_1.jpg', SYSDATE-10, SYSDATE-10);
+
+
+-- ========================================================
+-- [3] SPORTSTYLE 카테고리 (유니섹스)
+-- ========================================================
+
+-- 3-1. SPORTSTYLE_SNEAKERS
+INSERT INTO PRODUCTS (prod_id, cate_code, prod_name, prod_desc, base_price, is_displayed, thumb_nail, prod_date, shipped_date)
+VALUES (product_seq.NEXTVAL, 'SPORTSTYLE_SNEAKERS', 'XT-6 블랙 S/LAB', '아이코닉한 디자인과 편안한 착용감의 프리미엄 스니커즈.', 280000, 1, 'sport_xt6.jpg', SYSDATE, SYSDATE);
+
+INSERT INTO PRODUCTS (prod_id, cate_code, prod_name, prod_desc, base_price, is_displayed, thumb_nail, prod_date, shipped_date)
+VALUES (product_seq.NEXTVAL, 'SPORTSTYLE_SNEAKERS', 'XT-4 OG', '오리지널 트레일 디자인의 귀환. 내구성이 뛰어납니다.', 260000, 1, 'sport_xt4.jpg', SYSDATE-1, SYSDATE-1);
+
+INSERT INTO PRODUCTS (prod_id, cate_code, prod_name, prod_desc, base_price, is_displayed, thumb_nail, prod_date, shipped_date)
+VALUES (product_seq.NEXTVAL, 'SPORTSTYLE_SNEAKERS', '스피드벌스 PRG', '모던한 디자인으로 재해석된 아웃도어 스니커즈.', 220000, 1, 'sport_speedverse.jpg', SYSDATE-20, SYSDATE-20);
+
+
+-- 3-2. SPORTSTYLE_ADVANCED
+INSERT INTO PRODUCTS (prod_id, cate_code, prod_name, prod_desc, base_price, is_displayed, thumb_nail, prod_date, shipped_date)
+VALUES (product_seq.NEXTVAL, 'SPORTSTYLE_ADVANCED', 'ACS PRO', '통기성을 극대화한 메시 소재와 구조적인 디자인.', 310000, 1, 'sport_acs.jpg', SYSDATE-5, SYSDATE-5);
+
+INSERT INTO PRODUCTS (prod_id, cate_code, prod_name, prod_desc, base_price, is_displayed, thumb_nail, prod_date, shipped_date)
+VALUES (product_seq.NEXTVAL, 'SPORTSTYLE_ADVANCED', '정글 울트라', '밀리터리 부츠에서 영감을 받은 하이탑 스니커즈.', 290000, 1, 'sport_jungle.jpg', SYSDATE-30, SYSDATE-30);
+
+
+-- 3-3. SPORTSTYLE_INTERSECTION
+INSERT INTO PRODUCTS (prod_id, cate_code, prod_name, prod_desc, base_price, is_displayed, thumb_nail, prod_date, shipped_date)
+VALUES (product_seq.NEXTVAL, 'SPORTSTYLE_INTERSECTION', '오디세이 ELMT', '도시와 자연의 경계를 허무는 하이브리드 슈즈.', 240000, 1, 'sport_odyssey.jpg', SYSDATE-10, SYSDATE-10);
 
 COMMIT;
-
