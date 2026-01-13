@@ -271,7 +271,7 @@
 
         <button type="button" class="btn-submit-all" onclick="submitForm();">
             회원가입 완료 CREATE ACCOUNT
-        </button>
+        </button> 
     </form>
 </div>
 

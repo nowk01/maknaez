@@ -103,7 +103,7 @@
     </div>
 
     <div class="complete-header">
-        <h2>${title} 완료</h2>
+        <h2>${title} 완료</h2> 
     </div>
 
     <div class="complete-msg">
