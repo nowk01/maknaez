@@ -1,20 +1,22 @@
 @charset "UTF-8";
 
-/* [MAKNAEZ] Premium Admin Point Theme */
+/* [MAKNAEZ] Premium Admin Point Theme - Minimal Luxury Edition */
 body {
 	background-color: #fcfcfd;
 	color: #202224;
-	font-family: 'Pretendard', sans-serif;
+	font-family: 'Pretendard', 'Inter', sans-serif;
 	letter-spacing: -0.5px;
 }
 
+/* 1. 전체 컨테이너 애니메이션 (주문 리스트와 동일) */
 .content-container {
 	padding: 40px;
-	animation: fadeIn 0.5s ease-out;
+	animation: fadeInContainer 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94)
+		forwards;
 }
 
-@keyframes fadeIn {from { opacity:0;
-	transform: translateY(10px);
+@keyframes fadeInContainer {from { opacity:0;
+	transform: translateY(15px);
 }
 
 to {
@@ -24,7 +26,7 @@ to {
 
 }
 
-/* 타이틀 규격 26px 통일 */
+/* 2. 시그니처 오렌지 헤더 */
 .page-header {
 	margin-bottom: 35px;
 	border-left: 5px solid #ff4e00;
@@ -35,157 +37,292 @@ to {
 	font-weight: 800;
 	font-size: 26px;
 	color: #1a1c1e;
-	margin-bottom: 5px;
+	margin: 0;
 }
 
 .page-desc {
 	color: #8a8a8a;
-	font-size: 14px;
+	font-size: 13px;
+	margin-top: 4px;
+	text-transform: uppercase;
+	letter-spacing: 1px;
 }
 
-/* 카드 박스 */
+/* 3. 카드 박스 디자인 */
 .card-box {
-	background: #fff;
-	border-radius: 4px;
+	background: #ffffff;
+	border-radius: 0;
 	border: 1px solid #eee;
+	box-shadow: 0 10px 30px rgba(0, 0, 0, 0.02);
 	padding: 30px;
 	margin-bottom: 25px;
-	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
 }
 
-/* 검색 그리드 */
-.search-grid {
-	display: grid;
-	grid-template-columns: repeat(3, 1fr) auto;
-	gap: 20px;
-	align-items: end;
+/* 4. 구린 돋보기 아이콘 제거 및 제목 정리 */
+.card-box h5.fw-bold span.bg-dark {
+	display: none !important; /* 동그란 돋보기 아이콘 강제 삭제 */
 }
 
-.form-label {
-	font-weight: 700;
-	color: #4a5568;
-	font-size: 13px;
-	margin-bottom: 10px;
+.card-box h5.fw-bold {
+	font-size: 15px;
+	color: #1a1c1e;
+	letter-spacing: -0.5px;
+	margin-bottom: 25px !important;
 	display: block;
+	padding-left: 0; /* 아이콘이 빠진 만큼 여백 조정 */
 }
 
-.form-control, .form-select {
-	border-radius: 2px;
-	border: 1px solid #ddd;
-	height: 42px;
-	font-size: 14px;
-	padding: 0 15px;
-	outline: none;
-	background-color: #fcfcfc;
-	transition: 0.2s;
+/* 5. 검색 폼 요소 */
+.search-label {
+	font-size: 11px;
+	font-weight: 700;
+	color: #1a1c1e;
+	margin-bottom: 8px;
+	display: block;
+	text-transform: uppercase;
+}
+
+.form-control, .form-select, .input-group-text {
+	border-radius: 0 !important;
+	border: 1px solid #ddd !important;
+	height: 40px;
+	font-size: 13px;
+	background-color: #fbfbfb;
+	transition: all 0.2s;
 }
 
 .form-control:focus, .form-select:focus {
-	border-color: #ff4e00;
-	background-color: #fff;
+	border-color: #ff4e00 !important;
+	background-color: #fff !important;
+	box-shadow: none !important;
 }
 
-.btn-search-main {
-	background: #111;
-	color: #fff;
-	border: none;
-	padding: 0 40px;
-	font-weight: 700;
-	font-size: 14px;
-	height: 42px;
-	transition: 0.3s;
-	cursor: pointer;
-}
-
-.btn-search-main:hover {
-	background: #ff4e00;
-}
-
-/* 테이블 상단 */
-.list-ctrl {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	margin-bottom: 20px;
-}
-
-.stat-text {
-	font-size: 14px;
-	color: #718096;
-}
-
-.stat-text b {
-	color: #ff4e00;
-}
-
-.btn-group-custom .btn {
-	font-size: 12.5px;
-	font-weight: 700;
-	padding: 8px 16px;
-	border: 1px solid #eee;
-	background: #fff;
-	color: #444;
-	margin-left: 5px;
-	cursor: pointer;
-}
-
-.btn-group-custom .btn:hover {
-	border-color: #111;
-	color: #111;
-}
-
-/* 테이블 스타일 */
-.custom-table {
-	width: 100%;
-	border-collapse: collapse;
-	border-top: 2px solid #111;
-}
-
-.custom-table thead th {
-	background: #fbfbfb;
-	padding: 16px;
+/* 6. SEARCH 버튼 */
+.btn-dark {
+	background: #111 !important;
+	border: none !important;
+	border-radius: 0 !important;
+	font-weight: 800;
 	font-size: 13px;
-	border-bottom: 1px solid #eee;
-	text-align: center;
+	height: 40px;
+	transition: all 0.3s;
 }
 
-.custom-table tbody td {
-	padding: 18px 16px;
-	border-bottom: 1px solid #f5f5f5;
-	text-align: center;
+.btn-dark:hover {
+	background: #ff4e00 !important;
+	transform: translateY(-1px);
+}
+
+/* 7. 프리미엄 테이블 및 리스트 컨트롤 */
+.btn-group-premium .btn-ctrl {
+	font-size: 12px;
+	font-weight: 700;
+	padding: 10px 20px;
+	border-radius: 0;
+	margin-left: 8px;
+	border: 1px solid #ddd;
+	background: #fff;
+	color: #333;
+	transition: all 0.2s;
+}
+
+.btn-plus:hover {
+	border-color: #ff4e00 !important;
+	color: #ff4e00 !important;
+}
+
+.btn-minus:hover {
+	border-color: #111 !important;
+	color: #111 !important;
+}
+
+.table {
+	width: 100%;
+	border-top: 2px solid #1a1c1e !important;
+	vertical-align: middle;
+}
+
+.table thead th {
+	background: #fbfbfb !important;
+	color: #222 !important;
+	font-weight: 700 !important;
+	font-size: 13px !important;
+	padding: 15px !important;
+	border-bottom: 1px solid #eee !important;
+}
+
+.table tbody td {
+	padding: 18px 15px !important;
+	border-bottom: 1px solid #f5f5f5 !important;
 	font-size: 14px;
 }
 
-.text-start {
-	text-align: left !important;
+.table tbody tr:hover {
+	background-color: #fcfcfc !important;
 }
 
-.text-end {
-	text-align: right !important;
+/* 포인트 및 배지 */
+.text-orange {
+	color: #ff4e00 !important;
 }
 
-.point-text {
-	font-weight: 800;
-	color: #ff4e00;
-}
-
-/* 상태 뱃지 */
-.k-badge {
+.badge-luxury {
 	font-size: 11px;
-	font-weight: 800;
+	font-weight: 700;
 	padding: 4px 12px;
-	border-radius: 1px;
+	border: 1px solid #eee;
 	display: inline-block;
 }
 
-.k-badge.plus {
-	background-color: #fff1eb;
-	color: #ff4e00;
-	border: 1px solid #ff4e00;
+.st-plus {
+	border-color: #ff4e00 !important;
+	color: #ff4e00 !important;
+	background: #fffaf7 !important;
 }
 
-.k-badge.minus {
-	background-color: #f5f5f5;
-	color: #999;
+.st-minus {
+	border-color: #1a1c1e !important;
+	color: #1a1c1e !important;
+	background: #f9fafb !important;
+}
+
+/* 8. 내역 버튼 */
+.btn-detail-sm {
+	background: #fff;
 	border: 1px solid #ddd;
+	padding: 6px 15px;
+	font-size: 12px;
+	color: #444;
+	text-decoration: none;
+	border-radius: 0;
+	transition: all 0.2s;
+}
+
+.btn-detail-sm:hover {
+	background: #111 !important;
+	color: #fff !important;
+	border-color: #111 !important;
+}
+
+/* 9. 페이지네이션 */
+.pagination .page-link {
+	color: #1a1c1e;
+	border-radius: 0 !important;
+	border: 1px solid #eee;
+	margin: 0 2px;
+}
+
+.pagination .page-item.active .page-link {
+	background-color: #ff4e00 !important;
+	border-color: #ff4e00 !important;
+}
+
+/* 10. 모달 스타일 (애니메이션 포함) */
+.modal-content {
+	border-radius: 0 !important;
+	border: none;
+	box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+	animation: modalSlideUp 0.4s ease-out;
+}
+
+@keyframes modalSlideUp {from { opacity:0;
+	transform: translateY(20px);
+}
+
+to {
+	opacity: 1;
+	transform: translateY(0);
+}
+
+}
+.modal-header {
+	background: #1a1c1e !important;
+	color: #fff !important;
+	border-radius: 0 !important;
+	border: none;
+}
+
+.modal-header .btn-close {
+	filter: invert(1);
+}
+
+/* 1. 모달 전체 레이아웃 정렬 */
+.modal-content {
+    border-radius: 0 !important;
+    border: none;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+
+.modal-body {
+    padding: 30px !important;
+}
+
+/* 2. 문제의 취소/확인 버튼 정렬 (킹받는 포인트 해결) */
+.modal-footer {
+    display: flex !important;
+    padding: 0 30px 30px 30px !important; /* 바닥 여백 확보 */
+    border: none !important;
+    gap: 10px; /* 버튼 사이 간격 고정 */
+}
+
+/* 취소 버튼 스타일 (Secondary) */
+.modal-footer .btn-secondary {
+    flex: 1; /* 비율 동일하게 */
+    height: 48px;
+    border-radius: 0 !important;
+    background-color: #eee !important;
+    border: none !important;
+    color: #444 !important;
+    font-size: 14px;
+    font-weight: 600;
+    margin: 0 !important; /* 부트스트랩 기본 마진 제거 */
+    transition: all 0.2s ease;
+}
+
+.modal-footer .btn-secondary:hover {
+    background-color: #ddd !important;
+    color: #000 !important;
+}
+
+/* 확인/저장하기 버튼 스타일 (Primary - Orange/Black) */
+.modal-footer .btn-primary {
+    flex: 2; /* 확인 버튼을 조금 더 넓게 설정해서 강조 */
+    height: 48px;
+    border-radius: 0 !important;
+    background-color: #ff4e00 !important; /* MAKNAEZ 오렌지 */
+    border: none !important;
+    color: #fff !important;
+    font-size: 14px;
+    font-weight: 700;
+    margin: 0 !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.modal-footer .btn-primary:hover {
+    background-color: #111 !important; /* 호버 시 다크하게 변신 */
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 78, 0, 0.3);
+}
+
+/* 3. 인풋 박스 강조 애니메이션 */
+.modal-body .form-control:focus {
+    border-color: #ff4e00 !important;
+    background-color: #fff !important;
+}
+
+/* 4. 선택된 회원 리스트 박스 디자인 */
+#selectedMembers {
+    border: 1px dashed #ddd !important;
+    background-color: #f9fafb !important;
+    padding: 15px !important;
+    line-height: 1.8;
+}
+
+/* 5. 변동 포인트 인풋 그룹 블랙 포인트 */
+.modal-body .input-group-text {
+    background-color: #111 !important;
+    color: #fff !important;
+    border: 1px solid #111 !important;
+    font-weight: 700;
+    padding: 0 20px;
 }
