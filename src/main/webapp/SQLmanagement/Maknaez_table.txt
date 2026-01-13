@@ -8,22 +8,22 @@
 /* -- -----------------------------------------------------------------
    1. 시퀀스 생성
 -- ----------------------------------------------------------------- */
-CREATE SEQUENCE seq_member      START WITH 1 INCREMENT BY 1 NOCACHE; -- [member1]         memberIdx
-CREATE SEQUENCE seq_addr        START WITH 1 INCREMENT BY 1 NOCACHE; -- [address]         addr_id
-CREATE SEQUENCE seq_delivery    START WITH 1 INCREMENT BY 1 NOCACHE; -- [shipments]       delivery_number
-CREATE SEQUENCE seq_qna         START WITH 1 INCREMENT BY 1 NOCACHE; -- [qna_answer]      qna_id
-CREATE SEQUENCE seq_board       START WITH 1 INCREMENT BY 1 NOCACHE; -- [board_posts]     post_id
-CREATE SEQUENCE seq_product     START WITH 1 INCREMENT BY 1 NOCACHE; -- [products]        prod_id
-CREATE SEQUENCE seq_opt         START WITH 1 INCREMENT BY 1 NOCACHE; -- [pd_size]         opt_id
-CREATE SEQUENCE seq_stock       START WITH 1 INCREMENT BY 1 NOCACHE; -- [stock_logs]      log_id
-CREATE SEQUENCE seq_item        START WITH 1 INCREMENT BY 1 NOCACHE; -- [order_items]     item_id
-CREATE SEQUENCE seq_pay         START WITH 1 INCREMENT BY 1 NOCACHE; -- [payments]        pay_id
-CREATE SEQUENCE seq_claim       START WITH 1 INCREMENT BY 1 NOCACHE; -- [claims]          claim_id
-CREATE SEQUENCE seq_cart        START WITH 1 INCREMENT BY 1 NOCACHE; -- [cart]            cart_id
-CREATE SEQUENCE seq_wish        START WITH 1 INCREMENT BY 1 NOCACHE; -- [wishlist]        wish_id
-CREATE SEQUENCE seq_discount    START WITH 1 INCREMENT BY 1 NOCACHE; -- [discounts]       discount_id
-CREATE SEQUENCE seq_od          START WITH 1 INCREMENT BY 1 NOCACHE; -- [order_discounts] od_id
-CREATE SEQUENCE seq_pm          START WITH 1 INCREMENT BY 1 NOCACHE; -- [point_member]    pm_id
+CREATE SEQUENCE member_seq      START WITH 1 INCREMENT BY 1 NOCACHE; -- [member1]         memberIdx
+CREATE SEQUENCE addr_seq        START WITH 1 INCREMENT BY 1 NOCACHE; -- [address]         addr_id
+CREATE SEQUENCE delivery_seq    START WITH 1 INCREMENT BY 1 NOCACHE; -- [shipments]       delivery_number
+CREATE SEQUENCE qna_seq         START WITH 1 INCREMENT BY 1 NOCACHE; -- [qna_answer]      qna_id
+CREATE SEQUENCE notice_seq      START WITH 1 INCREMENT BY 1 NOCACHE; -- [board_posts]     post_id
+CREATE SEQUENCE product_seq     START WITH 1 INCREMENT BY 1 NOCACHE; -- [products]        prod_id
+CREATE SEQUENCE opt_seq         START WITH 1 INCREMENT BY 1 NOCACHE; -- [pd_size]         opt_id
+CREATE SEQUENCE stock_seq       START WITH 1 INCREMENT BY 1 NOCACHE; -- [stock_logs]      log_id
+CREATE SEQUENCE item_seq        START WITH 1 INCREMENT BY 1 NOCACHE; -- [order_items]     item_id
+CREATE SEQUENCE pay_seq         START WITH 1 INCREMENT BY 1 NOCACHE; -- [payments]        pay_id
+CREATE SEQUENCE claim_seq       START WITH 1 INCREMENT BY 1 NOCACHE; -- [claims]          claim_id
+CREATE SEQUENCE cart_seq        START WITH 1 INCREMENT BY 1 NOCACHE; -- [cart]            cart_id
+CREATE SEQUENCE wish_seq        START WITH 1 INCREMENT BY 1 NOCACHE; -- [wishlist]        wish_id
+CREATE SEQUENCE discount_seq    START WITH 1 INCREMENT BY 1 NOCACHE; -- [discounts]       discount_id
+CREATE SEQUENCE od_seq          START WITH 1 INCREMENT BY 1 NOCACHE; -- [order_discounts] od_id
+CREATE SEQUENCE pm_seq          START WITH 1 INCREMENT BY 1 NOCACHE; -- [point_member]    pm_id
 
 /* -- -----------------------------------------------------------------
    2. 테이블 생성 (PK 선언 제거, 주석 복구)
@@ -154,7 +154,7 @@ CREATE TABLE products (
 CREATE TABLE pd_size (
     opt_id  NUMBER          NOT NULL,               -- PK: 시퀀스 (seq_opt) 필요
     prod_id NUMBER          NOT NULL,               -- FK: products.prod_id
-    size    VARCHAR2(50)    NULL                    
+    pd_size VARCHAR2(50)    NULL                    
 );
 
 -- 14. 상품 색상 (현재 구조상 상품 1개당 색상 1개로 보임. 1:1 관계)
@@ -269,7 +269,7 @@ CREATE TABLE point_member (
     pm_id           NUMBER          NOT NULL,       -- PK: 시퀀스 필요
     memberIdx       NUMBER          NOT NULL,       -- FK: member1.memberIdx
     order_id        VARCHAR2(20)    NOT NULL,       -- FK: orders.order_id (어떤 주문으로 적립/사용했는지)
-    change_type     VARCHAR2(20)    NULL,           -- '적립, '사용', '소멸')
+    reason          VARCHAR2(40)    NULL,           -- '적립, '사용', '소멸' 등 변동 사유
     point_amount    NUMBER          NULL,           -- 변동액
     rem_point       NUMBER          NULL,           -- 잔여 포인트
     reg_date        DATE            NULL
