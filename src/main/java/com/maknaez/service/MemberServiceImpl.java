@@ -135,7 +135,17 @@ public class MemberServiceImpl implements MemberService {
 		}
 		return dto;
 	}
-
+	
+	@Override
+	public MemberDTO findByNickName(String nickName) {
+	    MemberDTO dto = null;
+	    try {
+	        dto = mapper.findByNickName(nickName);
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	    return dto;
+	} 
 	@Override
 	public List<Map<String, Object>> listAgeSection() {
 		// TODO Auto-generated method stub
