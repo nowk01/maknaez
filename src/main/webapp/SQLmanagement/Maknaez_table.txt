@@ -39,7 +39,7 @@ CREATE TABLE member1 (
     enabled     NUMBER          NOT NULL,           -- 계정 상태 (0:휴면/삭제, 1:활성)
     modify_date DATE            NOT NULL,           -- 정보 수정일
     birth       DATE            NOT NULL,           -- 생일
-    gender      NUMBER          NOT NULL            -- 성별 (0:남, 1여 )
+    gender      NUMBER          NULL                -- 성별 (0:남, 1여 )
 );
 
 -- 2. 회원 부가 정보 (선택/추가 정보) - 1:1 관계
