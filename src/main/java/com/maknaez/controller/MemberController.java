@@ -262,54 +262,76 @@ public class MemberController {
 		HttpSession session = req.getSession();
 		SessionInfo info = (SessionInfo) session.getAttribute("member");
 
-		String root = session.getServletContext().getRealPath("/");
-		String pathname = root + "uploads" + File.separator + "member";
+		// 1. 로그인 여부 확인
+		if (info == null) {
+			return new ModelAndView("redirect:/member/login");
+		}
 
 		try {
+			// 2. 기존 정보 가져오기
 			MemberDTO dto = service.findByIdx(info.getMemberIdx());
-			
 			if (dto == null) {
-	            return new ModelAndView("redirect:/member/login");
-	        }
-			
-			dto.setMemberIdx(info.getMemberIdx());
+				session.invalidate();
+				return new ModelAndView("redirect:/member/login");
+			}
+
+			// --- [디버깅] 넘어온 파라미터 확인 (콘솔창 확인용) ---
+			System.out.println("--- 회원정보 수정 요청 시작 ---");
+			System.out.println("비밀번호: " + req.getParameter("userPwd"));
+			System.out.println("이름: " + req.getParameter("userName"));
+			System.out.println("이메일1: " + req.getParameter("email1"));
+			System.out.println("이메일2: " + req.getParameter("email2"));
+			// ------------------------------------------------
+
+			// 3. 폼 데이터로 DTO 업데이트
 			dto.setUserPwd(req.getParameter("userPwd"));
 			dto.setUserName(req.getParameter("userName"));
-			dto.setBirth(req.getParameter("birth"));
 
 			String email1 = req.getParameter("email1");
 			String email2 = req.getParameter("email2");
-			dto.setEmail(email1 + "@" + email2);
-
-			dto.setProfile_photo(req.getParameter("profile_photo"));
-			Part p = req.getPart("selectFile");
-
-			MyMultipartFile mp = fileManager.doFileUpload(p, pathname);
-			if (mp != null) {
-				if (dto.getProfile_photo().length() != 0) {
-					fileManager.doFiledelete(pathname, dto.getProfile_photo());
-				}
-				dto.setProfile_photo(mp.getSaveFilename());
+			if (email1 != null && email2 != null) {
+				dto.setEmail(email1 + "@" + email2);
 			}
 
 			dto.setTel(req.getParameter("tel"));
+
+			String genderStr = req.getParameter("gender");
+			if (genderStr != null && !genderStr.isEmpty()) {
+				dto.setGender(Integer.parseInt(genderStr));
+			}
+
 			dto.setZip(req.getParameter("zip"));
 			dto.setAddr1(req.getParameter("addr1"));
 			dto.setAddr2(req.getParameter("addr2"));
 
+			// 이메일 수신동의 처리 (JSP에 체크박스가 있다면)
+			String receiveEmail = req.getParameter("receiveEmail");
+			dto.setReceiveEmail(receiveEmail != null ? 1 : 0);
+
+			// 4. DB 업데이트 실행
 			service.updateMember(dto);
+			System.out.println("--- DB 업데이트 성공 ---");
 
-			info.setAvatar(dto.getProfile_photo());
-
+			// 5. 세션 정보 갱신  
+			info.setUserName(dto.getUserName());
+			session.setAttribute("member", info);
+			
 			session.setAttribute("mode", "update");
 			session.setAttribute("userName", dto.getUserName());
 
 			return new ModelAndView("redirect:/member/complete");
+
 		} catch (Exception e) {
+			// [중요] 에러 발생 시 콘솔에 빨간 줄로 원인 출력
+			System.err.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+			System.err.println("회원정보 수정 중 에러 발생!");
+			System.err.println("에러 메시지: " + e.getMessage());
 			e.printStackTrace();
+			System.err.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 		}
 
-		return new ModelAndView("redirect:/");
+		// 실패 시 다시 폼으로
+		return new ModelAndView("redirect:/member/mypage/myInfo");
 	}
 
 	@GetMapping("complete")
@@ -396,7 +418,6 @@ public class MemberController {
 		model.put("state", state);
 		return model;
 	}
-
 
 	@GetMapping("mypage/orderList")
 	public ModelAndView orderList(HttpServletRequest req, HttpServletResponse resp)
@@ -658,15 +679,17 @@ public class MemberController {
 		}
 
 		ModelAndView mav = new ModelAndView("mypage/myInfo");
-
+		
 		try {
 			MemberDTO dto = service.findByIdx(info.getMemberIdx());
-			
+
 			if (dto != null && dto.getEmail() != null) {
-	            String[] emails = dto.getEmail().split("@");
-	            if (emails.length > 0) dto.setEmail1(emails[0]);
-	            if (emails.length > 1) dto.setEmail2(emails[1]);
-	        }
+				String[] emails = dto.getEmail().split("@");
+				if (emails.length > 0)
+					dto.setEmail1(emails[0]);
+				if (emails.length > 1)
+					dto.setEmail2(emails[1]);
+			}
 			mav.addObject("dto", dto); // JSP에서 사용할 수 있도록 'dto'라는 이름으로 전달
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -2,278 +2,327 @@
 
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.maknaez.mapper.MemberMapper">
-	<select id="loginMember" parameterType="map" resultType="com.maknaez.model.MemberDTO">
-		SELECT m1.memberIdx, m1.userId, userPwd, userName, userLevel, modify_date
+	<select id="loginMember" parameterType="map"
+		resultType="com.maknaez.model.MemberDTO">
+		SELECT m1.memberIdx, m1.userId, userPwd, userName,
+		userLevel, modify_date
 		FROM member1 m1
-		LEFT OUTER JOIN member2 m2 ON m1.memberIdx = m2.memberIdx
-		WHERE m1.userId = #{userId} AND userPwd = #{userPwd} AND enabled = 1
+		LEFT OUTER JOIN member2 m2 ON
+		m1.memberIdx = m2.memberIdx
+		WHERE m1.userId = #{userId} AND userPwd =
+		#{userPwd} AND enabled = 1
 	</select>
-	
-	<insert id="insertLoginLog" parameterType="com.maknaez.model.MemberDTO">
-		INSERT INTO login_history(log_id, log_date, ip_info, memberIdx)
-		VALUES (loginLog_seq.NEXTVAL, SYSDATE, #{ip_info}, #{memberIdx}) 
-    </insert>
-    
-    <select id="listDormantMembers" parameterType="map" resultType="com.maknaez.model.MemberDTO">
-        SELECT m1.memberIdx, m1.userId, m2.userName, m2.email, m1.enabled, m1.modify_date, lh.LOG_DATE AS lastLoginDate
-        FROM member1 m1
-        JOIN member2 m2 ON m1.memberIdx = m2.memberIdx
-        LEFT OUTER JOIN (
-            SELECT memberIdx, MAX(log_date) as LOG_DATE
-            FROM login_history
-            GROUP BY memberIdx
-        ) lh ON m1.memberIdx = lh.memberIdx
-        <where>
-            m1.enabled = 0 <if test="startDate != null and startDate != '' and endDate != null and endDate != ''">
-                AND m1.modify_date BETWEEN TO_DATE(#{startDate}, 'YYYY-MM-DD') AND TO_DATE(#{endDate}, 'YYYY-MM-DD') + 0.99999
-            </if>
-            <if test="keyword != null and keyword != ''">
-                AND (
-                    INSTR(m1.userId, #{keyword}) &gt; 0 
-                    OR INSTR(m2.userName, #{keyword}) &gt; 0
-                )
-            </if>
-        </where>
-        <choose>
-            <when test="sortType == 'longestInactive'">
-                ORDER BY lh.LOG_DATE ASC NULLS FIRST, m1.modify_date DESC
-            </when>
-            <when test="sortType == 'nameOrder'">
-                ORDER BY m2.userName ASC, m1.modify_date DESC
-            </when>
-            <otherwise> ORDER BY m1.modify_date DESC
-            </otherwise>
-        </choose>
-        OFFSET #{offset} ROWS FETCH NEXT #{size} ROWS ONLY
-    </select>
-    
-    <select id="dataCountDormant" parameterType="map" resultType="Integer">
-        SELECT COUNT(*)
-        FROM member1 m1
-        JOIN member2 m2 ON m1.memberIdx = m2.memberIdx
-        <where>
-            m1.enabled = 0
-            <if test="startDate != null and startDate != '' and endDate != null and endDate != ''">
-                AND m1.modify_date BETWEEN TO_DATE(#{startDate}, 'YYYY-MM-DD') 
-                                       AND TO_DATE(#{endDate}, 'YYYY-MM-DD') + 0.99999
-            </if>
-            <if test="keyword != null and keyword != ''">
-                AND (
-                    INSTR(m1.userId, #{keyword}) &gt; 0 
-                    OR INSTR(m2.userName, #{keyword}) &gt; 0
-                )
-            </if>
-        </where>
-    </select>
-    
-    <insert id="insertMember1" parameterType="com.maknaez.model.MemberDTO">
-    	<selectKey keyProperty="memberIdx" resultType="Long" order="BEFORE">
-	        SELECT member_seq.NEXTVAL FROM dual
-	    </selectKey>
-	    INSERT INTO member1(memberIdx, userId, birth, userPwd, nickName, gender, enabled, userLevel, modify_date)
-	    VALUES (#{memberIdx}, #{userId}, #{birth}, #{userPwd}, #{nickName}, #{gender, jdbcType=INTEGER}, 1, #{userLevel}, SYSDATE) 
+
+	<insert id="insertLoginLog"
+		parameterType="com.maknaez.model.MemberDTO">
+		INSERT INTO login_history(log_id, log_date, ip_info,
+		memberIdx)
+		VALUES (loginLog_seq.NEXTVAL, SYSDATE, #{ip_info},
+		#{memberIdx})
 	</insert>
 
-    <insert id="insertMember2" parameterType="com.maknaez.model.MemberDTO">
-		INSERT INTO member2(memberIdx, userName, email, tel)
-		VALUES (#{memberIdx}, #{userName, jdbcType=VARCHAR}, #{email, jdbcType=VARCHAR}, #{tel, jdbcType=VARCHAR})
-    </insert>
-    
-    <insert id="insertMember3">
-    	INSERT INTO member3(memberIdx, register_date)
-    	VALUES(#{memberIdx}, SYSDATE)
-    </insert>
-   
-	<select id="findById" parameterType="String" resultType="com.maknaez.model.MemberDTO">
-	    SELECT m1.memberIdx, m1.userId, m1.userPwd, m1.nickName, m1.gender,
-	           m1.enabled, m1.userLevel, m1.modify_date,
-	           m2.userName, m2.email, m2.tel,
-	           TO_CHAR(m1.birth, 'YYYY-MM-DD') birth
-	    FROM member1 m1
-	    LEFT OUTER JOIN member2 m2 ON m1.memberIdx = m2.memberIdx
-	    WHERE m1.userId = #{userId}
+	<select id="listDormantMembers" parameterType="map"
+		resultType="com.maknaez.model.MemberDTO">
+		SELECT m1.memberIdx, m1.userId, m2.userName, m2.email, m1.enabled,
+		m1.modify_date, lh.LOG_DATE AS lastLoginDate
+		FROM member1 m1
+		JOIN member2 m2 ON m1.memberIdx = m2.memberIdx
+		LEFT OUTER JOIN (
+		SELECT memberIdx, MAX(log_date) as LOG_DATE
+		FROM login_history
+		GROUP BY memberIdx
+		) lh ON m1.memberIdx = lh.memberIdx
+		<where>
+			m1.enabled = 0
+			<if
+				test="startDate != null and startDate != '' and endDate != null and endDate != ''">
+				AND m1.modify_date BETWEEN TO_DATE(#{startDate}, 'YYYY-MM-DD') AND
+				TO_DATE(#{endDate}, 'YYYY-MM-DD') + 0.99999
+			</if>
+			<if test="keyword != null and keyword != ''">
+				AND (
+				INSTR(m1.userId, #{keyword}) &gt; 0
+				OR INSTR(m2.userName, #{keyword}) &gt; 0
+				)
+			</if>
+		</where>
+		<choose>
+			<when test="sortType == 'longestInactive'">
+				ORDER BY lh.LOG_DATE ASC NULLS FIRST, m1.modify_date DESC
+			</when>
+			<when test="sortType == 'nameOrder'">
+				ORDER BY m2.userName ASC, m1.modify_date DESC
+			</when>
+			<otherwise> ORDER BY m1.modify_date DESC
+			</otherwise>
+		</choose>
+		OFFSET #{offset} ROWS FETCH NEXT #{size} ROWS ONLY
 	</select>
-		
-	<!-- 아이디 -> 고유번호로 찾는걸로 변경 -->
-	<select id="findByIdx" parameterType="Long" resultType="com.maknaez.model.MemberDTO">
-	    SELECT m1.memberIdx, m1.userId, m2.userName, m1.userPwd, m1.userLevel, m1.nickName, m1.gender, m1.enabled,
-           TO_CHAR(m1.birth, 'YYYY-MM-DD') as birth, m3.register_date, m1.modify_date,
-           m2.email, m2.tel
-	    FROM member1 m1
-	    JOIN member3 m3 ON m1.memberIdx = m3.memberIdx
-	    JOIN member2 m2 ON m1.memberIdx = m2.memberIdx
-	    WHERE m1.memberIdx = #{memberIdx}
-	</select>
-	    
-	<update id="updateMember1" parameterType="com.maknaez.model.MemberDTO">
-	    UPDATE member1 
-	    SET userPwd = #{userPwd}, nickName = #{nickName}, birth = TO_DATE(#{birth},'YYYY-MM-DD'), gender = #{gender}, 
-	    modify_date = SYSDATE, userLevel = #{userLevel}, enabled = #{enabled}
-	    WHERE memberIdx = #{memberIdx}  
-	</update>
-	
-    <update id="updateMember2" parameterType="com.maknaez.model.MemberDTO">
-		UPDATE member2 SET userName = #{userName}, email = #{email},  
-			tel = #{tel, jdbcType=VARCHAR} 
-		WHERE memberIdx = #{memberIdx}
-    </update>
-    
-    <update id="updateMemberLevel" parameterType="map">
-		UPDATE member1 SET userLevel = #{userLevel}
-		WHERE userId = #{userId}
-    </update>
-    
-    <update id="updateEnabled" parameterType="map">
-		UPDATE member1 SET enabled = #{enabled}
-		WHERE memberIdx = #{memberIdx}
-    </update>
-    
-	<update id="deleteProfilePhoto" parameterType="map">
-		UPDATE member2 SET profile_photo = ''
-		WHERE userId = #{userId}
-    </update>
 
-    <update id="deleteMember1" parameterType="map">
-		UPDATE member1 SET enabled = 0, userLevel = 0
+	<select id="dataCountDormant" parameterType="map"
+		resultType="Integer">
+		SELECT COUNT(*)
+		FROM member1 m1
+		JOIN member2 m2 ON m1.memberIdx = m2.memberIdx
+		<where>
+			m1.enabled = 0
+			<if
+				test="startDate != null and startDate != '' and endDate != null and endDate != ''">
+				AND m1.modify_date BETWEEN TO_DATE(#{startDate}, 'YYYY-MM-DD')
+				AND TO_DATE(#{endDate}, 'YYYY-MM-DD') + 0.99999
+			</if>
+			<if test="keyword != null and keyword != ''">
+				AND (
+				INSTR(m1.userId, #{keyword}) &gt; 0
+				OR INSTR(m2.userName, #{keyword}) &gt; 0
+				)
+			</if>
+		</where>
+	</select>
+
+	<insert id="insertMember1"
+		parameterType="com.maknaez.model.MemberDTO">
+		<selectKey keyProperty="memberIdx" resultType="Long"
+			order="BEFORE">
+			SELECT member_seq.NEXTVAL FROM dual
+		</selectKey>
+		INSERT INTO member1(memberIdx, userId, birth, userPwd, nickName,
+		gender, enabled, userLevel, modify_date)
+		VALUES (#{memberIdx}, #{userId}, #{birth}, #{userPwd}, #{nickName},
+		#{gender, jdbcType=INTEGER}, 1, #{userLevel}, SYSDATE)
+	</insert>
+
+	<insert id="insertMember2"
+		parameterType="com.maknaez.model.MemberDTO">
+		INSERT INTO member2(memberIdx, userName, email, tel)
+		VALUES (#{memberIdx}, #{userName, jdbcType=VARCHAR}, #{email,
+		jdbcType=VARCHAR}, #{tel, jdbcType=VARCHAR})
+	</insert>
+
+	<insert id="insertMember3">
+		INSERT INTO member3(memberIdx, register_date)
+		VALUES(#{memberIdx}, SYSDATE)
+	</insert>
+
+	<select id="findById" parameterType="String"
+		resultType="com.maknaez.model.MemberDTO">
+		SELECT m1.memberIdx, m1.userId, m1.userPwd, m1.nickName, m1.gender,
+		m1.enabled, m1.userLevel, m1.modify_date,
+		m2.userName, m2.email, m2.tel,
+		TO_CHAR(m1.birth, 'YYYY-MM-DD') birth
+		FROM member1 m1
+		LEFT OUTER JOIN member2 m2 ON m1.memberIdx = m2.memberIdx
+		WHERE m1.userId = #{userId}
+	</select>  
+
+	<!-- 아이디 -> 고유번호로 찾는걸로 변경 -->
+	<select id="findByIdx" parameterType="Long"
+		resultType="com.maknaez.model.MemberDTO">
+		SELECT m1.memberIdx, m1.userId, m1.userPwd, m1.userLevel, m1.nickName,
+		m1.gender, m1.enabled,
+		TO_CHAR(m1.birth, 'YYYY-MM-DD') as birth, m1.modify_date,
+		m2.userName, m2.email, m2.tel,
+		m3.register_date
+		FROM member1 m1
+		LEFT OUTER JOIN member2 m2 ON m1.memberIdx = m2.memberIdx
+		LEFT OUTER JOIN member3 m3 ON m1.memberIdx = m3.memberIdx
+		WHERE m1.memberIdx = #{memberIdx}
+	</select>
+
+	<update id="updateMember1"
+		parameterType="com.maknaez.model.MemberDTO">
+		UPDATE member1
+		SET userPwd = #{userPwd},
+		nickName = #{nickName},
+		gender = #{gender},
+		modify_date = SYSDATE
 		WHERE memberIdx = #{memberIdx}
-    </update>
-    
-    <delete id="deleteMember2" parameterType="map">
+	</update>
+
+	<update id="updateMember2"
+		parameterType="com.maknaez.model.MemberDTO">
+		UPDATE member2 SET userName = #{userName}, email =
+		#{email},
+		tel = #{tel, jdbcType=VARCHAR}
+		WHERE memberIdx = #{memberIdx}
+	</update>
+
+	<update id="updateMemberLevel" parameterType="map">
+		UPDATE member1 SET
+		userLevel = #{userLevel}
+		WHERE userId = #{userId}
+	</update>
+
+	<update id="updateEnabled" parameterType="map">
+		UPDATE member1 SET
+		enabled = #{enabled}
+		WHERE memberIdx = #{memberIdx}
+	</update>
+
+	<update id="deleteProfilePhoto" parameterType="map">
+		UPDATE member2 SET
+		profile_photo = ''
+		WHERE userId = #{userId}
+	</update>
+
+	<update id="deleteMember1" parameterType="map">
+		UPDATE member1 SET
+		enabled = 0, userLevel = 0
+		WHERE memberIdx = #{memberIdx}
+	</update>
+
+	<delete id="deleteMember2" parameterType="map">
 		DELETE FROM member2
 		WHERE memberIdx = #{memberIdx}
-    </delete>
-    
+	</delete>
+
 	<select id="listAgeSection" resultType="map">
-		WITH  memberAge AS (
-		    SELECT m1.userId, TRUNC(MONTHS_BETWEEN(SYSDATE, birth)/12) age
-		    FROM member1 m1
-			JOIN member2 m2 ON m1.userId = m2.userId
-			WHERE userLevel &gt; 0 AND userLevel &lt; 50
+		WITH memberAge AS (
+		SELECT m1.userId, TRUNC(MONTHS_BETWEEN(SYSDATE, birth)/12) age
+		FROM member1 m1
+		JOIN member2 m2 ON m1.userId = m2.userId
+		WHERE userLevel &gt; 0 AND userLevel &lt; 50
 		)
-		SELECT '10대' section, COUNT(*) count FROM memberAge WHERE age &gt;= 10 AND age &lt; 20
+		SELECT '10대' section, COUNT(*)
+		count FROM memberAge WHERE age &gt;= 10 AND age &lt; 20
 		UNION ALL
-		SELECT '20대' section, COUNT(*) count FROM memberAge WHERE age &gt;= 20 AND age &lt; 30
+		SELECT '20대' section, COUNT(*) count FROM memberAge WHERE age &gt;= 20
+		AND age &lt; 30
 		UNION ALL
-		SELECT '30대' section, COUNT(*) count FROM memberAge WHERE age &gt;= 30 AND age &lt; 40
+		SELECT '30대' section, COUNT(*) count FROM
+		memberAge WHERE age &gt;= 30 AND age &lt; 40
 		UNION ALL
-		SELECT '40대' section, COUNT(*) count FROM memberAge WHERE age &gt;= 40 AND age &lt; 50
+		SELECT '40대'
+		section, COUNT(*) count FROM memberAge WHERE age &gt;= 40 AND age &lt;
+		50
 		UNION ALL
-		SELECT '50대' section, COUNT(*) count FROM memberAge WHERE age &gt;= 50 AND age &lt; 60
+		SELECT '50대' section, COUNT(*) count FROM memberAge WHERE
+		age &gt;= 50 AND age &lt; 60
 		UNION ALL
-		SELECT '60대' section, COUNT(*) count FROM memberAge WHERE age &gt;= 60 AND age &lt; 70
+		SELECT '60대' section, COUNT(*)
+		count FROM memberAge WHERE age &gt;= 60 AND age &lt; 70
 		UNION ALL
-		SELECT '기타' section, COUNT(*) count FROM memberAge WHERE age &lt; 10 OR age &gt;= 70
+		SELECT '기타' section, COUNT(*) count FROM memberAge WHERE age &lt; 10
+		OR age &gt;= 70
 	</select>
-	
-	
-	<!-- 관리자  -->
-	
+
+
+	<!-- 관리자 -->
+
 	<sql id="where-list">
-        <choose>
-            <when test="searchKey == 'all' ">
-                ( INSTR(m1.userId, #{searchValue}) &gt; 0 OR
-                  INSTR(m2.userName, #{searchValue}) &gt; 0 OR
-                  INSTR(m2.email, #{searchValue}) &gt; 0 )
-            </when>
-            <when test="searchKey == 'userId'">
-                INSTR(m1.userId, #{searchValue}) &gt; 0
-            </when>
-            <when test="searchKey == 'userName'">
-                INSTR(m2.userName, #{searchValue}) &gt; 0
-            </when>
-            <when test="searchKey == 'email'">
-                INSTR(m2.email, #{searchValue}) &gt; 0
-            </when>
-            <otherwise>
-                INSTR(${searchKey}, #{searchValue}) &gt; 0
-            </otherwise>
-        </choose>
-    </sql>
-    
-    <select id="dataCount" parameterType="map" resultType="Integer">
-        SELECT COUNT(*)
-        FROM member1 m1
-        JOIN member2 m2 ON m1.memberIdx = m2.memberIdx
-        LEFT JOIN member3 m3 ON m1.memberIdx = m3.memberIdx
-        <where>
-            <if test="startDate != null and startDate != '' and endDate != null and endDate != ''">
-                 m3.register_date BETWEEN TO_DATE(#{startDate}, 'YYYY-MM-DD') 
-                                      AND TO_DATE(#{endDate}, 'YYYY-MM-DD') + 0.99999
-            </if>
-            <if test="userLevel != null and userLevel != '' and userLevel != '전체 등급'">
-			    <choose>
-			        <when test="userLevel == 'IRON'">
-			            AND m1.userLevel BETWEEN 1 AND 10
-			        </when>
-			        <when test="userLevel == 'BRONZE'">
-			            AND m1.userLevel BETWEEN 11 AND 20
-			        </when>
-			        <when test="userLevel == 'SILVER'">
-			            AND m1.userLevel BETWEEN 21 AND 30
-			        </when>
-			        <when test="userLevel == 'GOLD'">
-			            AND m1.userLevel BETWEEN 31 AND 40
-			        </when>
-			        <when test="userLevel == 'PLATINUM'">
-			            AND m1.userLevel BETWEEN 41 AND 50
-			        </when>
-			        <when test="userLevel == 'ADMIN'">
-			            AND m1.userLevel >= 51
-			        </when>
-			        <otherwise>
-			            AND m1.userLevel = #{userLevel}
-			        </otherwise>
-			    </choose>
+		<choose>
+			<when test="searchKey == 'all' ">
+				( INSTR(m1.userId, #{searchValue}) &gt; 0 OR
+				INSTR(m2.userName, #{searchValue}) &gt; 0 OR
+				INSTR(m2.email, #{searchValue}) &gt; 0 )
+			</when>
+			<when test="searchKey == 'userId'">
+				INSTR(m1.userId, #{searchValue}) &gt; 0
+			</when>
+			<when test="searchKey == 'userName'">
+				INSTR(m2.userName, #{searchValue}) &gt; 0
+			</when>
+			<when test="searchKey == 'email'">
+				INSTR(m2.email, #{searchValue}) &gt; 0
+			</when>
+			<otherwise>
+				INSTR(${searchKey}, #{searchValue}) &gt; 0
+			</otherwise>
+		</choose>
+	</sql>
+
+	<select id="dataCount" parameterType="map" resultType="Integer">
+		SELECT COUNT(*)
+		FROM member1 m1
+		JOIN member2 m2 ON m1.memberIdx = m2.memberIdx
+		LEFT JOIN member3 m3 ON m1.memberIdx = m3.memberIdx
+		<where>
+			<if
+				test="startDate != null and startDate != '' and endDate != null and endDate != ''">
+				m3.register_date BETWEEN TO_DATE(#{startDate}, 'YYYY-MM-DD')
+				AND TO_DATE(#{endDate}, 'YYYY-MM-DD') + 0.99999
 			</if>
-            <if test="searchValue != null and searchValue != ''">
-                AND <include refid="where-list"/>
-            </if>
-        </where>
-    </select>
-    
-    <select id="listMember" parameterType="map" resultType="com.maknaez.model.MemberDTO">
-        SELECT m1.memberIdx, m1.nickName, m1.userId, m1.gender, m1.userLevel, m1.enabled, 
-               m2.userName, m2.email,
-               TO_CHAR(m3.register_date, 'YYYY-MM-DD') as register_date
-        FROM member1 m1
-        JOIN member2 m2 ON m1.memberIdx = m2.memberIdx
-        LEFT JOIN member3 m3 ON m1.memberIdx = m3.memberIdx
-        <where>
-            <if test="startDate != null and startDate != '' and endDate != null and endDate != ''">
-                 m3.register_date BETWEEN TO_DATE(#{startDate}, 'YYYY-MM-DD') 
-                                      AND TO_DATE(#{endDate}, 'YYYY-MM-DD') + 0.99999
-            </if>
-            <if test="userLevel != null and userLevel != '' and userLevel != '전체 등급'">
-			    <choose>
-			        <when test="userLevel == 'IRON'">
-			            AND m1.userLevel BETWEEN 1 AND 10
-			        </when>
-			        <when test="userLevel == 'BRONZE'">
-			            AND m1.userLevel BETWEEN 11 AND 20
-			        </when>
-			        <when test="userLevel == 'SILVER'">
-			            AND m1.userLevel BETWEEN 21 AND 30
-			        </when>
-			        <when test="userLevel == 'GOLD'">
-			            AND m1.userLevel BETWEEN 31 AND 40
-			        </when>
-			        <when test="userLevel == 'PLATINUM'">
-			            AND m1.userLevel BETWEEN 41 AND 50
-			        </when>
-			        <when test="userLevel == 'ADMIN'">
-			            AND m1.userLevel >= 51
-			        </when>
-			        <otherwise>
-			            AND m1.userLevel = #{userLevel}
-			        </otherwise>
-			    </choose>
+			<if
+				test="userLevel != null and userLevel != '' and userLevel != '전체 등급'">
+				<choose>
+					<when test="userLevel == 'IRON'">
+						AND m1.userLevel BETWEEN 1 AND 10
+					</when>
+					<when test="userLevel == 'BRONZE'">
+						AND m1.userLevel BETWEEN 11 AND 20
+					</when>
+					<when test="userLevel == 'SILVER'">
+						AND m1.userLevel BETWEEN 21 AND 30
+					</when>
+					<when test="userLevel == 'GOLD'">
+						AND m1.userLevel BETWEEN 31 AND 40
+					</when>
+					<when test="userLevel == 'PLATINUM'">
+						AND m1.userLevel BETWEEN 41 AND 50
+					</when>
+					<when test="userLevel == 'ADMIN'">
+						AND m1.userLevel >= 51
+					</when>
+					<otherwise>
+						AND m1.userLevel = #{userLevel}
+					</otherwise>
+				</choose>
 			</if>
-            <if test="searchValue != null and searchValue != ''">
-                AND <include refid="where-list"/>
-            </if>
-        </where>
-        ORDER BY m1.memberIdx DESC
-        OFFSET #{offset} ROWS FETCH NEXT #{size} ROWS ONLY
-    </select>
-    
+			<if test="searchValue != null and searchValue != ''">
+				AND
+				<include refid="where-list" />
+			</if>
+		</where>
+	</select>
+
+	<select id="listMember" parameterType="map"
+		resultType="com.maknaez.model.MemberDTO">
+		SELECT m1.memberIdx, m1.nickName, m1.userId, m1.gender, m1.userLevel,
+		m1.enabled,
+		m2.userName, m2.email,
+		TO_CHAR(m3.register_date, 'YYYY-MM-DD') as register_date
+		FROM member1 m1
+		JOIN member2 m2 ON m1.memberIdx = m2.memberIdx
+		LEFT JOIN member3 m3 ON m1.memberIdx = m3.memberIdx
+		<where>
+			<if
+				test="startDate != null and startDate != '' and endDate != null and endDate != ''">
+				m3.register_date BETWEEN TO_DATE(#{startDate}, 'YYYY-MM-DD')
+				AND TO_DATE(#{endDate}, 'YYYY-MM-DD') + 0.99999
+			</if>
+			<if
+				test="userLevel != null and userLevel != '' and userLevel != '전체 등급'">
+				<choose>
+					<when test="userLevel == 'IRON'">
+						AND m1.userLevel BETWEEN 1 AND 10
+					</when>
+					<when test="userLevel == 'BRONZE'">
+						AND m1.userLevel BETWEEN 11 AND 20
+					</when>
+					<when test="userLevel == 'SILVER'">
+						AND m1.userLevel BETWEEN 21 AND 30
+					</when>
+					<when test="userLevel == 'GOLD'">
+						AND m1.userLevel BETWEEN 31 AND 40
+					</when>
+					<when test="userLevel == 'PLATINUM'">
+						AND m1.userLevel BETWEEN 41 AND 50
+					</when>
+					<when test="userLevel == 'ADMIN'">
+						AND m1.userLevel >= 51
+					</when>
+					<otherwise>
+						AND m1.userLevel = #{userLevel}
+					</otherwise>
+				</choose>
+			</if>
+			<if test="searchValue != null and searchValue != ''">
+				AND
+				<include refid="where-list" />
+			</if>
+		</where>
+		ORDER BY m1.memberIdx DESC
+		OFFSET #{offset} ROWS FETCH NEXT #{size} ROWS ONLY
+	</select>
+
 </mapper>
