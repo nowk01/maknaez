@@ -17,19 +17,18 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-@MultipartConfig(
-	fileSizeThreshold = 1024 * 1024,	// 업로드된 파일이 임시로 서버에 저장되지 않고 메모리에서 스트림으로 바로 전달되는 크기
-	maxFileSize = 1024 * 1024 * 5,		// 업로드된 하나의 파일 크기. 기본 용량 제한 없음
-	maxRequestSize = 1024 * 1024 * 10	// 폼 전체 용량
+@MultipartConfig(fileSizeThreshold = 1024 * 1024, // 업로드된 파일이 임시로 서버에 저장되지 않고 메모리에서 스트림으로 바로 전달되는 크기
+		maxFileSize = 1024 * 1024 * 5, // 업로드된 하나의 파일 크기. 기본 용량 제한 없음
+		maxRequestSize = 1024 * 1024 * 10 // 폼 전체 용량
 )
 
-@WebServlet(urlPatterns = {"/", "*.do"}, loadOnStartup = 1)
+@WebServlet(urlPatterns = { "/", "*.do" }, loadOnStartup = 1)
 public class DispatcherServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	private final HandlerMappingRegistry handlerMappingRegistry;
 	private final HandlerAdapterRegistry handlerAdapters;
-	
+
 	private static final String BASE_PACKAGE = "com.maknaez.controller";
 
 	public DispatcherServlet() {
@@ -40,7 +39,7 @@ public class DispatcherServlet extends HttpServlet {
 	@Override
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
-		
+
 		handlerMappingRegistry.addHandlerMapping(new AnnotationHandlerMapping(BASE_PACKAGE));
 		handlerAdapters.addHandlerAdapter(new HandlerExecutionHandlerAdapter());
 	}
@@ -58,11 +57,13 @@ public class DispatcherServlet extends HttpServlet {
 
 	protected void handleRequest(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
-			
+
 		final Optional<Object> handler = handlerMappingRegistry.getHandler(req);
+
 		if (handler.isEmpty()) {
 			System.out.println("404 Error: 핸들러를 찾을 수 없음 - " + req.getRequestURI());
-			resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
+
+			req.getRequestDispatcher("/error/404").forward(req, resp);
 			return;
 		}
 
@@ -78,4 +79,5 @@ public class DispatcherServlet extends HttpServlet {
 	@Override
 	public void destroy() {
 	}
+
 }
