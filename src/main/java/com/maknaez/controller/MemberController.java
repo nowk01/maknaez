@@ -144,11 +144,17 @@ public class MemberController {
 			dto.setUserPwd(req.getParameter("userPwd"));
 			dto.setUserName(req.getParameter("userName"));
 			dto.setBirth(req.getParameter("birth"));
-
+			
+			dto.setNickName(req.getParameter("nickName"));
+			dto.setGender(Integer.parseInt(req.getParameter("gender")));
+			
 			String email1 = req.getParameter("email1");
 			String email2 = req.getParameter("email2");
 			dto.setEmail(email1 + "@" + email2);
 
+			// 약관 동의 페이지에서 선택한 값에 따라 세팅 (기본값 0 또는 1)
+	        dto.setReceiveEmail(req.getParameter("receiveEmail") != null ? 1 : 0);
+	        
 			Part p = req.getPart("selectFile");
 			MyMultipartFile mp = fileManager.doFileUpload(p, pathname);
 			if (mp != null) {
