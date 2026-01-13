@@ -91,8 +91,19 @@
         ) WHERE rnum &gt;= #{start}
     </select>
 
+	<sql id="where-history">
+	    <if test="startDate != null and startDate != '' and endDate != null and endDate != ''">
+	        AND reg_date BETWEEN TO_DATE(#{startDate}, 'YYYY-MM-DD') 
+	                         AND TO_DATE(#{endDate} || ' 23:59:59', 'YYYY-MM-DD HH24:MI:SS')
+	    </if>
+	    <if test="reason != null and reason != ''">
+	        AND INSTR(reason, #{reason}) &gt; 0
+	    </if>
+	</sql>
+
     <select id="dataCountPointHistory" parameterType="map" resultType="Integer">
         SELECT COUNT(*) FROM point_member WHERE memberIdx = #{memberIdx}
+        <include refid="where-history"/>
     </select>
 
     <select id="listPointHistory" parameterType="map" resultType="com.maknaez.model.PointDTO">
@@ -102,6 +113,7 @@
                        TO_CHAR(reg_date, 'YYYY-MM-DD HH24:MI:SS') as reg_date
                 FROM point_member
                 WHERE memberIdx = #{memberIdx}
+                <include refid="where-history"/>
                 ORDER BY pm_id DESC
             ) tb WHERE ROWNUM &lt;= #{end}
         ) WHERE rnum &gt;= #{start}
