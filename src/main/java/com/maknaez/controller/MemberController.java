@@ -2,11 +2,14 @@ package com.maknaez.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.json.JSONObject;
 
 import com.maknaez.util.FileManager;
 import com.maknaez.util.MyMultipartFile;
@@ -144,6 +147,7 @@ public class MemberController {
 			dto.setUserId(req.getParameter("userId"));
 			dto.setUserPwd(req.getParameter("userPwd"));
 			dto.setUserName(req.getParameter("userName"));
+			dto.setNickName(req.getParameter("nickName"));
 			dto.setBirth(req.getParameter("birth"));
 
 			String email1 = req.getParameter("email1");
@@ -382,6 +386,25 @@ public class MemberController {
 
 		model.put("passed", passed);
 		return model;
+	}
+	
+	@PostMapping("nickNameCheck")
+	public void nickNameCheck(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+		String nickName = req.getParameter("nickName");
+
+		
+		MemberDTO dto = service.findByNickName(nickName);
+		boolean isPassed = (dto == null);
+
+		
+		JSONObject json = new JSONObject();
+		json.put("passed", isPassed);
+		
+		resp.setContentType("application/json; charset=UTF-8");
+		PrintWriter out = resp.getWriter();
+		out.print(json.toString());
+		out.flush();
+		out.close();
 	}
 
 	@ResponseBody
