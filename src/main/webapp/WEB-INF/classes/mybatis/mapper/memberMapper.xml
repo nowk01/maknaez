@@ -26,29 +26,35 @@
 		SELECT m1.memberIdx, m1.userId, m2.userName, m2.email, m1.enabled,
 		m1.modify_date, lh.LOG_DATE AS lastLoginDate
 		FROM member1 m1
-		JOIN member2 m2 ON m1.memberIdx = m2.memberIdx
+		JOIN
+		member2 m2 ON m1.memberIdx = m2.memberIdx
 		LEFT OUTER JOIN (
-		SELECT memberIdx, MAX(log_date) as LOG_DATE
+		SELECT
+		memberIdx, MAX(log_date) as LOG_DATE
 		FROM login_history
-		GROUP BY memberIdx
+		GROUP BY
+		memberIdx
 		) lh ON m1.memberIdx = lh.memberIdx
 		<where>
 			m1.enabled = 0
 			<if
 				test="startDate != null and startDate != '' and endDate != null and endDate != ''">
-				AND m1.modify_date BETWEEN TO_DATE(#{startDate}, 'YYYY-MM-DD') AND
+				AND m1.modify_date BETWEEN TO_DATE(#{startDate}, 'YYYY-MM-DD')
+				AND
 				TO_DATE(#{endDate}, 'YYYY-MM-DD') + 0.99999
 			</if>
 			<if test="keyword != null and keyword != ''">
 				AND (
 				INSTR(m1.userId, #{keyword}) &gt; 0
-				OR INSTR(m2.userName, #{keyword}) &gt; 0
+				OR
+				INSTR(m2.userName, #{keyword}) &gt; 0
 				)
 			</if>
 		</where>
 		<choose>
 			<when test="sortType == 'longestInactive'">
-				ORDER BY lh.LOG_DATE ASC NULLS FIRST, m1.modify_date DESC
+				ORDER BY lh.LOG_DATE ASC NULLS FIRST, m1.modify_date
+				DESC
 			</when>
 			<when test="sortType == 'nameOrder'">
 				ORDER BY m2.userName ASC, m1.modify_date DESC
@@ -63,7 +69,8 @@
 		resultType="Integer">
 		SELECT COUNT(*)
 		FROM member1 m1
-		JOIN member2 m2 ON m1.memberIdx = m2.memberIdx
+		JOIN member2 m2 ON m1.memberIdx =
+		m2.memberIdx
 		<where>
 			m1.enabled = 0
 			<if
@@ -74,7 +81,8 @@
 			<if test="keyword != null and keyword != ''">
 				AND (
 				INSTR(m1.userId, #{keyword}) &gt; 0
-				OR INSTR(m2.userName, #{keyword}) &gt; 0
+				OR
+				INSTR(m2.userName, #{keyword}) &gt; 0
 				)
 			</if>
 		</where>
@@ -88,8 +96,10 @@
 		</selectKey>
 		INSERT INTO member1(memberIdx, userId, birth, userPwd, nickName,
 		gender, enabled, userLevel, modify_date)
-		VALUES (#{memberIdx}, #{userId}, #{birth}, #{userPwd}, #{nickName},
-		#{gender, jdbcType=INTEGER}, 1, #{userLevel}, SYSDATE)
+		VALUES (#{memberIdx},
+		#{userId}, #{birth}, #{userPwd}, #{nickName},
+		#{gender,
+		jdbcType=INTEGER}, 1, #{userLevel}, SYSDATE)
 	</insert>
 
 	<insert id="insertMember2"
@@ -106,42 +116,49 @@
 
 	<select id="findById" parameterType="String"
 		resultType="com.maknaez.model.MemberDTO">
-		SELECT m1.memberIdx, m1.userId, m1.userPwd, m1.nickName, m1.gender,
+		SELECT m1.memberIdx, m1.userId, m1.userPwd, m1.nickName,
+		m1.gender,
 		m1.enabled, m1.userLevel, m1.modify_date,
-		m2.userName, m2.email, m2.tel,
+		m2.userName,
+		m2.email, m2.tel,
 		TO_CHAR(m1.birth, 'YYYY-MM-DD') birth
 		FROM member1 m1
 		LEFT OUTER JOIN member2 m2 ON m1.memberIdx = m2.memberIdx
-		WHERE m1.userId = #{userId}
-	</select>  
+		WHERE
+		m1.userId = #{userId}
+	</select>
 
 	<!-- 아이디 -> 고유번호로 찾는걸로 변경 -->
 	<select id="findByIdx" parameterType="Long"
 		resultType="com.maknaez.model.MemberDTO">
-		SELECT m1.memberIdx, m1.userId, m1.userPwd, m1.userLevel, m1.nickName,
+		SELECT m1.memberIdx, m1.userId, m1.userPwd, m1.userLevel,
+		m1.nickName,
 		m1.gender, m1.enabled,
-		TO_CHAR(m1.birth, 'YYYY-MM-DD') as birth, m1.modify_date,
+		TO_CHAR(m1.birth, 'YYYY-MM-DD') as
+		birth, m1.modify_date,
 		m2.userName, m2.email, m2.tel,
 		m3.register_date
 		FROM member1 m1
-		LEFT OUTER JOIN member2 m2 ON m1.memberIdx = m2.memberIdx
+		LEFT OUTER JOIN member2 m2 ON m1.memberIdx =
+		m2.memberIdx
 		LEFT OUTER JOIN member3 m3 ON m1.memberIdx = m3.memberIdx
 		WHERE m1.memberIdx = #{memberIdx}
 	</select>
 
-	<update id="updateMember1" parameterType="com.maknaez.model.MemberDTO">
-	    UPDATE member1
-	    SET userPwd = #{userPwd},
-	        nickName = #{nickName},
-	        gender = #{gender},
-	        modify_date = SYSDATE
-	    <if test="userLevel != null">
-	        , userLevel = #{userLevel}
-	    </if>
-	    <if test="enabled != null">
-	        , enabled = #{enabled}
-	    </if>
-	    WHERE memberIdx = #{memberIdx}
+	<update id="updateMember1"
+		parameterType="com.maknaez.model.MemberDTO">
+		UPDATE member1
+		SET userPwd = #{userPwd},
+		nickName = #{nickName},
+		gender = #{gender},
+		modify_date = SYSDATE
+		<if test="userLevel != null">
+			, userLevel = #{userLevel}
+		</if>
+		<if test="enabled != null">
+			, enabled = #{enabled}
+		</if>
+		WHERE memberIdx = #{memberIdx}
 	</update>
 
 	<update id="updateMember2"
@@ -152,6 +169,13 @@
 		WHERE memberIdx = #{memberIdx}
 	</update>
 
+	<select id="findByNickName" parameterType="String"
+		resultType="com.maknaez.model.MemberDTO">
+		SELECT memberIdx, userId, nickName
+		FROM member1
+		WHERE nickName = #{nickName}
+	</select>
+	
 	<update id="updateMemberLevel" parameterType="map">
 		UPDATE member1 SET
 		userLevel = #{userLevel}
@@ -184,30 +208,41 @@
 	<select id="listAgeSection" resultType="map">
 		WITH memberAge AS (
 		SELECT m1.userId, TRUNC(MONTHS_BETWEEN(SYSDATE, birth)/12) age
-		FROM member1 m1
+		FROM
+		member1 m1
 		JOIN member2 m2 ON m1.userId = m2.userId
-		WHERE userLevel &gt; 0 AND userLevel &lt; 50
+		WHERE userLevel &gt;
+		0 AND userLevel &lt; 50
 		)
 		SELECT '10대' section, COUNT(*)
-		count FROM memberAge WHERE age &gt;= 10 AND age &lt; 20
+		count FROM
+		memberAge WHERE age &gt;= 10 AND age &lt; 20
 		UNION ALL
-		SELECT '20대' section, COUNT(*) count FROM memberAge WHERE age &gt;= 20
-		AND age &lt; 30
+		SELECT '20대'
+		section, COUNT(*) count FROM memberAge WHERE age &gt;= 20
+		AND age &lt;
+		30
 		UNION ALL
 		SELECT '30대' section, COUNT(*) count FROM
-		memberAge WHERE age &gt;= 30 AND age &lt; 40
+		memberAge WHERE
+		age &gt;= 30 AND age &lt; 40
 		UNION ALL
 		SELECT '40대'
-		section, COUNT(*) count FROM memberAge WHERE age &gt;= 40 AND age &lt;
+		section, COUNT(*)
+		count FROM memberAge WHERE age &gt;= 40 AND age &lt;
 		50
 		UNION ALL
-		SELECT '50대' section, COUNT(*) count FROM memberAge WHERE
-		age &gt;= 50 AND age &lt; 60
+		SELECT
+		'50대' section, COUNT(*) count FROM memberAge WHERE
+		age &gt;= 50 AND age
+		&lt; 60
 		UNION ALL
 		SELECT '60대' section, COUNT(*)
-		count FROM memberAge WHERE age &gt;= 60 AND age &lt; 70
+		count FROM memberAge
+		WHERE age &gt;= 60 AND age &lt; 70
 		UNION ALL
-		SELECT '기타' section, COUNT(*) count FROM memberAge WHERE age &lt; 10
+		SELECT '기타' section,
+		COUNT(*) count FROM memberAge WHERE age &lt; 10
 		OR age &gt;= 70
 	</select>
 
@@ -219,7 +254,8 @@
 			<when test="searchKey == 'all' ">
 				( INSTR(m1.userId, #{searchValue}) &gt; 0 OR
 				INSTR(m2.userName, #{searchValue}) &gt; 0 OR
-				INSTR(m2.email, #{searchValue}) &gt; 0 )
+				INSTR(m2.email,
+				#{searchValue}) &gt; 0 )
 			</when>
 			<when test="searchKey == 'userId'">
 				INSTR(m1.userId, #{searchValue}) &gt; 0
@@ -239,7 +275,8 @@
 	<select id="dataCount" parameterType="map" resultType="Integer">
 		SELECT COUNT(*)
 		FROM member1 m1
-		JOIN member2 m2 ON m1.memberIdx = m2.memberIdx
+		JOIN member2 m2 ON m1.memberIdx =
+		m2.memberIdx
 		LEFT JOIN member3 m3 ON m1.memberIdx = m3.memberIdx
 		<where>
 			<if
@@ -285,10 +322,13 @@
 		SELECT m1.memberIdx, m1.nickName, m1.userId, m1.gender, m1.userLevel,
 		m1.enabled,
 		m2.userName, m2.email,
-		TO_CHAR(m3.register_date, 'YYYY-MM-DD') as register_date
+		TO_CHAR(m3.register_date,
+		'YYYY-MM-DD') as register_date
 		FROM member1 m1
-		JOIN member2 m2 ON m1.memberIdx = m2.memberIdx
-		LEFT JOIN member3 m3 ON m1.memberIdx = m3.memberIdx
+		JOIN member2 m2 ON
+		m1.memberIdx = m2.memberIdx
+		LEFT JOIN member3 m3 ON m1.memberIdx =
+		m3.memberIdx
 		<where>
 			<if
 				test="startDate != null and startDate != '' and endDate != null and endDate != ''">
@@ -327,35 +367,41 @@
 			</if>
 		</where>
 		ORDER BY m1.memberIdx DESC
-		OFFSET #{offset} ROWS FETCH NEXT #{size} ROWS ONLY
+		OFFSET #{offset} ROWS FETCH NEXT #{size}
+		ROWS ONLY
 	</select>
-<insert id="insertAddress" parameterType="com.maknaez.model.AddressDTO">
+	<insert id="insertAddress"
+		parameterType="com.maknaez.model.AddressDTO">
 		INSERT INTO address (
-			addr_id, memberIdx, addr_name, receiver_name, receiver_tel, 
-			zip_code, addr1, addr2, isbasic
+		addr_id, memberIdx, addr_name, receiver_name, receiver_tel,
+		zip_code, addr1, addr2, isbasic
 		) VALUES (
-			addr_seq.NEXTVAL, #{memberIdx}, #{addrName, jdbcType=VARCHAR}, #{receiverName}, #{receiverTel},
-			#{zipCode}, #{addr1}, #{addr2}, #{isBasic}
+		addr_seq.NEXTVAL, #{memberIdx}, #{addrName, jdbcType=VARCHAR}, #{receiverName},
+		#{receiverTel},
+		#{zipCode}, #{addr1}, #{addr2}, #{isBasic}
 		)
 	</insert>
 
-	<select id="listAddress" parameterType="Long" resultType="com.maknaez.model.AddressDTO">
-		SELECT 
-			addr_id AS addrId,
-			memberIdx,
-			addr_name AS addrName,
-			receiver_name AS receiverName,
-			receiver_tel AS receiverTel,
-			zip_code AS zipCode,
-			addr1,
-			addr2,
-			isbasic AS isBasic
+	<select id="listAddress" parameterType="Long"
+		resultType="com.maknaez.model.AddressDTO">
+		SELECT
+		addr_id AS addrId,
+		memberIdx,
+		addr_name AS addrName,
+		receiver_name AS receiverName,
+		receiver_tel AS receiverTel,
+		zip_code AS zipCode,
+		addr1,
+		addr2,
+		isbasic AS isBasic
 		FROM address
 		WHERE memberIdx = #{memberIdx}
-		ORDER BY isbasic DESC, addr_id DESC
+		ORDER BY isbasic
+		DESC, addr_id DESC
 	</select>
 
 	<delete id="deleteAddress" parameterType="Long">
-		DELETE FROM address WHERE addr_id = #{addrId}
+		DELETE FROM address
+		WHERE addr_id = #{addrId}
 	</delete>
 </mapper>

@@ -144,6 +144,7 @@ public class MemberController {
 			dto.setUserId(req.getParameter("userId"));
 			dto.setUserPwd(req.getParameter("userPwd"));
 			dto.setUserName(req.getParameter("userName"));
+			dto.setNickName(req.getParameter("nickName"));
 			dto.setBirth(req.getParameter("birth"));
 
 			String email1 = req.getParameter("email1");
@@ -382,6 +383,19 @@ public class MemberController {
 
 		model.put("passed", passed);
 		return model;
+	}
+	
+	@ResponseBody
+	@PostMapping("nickNameCheck") // 이 경로가 JSP의 fetch 경로와 일치해야 합니다.
+	public Map<String, Object> nickNameCheck(HttpServletRequest req, HttpServletResponse resp) {
+	    Map<String, Object> model = new HashMap<>();
+	    String nickName = req.getParameter("nickName");
+	    
+	    MemberDTO dto = service.findByNickName(nickName); 
+
+	    String passed = (dto == null) ? "true" : "false";
+	    model.put("passed", passed);
+	    return model;
 	}
 
 	@ResponseBody
