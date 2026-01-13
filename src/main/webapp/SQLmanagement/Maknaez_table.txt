@@ -268,7 +268,7 @@ CREATE TABLE order_discounts (
 CREATE TABLE point_member (
     pm_id           NUMBER          NOT NULL,       -- PK: 시퀀스 필요
     memberIdx       NUMBER          NOT NULL,       -- FK: member1.memberIdx
-    order_id        VARCHAR2(20)    NOT NULL,       -- FK: orders.order_id (어떤 주문으로 적립/사용했는지)
+    order_id        VARCHAR2(20)    NULL,       -- FK: orders.order_id (어떤 주문으로 적립/사용했는지)
     reason          VARCHAR2(40)    NULL,           -- '적립, '사용', '소멸' 등 변동 사유
     point_amount    NUMBER          NULL,           -- 변동액
     rem_point       NUMBER          NULL,           -- 잔여 포인트

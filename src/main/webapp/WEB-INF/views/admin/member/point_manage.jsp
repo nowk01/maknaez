@@ -34,9 +34,9 @@
                         <div>
                             <label class="form-label">구분 (Type)</label>
                             <select class="form-select">
-                                <option>전체 내역</option>
-                                <option>포인트 적립 (+)</option>
-                                <option>포인트 차감 (-)</option>
+                                <option>검색 필터</option>
+                                <option>회원명</option>
+                                <option>아이디</option>
                             </select>
                         </div>
                         <div>
@@ -66,44 +66,50 @@
                                 <th style="width: 80px;">번호</th>
                                 <th>아이디</th>
                                 <th>회원명</th>
-                                <th>사유</th>
-                                <th class="text-end">변동 금액</th>
-                                <th>처리일</th>
+                                <th class="text-end">남은 포인트</th>
+                                <th>최근 처리일</th>
                                 <th>상태</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td><input type="checkbox" class="chk-item"></td>
-                                <td class="text-muted">3</td>
-                                <td class="fw-bold">sample_user</td>
-                                <td>홍길동</td>
-                                <td class="text-start">신규 가입 축하 마일리지</td>
-                                <td class="text-end point-text">+3,000 P</td>
-                                <td class="text-muted">2026-01-11</td>
-                                <td><span class="k-badge plus">적립완료</span></td>
-                            </tr>
-                            <tr>
-                                <td><input type="checkbox" class="chk-item"></td>
-                                <td class="text-muted">2</td>
-                                <td class="fw-bold">maknaez_01</td>
-                                <td>김막내</td>
-                                <td class="text-start">상품 구매에 따른 자동 적립</td>
-                                <td class="text-end point-text">+450 P</td>
-                                <td class="text-muted">2026-01-10</td>
-                                <td><span class="k-badge plus">적립완료</span></td>
-                            </tr>
-                            <tr>
-                                <td><input type="checkbox" class="chk-item"></td>
-                                <td class="text-muted">1</td>
-                                <td class="fw-bold">test_id</td>
-                                <td>테스터</td>
-                                <td class="text-start">이벤트 참여 포인트 지급</td>
-                                <td class="text-end point-text" style="color:#111;">-500 P</td>
-                                <td class="text-muted">2026-01-08</td>
-                                <td><span class="k-badge minus">차감완료</span></td>
-                            </tr>
-                        </tbody>
+						    <c:if test="${empty list}">
+						        <tr>
+						            <td colspan="7" class="text-center py-4 text-muted">등록된 회원 정보가 없습니다.</td>
+						        </tr>
+						    </c:if>
+						
+						    <c:forEach var="dto" items="${list}" varStatus="status">
+						        <tr>
+						            <td><input type="checkbox" class="chk-item" name="memberIdxs" value="${dto.memberIdx}"></td>
+						            <td class="text-muted">${dataCount - (pageNo-1) * 10 - status.index}</td> <td class="fw-bold">
+						                <a href="${pageContext.request.contextPath}/admin/point/history?memberIdx=${dto.memberIdx}" class="text-decoration-none text-dark">
+						                    ${dto.userId}
+						                </a>
+						            </td>
+						            
+						            <td>${dto.userName}</td>
+						            
+						            <td class="text-end point-text fw-bold text-primary">
+						                <fmt:formatNumber value="${dto.point}"/> P
+						            </td>
+						            
+						            <td class="text-muted">
+						                ${not empty dto.lastPointDate ? dto.lastPointDate : '-'}
+						            </td>
+						            
+						            <td>
+						                <c:choose>
+						                    <c:when test="${dto.enabled == 1}">
+						                        <span class="k-badge plus">활성</span>
+						                    </c:when>
+						                    <c:otherwise>
+						                        <span class="k-badge minus">잠금</span>
+						                    </c:otherwise>
+						                </c:choose>
+						            </td>
+						        </tr>
+						    </c:forEach>
+						</tbody>
                     </table>
 
                     <div class="mt-5 d-flex justify-content-center">
