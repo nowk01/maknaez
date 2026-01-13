@@ -123,6 +123,7 @@ public class LoginFilter implements Filter {
 			"/index.jsp", "/main", "/index2.jsp",
 			"/member/login", "/member/logout",
 			"/member/account", "/member/userIdCheck", "/member/complete",
+			"/member/nickNameCheck", // [수정] 닉네임 중복 확인 경로 추가
 			"/member/consent",
 			"/collections/**", 
 			"/product/**"
