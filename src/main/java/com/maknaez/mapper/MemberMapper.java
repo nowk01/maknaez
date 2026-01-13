@@ -4,6 +4,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
+import com.maknaez.model.AddressDTO;
 import com.maknaez.model.MemberDTO;
 
 public interface MemberMapper {
@@ -31,4 +32,9 @@ public interface MemberMapper {
 	
 	public List<MemberDTO> listDormantMembers(Map<String, Object> map) throws SQLException;
 	public Integer dataCountDormant(Map<String, Object> map);
+	
+	// 배송지 관리
+    public void insertAddress(AddressDTO dto) throws SQLException;
+    public List<AddressDTO> listAddress(long memberIdx);
+    public void deleteAddress(long addrId) throws SQLException;
 }

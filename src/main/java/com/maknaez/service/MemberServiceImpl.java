@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.maknaez.mapper.MemberMapper;
+import com.maknaez.model.AddressDTO;
 import com.maknaez.model.MemberDTO;
 import com.maknaez.mybatis.support.MapperContainer;
 import com.maknaez.mybatis.support.SqlSessionManager;
@@ -207,5 +208,35 @@ public class MemberServiceImpl implements MemberService {
 		}
 		
 		return result;
+	}
+	@Override
+	public void insertAddress(AddressDTO dto) throws Exception {
+		try {
+			mapper.insertAddress(dto);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+	}
+
+	@Override
+	public List<AddressDTO> listAddress(long memberIdx) {
+		List<AddressDTO> list = null;
+		try {
+			list = mapper.listAddress(memberIdx);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
+
+	@Override
+	public void deleteAddress(long addrId) throws Exception {
+		try {
+			mapper.deleteAddress(addrId);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
 	}
 }
