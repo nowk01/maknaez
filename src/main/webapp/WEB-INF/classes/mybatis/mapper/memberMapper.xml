@@ -71,12 +71,12 @@
 	        SELECT member_seq.NEXTVAL FROM dual
 	    </selectKey>
 	    INSERT INTO member1(memberIdx, userId, birth, userPwd, nickName, gender, enabled, userLevel, modify_date)
-	    VALUES (#{memberIdx}, #{userId}, #{birth}, #{userPwd}, #{nickName}, #{gender}, 1, #{userLevel}, SYSDATE) 
+	    VALUES (#{memberIdx}, #{userId}, #{birth}, #{userPwd}, #{nickName}, #{gender, jdbcType=INTEGER}, 1, #{userLevel}, SYSDATE) 
 	</insert>
 
     <insert id="insertMember2" parameterType="com.maknaez.model.MemberDTO">
 		INSERT INTO member2(memberIdx, userName, email, tel)
-		VALUES (#{memberIdx}, #{userName}, #{email}, #{tel})
+		VALUES (#{memberIdx}, #{userName, jdbcType=VARCHAR}, #{email, jdbcType=VARCHAR}, #{tel, jdbcType=VARCHAR})
     </insert>
     
     <insert id="insertMember3">
