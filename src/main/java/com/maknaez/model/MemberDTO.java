@@ -30,6 +30,33 @@ public class MemberDTO {
 	private String log_date;
 	private String ip_info;
 	private Date lastLoginDate;
+	private int currentPoint;    
+	private String lastPointDate;
+	
+	public int getCurrentPoint() {
+		return currentPoint;
+	}
+
+	public void setCurrentPoint(int currentPoint) {
+		this.currentPoint = currentPoint;
+	}
+
+	public String getLastPointDate() {
+		return lastPointDate;
+	}
+
+	public void setLastPointDate(String lastPointDate) {
+		this.lastPointDate = lastPointDate;
+	}
+
+	public String getLastPointType() {
+		return lastPointType;
+	}
+
+	public void setLastPointType(String lastPointType) {
+		this.lastPointType = lastPointType;
+	}
+	private String lastPointType;
 
 	public long getDormantDays() {
         if (this.lastLoginDate == null) {

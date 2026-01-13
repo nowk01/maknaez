@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.maknaez.mapper.PointMapper">
+
+    <select id="dataCountMemberPoint" parameterType="map" resultType="Integer">
+        SELECT COUNT(*)
+        FROM member1 m1
+        JOIN member2 m2 ON m1.memberIdx = m2.memberIdx
+        LEFT JOIN (
+            SELECT p1.memberIdx, p1.rem_point, p1.reg_date, p1.point_amount
+            FROM point_member p1
+            JOIN (
+                SELECT memberIdx, MAX(pm_id) as max_id
+                FROM point_member
+                GROUP BY memberIdx
+            ) p2 ON p1.pm_id = p2.max_id
+        ) pm ON m1.memberIdx = pm.memberIdx
+        <where>
+            <if test="keyword != null and keyword != ''">
+                <choose>
+                    <when test="condition == 'userId'"> AND INSTR(m1.userId, #{keyword}) &gt; 0 </when>
+                    <when test="condition == 'userName'"> AND INSTR(m2.userName, #{keyword}) &gt; 0 </when>
+                    <otherwise>
+                       AND (INSTR(m1.userId, #{keyword}) &gt; 0 OR INSTR(m2.userName, #{keyword}) &gt; 0)
+                    </otherwise>
+                </choose>
+            </if>
+            <if test="startDate != null and startDate != ''">
+                AND TO_CHAR(pm.reg_date, 'YYYY-MM-DD') &gt;= #{startDate}
+            </if>
+            <if test="endDate != null and endDate != ''">
+                AND TO_CHAR(pm.reg_date, 'YYYY-MM-DD') &lt;= #{endDate}
+            </if>
+            <if test="minPoint != null">
+                AND pm.rem_point &gt;= #{minPoint}
+            </if>
+            <if test="maxPoint != null">
+                AND pm.rem_point &lt;= #{maxPoint}
+            </if>
+        </where>
+    </select>
+
+    <select id="listMemberPoint" parameterType="map" resultType="com.maknaez.model.MemberDTO">
+        SELECT * FROM (
+            SELECT ROWNUM rnum, tb.* FROM (
+                SELECT m1.memberIdx, m1.userId, m2.userName,
+                       NVL(pm.rem_point, 0) AS currentPoint,
+                       TO_CHAR(pm.reg_date, 'YYYY-MM-DD HH24:MI') AS lastPointDate,
+                       CASE 
+                           WHEN pm.point_amount > 0 THEN '적립'
+                           WHEN pm.point_amount &lt; 0 THEN '차감'
+                           ELSE '-'
+                       END AS lastPointType
+                FROM member1 m1
+                JOIN member2 m2 ON m1.memberIdx = m2.memberIdx
+                LEFT JOIN (
+                    SELECT p1.memberIdx, p1.rem_point, p1.reg_date, p1.point_amount
+                    FROM point_member p1
+                    JOIN (
+                        SELECT memberIdx, MAX(pm_id) as max_id
+                        FROM point_member
+                        GROUP BY memberIdx
+                    ) p2 ON p1.pm_id = p2.max_id
+                ) pm ON m1.memberIdx = pm.memberIdx
+                <where>
+                    <if test="keyword != null and keyword != ''">
+                        <choose>
+                            <when test="condition == 'userId'"> AND INSTR(m1.userId, #{keyword}) &gt; 0 </when>
+                            <when test="condition == 'userName'"> AND INSTR(m2.userName, #{keyword}) &gt; 0 </when>
+                            <otherwise>
+                               AND (INSTR(m1.userId, #{keyword}) &gt; 0 OR INSTR(m2.userName, #{keyword}) &gt; 0)
+                            </otherwise>
+                        </choose>
+                    </if>
+                    <if test="startDate != null and startDate != ''">
+                        AND TO_CHAR(pm.reg_date, 'YYYY-MM-DD') &gt;= #{startDate}
+                    </if>
+                    <if test="endDate != null and endDate != ''">
+                        AND TO_CHAR(pm.reg_date, 'YYYY-MM-DD') &lt;= #{endDate}
+                    </if>
+                    <if test="minPoint != null">
+                        AND pm.rem_point &gt;= #{minPoint}
+                    </if>
+                    <if test="maxPoint != null">
+                        AND pm.rem_point &lt;= #{maxPoint}
+                    </if>
+                </where>
+                ORDER BY m1.memberIdx DESC
+            ) tb WHERE ROWNUM &lt;= #{end}
+        ) WHERE rnum &gt;= #{start}
+    </select>
+
+    <select id="dataCountPointHistory" parameterType="map" resultType="Integer">
+        SELECT COUNT(*) FROM point_member WHERE memberIdx = #{memberIdx}
+    </select>
+
+    <select id="listPointHistory" parameterType="map" resultType="com.maknaez.model.PointDTO">
+        SELECT * FROM (
+            SELECT ROWNUM rnum, tb.* FROM (
+                SELECT pm_id, memberIdx, order_id, reason, point_amount, rem_point,
+                       TO_CHAR(reg_date, 'YYYY-MM-DD HH24:MI:SS') as reg_date
+                FROM point_member
+                WHERE memberIdx = #{memberIdx}
+                ORDER BY pm_id DESC
+            ) tb WHERE ROWNUM &lt;= #{end}
+        ) WHERE rnum &gt;= #{start}
+    </select>
+    
+    <insert id="insertPoint" parameterType="com.maknaez.model.PointDTO">
+        INSERT INTO point_member (pm_id, memberIdx, order_id, reason, point_amount, rem_point, reg_date)
+        VALUES (pm_seq.NEXTVAL, #{memberIdx}, #{order_id, jdbcType=VARCHAR}, #{reason}, #{point_amount}, #{rem_point}, SYSDATE)
+    </insert>
+
+    <select id="findCurrentPoint" parameterType="Long" resultType="Integer">
+        SELECT rem_point FROM (
+            SELECT rem_point FROM point_member 
+            WHERE memberIdx = #{memberIdx} 
+            ORDER BY pm_id DESC
+        ) WHERE ROWNUM = 1
+    </select>
+
+</mapper>

@@ -1,0 +1,18 @@
+package com.maknaez.mapper;
+
+import java.util.List;
+import java.util.Map;
+import com.maknaez.model.MemberDTO; 
+import com.maknaez.model.PointDTO;  
+
+public interface PointMapper {
+    public int dataCountMemberPoint(Map<String, Object> map);
+    public List<MemberDTO> listMemberPoint(Map<String, Object> map);
+    
+    public int dataCountPointHistory(Map<String, Object> map);
+    public List<PointDTO> listPointHistory(Map<String, Object> map);
+    
+    public void insertPoint(PointDTO dto) throws Exception;
+    
+    public int findCurrentPoint(long memberIdx);
+}
