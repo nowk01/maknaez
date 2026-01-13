@@ -4,190 +4,90 @@
    내 정보 관리 (My Info) 전용 스타일
    ========================================= */
 
-:root {
-    --font-primary: "SALOMON Sans", "Noto Sans KR", sans-serif;
-    --color-black: #000;
-    --color-grey-light: #e0e0e0;
+.rte, #comments, #template, #address_tables, .section-accordion .cc-accordion-item__content {
+    text-align: left;
+    zoom: 1;
 }
 
-/* 폼 컨테이너 */
+.feature-header {
+    font-family: "SALOMON Sans", "Noto Sans KR", sans-serif;
+    font-size: 24px;
+    font-weight: 700;
+    color: #000;
+    
+    text-align: center;           /* 텍스트 가운데 정렬 */
+    padding-bottom: 25px;         /* 텍스트와 줄 사이 간격 */
+    margin-bottom: 60px;          /* 줄과 입력 폼 사이 간격 */
+    border-bottom: 2px solid #000;/* ★ 핵심: 긴 검은 줄 */
+    width: 100%;                  /* 줄을 끝까지 긋기 위함 */
+    display: block;
+}
+
+/* 3. 폼 컨테이너 (368px 중앙 정렬) */
 .customer__detailsForm {
-    max-width: 600px;
-    margin: 0; /* 왼쪽 정렬 혹은 필요시 auto */
+    max-width: 368px;             /* 살로몬 공식 폼 너비 */
+    margin: 0 auto;               /* 좌우 자동 여백 -> 중앙 정렬 */
     padding-bottom: 50px;
 }
 
-/* 타이틀 */
-.feature-header {
-    font-family: var(--font-primary);
-    font-size: 24px;
-    font-weight: 700;
-    margin-bottom: 40px;
-    color: var(--color-black);
-}
+/* --- 이하 입력 필드 스타일 --- */
 
-/* 입력 필드 공통 레이아웃 */
-.input-row {
-    margin-bottom: 24px;
-    position: relative;
-    width: 100%;
-}
-
+.input-row { margin-bottom: 24px; width: 100%; position: relative; }
 .info-label {
-    display: block;
-    font-size: 13px;
-    font-weight: 700;
-    color: var(--color-black);
-    margin-bottom: 8px;
-    text-transform: uppercase;
+    display: block; font-size: 13px; font-weight: 700; color: #000;
+    margin-bottom: 8px; text-transform: uppercase;
 }
 
-/* Input 스타일 */
-input[type="text"], 
-input[type="password"], 
-input[type="tel"], 
-input[type="email"], 
-input[type="date"] {
-    width: 100%;
-    height: 48px;
-    padding: 0 16px;
-    border: 1px solid var(--color-grey-light);
-    border-radius: 0; /* 각진 스타일 */
-    font-size: 14px;
-    color: var(--color-black);
-    box-sizing: border-box;
-    transition: border-color 0.2s ease;
-    background-color: #fff;
-    font-family: var(--font-primary);
+/* 입력창 디자인 */
+input[type="text"], input[type="password"], input[type="tel"], input[type="email"], select {
+    width: 100%; height: 48px; padding: 0 16px;
+    border: 1px solid #e0e0e0; border-radius: 0;
+    font-size: 14px; color: #000; background-color: #fff;
+    box-sizing: border-box; appearance: none; -webkit-appearance: none;
+    font-family: inherit;
 }
+input:focus, select:focus { border-color: #000; outline: none; }
+input[disabled], input[readonly] { background-color: #f9f9f9; color: #888; cursor: default; }
 
-input:focus {
-    border-color: var(--color-black);
-    outline: none;
-}
+/* 성/이름 분리 */
+.divided { display: flex; gap: 10px; margin-bottom: 24px; }
+.divided__input { flex: 1; }
 
-input[disabled], input[readonly] {
-    background-color: #f9f9f9;
-    color: #888;
-    border-color: #eee;
-    cursor: default;
-}
+/* 휴대폰 번호 + 버튼 */
+.phone-field { display: flex; gap: 10px; margin-bottom: 5px; }
+.phone-field input { flex: 1; }
 
-/* 이름 입력 (성/이름 분리 레이아웃) */
-.divided {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 24px;
-}
-.divided__input {
-    flex: 1;
-}
-
-/* 휴대폰 번호 필드 레이아웃 */
-.phone-field {
-    position: relative;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-.phone-field input {
-    flex: 1;
-}
-
-/* 업데이트/인증 버튼 */
+/* 버튼 스타일 */
 .phone-field__send-code, .btn {
-    height: 48px;
-    padding: 0 20px;
-    background-color: #000;
-    color: #fff;
-    font-size: 13px;
-    font-weight: 600;
-    border: 1px solid #000;
-    cursor: pointer;
-    white-space: nowrap;
-    transition: opacity 0.2s;
+    height: 48px; padding: 0 20px;
+    background-color: #000; color: #fff;
+    font-size: 13px; font-weight: 600;
+    border: 1px solid #000; cursor: pointer; white-space: nowrap;
 }
-.phone-field__send-code:hover, .btn:hover {
-    opacity: 0.8;
-}
+.phone-field__send-code:hover, .btn:hover { opacity: 0.8; }
 
-/* 안내 메시지 & 에러 메시지 */
-.otp-text {
-    font-size: 12px;
-    color: #666;
-    margin-top: 6px;
-    font-weight: 400;
-}
-.hidden {
-    display: none !important;
-}
+/* 유틸리티 */
+.otp-text { font-size: 12px; color: #666; margin-top: 5px; }
+.hidden { display: none !important; }
 
-/* 성별 선택 (Select) */
-.pretty-select {
-    position: relative;
-    width: 100%;
-    margin-bottom: 24px;
-}
-.pretty-select select {
-    width: 100%;
-    height: 48px;
-    padding: 0 16px;
-    border: 1px solid var(--color-grey-light);
-    border-radius: 0;
-    appearance: none;
-    -webkit-appearance: none;
-    background: #fff;
-    font-size: 14px;
-    color: #000;
-    cursor: pointer;
-}
+/* 성별 선택 화살표 */
+.pretty-select { position: relative; margin-bottom: 24px; }
 .pretty-select svg {
-    position: absolute;
-    right: 16px;
-    top: 50%;
-    transform: translateY(-50%);
-    pointer-events: none;
-    width: 12px;
-    height: 12px;
+    position: absolute; right: 16px; top: 50%;
+    transform: translateY(-50%); pointer-events: none;
+    width: 12px; height: 12px;
 }
 
-/* 체크박스 행 */
-.checkbox-row {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 12px;
-}
-.checkbox-row input[type="checkbox"] {
-    width: 18px;
-    height: 18px;
-    accent-color: #000;
-    cursor: pointer;
-    margin: 0;
-}
-.checkbox-row label {
-    font-size: 13px;
-    color: #333;
-    cursor: pointer;
-    user-select: none;
-}
+/* 체크박스 */
+.checkbox-row { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+.checkbox-row input { width: 18px; height: 18px; accent-color: #000; margin: 0; }
+.checkbox-row label { font-size: 13px; cursor: pointer; }
 
-/* 하단 저장 버튼 */
-.wide-action {
-    margin-top: 50px;
-}
+/* 저장 버튼 */
+.wide-action { margin-top: 50px; }
 .as-salomon__submit {
-    width: 100%;
-    height: 52px;
-    background-color: #000;
-    color: #fff;
-    font-size: 15px;
-    font-weight: 700;
-    border: none;
-    cursor: pointer;
-    text-transform: uppercase;
-    transition: background-color 0.3s;
-}
-.as-salomon__submit:hover {
-    background-color: #333;
+    width: 100%; height: 52px;
+    background-color: #000; color: #fff;
+    font-size: 15px; font-weight: 700;
+    border: none; cursor: pointer; text-transform: uppercase;
 }
