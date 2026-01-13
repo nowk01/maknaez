@@ -21,4 +21,3 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/main.css" type="text/css">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/header.css" type="text/css">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/footer.css" type="text/css">
-<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/list-sidebar.css" type="text/css">

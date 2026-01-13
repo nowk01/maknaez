@@ -24,7 +24,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
-@RequestMapping("/order/*")
+@RequestMapping("/order")
 public class PaymentController {
 
     private PaymentService paymentService = new PaymentServiceImpl();
@@ -34,7 +34,7 @@ public class PaymentController {
      * 결제 페이지 진입 (GET)
      * URL: /order/payment
      */
-    @GetMapping("payment")
+    @GetMapping("/payment")
     public ModelAndView paymentForm(HttpServletRequest req, HttpServletResponse resp) {
         System.out.println(">>> [PaymentController] 결제 페이지 진입");
 
@@ -53,12 +53,12 @@ public class PaymentController {
         try {
             MemberDTO member = null;
             
-            // 1. 회원 정보 조회 시도 (DB 오류가 나도 레이아웃 확인은 가능하도록 예외 처리 분리)
+            // 1. 회원 정보 조회 시도
             try {
-                member = memberService.findById(info.getUserId());
+                // [MemberDTO 복구] 기존 getUserId() 사용
+                member = memberService.findById(info.getUserId()); 
             } catch (Exception e) {
                 System.out.println(">>> [Warn] 회원 정보 조회 실패: " + e.getMessage());
-                // 파라미터가 있을 때(실제 주문)는 에러를 던져서 중단하고, 없을 때(테스트)는 넘어감
                 if(prodIdParam != null && quantityParam != null) throw e;
             }
             
@@ -66,8 +66,8 @@ public class PaymentController {
             if(prodIdParam == null || quantityParam == null) {
                  System.out.println(">>> [Debug] 파라미터 없음 -> 레이아웃 확인용 테스트 데이터 생성");
                  
-                 // 회원 정보 조회 실패했다면 더미 회원 정보 생성
                  if(member == null) {
+                     // [MemberDTO 복구] 기존 메소드명(setUserName, setTel, setZip) 유지
                      member = new MemberDTO();
                      member.setUserName("테스트유저");
                      member.setTel("010-0000-0000");
@@ -77,12 +77,12 @@ public class PaymentController {
                      member.setAddr2("101호");
                  }
                  
-                 // 가상 상품 데이터 생성
+                 // [ProductDTO 변경 적용] prodId, prodName, thumbnail
                  ProductDTO dummyProd = new ProductDTO();
-                 dummyProd.setProductNo(999);
-                 dummyProd.setProductName("[테스트] 레이아웃 확인용 상품");
+                 dummyProd.setProdId(999);
+                 dummyProd.setProdName("[테스트] 레이아웃 확인용 상품");
                  dummyProd.setPrice(50000);
-                 dummyProd.setImageFile("no_image.jpg"); 
+                 dummyProd.setThumbnail("no_image.jpg");
                  
                  mav.addObject("member", member);
                  mav.addObject("product", dummyProd);
@@ -117,8 +117,6 @@ public class PaymentController {
         } catch (Exception e) {
             System.out.println(">>> [Fatal Error] 결제 페이지 처리 중 오류 발생");
             e.printStackTrace();
-            // 에러가 발생해도 바로 리다이렉트 하지 않고 로그를 확인하기 위해
-            // 리다이렉트 코드는 유지하되, 콘솔에 에러가 찍히도록 했습니다.
             return new ModelAndView("redirect:/home/main");
         }
 
@@ -129,7 +127,7 @@ public class PaymentController {
      * 결제 처리 (POST)
      * URL: /order/pay
      */
-    @PostMapping("pay")
+    @PostMapping("/pay")
     @ResponseBody
     public Map<String, Object> payProcess(HttpServletRequest req, HttpServletResponse resp) {
         Map<String, Object> result = new HashMap<>();
@@ -143,8 +141,6 @@ public class PaymentController {
         }
 
         try {
-            // [주의] 테스트 모드일 때는 prod_id가 없어서 에러가 날 수 있으니
-            // 실제 결제 테스트 시에는 반드시 상품 상세나 장바구니를 거쳐서 들어와야 함
             if(req.getParameter("prod_id") == null) {
                 result.put("status", "fail");
                 result.put("message", "잘못된 접근입니다. (상품 정보 없음)");
@@ -160,24 +156,24 @@ public class PaymentController {
 
             // 1. OrderDTO 객체 생성
             OrderDTO order = new OrderDTO();
-            // orderNum, orderDate 등은 서비스에서 처리
             order.setMemberIdx(info.getMemberIdx());
             order.setOrderState("결제완료");
             
-            order.setProductName(prodInfo.getProductName());      
-            order.setThumbNail(prodInfo.getImageFile());   
+            // [ProductDTO 변경 적용] getProdName, getThumbnail
+            order.setProductName(prodInfo.getProdName());
+            order.setThumbNail(prodInfo.getThumbnail());
             
             order.setTotalAmount(totalAmount);
             order.setQty(quantity);
             order.setPrice(prodInfo.getPrice());
             
-            // 2. OrderItemDTO 생성 및 배송지 정보 설정
+            // 2. OrderItemDTO 생성
             OrderItemDTO item = new OrderItemDTO();
             item.setProd_id(prodId);
             item.setQuantity(quantity);
             item.setPrice(prodInfo.getPrice());
             
-            // 배송지 정보를 OrderItemDTO에 저장
+            // 배송지 정보
             String addrIdParam = req.getParameter("address_id");
             if(addrIdParam != null && !addrIdParam.isEmpty()) {
                 item.setAddressId(Long.parseLong(addrIdParam));

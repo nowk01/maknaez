@@ -644,49 +644,47 @@ public class MemberController {
 	// [MemberController.java 내부에 추가]
 
 	@GetMapping("mypage/wishList")
-	public ModelAndView wishList(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
-		ModelAndView mav = new ModelAndView("mypage/wishList");
-		HttpSession session = req.getSession();
+	public ModelAndView wishList(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	    ModelAndView mav = new ModelAndView("mypage/wishList");
+	    HttpSession session = req.getSession();
 
-		SessionInfo info = (SessionInfo) session.getAttribute("member");
-		if (info == null) {
-			return new ModelAndView("redirect:/member/login");
-		}
+	    SessionInfo info = (SessionInfo) session.getAttribute("member");
+	    if (info == null) {
+	        return new ModelAndView("redirect:/member/login");
+	    }
 
-		// TODO: 실제로는 Service/Mapper를 통해 DB에서 위시리스트를 가져와야 합니다.
-		// ProductDTO는 이미 있으므로, 이를 활용해 더미 데이터를 만들어 보냅니다.
+	    List<ProductDTO> list = new ArrayList<>();
 
-		List<ProductDTO> list = new ArrayList<>();
+	    // 더미 데이터 1
+	    ProductDTO item1 = new ProductDTO();
+	    item1.setProdId(101);                       // setProductNo -> setProdId
+	    item1.setProdName("ACS 프로 (관심상품 예시)");  // setProductName -> setProdName
+	    item1.setPrice(290000);
+	    // 이미지 경로 설정: 전체 URL 대신 파일명만 넣는 것을 권장합니다 (JSP에서 경로 처리)
+	    item1.setThumbnail("sport_acs.jpg");        // setImageFile -> setThumbnail
+	    item1.setDiscountRate(0);                   // 할인율 (선택)
+	    list.add(item1);
 
-		// 더미 데이터 1
-		ProductDTO item1 = new ProductDTO();
-		item1.setProductNo(101);
-		item1.setProductName("ACS 프로 (관심상품 예시)");
-		item1.setPrice(290000);
-		item1.setImageFile("https://placehold.co/500x500?text=ACS+PRO");
-		list.add(item1);
+	    // 더미 데이터 2
+	    ProductDTO item2 = new ProductDTO();
+	    item2.setProdId(102);
+	    item2.setProdName("XT-6 GTX");
+	    item2.setPrice(280000);
+	    item2.setThumbnail("sport_xt6.jpg");
+	    list.add(item2);
 
-		// 더미 데이터 2
-		ProductDTO item2 = new ProductDTO();
-		item2.setProductNo(102);
-		item2.setProductName("XT-6 GTX");
-		item2.setPrice(280000);
-		item2.setImageFile("https://placehold.co/500x500?text=XT-6");
-		list.add(item2);
+	    // 더미 데이터 3
+	    ProductDTO item3 = new ProductDTO();
+	    item3.setProdId(103);
+	    item3.setProdName("SPEEDCROSS 6");
+	    item3.setPrice(198000);
+	    item3.setThumbnail("women_trail_1.jpg");
+	    list.add(item3);
 
-		// 더미 데이터 3
-		ProductDTO item3 = new ProductDTO();
-		item3.setProductNo(103);
-		item3.setProductName("SPEEDCROSS 6");
-		item3.setPrice(198000);
-		item3.setImageFile("https://placehold.co/500x500?text=SPEEDCROSS");
-		list.add(item3);
+	    mav.addObject("list", list);
+	    mav.addObject("dataCount", list.size());
 
-		mav.addObject("list", list);
-		mav.addObject("dataCount", list.size());
-
-		return mav;
+	    return mav;
 	}
 
 	@GetMapping("mypage/myInfo")

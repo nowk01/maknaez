@@ -10,19 +10,15 @@
 
 <jsp:include page="/WEB-INF/views/layout/headerResources.jsp"/>
 
-<!-- Custom CSS for Detail Page -->
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/product-detail.css" type="text/css">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/header.css">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/footer.css">
   
-<!-- Bootstrap Icons -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 
-<!-- 카카오톡 SDK 추가 -->
 <script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
 
 <style>
-    /* [수정] 공유하기 버튼 - 너비 확장 및 아이콘 정렬 개선 */
     .share-container {
         position: relative;
         display: inline-block;
@@ -31,7 +27,6 @@
         vertical-align: middle;
     }
 
-    /* 기본 공유 아이콘 */
     .share-trigger {
         font-size: 1.2rem;
         color: #333;
@@ -44,7 +39,6 @@
         z-index: 2;
     }
 
-    /* Hover 시 나타나는 메뉴 (알약 모양) */
     .share-options {
         position: absolute;
         top: 50%;
@@ -60,8 +54,7 @@
         align-items: center;
         justify-content: center; 
         gap: 0; 
-        
-        /* 초기 상태: 숨김 */
+       
         width: 0;
         padding: 0;
         opacity: 0;
@@ -73,7 +66,6 @@
         box-shadow: 0 4px 15px rgba(0,0,0,0.1);
     }
 
-    /* 호버 인터랙션 */
     .share-container:hover .share-trigger {
         opacity: 0;
         transform: translate(-50%, -50%) scale(0.5); 
@@ -86,7 +78,6 @@
         visibility: visible;
     }
 
-    /* 내부 버튼 스타일 */
     .share-btn {
         background: none;
         border: none;
@@ -107,12 +98,11 @@
         transition: all 0.2s ease;
     }
     
-    /* [수정] 아이콘 우측 여백 추가 */
     .share-btn i {
         line-height: 1;
         display: block;
         margin-top: 1px;
-        margin-right: 12px; /* 요청하신 간격 적용 */
+        margin-right: 12px; 
     }
     
     .share-btn:hover {
@@ -121,7 +111,6 @@
         transform: scale(1.1);
     }
     
-    /* 구분선 */
     .share-divider {
         width: 1px;
         height: 14px;
@@ -130,7 +119,6 @@
         flex-shrink: 0;
     }
 
-    /* [유지] 별점 스타일 */
     .star-rating-custom {
         display: inline-flex;
         align-items: center;
@@ -157,7 +145,6 @@
         margin-right: 8px;
     }
 
-    /* [추가] 토스트 알림 메시지 스타일 */
     .toast-message {
         position: fixed;
         bottom: 50px;
@@ -184,10 +171,6 @@
         transform: translateX(-50%) translateY(0); 
     }
 
-    /* =================================================================
-       [신규 추가] 버튼 스타일 커스터마이징 (둥근 모서리 & 테두리 유지)
-       ================================================================= */
-    
     #stickySidebar .restock-alert .btn {
         border-radius: 30px; 
         border: 1px solid #e0e0e0;
@@ -248,7 +231,6 @@
 		</form>
 
 		<div class="row">
-			<!-- ================= LEFT COLUMN (상세 정보) ================= -->
 			<div class="col-lg-8 detail-left-section">
 				
 				<!-- 좌-상: 제품 이미지 그리드 -->
@@ -334,18 +316,14 @@
 						
 						<div class="action-icons" style="display: flex; gap: 15px; align-items: center;">
                             
-                            <!-- [수정] 공유하기 버튼 (더 넓게, 중앙 정렬) -->
                             <div class="share-container">
-                                <!-- 기본 아이콘 -->
                                 <i class="bi bi-share share-trigger" title="공유하기"></i>
                                 
-                                <!-- 호버 시 나타나는 메뉴 -->
                                 <div class="share-options">
                                     <button type="button" class="share-btn" onclick="shareKakao()" title="카카오톡 공유">
                                         <i class="bi bi-chat-fill"></i>
                                     </button>
                                     
-                                    <!-- [수정] 구분선 복구 -->
                                     <div class="share-divider"></div>
                                     
                                     <button type="button" class="share-btn" onclick="copyLink()" title="링크 복사">
@@ -416,11 +394,7 @@
 
 		<div id="sentinelNode" class="sentinel-point"></div>
 
-		<!-- 
-             ===========================================================
-             [REVIEW SECTION] 
-             ===========================================================
-        -->
+		<!--  REVIEW SECTION -->
 		<div id="reviewSection" class="review-wrapper">
             
             <!-- [Header] -->
@@ -433,7 +407,7 @@
                 </div>
             </div>
 
-            <!-- [Content Area] : 하드코딩된 레이아웃 복구 -->
+            <!-- [Content Area] -->
             <div id="reviewContentArea">
                 
                 <!-- Filter Bar (Static) -->
@@ -455,7 +429,7 @@
                     </div>
                 </div>
 
-                <!-- Hardcoded Review Item 1 -->
+                <!-- Review Item 1 -->
                 <div class="review-item">
                     <div class="review-meta-top">
                         <div class="d-flex align-items-center">
@@ -491,7 +465,7 @@
                     </div>
                 </div>
 
-                <!-- Hardcoded Review Item 2 -->
+                <!-- Review Item 2 -->
                 <div class="review-item">
                     <div class="review-meta-top">
                         <div class="d-flex align-items-center">
@@ -573,27 +547,22 @@
 <jsp:include page="/WEB-INF/views/layout/footerResources.jsp"/>
 
 <script>
-// 전역 변수 선언
 const contextPath = "${pageContext.request.contextPath}";
 const productNum = "${dto.productNo}"; 
 let currentReviewPage = 1;
 
-// [공유하기 기능 스크립트]
-// ===================================================================
 
-// [추가] 토스트 알림 메시지 함수
+// 토스트 알림 메시지 함수
 function showToast(message) {
-    // 이미 존재하는 토스트 제거 (중복 방지)
     const existingToast = document.querySelector('.toast-message');
     if (existingToast) existingToast.remove();
-
+    
     // 새 토스트 생성
     const toast = document.createElement('div');
     toast.className = 'toast-message';
     toast.innerText = message;
     document.body.appendChild(toast);
 
-    // setTimeout으로 변경하여 DOM 추가 후 확실하게 스타일 적용 시점 분리
     setTimeout(() => {
         toast.classList.add('show');
     }, 10);
@@ -601,16 +570,13 @@ function showToast(message) {
     // 2.5초 후 제거 시작
     setTimeout(() => {
         toast.classList.remove('show');
-        // 애니메이션(0.4s) 종료 후 DOM에서 제거
         setTimeout(() => {
             toast.remove();
         }, 400); 
     }, 2500);
 }
 
-// [수정] 링크 복사 기능 (호환성 개선)
 function copyLink() {
-    // 1. 현재 주소를 가져오되, localhost인 경우 실제 IP로 변환 (개발 편의성)
     let url = window.location.href;
     const myPublicIP = "61.73.115.26:9090"; // ★ 실제 접속 가능한 IP로 변경하세요
     if (url.includes("localhost")) {
@@ -699,7 +665,6 @@ function shareKakao() {
 
 // 문서 로드 시 실행
 $(document).ready(function() {
-    // 1. 기존 UI 이벤트 (스티키바, 수량조절, 장바구니 등)
 	const sidebar = document.getElementById('stickySidebar');
 	const sentinel = document.getElementById('sentinelNode');
 	
@@ -748,16 +713,14 @@ $(document).ready(function() {
 		$(this).toggleClass('bi-heart bi-heart-fill text-danger');
 	});
 
-    // 2. 리뷰 데이터 강제 로드 호출 (레이아웃 확인을 위해 잠시 주석 처리)
+    // 리뷰 데이터 강제 로드 호출 (레이아웃 확인을 위해 잠시 주석 처리)
     // loadReviews(1);
 });
 
 function scrollToReview() { document.getElementById('reviewSection').scrollIntoView({ behavior: 'smooth' }); }
 function scrollToRecommend() { document.getElementById('recommendSection').scrollIntoView({ behavior: 'smooth' }); }
 
-/* =========================================================
-   [REVIEW LOGIC] - 데이터 강제 주입 로직
-   ========================================================= */
+
 function searchReview() {
     currentReviewPage = 1;
     loadReviews(1);
@@ -767,7 +730,7 @@ function loadReviews(page) {
     currentReviewPage = page;
     let keyword = $('#reviewKeyword').val() || ""; // null 방지
     
-    // AJAX 호출 부분 (백엔드 연동 시 주석 해제)
+    // AJAX 호출 부분 
     /*
     $.ajax({
         url: contextPath + "/review/list",
@@ -778,16 +741,15 @@ function loadReviews(page) {
     });
     */
     
-    // [강제 실행] 가짜 데이터를 0.1초 뒤에 렌더링 (화면 깜빡임 최소화)
+    // 가짜 데이터를 0.1초 뒤에 렌더링 (화면 깜빡임 최소화)
     setTimeout(function() {
         let mockData = generateMockReviews(keyword);
         renderReviews(mockData);
     }, 100);
 }
 
-// 가짜 데이터 생성기 (생동감 있는 데이터)
+
 function generateMockReviews(keyword) {
-    // 키워드가 있고 '없음'이라고 검색하면 빈 데이터 리턴 테스트
     if(keyword && keyword === "없음") return { count: 0, list: [], photoList: [] };
 
     // 다양한 리뷰 텍스트 풀
