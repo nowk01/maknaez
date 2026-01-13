@@ -144,17 +144,11 @@ public class MemberController {
 			dto.setUserPwd(req.getParameter("userPwd"));
 			dto.setUserName(req.getParameter("userName"));
 			dto.setBirth(req.getParameter("birth"));
-			
-			dto.setNickName(req.getParameter("nickName"));
-			dto.setGender(Integer.parseInt(req.getParameter("gender")));
-			
+
 			String email1 = req.getParameter("email1");
 			String email2 = req.getParameter("email2");
 			dto.setEmail(email1 + "@" + email2);
 
-			// 약관 동의 페이지에서 선택한 값에 따라 세팅 (기본값 0 또는 1)
-	        dto.setReceiveEmail(req.getParameter("receiveEmail") != null ? 1 : 0);
-	        
 			Part p = req.getPart("selectFile");
 			MyMultipartFile mp = fileManager.doFileUpload(p, pathname);
 			if (mp != null) {
@@ -633,6 +627,27 @@ public class MemberController {
 
 		return mav;
 	}
+	
+	@GetMapping("mypage/myInfo")
+    public ModelAndView myInfo(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        ModelAndView mav = new ModelAndView("mypage/myInfo");
+        HttpSession session = req.getSession();
+        
+        SessionInfo info = (SessionInfo) session.getAttribute("member");
+        if (info == null) {
+            return new ModelAndView("redirect:/member/login");
+        }
+
+        try {
+            // 현재 로그인한 사용자의 ID로 상세 정보를 조회하여 DTO에 담습니다.
+            MemberDTO dto = service.findById(info.getUserId());
+            mav.addObject("dto", dto);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return mav;
+    }
 
 
 }
