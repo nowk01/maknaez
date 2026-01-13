@@ -203,7 +203,8 @@ public class MemberController {
 		SessionInfo info = (SessionInfo) session.getAttribute("member");
 
 		try {
-			MemberDTO dto = service.findById(info.getUserId());
+			// 1. 회원 정보 가져오기
+			MemberDTO dto = service.findByIdx(info.getMemberIdx());
 
 			if (dto == null) {
 				session.invalidate();
@@ -213,6 +214,7 @@ public class MemberController {
 			String userPwd = req.getParameter("userPwd");
 			String mode = req.getParameter("mode");
 
+			// 2. 비밀번호 확인
 			if (!dto.getUserPwd().equals(userPwd)) {
 				ModelAndView mav = new ModelAndView("member/pwd");
 				mav.addObject("mode", mode);
@@ -220,11 +222,28 @@ public class MemberController {
 				return mav;
 			}
 
+			// 3. 모드별 처리
 			if (mode.equals("delete")) {
+				// 회원 탈퇴 처리 (기존 유지)
 				session.removeAttribute("member");
 				session.invalidate();
 			} else if (mode.equals("update")) {
-				ModelAndView mav = new ModelAndView("member/member");
+				/*
+				 * ============================================== [수정 핵심] 여기를 바꿔야 새 페이지가 뜹니다!
+				 * ==============================================
+				 */
+
+				// (1) 이메일 분리: DB에 있는 email(user@naver.com)을 쪼개서 화면에 보냄
+				if (dto.getEmail() != null) {
+					String[] emails = dto.getEmail().split("@");
+					if (emails.length > 0)
+						dto.setEmail1(emails[0]);
+					if (emails.length > 1)
+						dto.setEmail2(emails[1]);
+				}
+
+				// (2) 이동 경로 변경: member/member -> mypage/myInfo
+				ModelAndView mav = new ModelAndView("mypage/myInfo");
 				mav.addObject("dto", dto);
 				mav.addObject("mode", "update");
 				return mav;
@@ -249,7 +268,7 @@ public class MemberController {
 		try {
 			MemberDTO dto = new MemberDTO();
 
-			dto.setUserId(info.getUserId());
+			dto.setMemberIdx(info.getMemberIdx());
 			dto.setUserPwd(req.getParameter("userPwd"));
 			dto.setUserName(req.getParameter("userName"));
 			dto.setBirth(req.getParameter("birth"));
@@ -627,27 +646,36 @@ public class MemberController {
 
 		return mav;
 	}
-	
+
 	@GetMapping("mypage/myInfo")
-    public ModelAndView myInfo(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        ModelAndView mav = new ModelAndView("mypage/myInfo");
-        HttpSession session = req.getSession();
-        
-        SessionInfo info = (SessionInfo) session.getAttribute("member");
-        if (info == null) {
-            return new ModelAndView("redirect:/member/login");
-        }
+	public ModelAndView myInfo(HttpServletRequest req, HttpServletResponse resp) {
 
-        try {
-            // 현재 로그인한 사용자의 ID로 상세 정보를 조회하여 DTO에 담습니다.
-            MemberDTO dto = service.findById(info.getUserId());
-            mav.addObject("dto", dto);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+		HttpSession session = req.getSession(false);
+		if (session == null) {
+			return new ModelAndView("redirect:/member/login");
+		}
 
-        return mav;
-    }
+		SessionInfo info = (SessionInfo) session.getAttribute("member");
+		if (info == null) {
+			return new ModelAndView("redirect:/member/login");
+		}
 
+		ModelAndView mav = new ModelAndView("mypage/myInfo");
+
+		try {
+			MemberDTO dto = service.findByIdx(info.getMemberIdx());
+			
+			if (dto != null && dto.getEmail() != null) {
+	            String[] emails = dto.getEmail().split("@");
+	            if (emails.length > 0) dto.setEmail1(emails[0]);
+	            if (emails.length > 1) dto.setEmail2(emails[1]);
+	        }
+			mav.addObject("dto", dto);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return mav;
+	}
 
 }

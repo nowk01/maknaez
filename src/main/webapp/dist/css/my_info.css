@@ -1,93 +1,241 @@
 @charset "UTF-8";
 
-/* =========================================
-   내 정보 관리 (My Info) 전용 스타일
-   ========================================= */
+/* =====================================================
+   MY INFO – SALOMON STYLE (PAGE ONLY)
+   적용 범위: 마이페이지 > 내 정보 관리
+   ===================================================== */
 
-.rte, #comments, #template, #address_tables, .section-accordion .cc-accordion-item__content {
-    text-align: left;
-    zoom: 1;
+/* -------------------------------------
+   1. 페이지 전용 폰트 세팅
+------------------------------------- */
+.main-content {
+    font-family: "Pretendard", "Noto Sans KR",
+                 -apple-system, BlinkMacSystemFont,
+                 "Segoe UI", Roboto, sans-serif;
+    color: #000;
 }
 
+/* -------------------------------------
+   2. 페이지 타이틀
+------------------------------------- */
 .feature-header {
-    font-family: "SALOMON Sans", "Noto Sans KR", sans-serif;
     font-size: 24px;
     font-weight: 700;
+    letter-spacing: -0.02em;
     color: #000;
-    
-    text-align: center;           /* 텍스트 가운데 정렬 */
-    padding-bottom: 25px;         /* 텍스트와 줄 사이 간격 */
-    margin-bottom: 60px;          /* 줄과 입력 폼 사이 간격 */
-    border-bottom: 2px solid #000;/* ★ 핵심: 긴 검은 줄 */
-    width: 100%;                  /* 줄을 끝까지 긋기 위함 */
-    display: block;
+
+    text-align: center;
+    padding-bottom: 24px;
+    margin-bottom: 56px;
+    border-bottom: 2px solid #000;
 }
 
-/* 3. 폼 컨테이너 (368px 중앙 정렬) */
+/* -------------------------------------
+   3. 폼 컨테이너 (Salomon 실제 폭)
+------------------------------------- */
 .customer__detailsForm {
-    max-width: 368px;             /* 살로몬 공식 폼 너비 */
-    margin: 0 auto;               /* 좌우 자동 여백 -> 중앙 정렬 */
-    padding-bottom: 50px;
+    max-width: 368px;
+    margin: 0 auto;
+    padding-bottom: 48px;
 }
 
-/* --- 이하 입력 필드 스타일 --- */
+/* -------------------------------------
+   4. 입력 행
+------------------------------------- */
+.input-row {
+    width: 100%;
+    margin-bottom: 24px;
+}
 
-.input-row { margin-bottom: 24px; width: 100%; position: relative; }
+/* -------------------------------------
+   5. 라벨
+------------------------------------- */
 .info-label {
-    display: block; font-size: 13px; font-weight: 700; color: #000;
-    margin-bottom: 8px; text-transform: uppercase;
+    display: block;
+    margin-bottom: 8px;
+
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+
+    color: #000;
 }
 
-/* 입력창 디자인 */
-input[type="text"], input[type="password"], input[type="tel"], input[type="email"], select {
-    width: 100%; height: 48px; padding: 0 16px;
-    border: 1px solid #e0e0e0; border-radius: 0;
-    font-size: 14px; color: #000; background-color: #fff;
-    box-sizing: border-box; appearance: none; -webkit-appearance: none;
+/* -------------------------------------
+   6. 공통 입력 요소
+------------------------------------- */
+input[type="text"],
+input[type="password"],
+input[type="tel"],
+input[type="email"],
+select {
+    width: 100%;
+    height: 48px;
+    padding: 0 16px;
+
     font-family: inherit;
+    font-size: 14px;
+    font-weight: 400;
+    color: #000;
+
+    border: 1px solid #e0e0e0;
+    border-radius: 0;
+    background-color: #fff;
+
+    box-sizing: border-box;
+    appearance: none;
+    -webkit-appearance: none;
 }
-input:focus, select:focus { border-color: #000; outline: none; }
-input[disabled], input[readonly] { background-color: #f9f9f9; color: #888; cursor: default; }
 
-/* 성/이름 분리 */
-.divided { display: flex; gap: 10px; margin-bottom: 24px; }
-.divided__input { flex: 1; }
-
-/* 휴대폰 번호 + 버튼 */
-.phone-field { display: flex; gap: 10px; margin-bottom: 5px; }
-.phone-field input { flex: 1; }
-
-/* 버튼 스타일 */
-.phone-field__send-code, .btn {
-    height: 48px; padding: 0 20px;
-    background-color: #000; color: #fff;
-    font-size: 13px; font-weight: 600;
-    border: 1px solid #000; cursor: pointer; white-space: nowrap;
+/* 포커스 상태 */
+input:focus,
+select:focus {
+    border-color: #000;
+    outline: none;
 }
-.phone-field__send-code:hover, .btn:hover { opacity: 0.8; }
 
-/* 유틸리티 */
-.otp-text { font-size: 12px; color: #666; margin-top: 5px; }
-.hidden { display: none !important; }
+/* 비활성 / 읽기전용 */
+input[disabled],
+input[readonly] {
+    background-color: #f5f5f5;
+    color: #777;
+    cursor: default;
+}
 
-/* 성별 선택 화살표 */
-.pretty-select { position: relative; margin-bottom: 24px; }
+/* -------------------------------------
+   7. 성 / 이름 분리 입력
+------------------------------------- */
+.divided {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 24px;
+}
+
+.divided__input {
+    flex: 1;
+}
+
+/* -------------------------------------
+   8. 휴대폰 입력 + 버튼
+------------------------------------- */
+.phone-field {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 6px;
+}
+
+.phone-field input {
+    flex: 1;
+}
+
+/* -------------------------------------
+   9. 버튼 (업데이트 / 재설정)
+------------------------------------- */
+.phone-field__send-code,
+.btn {
+    height: 48px;
+    padding: 0 20px;
+
+    background-color: #000;
+    color: #fff;
+
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+
+    border: 1px solid #000;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.phone-field__send-code:hover,
+.btn:hover {
+    opacity: 0.85;
+}
+
+/* -------------------------------------
+   10. OTP 안내 텍스트
+------------------------------------- */
+.otp-text {
+    margin-top: 4px;
+    font-size: 12px;
+    color: #666;
+}
+
+/* -------------------------------------
+   11. 숨김 처리
+------------------------------------- */
+.hidden {
+    display: none !important;
+}
+
+/* -------------------------------------
+   12. 셀렉트 커스텀 화살표
+------------------------------------- */
+.pretty-select {
+    position: relative;
+    margin-bottom: 24px;
+}
+
 .pretty-select svg {
-    position: absolute; right: 16px; top: 50%;
-    transform: translateY(-50%); pointer-events: none;
-    width: 12px; height: 12px;
+    position: absolute;
+    right: 16px;
+    top: 50%;
+
+    width: 12px;
+    height: 12px;
+
+    transform: translateY(-50%);
+    pointer-events: none;
 }
 
-/* 체크박스 */
-.checkbox-row { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
-.checkbox-row input { width: 18px; height: 18px; accent-color: #000; margin: 0; }
-.checkbox-row label { font-size: 13px; cursor: pointer; }
+/* -------------------------------------
+   13. 체크박스
+------------------------------------- */
+.checkbox-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+}
 
-/* 저장 버튼 */
-.wide-action { margin-top: 50px; }
+.checkbox-row input {
+    width: 18px;
+    height: 18px;
+    margin: 0;
+    accent-color: #000;
+}
+
+.checkbox-row label {
+    font-size: 13px;
+    cursor: pointer;
+}
+
+/* -------------------------------------
+   14. 저장 버튼
+------------------------------------- */
+.wide-action {
+    margin-top: 48px;
+}
+
 .as-salomon__submit {
-    width: 100%; height: 52px;
-    background-color: #000; color: #fff;
-    font-size: 15px; font-weight: 700;
-    border: none; cursor: pointer; text-transform: uppercase;
+    width: 100%;
+    height: 52px;
+
+    background-color: #000;
+    color: #fff;
+
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+
+    border: none;
+    cursor: pointer;
 }
+
+.as-salomon__submit:hover {
+    opacity: 0.9;
+}
+
