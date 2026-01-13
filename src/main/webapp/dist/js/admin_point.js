@@ -13,8 +13,14 @@ function checkAll(checkbox) {
 
 // 2. 모달 열기 (선택된 회원 확인)
 function openPointModal(mode) {
+    const modal = document.getElementById('pointModal');
     const checkedItems = document.querySelectorAll('.chk-item:checked');
-    if (checkedItems.length === 0) {
+    const memberIdxInput = document.querySelector("input[name=memberIdx]"); // 상세페이지용 idx
+
+    // 상세페이지인지 목록페이지인지 판별
+    const isDetailPage = !!memberIdxInput;
+
+    if (!isDetailPage && checkedItems.length === 0) {
         alert("처리가 필요한 회원을 선택해주세요.");
         return;
     }
@@ -22,46 +28,40 @@ function openPointModal(mode) {
     // 모달 UI 세팅
     const modalTitle = document.getElementById("pointModalLabel");
     const modalMode = document.getElementById("modalMode");
-    const confirmBtn = document.querySelector("#pointModal .btn-primary");
+    const confirmBtn = document.querySelector("#pointModal .btn-primary") || document.getElementById("modalConfirmBtn");
     const pointHelp = document.getElementById("pointHelp");
+    const selectedDiv = document.getElementById("selectedMembers");
 
-    modalMode.value = mode; // '적립' or '차감'
+    modalMode.value = mode;
 
     if (mode === '적립') {
-        modalTitle.innerText = "포인트 일괄 [적립]";
-        modalTitle.className = "modal-title fw-bold text-primary";
-        confirmBtn.className = "btn btn-primary";
-        confirmBtn.innerText = "적립하기";
-        pointHelp.innerText = "입력한 금액만큼 포인트가 더해집니다.";
+        modalTitle.innerText = isDetailPage ? "포인트 [적립]" : "포인트 일괄 [적립]";
+        if(confirmBtn) confirmBtn.innerText = "적립하기";
+        if(pointHelp) pointHelp.innerText = "입력한 금액만큼 포인트가 더해집니다.";
     } else {
-        modalTitle.innerText = "포인트 일괄 [차감]";
-        modalTitle.className = "modal-title fw-bold text-danger";
-        confirmBtn.className = "btn btn-danger";
-        confirmBtn.innerText = "차감하기";
-        pointHelp.innerText = "입력한 금액만큼 포인트가 차감됩니다.";
+        modalTitle.innerText = isDetailPage ? "포인트 [차감]" : "포인트 일괄 [차감]";
+        if(confirmBtn) confirmBtn.innerText = "차감하기";
+        if(pointHelp) pointHelp.innerText = "입력한 금액만큼 포인트가 차감됩니다.";
     }
 
-    // 선택된 회원 리스트 표시 Logic
-    const selectedDiv = document.getElementById("selectedMembers");
-    const countSpan = document.getElementById("selectedCount");
-    selectedDiv.innerHTML = "";
-    
-    let html = "";
-    checkedItems.forEach(item => {
-        const memberIdx = item.value;
-        const userId = document.getElementById("id_" + memberIdx).innerText;
-        const userName = document.getElementById("name_" + memberIdx).innerText;
-        const curPoint = document.getElementById("point_" + memberIdx).value; // 히든값 가져오기
+    // 선택된 회원 표시 로직
+    if (isDetailPage) {
+        const userId = document.querySelector(".text-orange").innerText;
+        selectedDiv.innerHTML = `<div><span class="fw-bold">${userId}</span> 님 대상</div>`;
+    } else {
+        let html = "";
+        checkedItems.forEach(item => {
+            const memberIdx = item.value;
+            const userId = document.getElementById("id_" + memberIdx).innerText;
+            const userName = document.getElementById("name_" + memberIdx).innerText;
+            html += `<div><span class="fw-bold">${userId}</span> (${userName})</div>`;
+        });
+        selectedDiv.innerHTML = html;
+        document.getElementById("selectedCount").innerText = checkedItems.length;
+    }
 
-        html += `<div><span class="fw-bold">\${userId}</span> (\${userName}) - 현재: \${curPoint} P</div>`;
-    });
-    
-    selectedDiv.innerHTML = html;
-    countSpan.innerText = checkedItems.length;
-
-    // 모달 띄우기 (Bootstrap 5 API)
-    const modal = new bootstrap.Modal(document.getElementById('pointModal'));
-    modal.show();
+    const modalObj = new bootstrap.Modal(modal);
+    modalObj.show();
 }
 
 // 3. 사유 선택 시 입력창 자동 완성
