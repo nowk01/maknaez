@@ -266,8 +266,12 @@ public class MemberController {
 		String pathname = root + "uploads" + File.separator + "member";
 
 		try {
-			MemberDTO dto = new MemberDTO();
-
+			MemberDTO dto = service.findByIdx(info.getMemberIdx());
+			
+			if (dto == null) {
+	            return new ModelAndView("redirect:/member/login");
+	        }
+			
 			dto.setMemberIdx(info.getMemberIdx());
 			dto.setUserPwd(req.getParameter("userPwd"));
 			dto.setUserName(req.getParameter("userName"));
@@ -393,10 +397,7 @@ public class MemberController {
 		return model;
 	}
 
-	/*
-	 * ========================================================= [수정됨] 주문/배송 조회 (상태별
-	 * 카운트 추가) =========================================================
-	 */
+
 	@GetMapping("mypage/orderList")
 	public ModelAndView orderList(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
@@ -475,10 +476,6 @@ public class MemberController {
 		return mav;
 	}
 
-	/*
-	 * ========================================================= [수정됨] 취소/반품 조회 (상태별
-	 * 카운트 추가) =========================================================
-	 */
 	@GetMapping("mypage/cancelList")
 	public ModelAndView cancelList(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
@@ -670,7 +667,7 @@ public class MemberController {
 	            if (emails.length > 0) dto.setEmail1(emails[0]);
 	            if (emails.length > 1) dto.setEmail2(emails[1]);
 	        }
-			mav.addObject("dto", dto);
+			mav.addObject("dto", dto); // JSP에서 사용할 수 있도록 'dto'라는 이름으로 전달
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
