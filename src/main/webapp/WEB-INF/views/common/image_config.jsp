@@ -40,3 +40,7 @@
 	
 	<c:set var="img_cat_sale_1" value="https://images.pexels.com/photos/3011385/pexels-photo-3011385.jpeg?auto=compress&cs=tinysrgb&w=800" scope="request"/>
 	<c:set var="img_cat_sale_2" value="https://images.pexels.com/photos/5632371/pexels-photo-5632371.jpeg?auto=compress&cs=tinysrgb&w=800" scope="request"/>
+	
+	
+	<%-- list에서 이미지 뽑아오기 --%>
+	<c:set var="uploadPath" value="${pageContext.request.contextPath}/uploads" scope="request"/>
