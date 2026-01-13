@@ -698,7 +698,96 @@ public class MemberController {
 
 		return mav;
 	}
+	/* =========================================================================
+	   [추가] 배송지 관리 (목록 / 등록 / 삭제)
+	   ========================================================================= */
 
+	// 1. 배송지 목록 페이지 이동
+	@GetMapping("mypage/addr")
+	public ModelAndView addressList(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		HttpSession session = req.getSession();
+		SessionInfo info = (SessionInfo) session.getAttribute("member");
+		
+		// 로그인 확인
+		if (info == null) {
+			return new ModelAndView("redirect:/member/login");
+		}
 
+		ModelAndView mav = new ModelAndView("mypage/addr"); // 뷰 페이지: /WEB-INF/views/mypage/addr.jsp
 
+		try {
+			// Service에서 배송지 목록 가져오기
+			// (MemberService에 listAddress 메서드가 구현되어 있어야 합니다)
+			List<AddressDTO> list = service.listAddress(info.getMemberIdx());
+			mav.addObject("list", list);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return mav;
+	}
+
+	// 2. 배송지 등록 처리
+	@PostMapping("mypage/addr/write")
+	public ModelAndView addressWrite(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		HttpSession session = req.getSession();
+		SessionInfo info = (SessionInfo) session.getAttribute("member");
+		
+		if (info == null) {
+			return new ModelAndView("redirect:/member/login");
+		}
+
+		try {
+			AddressDTO dto = new AddressDTO();
+			dto.setMemberIdx(info.getMemberIdx());
+			
+			// JSP 폼(Form)에서 넘어온 데이터 받기 (name 속성과 일치해야 함)
+			// DB 컬럼명에 맞춰 DTO에 세팅 (DTO 변수명: receiverName, zipCode 등 가정)
+			dto.setReceiverName(req.getParameter("name")); 
+			dto.setReceiverTel(req.getParameter("tel"));
+			dto.setZipCode(req.getParameter("zip"));
+			dto.setAddr1(req.getParameter("addr1"));
+			dto.setAddr2(req.getParameter("addr2"));
+			
+			// 배송지 별칭 (입력란이 없다면 기본값 설정)
+			dto.setAddrName("나의 배송지");
+
+			// 기본 배송지 체크 여부 (체크되면 1, 아니면 0)
+			String isDefault = req.getParameter("isDefault");
+			dto.setIsBasic(isDefault != null ? 1 : 0);
+
+			// Service에 저장 요청
+			service.insertAddress(dto);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		// 저장 후 목록 페이지로 리다이렉트 (새로고침 효과)
+		return new ModelAndView("redirect:/member/mypage/addr");
+	}
+
+	// 3. 배송지 삭제 처리
+	@GetMapping("mypage/addr/delete")
+	public ModelAndView addressDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		HttpSession session = req.getSession();
+		SessionInfo info = (SessionInfo) session.getAttribute("member");
+		
+		if (info == null) {
+			return new ModelAndView("redirect:/member/login");
+		}
+		
+		try {
+			// 삭제할 배송지 번호(PK) 받기
+			long addrId = Long.parseLong(req.getParameter("addrIdx"));
+			
+			// Service에 삭제 요청
+			service.deleteAddress(addrId);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		// 삭제 후 목록으로 리다이렉트
+		return new ModelAndView("redirect:/member/mypage/addr");
+	}
 }

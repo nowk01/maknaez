@@ -47,7 +47,7 @@
             <span class="menu-title">회원정보</span>
             <ul>
                 <li><a href="${pageContext.request.contextPath}/member/mypage/myInfo">내 정보 관리</a></li>
-                <li><a href="#">배송지 관리</a></li>
+                <li><a href="${pageContext.request.contextPath}/member/mypage/addr">배송지 관리</a></li>
                 <li><a href="#">회원등급</a></li>
                 <li><a href="#">문의하기</a></li>
             </ul>

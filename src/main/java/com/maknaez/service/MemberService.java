@@ -3,6 +3,7 @@ package com.maknaez.service;
 import java.util.List;
 import java.util.Map;
 
+import com.maknaez.model.AddressDTO;
 import com.maknaez.model.MemberDTO;
 
 public interface MemberService {
@@ -25,4 +26,8 @@ public interface MemberService {
 	
 	public List<MemberDTO> listDormantMembers(Map<String, Object> map) throws Exception;
 	public Integer dataCountDormant(Map<String, Object> map);
+
+	public void insertAddress(AddressDTO dto) throws Exception;
+    public List<AddressDTO> listAddress(long memberIdx);
+    public void deleteAddress(long addrId) throws Exception;
 }
