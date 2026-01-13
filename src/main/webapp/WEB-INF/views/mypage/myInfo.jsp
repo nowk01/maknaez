@@ -126,17 +126,22 @@
 
 				<div class="customer__detailsForm">
 					<form name="memberForm" method="post">
+						<!-- 기존 hidden -->
 						<input type="hidden" name="userName"> <input type="hidden"
 							name="userId" value="${dto.userId}">
 
+						<!-- ★ 추가: 이메일 분리용 hidden -->
+						<input type="hidden" name="email1"> <input type="hidden"
+							name="email2">
+
 						<div class="input-row">
-							<label class="info-label">아이디</label>
-							<div class="static-text">${dto.userId}</div>
+							<label class="info-label">아이디</label> <input type="text"
+								value="${sessionScope.member.userId}" readonly>
 						</div>
 
 						<label class="info-label">이름</label>
 						<div class="divided">
-							<c:set var="uName" value="${dto.userName}" />
+							<c:set var="uName" value="${sessionScope.member.userName}" />
 							<input class="divided__input" type="text" placeholder="성"
 								id="last_name_customer" value="${fn:substring(uName, 0, 1)}">
 							<input class="divided__input" type="text" placeholder="이름"
@@ -146,16 +151,15 @@
 
 						<div class="input-row">
 							<label class="info-label">생년월일</label> <input type="text"
-								value="<fmt:formatDate value='${dto.birth}' pattern='yyyy/MM/dd'/>"
-								readonly> <input type="hidden" name="birth"
-								value="${dto.birth}">
+								value="${dto.birth}" readonly> <input type="hidden"
+								name="birth" value="${dto.birth}">
 						</div>
 
 						<div class="input-row">
 							<label class="info-label">이메일주소</label>
-							<%-- 요청하신 태그 속성 그대로 적용 + value는 DB 데이터 바인딩 --%>
+							<!-- name="email" 없음 → JS에서 hidden(email1, email2)로 분해 -->
 							<input aria-label="이메일" placeholder="이메일" type="email"
-								name="email" id="email_customer" value="${dto.email}" size="40">
+								id="email_customer" value="${dto.email}" size="40">
 						</div>
 
 						<div class="input-row">
@@ -193,7 +197,9 @@
 									<option value="1" ${dto.gender == 1 ? 'selected' : ''}>여성</option>
 								</select>
 								<svg fill="#000000" viewBox="0 0 24 24">
-									<path d="M7.41 7.84L12 12.42l4.59-4.58L18 9.25l-6 6-6-6z"></path></svg>
+                <path
+										d="M7.41 7.84L12 12.42l4.59-4.58L18 9.25l-6 6-6-6z" />
+            </svg>
 							</div>
 						</div>
 
@@ -202,6 +208,7 @@
 								value="1" ${dto.receiveEmail == 1 ? 'checked' : ''}> <label
 								for="email_consent">이메일 수신에 동의합니다</label>
 						</div>
+
 						<div class="checkbox-row">
 							<input type="checkbox" id="sms_consent" checked> <label
 								for="sms_consent">SMS 수신에 동의합니다.</label>
@@ -212,6 +219,7 @@
 								onclick="updateMember();">저장</button>
 						</div>
 					</form>
+
 				</div>
 			</div>
 		</main>
