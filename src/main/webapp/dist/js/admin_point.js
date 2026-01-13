@@ -1,3 +1,8 @@
+function searchList() {
+    const f = document.searchForm;
+    f.submit();
+}
+
 // 1. 전체 선택/해제 기능
 function checkAll(checkbox) {
     const items = document.querySelectorAll('.chk-item');
