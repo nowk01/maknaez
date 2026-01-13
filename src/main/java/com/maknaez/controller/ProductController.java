@@ -35,10 +35,10 @@ public class ProductController {
         }
 
         ProductDTO dto = new ProductDTO();
-        dto.setProductNo(productNo); 
-        dto.setProductName("나이키 에어 포스 1 '07 (" + productNo + "번 모델)");
+        dto.setProdId(productNo); 
+        dto.setProdName("나이키 에어 포스 1 '07 (" + productNo + "번 모델)");
         dto.setPrice((int)(139000 + (productNo * 1000))); 
-        dto.setCategoryNo(1);
+        dto.setCateCode("1");
         
         ModelAndView mav = new ModelAndView("product/detail");
         mav.addObject("dto", dto);

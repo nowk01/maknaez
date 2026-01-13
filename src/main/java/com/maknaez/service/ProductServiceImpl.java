@@ -12,7 +12,8 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<ProductDTO> listProduct(Map<String, Object> map) {
         List<ProductDTO> list = null;
-        try (var sqlSession = SqlSessionManager.getSession()) {
+        try {
+            var sqlSession = SqlSessionManager.getSession();
             ProductMapper mapper = sqlSession.getMapper(ProductMapper.class);
             list = mapper.listProduct(map);
         } catch (Exception e) {
@@ -24,7 +25,8 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public int dataCount(Map<String, Object> map) {
         int result = 0;
-        try (var sqlSession = SqlSessionManager.getSession()) {
+        try {
+            var sqlSession = SqlSessionManager.getSession();
             ProductMapper mapper = sqlSession.getMapper(ProductMapper.class);
             result = mapper.dataCount(map);
         } catch (Exception e) {
