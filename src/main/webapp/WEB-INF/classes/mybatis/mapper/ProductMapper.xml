@@ -127,5 +127,41 @@
         LEFT JOIN CATEGORY c ON p.cate_code = c.cate_code
         <include refid="where-list"/>
     </select>
-
+	
+	<!-- 카테고리 관련 쿼리 -->
+	<select id="listCategory" resultType="com.maknaez.model.CategoryDTO">
+	    SELECT 
+	        CATE_CODE   AS cateCode,
+	        CATE_NAME   AS cateName,
+	        CATE_PARENT AS cateParent,
+	        DEPTH       AS depth,
+	        STATUS      AS status,
+	        ORDER_NO    AS orderNo
+	    FROM EZ.CATEGORY
+	    ORDER BY COALESCE(CATE_PARENT, CATE_CODE) ASC, ORDER_NO ASC
+	</select>
+	
+	<insert id="insertCategory" parameterType="com.maknaez.model.CategoryDTO">
+	    INSERT INTO EZ.CATEGORY (CATE_CODE, CATE_NAME, CATE_PARENT, DEPTH, STATUS, ORDER_NO)
+	    VALUES (
+	        TO_CHAR(SEQ_CATEGORY.NEXTVAL), 
+	        #{cateName}, 
+	        #{cateParent, jdbcType=VARCHAR}, 
+	        #{depth}, 
+	        #{status}, 
+	        #{orderNo}
+	    )
+	</insert>
+	
+	<update id="updateCategory" parameterType="com.maknaez.model.CategoryDTO">
+	    UPDATE EZ.CATEGORY 
+	    SET CATE_NAME = #{cateName}, 
+	        STATUS = #{status}, 
+	        ORDER_NO = #{orderNo}
+	    WHERE CATE_CODE = #{cateCode}
+	</update>
+	
+	<delete id="deleteCategory" parameterType="string">
+	    DELETE FROM EZ.CATEGORY WHERE CATE_CODE = #{cateCode}
+	</delete>
 </mapper>
