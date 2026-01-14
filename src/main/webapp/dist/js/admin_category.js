@@ -180,7 +180,7 @@ function submitCategory() {
     }
 
     const mode = $('#mode').val();
-    let url = mode === 'insert' ? "/admin/product/category_insert" : "/admin/product/category_update";
+    let url = mode === 'insert' ? "category_insert" : "category_update";
     
     // form 데이터를 객체나 QueryString으로 변환
     const formData = $('#categoryForm').serialize();
@@ -203,7 +203,7 @@ function deleteCategoryFunc() {
 
     if(!confirm("정말 삭제하시겠습니까? 하위 카테고리가 있으면 삭제되지 않습니다.")) return;
 
-    let url = "/admin/product/category_delete";
+    let url = "category_delete";
     let params = { cateCode: code };
 
     ajaxRequest(url, "post", params, "json", function(data) {
