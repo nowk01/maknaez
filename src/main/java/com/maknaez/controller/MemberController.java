@@ -789,5 +789,9 @@ public class MemberController {
 		// 삭제 후 목록으로 리다이렉트
 		return new ModelAndView("redirect:/member/mypage/addr");
 	}
-
+	
+	@GetMapping("membership")
+	public ModelAndView membership(HttpServletRequest req, HttpServletResponse resp) {
+	    return new ModelAndView("mypage/membership");
+	}
 }

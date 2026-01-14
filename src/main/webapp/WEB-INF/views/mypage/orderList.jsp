@@ -50,7 +50,7 @@
 				<ul>
 					<li><a href="${pageContext.request.contextPath}/member/mypage/myImfo">내 정보 관리</a></li>
 					<li><a href="${pageContext.request.contextPath}/member/mypage/addr">배송지 관리</a></li>
-					<li><a href="#">회원등급</a></li>
+					<li><a href="${pageContext.request.contextPath}/member/mypage/membership">회원등급</a></li>
 				</ul>
 			</div>
 		</aside>
