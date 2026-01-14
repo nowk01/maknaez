@@ -317,10 +317,10 @@ public class MemberController {
 			service.updateMember(dto);
 			System.out.println("--- DB 업데이트 성공 ---");
 
-			// 5. 세션 정보 갱신  
+			// 5. 세션 정보 갱신
 			info.setUserName(dto.getUserName());
 			session.setAttribute("member", info);
-			
+
 			session.setAttribute("mode", "update");
 			session.setAttribute("userName", dto.getUserName());
 
@@ -387,19 +387,17 @@ public class MemberController {
 		model.put("passed", passed);
 		return model;
 	}
-	
+
 	@PostMapping("nickNameCheck")
 	public void nickNameCheck(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 		String nickName = req.getParameter("nickName");
 
-		
 		MemberDTO dto = service.findByNickName(nickName);
 		boolean isPassed = (dto == null);
 
-		
 		JSONObject json = new JSONObject();
 		json.put("passed", isPassed);
-		
+
 		resp.setContentType("application/json; charset=UTF-8");
 		PrintWriter out = resp.getWriter();
 		out.print(json.toString());
@@ -644,47 +642,48 @@ public class MemberController {
 	// [MemberController.java 내부에 추가]
 
 	@GetMapping("mypage/wishList")
-	public ModelAndView wishList(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-	    ModelAndView mav = new ModelAndView("mypage/wishList");
-	    HttpSession session = req.getSession();
+	public ModelAndView wishList(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException {
+		ModelAndView mav = new ModelAndView("mypage/wishList");
+		HttpSession session = req.getSession();
 
-	    SessionInfo info = (SessionInfo) session.getAttribute("member");
-	    if (info == null) {
-	        return new ModelAndView("redirect:/member/login");
-	    }
+		SessionInfo info = (SessionInfo) session.getAttribute("member");
+		if (info == null) {
+			return new ModelAndView("redirect:/member/login");
+		}
 
-	    List<ProductDTO> list = new ArrayList<>();
+		List<ProductDTO> list = new ArrayList<>();
 
-	    // 더미 데이터 1
-	    ProductDTO item1 = new ProductDTO();
-	    item1.setProdId(101);                       // setProductNo -> setProdId
-	    item1.setProdName("ACS 프로 (관심상품 예시)");  // setProductName -> setProdName
-	    item1.setPrice(290000);
-	    // 이미지 경로 설정: 전체 URL 대신 파일명만 넣는 것을 권장합니다 (JSP에서 경로 처리)
-	    item1.setThumbnail("sport_acs.jpg");        // setImageFile -> setThumbnail
-	    item1.setDiscountRate(0);                   // 할인율 (선택)
-	    list.add(item1);
+		// 더미 데이터 1
+		ProductDTO item1 = new ProductDTO();
+		item1.setProdId(101); // setProductNo -> setProdId
+		item1.setProdName("ACS 프로 (관심상품 예시)"); // setProductName -> setProdName
+		item1.setPrice(290000);
+		// 이미지 경로 설정: 전체 URL 대신 파일명만 넣는 것을 권장합니다 (JSP에서 경로 처리)
+		item1.setThumbnail("sport_acs.jpg"); // setImageFile -> setThumbnail
+		item1.setDiscountRate(0); // 할인율 (선택)
+		list.add(item1);
 
-	    // 더미 데이터 2
-	    ProductDTO item2 = new ProductDTO();
-	    item2.setProdId(102);
-	    item2.setProdName("XT-6 GTX");
-	    item2.setPrice(280000);
-	    item2.setThumbnail("sport_xt6.jpg");
-	    list.add(item2);
+		// 더미 데이터 2
+		ProductDTO item2 = new ProductDTO();
+		item2.setProdId(102);
+		item2.setProdName("XT-6 GTX");
+		item2.setPrice(280000);
+		item2.setThumbnail("sport_xt6.jpg");
+		list.add(item2);
 
-	    // 더미 데이터 3
-	    ProductDTO item3 = new ProductDTO();
-	    item3.setProdId(103);
-	    item3.setProdName("SPEEDCROSS 6");
-	    item3.setPrice(198000);
-	    item3.setThumbnail("women_trail_1.jpg");
-	    list.add(item3);
+		// 더미 데이터 3
+		ProductDTO item3 = new ProductDTO();
+		item3.setProdId(103);
+		item3.setProdName("SPEEDCROSS 6");
+		item3.setPrice(198000);
+		item3.setThumbnail("women_trail_1.jpg");
+		list.add(item3);
 
-	    mav.addObject("list", list);
-	    mav.addObject("dataCount", list.size());
+		mav.addObject("list", list);
+		mav.addObject("dataCount", list.size());
 
-	    return mav;
+		return mav;
 	}
 
 	@GetMapping("mypage/myInfo")
@@ -701,7 +700,7 @@ public class MemberController {
 		}
 
 		ModelAndView mav = new ModelAndView("mypage/myInfo");
-		
+
 		try {
 			MemberDTO dto = service.findByIdx(info.getMemberIdx());
 
@@ -719,16 +718,19 @@ public class MemberController {
 
 		return mav;
 	}
-	/* =========================================================================
-	   [추가] 배송지 관리 (목록 / 등록 / 삭제)
-	   ========================================================================= */
+	/*
+	 * =========================================================================
+	 * [추가] 배송지 관리 (목록 / 등록 / 삭제)
+	 * =========================================================================
+	 */
 
 	// 1. 배송지 목록 페이지 이동
 	@GetMapping("mypage/addr")
-	public ModelAndView addressList(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	public ModelAndView addressList(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException {
 		HttpSession session = req.getSession();
 		SessionInfo info = (SessionInfo) session.getAttribute("member");
-		
+
 		// 로그인 확인
 		if (info == null) {
 			return new ModelAndView("redirect:/member/login");
@@ -749,10 +751,11 @@ public class MemberController {
 
 	// 2. 배송지 등록 처리
 	@PostMapping("mypage/addr/write")
-	public ModelAndView addressWrite(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	public ModelAndView addressWrite(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException {
 		HttpSession session = req.getSession();
 		SessionInfo info = (SessionInfo) session.getAttribute("member");
-		
+
 		if (info == null) {
 			return new ModelAndView("redirect:/member/login");
 		}
@@ -760,15 +763,15 @@ public class MemberController {
 		try {
 			AddressDTO dto = new AddressDTO();
 			dto.setMemberIdx(info.getMemberIdx());
-			
+
 			// JSP 폼(Form)에서 넘어온 데이터 받기 (name 속성과 일치해야 함)
 			// DB 컬럼명에 맞춰 DTO에 세팅 (DTO 변수명: receiverName, zipCode 등 가정)
-			dto.setReceiverName(req.getParameter("name")); 
+			dto.setReceiverName(req.getParameter("name"));
 			dto.setReceiverTel(req.getParameter("tel"));
 			dto.setZipCode(req.getParameter("zip"));
 			dto.setAddr1(req.getParameter("addr1"));
 			dto.setAddr2(req.getParameter("addr2"));
-			
+
 			// 배송지 별칭 (입력란이 없다면 기본값 설정)
 			dto.setAddrName("나의 배송지");
 
@@ -789,26 +792,37 @@ public class MemberController {
 
 	// 3. 배송지 삭제 처리
 	@GetMapping("mypage/addr/delete")
-	public ModelAndView addressDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	public ModelAndView addressDelete(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException {
 		HttpSession session = req.getSession();
 		SessionInfo info = (SessionInfo) session.getAttribute("member");
-		
+
 		if (info == null) {
 			return new ModelAndView("redirect:/member/login");
 		}
-		
+
 		try {
 			// 삭제할 배송지 번호(PK) 받기
 			long addrId = Long.parseLong(req.getParameter("addrIdx"));
-			
+
 			// Service에 삭제 요청
 			service.deleteAddress(addrId);
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		// 삭제 후 목록으로 리다이렉트
 		return new ModelAndView("redirect:/member/mypage/addr");
+	}
+
+	@GetMapping("terms")
+	public ModelAndView termsForm(HttpServletRequest req, HttpServletResponse resp) {
+		return new ModelAndView("member/terms");
+	}
+
+	@GetMapping("privacy")
+	public ModelAndView privacyForm(HttpServletRequest req, HttpServletResponse resp) {
+	    return new ModelAndView("member/privacy");
 	}
 }
