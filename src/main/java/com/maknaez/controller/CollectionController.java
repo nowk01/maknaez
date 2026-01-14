@@ -36,16 +36,28 @@ public class CollectionController {
         map.put("offset", 0);
         map.put("size", 9);
 
-        // 현재 대분류 (men, women 등)
+        // 현재 카테고리 (men, women 등)
         String category = (String) map.get("category");
-
-        // [핵심] DB에서 동적으로 카테고리 목록(중분류) 조회
-        // 이제 관리자가 카테고리를 추가하면 여기서 자동으로 가져옵니다.
-        List<String> dynamicSportList = productService.listCategoryNames(category);
 
         List<ProductDTO> list = null;
         int dataCount = 0;
         int totalPage = 0;
+        
+        // [핵심 수정] 하드코딩 제거 -> DB에서 동적으로 카테고리 목록 조회
+        List<String> dynamicSportList = new ArrayList<>();
+        try {
+            // category가 'sale'이면 세일 중인 카테고리 목록을, 아니면 해당 대분류의 하위 카테고리를 가져옴
+            // (ProductService에 해당 메소드가 구현되어 있어야 함)
+            if ("sale".equalsIgnoreCase(category)) {
+                // 세일 카테고리 목록 조회 (구현되지 않았다면 빈 리스트 반환될 수 있음)
+                 dynamicSportList = productService.listCategoryNames(category); 
+                 // 만약 listSaleCategoryNames()가 별도로 있다면 그것을 호출
+            } else {
+                dynamicSportList = productService.listCategoryNames(category);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         try {
             list = productService.listProduct(map);
@@ -70,10 +82,10 @@ public class CollectionController {
         mav.addObject("categoryCode", category);
         mav.addObject("categoryName", getCategoryName(category));
         
-        // [중요] DB에서 가져온 리스트를 JSP로 전달
+        // [변경] DB에서 가져온 리스트(dynamicSportList)를 JSP로 전달
         mav.addObject("sportList", dynamicSportList);
         
-        // 성별, 색상은 고정값 (Helper 사용)
+        // 성별, 색상은 고정값이므로 Helper 사용 (필요시 이것도 DB화 가능)
         mav.addObject("genderList", getGenderList());
         mav.addObject("colorList", getColorList());
         
@@ -147,6 +159,8 @@ public class CollectionController {
 
         return map;
     }
+
+    // [하드코딩 삭제됨] getSportList() 메소드는 이제 사용하지 않으므로 삭제하거나 무시됩니다.
 
     private List<Map<String, String>> getGenderList() {
         List<Map<String, String>> list = new ArrayList<>();
