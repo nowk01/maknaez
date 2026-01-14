@@ -1,5 +1,6 @@
 package com.maknaez.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -34,6 +35,20 @@ public class ProductServiceImpl implements ProductService {
         return result;
     }
 
+
+    @Override
+    public List<String> listCategoryNames(String categoryCode) {
+        List<String> list = new ArrayList<>();
+        try {
+            list = mapper.listCategoryNames(categoryCode);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+    
+    
+    // 관리자 사용
 	@Override
 	public List<CategoryDTO> listCategory() {
 		List<CategoryDTO> list = null;
@@ -72,4 +87,5 @@ public class ProductServiceImpl implements ProductService {
 			e.printStackTrace();
 		}
 	}
+
 }
