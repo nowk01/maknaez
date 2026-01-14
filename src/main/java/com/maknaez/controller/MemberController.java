@@ -160,7 +160,16 @@ public class MemberController {
 				dto.setProfile_photo(mp.getSaveFilename());
 			}
 
-			dto.setTel(req.getParameter("tel"));
+			String tel1 = req.getParameter("tel1");
+			String tel2 = req.getParameter("tel2");
+			String tel3 = req.getParameter("tel3");
+			String tel = "";
+
+			if(tel1 != null && !tel1.isEmpty()) {
+			    tel = tel1 + "-" + tel2 + "-" + tel3;
+			}
+
+			dto.setTel(tel);
 			dto.setZip(req.getParameter("zip"));
 			dto.setAddr1(req.getParameter("addr1"));
 			dto.setAddr2(req.getParameter("addr2"));
