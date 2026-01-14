@@ -26,62 +26,74 @@ public class CollectionController {
         this.productService = new ProductServiceImpl();
     }
 
-    // 1. 초기 리스트 화면 (1페이지 데이터 포함)
+    // 1. 초기 리스트 화면
     @RequestMapping("/list") 
     public ModelAndView list(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         ModelAndView mav = new ModelAndView("collections/list");
 
         // 검색 파라미터 처리
         Map<String, Object> map = getSearchMap(req);
-        
-        // 페이징 (초기 1페이지, 9개씩)
         map.put("offset", 0);
         map.put("size", 9);
 
-        // [핵심] 서비스 호출 (DB 조회)
+        // 현재 대분류 (men, women 등)
+        String category = (String) map.get("category");
+
+        // [핵심] DB에서 동적으로 카테고리 목록(중분류) 조회
+        // 이제 관리자가 카테고리를 추가하면 여기서 자동으로 가져옵니다.
+        List<String> dynamicSportList = productService.listCategoryNames(category);
+
+        List<ProductDTO> list = null;
+        int dataCount = 0;
+        int totalPage = 0;
+
         try {
-            List<ProductDTO> list = productService.listProduct(map);
-            int dataCount = productService.dataCount(map);
+            list = productService.listProduct(map);
+            dataCount = productService.dataCount(map);
             
-            mav.addObject("list", list);             // 상품 목록 (DB)
-            mav.addObject("dataCount", dataCount);   // 전체 개수
+            int size = (int)map.get("size");
+            if(dataCount > 0) {
+                totalPage = (int) Math.ceil((double)dataCount / size);
+            } else {
+                totalPage = 1;
+            }
         } catch (Exception e) {
             e.printStackTrace();
-            mav.addObject("list", new ArrayList<>()); 
-            mav.addObject("dataCount", 0);
+            list = new ArrayList<>();
         }
 
-        // 화면 표시용 기본 데이터
-        String category = (String) map.get("category");
+        mav.addObject("list", list);
+        mav.addObject("dataCount", dataCount);
+        mav.addObject("totalPage", totalPage);
+        
         mav.addObject("category", category);
-        mav.addObject("categoryCode", category); // JSP 호환용
+        mav.addObject("categoryCode", category);
         mav.addObject("categoryName", getCategoryName(category));
         
-        // [복구] 사이드바 필터용 리스트 생성 (JSP에서 사용됨)
-        mav.addObject("sportList", getSportList());
+        // [중요] DB에서 가져온 리스트를 JSP로 전달
+        mav.addObject("sportList", dynamicSportList);
+        
+        // 성별, 색상은 고정값 (Helper 사용)
         mav.addObject("genderList", getGenderList());
         mav.addObject("colorList", getColorList());
         
-        // 필터 상태 유지 (JSP에서 체크박스 유지용)
-        mav.addObject("paramValues", req.getParameterMap()); // 체크박스 값들
+        // 필터 상태 유지
+        mav.addObject("paramValues", req.getParameterMap()); 
         mav.addObject("minPrice", req.getParameter("minPrice"));
         mav.addObject("maxPrice", req.getParameter("maxPrice"));
+        mav.addObject("paramSort", req.getParameter("sort"));
 
         return mav;
     }
     
-    // 2. 무한 스크롤 데이터 요청 (AJAX - HTML 조각 반환)
+    // 2. 무한 스크롤 데이터
     @RequestMapping("/listMore")
     public ModelAndView listMore(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         ModelAndView mav = new ModelAndView("collections/list_more");
         
         String pageStr = req.getParameter("page");
         int currentPage = 1;
-        if(pageStr != null && !pageStr.isEmpty()) {
-            try {
-                currentPage = Integer.parseInt(pageStr);
-            } catch (NumberFormatException e) { }
-        }
+        try { currentPage = Integer.parseInt(pageStr); } catch (Exception e) {}
         
         int size = 9;
         int offset = (currentPage - 1) * size;
@@ -93,32 +105,27 @@ public class CollectionController {
         try {
             List<ProductDTO> list = productService.listProduct(map);
             mav.addObject("list", list);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        } catch (Exception e) { e.printStackTrace(); }
         
         return mav;
     }
     
-    // [Helper] 파라미터 맵핑
     private Map<String, Object> getSearchMap(HttpServletRequest req) {
         Map<String, Object> map = new HashMap<>();
+        
         String category = req.getParameter("category");
         if (category == null || category.isEmpty()) category = "men";
         map.put("category", category);
         
-        // 체크박스 필터 처리
         String[] sports = req.getParameterValues("sports");
-        if(sports != null) map.put("sports", sports); 
-        // *참고: 현재 Mapper는 'subCategory' 파라미터를 사용하여 'cate_code'를 검색합니다.
-        // JSP의 체크박스 값(sports)을 Mapper에 적용하려면 Mapper XML 수정이 필요할 수 있습니다.
-        // 우선 기존 'sub' 파라미터 로직과 호환되도록, 첫 번째 선택된 값을 subCategory로 넣어줍니다.
-        if(sports != null && sports.length > 0) {
-             // 한글명을 코드로 변환하는 로직이 필요할 수 있으나, 일단 값 그대로 전달
-             // (DB에 '트레일러닝' 등으로 저장되어 있지 않다면 매칭 안 될 수 있음 -> 영문 코드로 변환 추천)
-             // 여기서는 간단히 sub 파라미터가 있으면 그걸 우선시함
-        }
+        if(sports != null) map.put("sports", sports);
         
+        String[] genders = req.getParameterValues("genders");
+        if(genders != null) map.put("genders", genders);
+        
+        String[] colors = req.getParameterValues("colors");
+        if(colors != null) map.put("colors", colors);
+
         String sub = req.getParameter("sub");
         if(sub != null && !sub.isEmpty()) map.put("subCategory", sub);
 
@@ -129,34 +136,36 @@ public class CollectionController {
         
         String sort = req.getParameter("sort");
         if(sort != null && !sort.isEmpty()) map.put("sort", sort);
+        
+        String filter = req.getParameter("filter");
+        if(filter != null && !filter.isEmpty()) map.put("filter", filter);
+        
+        String excludeSoldOut = req.getParameter("excludeSoldOut");
+        if(excludeSoldOut != null && !excludeSoldOut.isEmpty()) {
+            map.put("excludeSoldOut", excludeSoldOut);
+        }
 
         return map;
     }
 
-    // [Helper] 더미 리스트 생성 메소드들 (사이드바용)
-    private List<String> getSportList() {
-        List<String> list = new ArrayList<>();
-        list.add("로드러닝"); 
-        list.add("트레일러닝"); 
-        list.add("아웃도어"); // 하이킹 -> 아웃도어 변경
-        list.add("스포츠스타일"); 
-        list.add("샌들/워터슈즈");
-        return list;
-    }
-    
-    private List<String> getGenderList() {
-        List<String> list = new ArrayList<>();
-        list.add("남성"); list.add("여성"); list.add("Unisex");
+    private List<Map<String, String>> getGenderList() {
+        List<Map<String, String>> list = new ArrayList<>();
+        Map<String, String> m = new HashMap<>(); m.put("code", "M"); m.put("name", "남성"); list.add(m);
+        Map<String, String> f = new HashMap<>(); f.put("code", "F"); f.put("name", "여성"); list.add(f);
+        Map<String, String> u = new HashMap<>(); u.put("code", "U"); u.put("name", "Unisex"); list.add(u);
         return list;
     }
     
     private List<Map<String, String>> getColorList() {
         List<Map<String, String>> list = new ArrayList<>();
-        String[] colors = {"블랙", "화이트", "그레이", "레드", "블루", "그린", "베이지", "브라운", "옐로우"};
-        String[] hexes = {"#000000", "#FFFFFF", "#808080", "#E32526", "#0057B8", "#006F44", "#DBCFB6", "#6E4E37", "#FFD100"};
-        for(int i=0; i<colors.length; i++) {
+        String[] codes = {"BK", "WH", "GY", "NV", "SV", "GR", "BE", "OR", "PK"};
+        String[] names = {"블랙", "화이트", "그레이", "네이비", "실버", "그린", "베이지", "오렌지", "핑크"};
+        String[] hexes = {"#000000", "#FFFFFF", "#808080", "#000080", "#C0C0C0", "#008000", "#F5F5DC", "#FFA500", "#FFC0CB"};
+        
+        for(int i=0; i<codes.length; i++) {
             Map<String, String> m = new HashMap<>();
-            m.put("name", colors[i]);
+            m.put("code", codes[i]);
+            m.put("name", names[i]);
             m.put("hex", hexes[i]);
             list.add(m);
         }

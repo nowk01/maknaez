@@ -1,8 +1,8 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core"%>
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt"%>
-<%@ page import="java.util.*" %>
 
+<!-- 이미지 경로 설정 -->
 <jsp:include page="/WEB-INF/views/common/image_config.jsp" />
 
 <!DOCTYPE html>
@@ -16,16 +16,25 @@
     
     <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/header.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/footer.css">
-    <!-- list.css로 통합된 파일 사용 -->
     <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/list.css">
-    
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Oswald:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- list-sidebar.css가 있다면 유지 -->
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/list-sidebar.css">
     
     <style>
-        /* 추가적인 커스텀 스타일 (필요 시) */
         .loading-spinner { display: none; width: 100%; text-align: center; padding: 20px; }
+        /* 체크박스 디자인 */
+        .sidebar-menu input[type="checkbox"] { margin-right: 8px; vertical-align: middle; }
+        .sidebar-menu label { cursor: pointer; display: block; margin-bottom: 5px; }
+        
+        /* 색상 칩 스타일 */
+        .color-list { display: flex; flex-wrap: wrap; gap: 8px; }
+        .color-swatch { position: relative; width: 24px; height: 24px; border-radius: 50%; border: 1px solid #ddd; cursor: pointer; }
+        .color-swatch input { position: absolute; opacity: 0; width: 0; height: 0; }
+        .color-swatch span { display: block; width: 100%; height: 100%; border-radius: 50%; }
+        .color-swatch input:checked + span { box-shadow: 0 0 0 2px #fff, 0 0 0 4px #000; }
+        
+        /* 로딩 오버레이 (필터링 시 깜빡임 방지) */
+        .loading-overlay { opacity: 0.5; pointer-events: none; transition: opacity 0.2s; }
     </style>
 </head>
 <body>
@@ -52,17 +61,17 @@
         </div>
 
         <div class="row">
-            <!-- Left Sidebar-->
+            <!-- Left Sidebar -->
             <aside class="col-lg-2 d-none d-lg-block sidebar-container">
-                <form name="searchForm" action="${pageContext.request.contextPath}/collections/list" method="get">
-                    <input type="hidden" name="page" value="1">
+                <!-- method="get" 유지하되, 실제로는 AJAX로 전송함 -->
+                <form name="searchForm" id="searchForm">
+                    <input type="hidden" name="page" id="page" value="1">
                     <input type="hidden" name="category" value="${categoryCode}">
 
                     <div class="sidebar-header">
                         <span class="sidebar-title">필터</span>
                         <button type="button" class="btn-reset-large" onclick="resetFilters()">
-                            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="margin-right:8px;"><path d="M4.33317 2.33341C2.72384 3.25141 1.6665 5.01475 1.6665 7.00008C1.6665 8.05491 1.9793 9.08606 2.56533 9.96312C3.15137 10.8402 3.98432 11.5238 4.95886 11.9274C5.9334 12.3311 7.00575 12.4367 8.04032 12.2309C9.07488 12.0251 10.0252 11.5172 10.7711 10.7713C11.517 10.0254 12.0249 9.07513 12.2307 8.04056C12.4365 7.006 12.3309 5.93364 11.9272 4.9591C11.5235 3.98456 10.8399 3.15161 9.96288 2.56558C9.08582 1.97954 8.05467 1.66675 6.99984 1.66675" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M4.33317 5.00016V2.3335H1.6665" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
-                            필터 초기화
+                            <i class="fas fa-redo-alt" style="margin-right:8px;"></i> 필터 초기화
                         </button>
                     </div>
 
@@ -72,7 +81,6 @@
                         <div class="filter-content">
                             <c:forEach var="sport" items="${sportList}">
                                 <c:set var="isSportChecked" value="false"/>
-                                <!-- 기존 선택값 확인 -->
                                 <c:if test="${not empty paramValues.sports}">
                                     <c:forEach var="val" items="${paramValues.sports}">
                                         <c:if test="${val eq sport}">
@@ -80,11 +88,12 @@
                                         </c:if>
                                     </c:forEach>
                                 </c:if>
-                                <!-- 체크박스 -->
-                                <label class="custom-check">
-                                    <input type="checkbox" name="sports" value="${sport}" onchange="searchList()" ${isSportChecked ? 'checked' : ''}>
-                                    <span>${sport}</span>
-                                </label>
+                                <div class="sidebar-menu">
+                                    <label>
+                                        <input type="checkbox" name="sports" value="${sport}" onchange="searchList()" ${isSportChecked ? 'checked' : ''}>
+                                        ${sport}
+                                    </label>
+                                </div>
                             </c:forEach>
                         </div>
                     </details>
@@ -93,10 +102,12 @@
                     <details class="filter-group" open>
                         <summary class="filter-title">판매 상태</summary>
                         <div class="filter-content">
-                            <label class="custom-check">
-                                <input type="checkbox" name="excludeSoldOut" value="true" onchange="searchList()" ${param.excludeSoldOut == 'true' ? 'checked' : ''}>
-                                <span>품절 상품 제외</span>
-                            </label>
+                            <div class="sidebar-menu">
+                                <label>
+                                    <input type="checkbox" name="excludeSoldOut" value="true" onchange="searchList()" ${param.excludeSoldOut == 'true' ? 'checked' : ''}>
+                                    품절 상품 제외
+                                </label>
+                            </div>
                         </div>
                     </details>
 
@@ -108,32 +119,37 @@
                                 <c:set var="isGenderChecked" value="false"/>
                                 <c:if test="${not empty paramValues.genders}">
                                     <c:forEach var="val" items="${paramValues.genders}">
-                                        <c:if test="${val eq g}">
+                                        <c:if test="${val eq g.code}">
                                             <c:set var="isGenderChecked" value="true"/>
                                         </c:if>
                                     </c:forEach>
                                 </c:if>
-                                <label class="custom-check">
-                                    <input type="checkbox" name="genders" value="${g}" onchange="searchList()" ${isGenderChecked ? 'checked' : ''}>
-                                    <span>${g}</span>
-                                </label>
+                                <div class="sidebar-menu">
+                                    <label>
+                                        <input type="checkbox" name="genders" value="${g.code}" onchange="searchList()" ${isGenderChecked ? 'checked' : ''}>
+                                        ${g.name}
+                                    </label>
+                                </div>
                             </c:forEach>
                         </div>
                     </details>
 
-                    <!-- 4. 가격 슬라이더 -->
+                    <!-- 4. 가격 (슬라이더) -->
                     <details class="filter-group" open>
                         <summary class="filter-title">가격</summary>
                         <div class="filter-content">
                             <div class="price-slider">
                                 <div class="slider-track"></div>
                                 <div id="sliderFill" class="slider-fill" style="left:0%; width:100%;"></div>
-                                <input type="range" id="rangeMin" name="minPrice" min="0" max="1000000" step="1000" 
-                                       value="${param.minPrice != null ? param.minPrice : 0}" 
-                                       onchange="searchList()">
-                                <input type="range" id="rangeMax" name="maxPrice" min="0" max="1000000" step="1000" 
-                                       value="${param.maxPrice != null ? param.maxPrice : 1000000}" 
-                                       onchange="searchList()">
+                                <!-- [수정] onchange 이벤트를 추가하여 마우스 뗄 때 즉시 검색 -->
+                                <input type="range" id="rangeMin" min="0" max="500000" step="5000" 
+                                       value="${empty minPrice ? 0 : minPrice}" 
+                                       oninput="updateSliderUI(event)" 
+                                       onchange="updatePriceAndSearch()">
+                                <input type="range" id="rangeMax" min="0" max="500000" step="5000" 
+                                       value="${empty maxPrice ? 500000 : maxPrice}" 
+                                       oninput="updateSliderUI(event)" 
+                                       onchange="updatePriceAndSearch()">
                             </div>
                             <div class="price-inputs">
                                 <div class="price-input-group">
@@ -142,9 +158,14 @@
                                 </div>
                                 <div class="price-input-group">
                                     <span>₩</span>
-                                    <input type="text" id="inputMax" value="1,000,000" readonly>
+                                    <input type="text" id="inputMax" value="500,000" readonly>
                                 </div>
                             </div>
+                            <!-- 적용 버튼 삭제됨 (자동 적용) -->
+                            
+                            <!-- 실제 전송될 값 -->
+                            <input type="hidden" name="minPrice" id="hiddenMinPrice" value="${empty minPrice ? 0 : minPrice}">
+                            <input type="hidden" name="maxPrice" id="hiddenMaxPrice" value="${empty maxPrice ? 500000 : maxPrice}">
                         </div>
                     </details>
 
@@ -157,13 +178,13 @@
                                     <c:set var="isColorChecked" value="false"/>
                                     <c:if test="${not empty paramValues.colors}">
                                         <c:forEach var="val" items="${paramValues.colors}">
-                                            <c:if test="${val eq color.name}">
+                                            <c:if test="${val eq color.code}">
                                                 <c:set var="isColorChecked" value="true"/>
                                             </c:if>
                                         </c:forEach>
                                     </c:if>
                                     <label class="color-swatch" title="${color.name}">
-                                        <input type="checkbox" name="colors" value="${color.name}" onchange="searchList()" ${isColorChecked ? 'checked' : ''}>
+                                        <input type="checkbox" name="colors" value="${color.code}" onchange="searchList()" ${isColorChecked ? 'checked' : ''}>
                                         <span style="background-color: ${color.hex}; ${color.name eq '화이트' ? 'border:1px solid #ddd;' : ''}"></span>
                                     </label>
                                 </c:forEach>
@@ -177,160 +198,192 @@
 
             <!-- Main Content -->
             <main class="col-12 col-lg-10">
-                <!-- 상품 목록 영역 (Ajax 교체 대상) -->
                 <div id="productList" class="row gx-4 gy-5">
                     
-                    <!-- 1. 데이터 없음 -->
                     <c:if test="${empty list}">
                         <div class="col-12 text-center py-5">
-                            <h4>등록된 상품이 없습니다.</h4>
+                            <h4>해당하는 상품이 없습니다.</h4>
                         </div>
                     </c:if>
                     
-                    <!-- 2. 실제 데이터 출력 -->
                     <c:if test="${not empty list}">
                         <jsp:include page="/WEB-INF/views/collections/list_more.jsp" />
                     </c:if>
                     
                 </div>
 
-                <!-- 로딩 스피너 -->
                 <div class="loading-spinner">
-                    <div class="spinner-border text-primary" role="status"><span class="sr-only">Loading...</span></div>
+                    <div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div>
                 </div>
             </main>
         </div>
     </div>
 
     <jsp:include page="/WEB-INF/views/layout/footer.jsp" />
+    <!-- Footer Resources (jQuery 포함) -->
     <jsp:include page="/WEB-INF/views/layout/footerResources.jsp" />
     
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            initPriceSlider();
+            // 초기 슬라이더 UI 설정
+            updateSliderUI();
         });
 
+        // 정렬 변경
         function changeSort(val) {
             document.getElementById('hiddenSort').value = val;
             searchList();
         }
 
+        // 초기화
         function resetFilters() {
             location.href = '${pageContext.request.contextPath}/collections/list?category=${categoryCode}';
         }
         
-        // [Ajax 검색 함수]
+        // 슬라이더 값 변경 완료 시 (onchange) 호출
+        function updatePriceAndSearch() {
+            document.getElementById('hiddenMinPrice').value = document.getElementById('rangeMin').value;
+            document.getElementById('hiddenMaxPrice').value = document.getElementById('rangeMax').value;
+            searchList();
+        }
+        
+        // 검색 실행 (AJAX로 부드럽게 처리)
         function searchList() {
-            const f = document.searchForm;
+            // 페이지를 1로 리셋
+            document.getElementById('page').value = 1;
+            
+            // 폼 데이터 직렬화
+            const f = document.getElementById('searchForm');
             const formData = new FormData(f);
-            formData.set('page', 1); // 검색 시 1페이지로 리셋
             const params = new URLSearchParams(formData);
             
-            const url = '${pageContext.request.contextPath}/collections/list?' + params.toString();
-            window.history.pushState({path: url}, '', url);
+            // URL 업데이트 (뒤로가기 지원을 위해)
+            const newUrl = '${pageContext.request.contextPath}/collections/list?' + params.toString();
+            window.history.pushState({path: newUrl}, '', newUrl);
 
+            // 로딩 효과
             const productListEl = document.getElementById('productList');
             if(productListEl) productListEl.classList.add('loading-overlay');
 
-            fetch(url, { method: 'GET' })
-            .then(response => response.text())
-            .then(html => {
-                const parser = new DOMParser();
-                const doc = parser.parseFromString(html, 'text/html');
-                
-                // 상품 리스트 교체
-                const newProductList = doc.getElementById('productList');
-                if (newProductList && productListEl) {
-                    productListEl.innerHTML = newProductList.innerHTML;
-                    productListEl.classList.remove('loading-overlay');
+            // AJAX 요청 (listMore 컨트롤러 재사용하여 HTML 조각만 받아옴)
+            // 주의: listMore는 HTML 조각만 주므로, 전체 구조를 유지하며 내용만 교체
+            $.ajax({
+                url: "${pageContext.request.contextPath}/collections/listMore",
+                type: "GET",
+                data: params.toString(),
+                success: function(html) {
+                    if(productListEl) {
+                        if($.trim(html) === "") {
+                            productListEl.innerHTML = '<div class="col-12 text-center py-5"><h4>해당하는 상품이 없습니다.</h4></div>';
+                        } else {
+                            productListEl.innerHTML = html;
+                        }
+                        productListEl.classList.remove('loading-overlay');
+                    }
+                    
+                    // 무한 스크롤 상태 초기화
+                    currentPage = 1;
+                    isEnd = false;
+                    
+                    // (선택) 개수 업데이트 로직이 필요하다면 별도 API가 필요하지만, 여기선 생략하거나 listMore에 포함 가능
+                },
+                error: function(err) {
+                    console.error("검색 실패", err);
+                    if(productListEl) productListEl.classList.remove('loading-overlay');
                 }
-                
-                // 총 개수 업데이트
-                const newCount = doc.querySelector('.collection-count');
-                const oldCount = document.querySelector('.collection-count');
-                if(newCount && oldCount) oldCount.textContent = newCount.textContent;
-                
-                // 무한 스크롤 상태 리셋
-                currentPage = 1;
-                isEnd = false;
-            })
-            .catch(err => {
-                console.error('Filter Error:', err);
-                if(productListEl) productListEl.classList.remove('loading-overlay');
             });
         }
 
-        // [가격 슬라이더]
-        function initPriceSlider() {
+        // 가격 슬라이더 UI 업데이트 (드래그 시 시각적 효과만 담당)
+        function updateSliderUI(e) {
             const rangeMin = document.getElementById('rangeMin');
             const rangeMax = document.getElementById('rangeMax');
             const inputMin = document.getElementById('inputMin');
             const inputMax = document.getElementById('inputMax');
             const sliderFill = document.getElementById('sliderFill');
             const minGap = 50000; 
+            const maxValLimit = 500000;
 
-            function updateSlider(e) {
-                let minVal = parseInt(rangeMin.value);
-                let maxVal = parseInt(rangeMax.value);
-                const max = parseInt(rangeMax.max);
+            let minVal = parseInt(rangeMin.value);
+            let maxVal = parseInt(rangeMax.value);
 
-                if (maxVal - minVal < minGap) {
-                    if (e && e.target.id === "rangeMin") {
-                        rangeMin.value = maxVal - minGap;
-                        minVal = parseInt(rangeMin.value);
-                    } else {
-                        rangeMax.value = minVal + minGap;
-                        maxVal = parseInt(rangeMax.value);
-                    }
+            // 교차 방지 로직
+            if (maxVal - minVal < minGap) {
+                if (e && e.target.id === "rangeMin") {
+                    rangeMin.value = maxVal - minGap;
+                    minVal = parseInt(rangeMin.value);
+                } else {
+                    rangeMax.value = minVal + minGap;
+                    maxVal = parseInt(rangeMax.value);
                 }
-
-                inputMin.value = minVal.toLocaleString();
-                inputMax.value = maxVal.toLocaleString();
-
-                const percentMin = (minVal / max) * 100;
-                const percentMax = (maxVal / max) * 100;
-
-                sliderFill.style.left = percentMin + "%";
-                sliderFill.style.width = (percentMax - percentMin) + "%";
             }
 
-            rangeMin.addEventListener('input', updateSlider);
-            rangeMax.addEventListener('input', updateSlider);
-            updateSlider();
+            // 텍스트 및 게이지 업데이트
+            inputMin.value = minVal.toLocaleString();
+            inputMax.value = maxVal.toLocaleString();
+
+            const percentMin = (minVal / maxValLimit) * 100;
+            const percentMax = (maxVal / maxValLimit) * 100;
+
+            sliderFill.style.left = percentMin + "%";
+            sliderFill.style.width = (percentMax - percentMin) + "%";
+            
+            // z-index 조절 (겹칠 때 선택 용이하게)
+            if (minVal > parseInt(rangeMax.max) - 100) {
+                rangeMin.style.zIndex = "2";
+            } else {
+                rangeMin.style.zIndex = "1";
+            }
         }
         
         // [무한 스크롤]
         let currentPage = 1;
         let isLoading = false;
         let isEnd = false;
+        
+        const totalPage = ${totalPage != null ? totalPage : 1};
+
+        if (currentPage >= totalPage) {
+            isEnd = true;
+        }
 
         $(window).scroll(function() {
             if ($(window).scrollTop() + $(window).height() >= $(document).height() - 100) {
-                if (!isLoading && !isEnd) loadMore();
+                if (!isLoading && !isEnd) {
+                    loadMore();
+                }
             }
         });
 
         function loadMore() {
+            if (currentPage >= totalPage) {
+                isEnd = true;
+                return;
+            }
+
             isLoading = true;
             $(".loading-spinner").show();
             currentPage++;
             
-            const f = document.searchForm;
+            const f = document.getElementById('searchForm');
             const formData = new FormData(f);
             formData.set('page', currentPage);
             const params = new URLSearchParams(formData);
 
-            // [중요] listMore URL 호출
             $.ajax({
                 url: "${pageContext.request.contextPath}/collections/listMore",
                 type: "GET",
                 data: params.toString(),
                 success: function(html) {
-                    if ($.trim(html) === "") {
-                        isEnd = true;
-                    } else {
-                        $("#productList").append(html);
+                    if ($.trim(html) !== "") {
+                         $("#productList").append(html);
                     }
+                    if (currentPage >= totalPage) {
+                        isEnd = true;
+                    }
+                },
+                error: function() {
+                    isEnd = true; 
                 },
                 complete: function() {
                     isLoading = false;
