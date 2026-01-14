@@ -23,7 +23,7 @@
             <span class="menu-title">구매내역</span>
             <ul>
                 <li><a href="${pageContext.request.contextPath}/member/mypage/orderList">주문/배송조회</a></li>
-                <li><a href="${pageContext.request.contextPath}/member/mypage/cancelList">취소/반품조회</a></li>
+                <li><a href="${pageContext.request.contextPath}/member/mypage/cancelList">취소조회</a></li>
             </ul>
         </div>
 
@@ -38,7 +38,6 @@
         <div class="menu-group">
             <span class="menu-title">상품내역</span>
             <ul>
-                <li><a href="#">최근 본 상품</a></li>
                 <li><a href="${pageContext.request.contextPath}/member/mypage/wishList">관심 상품</a></li>
             </ul>
         </div>
@@ -49,7 +48,6 @@
                 <li><a href="${pageContext.request.contextPath}/member/mypage/myInfo">내 정보 관리</a></li>
                 <li><a href="${pageContext.request.contextPath}/member/mypage/addr">배송지 관리</a></li>
                 <li><a href="#">회원등급</a></li>
-                <li><a href="#">문의하기</a></li>
             </ul>
         </div>
         
