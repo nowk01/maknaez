@@ -47,6 +47,17 @@ public class ProductServiceImpl implements ProductService {
         return list;
     }
     
+    @Override
+    public List<String> listSaleCategoryNames() {
+        List<String> list = new ArrayList<>();
+        try {
+            list = mapper.listSaleCategoryNames();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+    
     
     // 관리자 사용
 	@Override
