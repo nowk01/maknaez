@@ -1,46 +1,82 @@
-
 -- ---------------------------------------------
--- Categry 데이터 삽입 ( 2026.01.13 ) 
+-- Categry 데이터 삽입 ( 2026.01.14 업데이트 ) 
 -- ---------------------------------------------
 
-ALTER TABLE category    ADD CONSTRAINT FK_category_TO_category  FOREIGN KEY (cate_parent) REFERENCES category(cate_code);
-ALTER TABLE products    ADD CONSTRAINT FK_category_TO_products  FOREIGN KEY (cate_code)   REFERENCES category(cate_code);
+-- [초기화] 기존 데이터 삭제
+DELETE FROM category;
+COMMIT;
+
+-- ALTER TABLE category ADD CONSTRAINT FK_category_TO_category FOREIGN KEY (cate_parent) REFERENCES category(cate_code);
+-- ALTER TABLE products ADD CONSTRAINT FK_category_TO_products FOREIGN KEY (cate_code) REFERENCES category(cate_code);
 
 -- 대체어 취소용
-set define off;
+SET DEFINE OFF;
 
 -- -----------------------------------------------------------
 -- 1. 대분류 (Depth 1)
+-- status: 1 (노출), order_no: 정렬 순서
 -- -----------------------------------------------------------
-INSERT INTO CATEGORY (cate_code, cate_name, cate_parent, depth) VALUES ('MEN', '남성', NULL, 1);
-INSERT INTO CATEGORY (cate_code, cate_name, cate_parent, depth) VALUES ('WOMEN', '여성', NULL, 1);
-INSERT INTO CATEGORY (cate_code, cate_name, cate_parent, depth) VALUES ('SPORTSTYLE', '스포츠스타일(Unisex)', NULL, 1);
+INSERT INTO category (cate_code, cate_name, cate_parent, depth, status, order_no) 
+VALUES ('MEN', '남성', NULL, 1, 1, 1);
+
+INSERT INTO category (cate_code, cate_name, cate_parent, depth, status, order_no) 
+VALUES ('WOMEN', '여성', NULL, 1, 1, 2);
+
+INSERT INTO category (cate_code, cate_name, cate_parent, depth, status, order_no) 
+VALUES ('SPORTSTYLE', '스포츠스타일(Unisex)', NULL, 1, 1, 3);
 
 -- -----------------------------------------------------------
 -- 2. 중분류 (Depth 2) - MEN
 -- -----------------------------------------------------------
-INSERT INTO CATEGORY (cate_code, cate_name, cate_parent, depth) VALUES ('MEN_TRAIL', '트레일러닝', 'MEN', 2);
-INSERT INTO CATEGORY (cate_code, cate_name, cate_parent, depth) VALUES ('MEN_OUTDOOR', '아웃도어', 'MEN', 2);
-INSERT INTO CATEGORY (cate_code, cate_name, cate_parent, depth) VALUES ('MEN_ROAD', '로드러닝', 'MEN', 2);
-INSERT INTO CATEGORY (cate_code, cate_name, cate_parent, depth) VALUES ('MEN_SPORTSTYLE', '스포츠스타일', 'MEN', 2);
-INSERT INTO CATEGORY (cate_code, cate_name, cate_parent, depth) VALUES ('MEN_RECOVERY', '리커버리', 'MEN', 2);
-INSERT INTO CATEGORY (cate_code, cate_name, cate_parent, depth) VALUES ('MEN_SANDAL', '샌들&워터슈즈', 'MEN', 2);
+INSERT INTO category (cate_code, cate_name, cate_parent, depth, status, order_no) 
+VALUES ('MEN_TRAIL', '트레일러닝', 'MEN', 2, 1, 1);
+
+INSERT INTO category (cate_code, cate_name, cate_parent, depth, status, order_no) 
+VALUES ('MEN_OUTDOOR', '아웃도어', 'MEN', 2, 1, 2);
+
+INSERT INTO category (cate_code, cate_name, cate_parent, depth, status, order_no) 
+VALUES ('MEN_ROAD', '로드러닝', 'MEN', 2, 1, 3);
+
+INSERT INTO category (cate_code, cate_name, cate_parent, depth, status, order_no) 
+VALUES ('MEN_SPORTSTYLE', '스포츠스타일', 'MEN', 2, 1, 4);
+
+INSERT INTO category (cate_code, cate_name, cate_parent, depth, status, order_no) 
+VALUES ('MEN_RECOVERY', '리커버리', 'MEN', 2, 1, 5);
+
+INSERT INTO category (cate_code, cate_name, cate_parent, depth, status, order_no) 
+VALUES ('MEN_SANDAL', '샌들&워터슈즈', 'MEN', 2, 1, 6);
 
 -- -----------------------------------------------------------
 -- 2. 중분류 (Depth 2) - WOMEN
 -- -----------------------------------------------------------
-INSERT INTO CATEGORY (cate_code, cate_name, cate_parent, depth) VALUES ('WOMEN_TRAIL', '트레일러닝', 'WOMEN', 2);
-INSERT INTO CATEGORY (cate_code, cate_name, cate_parent, depth) VALUES ('WOMEN_OUTDOOR', '아웃도어', 'WOMEN', 2);
-INSERT INTO CATEGORY (cate_code, cate_name, cate_parent, depth) VALUES ('WOMEN_ROAD', '로드러닝', 'WOMEN', 2);
-INSERT INTO CATEGORY (cate_code, cate_name, cate_parent, depth) VALUES ('WOMEN_SPORTSTYLE', '스포츠스타일', 'WOMEN', 2);
-INSERT INTO CATEGORY (cate_code, cate_name, cate_parent, depth) VALUES ('WOMEN_RECOVERY', '리커버리', 'WOMEN', 2);
-INSERT INTO CATEGORY (cate_code, cate_name, cate_parent, depth) VALUES ('WOMEN_SANDAL', '샌들&워터슈즈', 'WOMEN', 2);
+INSERT INTO category (cate_code, cate_name, cate_parent, depth, status, order_no) 
+VALUES ('WOMEN_TRAIL', '트레일러닝', 'WOMEN', 2, 1, 1);
+
+INSERT INTO category (cate_code, cate_name, cate_parent, depth, status, order_no) 
+VALUES ('WOMEN_OUTDOOR', '아웃도어', 'WOMEN', 2, 1, 2);
+
+INSERT INTO category (cate_code, cate_name, cate_parent, depth, status, order_no) 
+VALUES ('WOMEN_ROAD', '로드러닝', 'WOMEN', 2, 1, 3);
+
+INSERT INTO category (cate_code, cate_name, cate_parent, depth, status, order_no) 
+VALUES ('WOMEN_SPORTSTYLE', '스포츠스타일', 'WOMEN', 2, 1, 4);
+
+INSERT INTO category (cate_code, cate_name, cate_parent, depth, status, order_no) 
+VALUES ('WOMEN_RECOVERY', '리커버리', 'WOMEN', 2, 1, 5);
+
+INSERT INTO category (cate_code, cate_name, cate_parent, depth, status, order_no) 
+VALUES ('WOMEN_SANDAL', '샌들&워터슈즈', 'WOMEN', 2, 1, 6);
 
 -- -----------------------------------------------------------
 -- 2. 중분류 (Depth 2) - SPORTSTYLE
 -- -----------------------------------------------------------
-INSERT INTO CATEGORY (cate_code, cate_name, cate_parent, depth) VALUES ('SPORTSTYLE_SNEAKERS', '스니커즈', 'SPORTSTYLE', 2);
-INSERT INTO CATEGORY (cate_code, cate_name, cate_parent, depth) VALUES ('SPORTSTYLE_ADVANCED', '어드밴스드', 'SPORTSTYLE', 2);
-INSERT INTO CATEGORY (cate_code, cate_name, cate_parent, depth) VALUES ('SPORTSTYLE_INTERSECTION', '인터섹션', 'SPORTSTYLE', 2);
+INSERT INTO category (cate_code, cate_name, cate_parent, depth, status, order_no) 
+VALUES ('SPORTSTYLE_SNEAKERS', '스니커즈', 'SPORTSTYLE', 2, 1, 1);
+
+INSERT INTO category (cate_code, cate_name, cate_parent, depth, status, order_no) 
+VALUES ('SPORTSTYLE_ADVANCED', '어드밴스드', 'SPORTSTYLE', 2, 1, 2);
+
+INSERT INTO category (cate_code, cate_name, cate_parent, depth, status, order_no) 
+VALUES ('SPORTSTYLE_INTERSECTION', '인터섹션', 'SPORTSTYLE', 2, 1, 3);
 
 COMMIT;
