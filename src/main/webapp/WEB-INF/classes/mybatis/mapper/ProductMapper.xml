@@ -164,7 +164,7 @@
 	<insert id="insertCategory" parameterType="com.maknaez.model.CategoryDTO">
 	    INSERT INTO EZ.CATEGORY (CATE_CODE, CATE_NAME, CATE_PARENT, DEPTH, STATUS, ORDER_NO)
 	    VALUES (
-	        TO_CHAR(SEQ_CATEGORY.NEXTVAL), 
+	        #{cateCode}, 
 	        #{cateName}, 
 	        #{cateParent, jdbcType=VARCHAR}, 
 	        #{depth}, 
@@ -174,12 +174,10 @@
 	</insert>
 	
 	<update id="updateCategory" parameterType="com.maknaez.model.CategoryDTO">
-	    UPDATE EZ.CATEGORY 
-	    SET CATE_NAME = #{cateName}, 
-	        STATUS = #{status}, 
-	        ORDER_NO = #{orderNo}
-	    WHERE CATE_CODE = #{cateCode}
-	</update>
+		 UPDATE EZ.CATEGORY SET
+		     CATE_CODE = #{cateCode}, CATE_NAME = #{cateName}, STATUS = #{status}, ORDER_NO = #{orderNo}
+		 WHERE CATE_CODE = #{originCateCode} 
+    </update>
 	
 	<delete id="deleteCategory" parameterType="string">
 	    DELETE FROM EZ.CATEGORY WHERE CATE_CODE = #{cateCode}
