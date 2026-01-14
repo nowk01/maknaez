@@ -54,30 +54,11 @@ function daumPostcode() {
 function sendOk() {
     const f = document.addrForm;
 
-    if (!f.addrName.value.trim()) {
-        alert("배송지 이름을 입력하세요.");
-        f.addrName.focus();
-        return;
-    }
-    if (!f.receiverName.value.trim()) {
-        alert("받는 분 성함을 입력하세요.");
-        f.receiverName.focus();
-        return;
-    }
-    if (!f.receiverTel.value.trim()) {
-        alert("전화번호를 입력하세요.");
-        f.receiverTel.focus();
-        return;
-    }
-    if (!f.zipCode.value.trim()) {
-        alert("우편번호를 검색해주세요.");
-        return;
-    }
-    if (!f.addr2.value.trim()) {
-        alert("상세 주소를 입력해주세요.");
-        f.addr2.focus();
-        return;
-    }
+	if (!f.addrName.value.trim()) { alert("배송지 이름을 입력하세요."); return; }
+	    if (!f.receiverName.value.trim()) { alert("받는 분 성함을 입력하세요."); return; }
+	    if (!f.receiverTel.value.trim()) { alert("전화번호를 입력하세요."); return; }
+	    if (!f.zipCode.value.trim()) { alert("우편번호를 검색해주세요."); return; }
+	    if (!f.addr2.value.trim()) { alert("상세 주소를 입력해주세요."); return; }
 
     // JSP form 태그에 data-action을 추가했으므로 이제 작동합니다.
     f.action = f.dataset.action;
