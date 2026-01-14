@@ -790,13 +790,4 @@ public class MemberController {
 		return new ModelAndView("redirect:/member/mypage/addr");
 	}
 
-	@GetMapping("terms")
-	public ModelAndView termsForm(HttpServletRequest req, HttpServletResponse resp) {
-		return new ModelAndView("member/terms");
-	}
-
-	@GetMapping("privacy")
-	public ModelAndView privacyForm(HttpServletRequest req, HttpServletResponse resp) {
-	    return new ModelAndView("member/privacy");
-	}
 }

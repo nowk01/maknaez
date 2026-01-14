@@ -125,6 +125,10 @@ public class LoginFilter implements Filter {
 			"/member/account", "/member/userIdCheck", "/member/complete",
 			"/member/nickNameCheck", 
 			"/member/consent",
+			"/about/intro",
+			"/about/store",
+			"/about/terms",
+			"/about/privacy",
 			"/collections/**", 
 			"/product/**"
 		};
