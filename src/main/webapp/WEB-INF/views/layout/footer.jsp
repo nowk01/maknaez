@@ -18,11 +18,11 @@
 			<div class="f-col">
 			    <h4>ABOUT</h4>
 			    <ul>
-			        <li><a href="${pageContext.request.contextPath}/">MAKNAEZ 소개</a></li>
-			        <li><a href="#">매장 안내</a></li>
-			        <li><a href="${pageContext.request.contextPath}/member/terms">이용약관</a></li>
+			        <li><a href="${pageContext.request.contextPath}/about/intro">MAKNAEZ 소개</a></li>
+			        <li><a href="${pageContext.request.contextPath}/about/store">매장 안내</a></li>
+			        <li><a href="${pageContext.request.contextPath}/about/terms">이용약관</a></li>
 			        <li style="font-weight: bold;">
-			            <a href="${pageContext.request.contextPath}/member/privacy" style="color: #fff;">개인정보처리방침</a>
+			            <a href="${pageContext.request.contextPath}/about/privacy" style="color: #fff;">개인정보처리방침</a>
 			        </li>
 			    </ul>
 			</div>
