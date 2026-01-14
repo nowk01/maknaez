@@ -98,4 +98,14 @@ public class AdminLoginController {
 		// 오류 발생 시 다시 로그인 페이지로
 		return new ModelAndView("redirect:/admin/login");
 	}
+	
+	@GetMapping("/logout")
+	public ModelAndView logout(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		HttpSession session = req.getSession();
+		
+		session.removeAttribute("member");
+		session.invalidate(); // 세션 전체 무효화
+
+		return new ModelAndView("redirect:/admin/login");
+	}
 }
