@@ -9,6 +9,8 @@ public class CategoryDTO {
     private String cateName;   // 카테고리 표시 이름 (예: 남성, 트레일러닝)
     private String cateParent; // 상위 카테고리 코드 (대분류는 null)
     private int depth;         // 계층 깊이 (1:대분류, 2:중분류 .. )
+    private int status;        // 1: 노출, 0: 숨김
+    private int orderNo;       // 정렬 순서
 
     public CategoryDTO() {
     }
@@ -24,7 +26,23 @@ public class CategoryDTO {
         return cateCode;
     }
 
-    public void setCateCode(String cateCode) {
+    public int getStatus() {
+		return status;
+	}
+
+	public void setStatus(int status) {
+		this.status = status;
+	}
+
+	public int getOrderNo() {
+		return orderNo;
+	}
+
+	public void setOrderNo(int orderNo) {
+		this.orderNo = orderNo;
+	}
+
+	public void setCateCode(String cateCode) {
         this.cateCode = cateCode;
     }
 
