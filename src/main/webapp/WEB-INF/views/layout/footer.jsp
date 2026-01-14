@@ -32,8 +32,8 @@
 				<ul>
 					<li><a href="${pageContext.request.contextPath}/cs/notice">공지사항</a></li>
 					<li><a href="${pageContext.request.contextPath}/cs/faq">고객센터</a></li>
-					<li><a href="#">배송조회</a></li>
-					<li><a href="#">반품/교환</a></li>
+					<li><a href="${pageContext.request.contextPath}/cs/write">문의하기</a></li>
+					<li><a href="${pageContext.request.contextPath}/member/mypage/orderList">배송조회</a></li>
 				</ul>
 			</div>
 
