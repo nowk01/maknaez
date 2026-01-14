@@ -34,8 +34,9 @@ public interface MemberMapper {
 	public List<MemberDTO> listDormantMembers(Map<String, Object> map) throws SQLException;
 	public Integer dataCountDormant(Map<String, Object> map);
 	
-	// 배송지 관리
-    public void insertAddress(AddressDTO dto) throws SQLException;
-    public List<AddressDTO> listAddress(long memberIdx);
-    public void deleteAddress(long addrId) throws SQLException;
+
+	public void insertAddress(AddressDTO dto) throws SQLException;
+	public List<AddressDTO> listAddress(long memberIdx);
+	public void deleteAddress(long addrId) throws SQLException;
+	public void updateAddressBasicReset(long memberIdx) throws SQLException;
 }
