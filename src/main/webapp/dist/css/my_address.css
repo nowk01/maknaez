@@ -260,29 +260,6 @@ body {
 }
 
 /* =========================================
-   반응형 (PC 화면 설정 수정)
-========================================= */
-@media (min-width: 768px) {
-    /* 기존의 가로 배치(row) 설정을 세로(column)로 강제 변경 */
-    .action_bottom {
-        flex-direction: column; /* 무조건 세로 배치 */
-        align-items: center;    /* 가운데 정렬 */
-    }
-
-    /* 버튼 크기: PC에서도 꽉 차게 유지 (필요 시 width: 368px 등으로 고정 가능) */
-    .btn {
-        width: 100%; 
-        min-width: 0; /* 기존 min-width 설정 초기화 */
-    }
-
-    /* 목록으로 돌아가기 (취소) 버튼 위치 조정 */
-    .note__text {
-        margin-left: 0;   /* 옆 간격 제거 */
-        margin-top: 15px; /* 위쪽 간격 추가 (버튼과의 거리) */
-    }
-}
-
-/* =========================================
    배송지 입력 폼 (Salomon Style 적용)
 ========================================= */
 
@@ -391,6 +368,9 @@ body {
     gap: 12px;
 }
 
+/* =========================================
+   반응형 (PC 화면 설정 수정)
+========================================= */
 @media (min-width: 768px) {
     .action_bottom {
         flex-direction: row;
@@ -401,4 +381,99 @@ body {
     .note__text {
         margin-left: 20px;
     }
+    
+    /* 배송지 관리 타이틀 중앙 정렬 */
+    .group {
+        text-align: center;
+    }
+
+    /* 구분선도 가운데 기준으로 */
+    .group .line {
+        margin: 0 auto 35px;
+    }
+} /* <--- ★★★ 여기서 미디어 쿼리가 확실하게 닫혀야 합니다 ★★★ */
+
+
+/* =========================================
+   배송지 추가 폼 애니메이션 (미디어 쿼리 밖으로 이동)
+========================================= */
+
+/* 기본 상태 (숨김) */
+#addr_form_area {
+    /* JS에서 display:block을 제어하더라도 CSS 초기값을 잡아줍니다 */
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transform: translateY(-10px);
+    transition:
+        max-height 0.4s ease,
+        opacity 0.3s ease,
+        transform 0.3s ease;
+}
+
+/* 열림 상태 */
+#addr_form_area.active {
+    max-height: 1000px; /* 충분히 큰 값 */
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* 버튼 영역 페이드 */
+#addr_btn_area {
+    transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+#addr_btn_area.hide {
+    opacity: 0;
+    transform: translateY(-10px);
+    pointer-events: none;
+}
+
+/* =========================================
+   [SALOMON STYLE] 대시보드 등장 애니메이션
+========================================= */
+
+/* 1. 애니메이션 키프레임 정의 (레퍼런스 스타일 적용) */
+@keyframes salomonSlideUp {
+    0% {
+        opacity: 0;
+        transform: translateY(50px); /* 50px 아래에서 시작 */
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);    /* 제자리로 이동 */
+    }
+}
+
+/* 2. 배송지 관리 전체 래퍼에 적용 */
+.customer-address-wrap {
+    /* 초기 상태: 안 보이게 설정 */
+    opacity: 0; 
+    
+    /* 애니메이션 설정 */
+    /* 0.8초 동안, 레퍼런스의 cubic-bezier 곡선(부드러운 감속) 사용 */
+    animation: salomonSlideUp 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+    
+    /* 페이지 로드 후 0.2초 뒤에 시작 (약간의 딜레이로 여유를 줌) */
+    animation-delay: 0.2s;
+}
+
+/* 3. (선택사항) 내부 아이템들이 순차적으로 뜨는 느낌을 주고 싶다면 */
+.addr-item {
+    opacity: 0;
+    animation: salomonSlideUp 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+/* 첫 번째 주소는 0.4초 뒤에 */
+.addr-item:nth-child(1) { animation-delay: 0.4s; }
+/* 두 번째 주소는 0.5초 뒤에 */
+.addr-item:nth-child(2) { animation-delay: 0.5s; }
+/* 세 번째 주소는 0.6초 뒤에 */
+.addr-item:nth-child(3) { animation-delay: 0.6s; }
+/* 그 이후는 일괄 0.7초 뒤에 */
+.addr-item:nth-child(n+4) { animation-delay: 0.7s; }
+
+/* 4. 배송지 추가 폼 (숨겨져 있다가 열릴 때 부드럽게) */
+#addr_form_area {
+    transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
