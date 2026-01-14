@@ -102,7 +102,7 @@
             </li>
 
             <li class="nav-item">
-                <a href="${pageContext.request.contextPath}/collections/list?category=sports" class="nav-link">SPORTSTYLE</a>
+                <a href="${pageContext.request.contextPath}/collections/list?category=sportstyle" class="nav-link">SPORTSTYLE</a>
                 <div class="mega-menu">
                     <div class="mega-container" style="display: flex; justify-content: center; align-items: center; padding: 40px 0;">
                          <div style="text-align: center;">
