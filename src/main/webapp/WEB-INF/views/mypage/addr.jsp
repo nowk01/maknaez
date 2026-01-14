@@ -13,14 +13,9 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/mypage.css">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/my_address.css">
 
-
 <script>
-
-/* 버튼 ↔ 입력폼 자리 교체 */
 function toggleAddrForm(show) {
-    // [수정] "block"을 "flex"로 변경하거나, 빈 문자열 ""로 변경하여 CSS의 display: flex 속성을 유지시킵니다.
     document.getElementById("addr_btn_area").style.display = show ? "none" : "flex";
-    
     document.getElementById("addr_form_area").style.display = show ? "block" : "none";
 
     if (!show) {
@@ -57,19 +52,43 @@ function deleteAddr(addrId) {
 
     <aside class="sidebar">
         <h2>마이페이지</h2>
+
         <div class="menu-group">
-            <span class="menu-title">쇼핑 정보</span>
+            <span class="menu-title">구매내역</span>
             <ul>
-                <li><a href="${pageContext.request.contextPath}/member/mypage/orderList">주문/배송 조회</a></li>
-                <li><a href="${pageContext.request.contextPath}/member/mypage/cancelList">취소/반품 조회</a></li>
+                <li><a href="${pageContext.request.contextPath}/member/mypage/orderList">주문/배송조회</a></li>
+                <li><a href="${pageContext.request.contextPath}/member/mypage/cancelList">취소조회</a></li>
             </ul>
         </div>
+
         <div class="menu-group">
-            <span class="menu-title">회원 정보</span>
+            <span class="menu-title">혜택내역</span>
             <ul>
-                <li><a href="${pageContext.request.contextPath}/member/mypage/myInfo">개인정보 관리</a></li>
-                <li><a href="${pageContext.request.contextPath}/member/mypage/addr" class="active">배송지 관리</a></li>
+                <li><a href="${pageContext.request.contextPath}/member/mypage/review">상품 리뷰</a></li>
+                <li><a href="#">포인트/쿠폰</a></li>
             </ul>
+        </div>
+
+        <div class="menu-group">
+            <span class="menu-title">상품내역</span>
+            <ul>
+                <li><a href="${pageContext.request.contextPath}/member/mypage/wishList">관심 상품</a></li>
+            </ul>
+        </div>
+
+        <div class="menu-group">
+            <span class="menu-title">회원정보</span>
+            <ul>
+                <li><a href="${pageContext.request.contextPath}/member/mypage/myInfo">내 정보 관리</a></li>
+                <li><a href="${pageContext.request.contextPath}/member/mypage/addr" class="active">배송지 관리</a></li>
+                <li><a href="#">회원등급</a></li>
+            </ul>
+        </div>
+        
+        <div class="menu-group">
+             <ul>
+                <li><a href="${pageContext.request.contextPath}/member/logout" style="color:#999;">로그아웃</a></li>
+             </ul>
         </div>
     </aside>
 
@@ -82,7 +101,6 @@ function deleteAddr(addrId) {
                 <div class="line"></div>
             </div>
 
-            <!-- 배송지 목록 -->
             <div id="address-list">
 
                 <c:forEach var="dto" items="${list}">
@@ -101,9 +119,7 @@ function deleteAddr(addrId) {
                     </div>
                 </c:forEach>
 
-              
                 <div class="addr-create-area">
-
                     
                     <div id="addr_btn_area">
                         <button class="btn" onclick="toggleAddrForm(true)">
@@ -111,7 +127,6 @@ function deleteAddr(addrId) {
                         </button>
                     </div>
 
-                    <!-- 배송지 입력 폼 -->
                     <div id="addr_form_area" style="display:none;">
                         <form name="addrForm" method="post" class="customer_address">
 
