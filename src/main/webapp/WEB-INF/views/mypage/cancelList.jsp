@@ -5,7 +5,7 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<title>취소/반품조회 | 쇼핑몰</title>
+<title>취소조회 | 쇼핑몰</title>
 <link rel="icon" href="data:;base64,iVBORw0KGgo=">
 <jsp:include page="/WEB-INF/views/layout/headerResources.jsp" />
 <link rel="stylesheet"
@@ -46,10 +46,9 @@
 			<div class="menu-group">
 				<span class="menu-title">회원정보</span>
 				<ul>
-					<li><a href="#">내 정보 관리</a></li>
-					<li><a href="#">배송지 관리</a></li>
+					<li><a href="${pageContext.request.contextPath}/member/mypage/myInfo">내 정보 관리</a></li>
+					<li><a href="${pageContext.request.contextPath}/member/mypage/addr">배송지 관리</a></li>
 					<li><a href="#">회원등급</a></li>
-					<li><a href="#">문의하기</a></li>
 				</ul>
 			</div>
 		</aside>
