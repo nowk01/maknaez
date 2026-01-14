@@ -543,29 +543,20 @@ public class MemberController {
 			map.put("memberIdx", info.getMemberIdx());
 			map.put("mode", "cancel"); // 기본 모드: 취소/반품 내역만 조회
 
-			// 1. 전체 취소/반품 개수
 			int dataCount = mapper.dataCount(map);
 
-			// 2. [추가] 취소/반품 상태별 개수 구하기
-			// (DB에 저장되는 실제 상태명에 맞춰주세요. 예: "주문취소", "반품신청" 등)
-
-			// 취소 (주문취소 완료된 건)
 			map.put("orderState", "취소완료"); // 혹은 "주문취소"
 			int cancelCount = mapper.dataCount(map);
 
-			// 반품신청 (조회)
 			map.put("orderState", "반품신청");
 			int returnCheckCount = mapper.dataCount(map);
 
-			// 반품진행중
 			map.put("orderState", "반품중");
 			int returnIngCount = mapper.dataCount(map);
 
-			// 반품완료
 			map.put("orderState", "반품완료");
 			int returnDoneCount = mapper.dataCount(map);
 
-			// ★ 중요: 리스트 조회 전 상태 조건 제거 (mode="cancel"은 유지)
 			map.remove("orderState");
 
 			int size = 5;
@@ -587,7 +578,6 @@ public class MemberController {
 			mav.addObject("dataCount", dataCount);
 			mav.addObject("paging", paging);
 
-			// [추가] 상태별 개수 전달
 			mav.addObject("cancelCount", cancelCount);
 			mav.addObject("returnCheckCount", returnCheckCount);
 			mav.addObject("returnIngCount", returnIngCount);
@@ -600,9 +590,7 @@ public class MemberController {
 		return mav;
 	}
 
-	/* MemberController.java 내부에 추가 */
-
-	/* [수정] 상품 리뷰 페이지 - 배송완료된 목록 가져오기 */
+	
 	@GetMapping("mypage/review")
 	public ModelAndView review(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		ModelAndView mav = new ModelAndView("mypage/review");
@@ -619,10 +607,8 @@ public class MemberController {
 			Map<String, Object> map = new HashMap<>();
 			map.put("memberIdx", info.getMemberIdx());
 
-			// ★ 핵심: '배송완료'된 상품만 가져와서 리뷰 작성 목록으로 보여줍니다.
 			map.put("orderState", "배송완료");
 
-			// 페이징 없이 최근 100개만 가져옴 (필요 시 페이징 추가 가능)
 			map.put("start", 1);
 			map.put("end", 100);
 
@@ -718,12 +704,7 @@ public class MemberController {
 
 		return mav;
 	}
-	/*
-	 * =========================================================================
-	 * [추가] 배송지 관리 (목록 / 등록 / 삭제)
-	 * =========================================================================
-	 */
-
+	
 	// 1. 배송지 목록 페이지 이동
 	@GetMapping("mypage/addr")
 	public ModelAndView addressList(HttpServletRequest req, HttpServletResponse resp)
@@ -749,7 +730,7 @@ public class MemberController {
 		return mav;
 	}
 
-	// 2. 배송지 등록 처리
+	
 	@PostMapping("mypage/addr/write")
 	public ModelAndView addressWrite(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
@@ -764,20 +745,16 @@ public class MemberController {
 			AddressDTO dto = new AddressDTO();
 			dto.setMemberIdx(info.getMemberIdx());
 
-			// JSP 폼(Form)에서 넘어온 데이터 받기 (name 속성과 일치해야 함)
-			// DB 컬럼명에 맞춰 DTO에 세팅 (DTO 변수명: receiverName, zipCode 등 가정)
-			dto.setReceiverName(req.getParameter("name"));
-			dto.setReceiverTel(req.getParameter("tel"));
-			dto.setZipCode(req.getParameter("zip"));
-			dto.setAddr1(req.getParameter("addr1"));
-			dto.setAddr2(req.getParameter("addr2"));
-
-			// 배송지 별칭 (입력란이 없다면 기본값 설정)
-			dto.setAddrName("나의 배송지");
+			dto.setReceiverName(req.getParameter("receiverName")); 
+	        dto.setAddrName(req.getParameter("addrName"));
+	        dto.setReceiverTel(req.getParameter("receiverTel"));  
+	        dto.setZipCode(req.getParameter("zipCode"));         
+	        dto.setAddr1(req.getParameter("addr1"));
+	        dto.setAddr2(req.getParameter("addr2"));
 
 			// 기본 배송지 체크 여부 (체크되면 1, 아니면 0)
-			String isDefault = req.getParameter("isDefault");
-			dto.setIsBasic(isDefault != null ? 1 : 0);
+	        String isBasic = req.getParameter("isBasic");       
+	        dto.setIsBasic(isBasic != null ? 1 : 0);
 
 			// Service에 저장 요청
 			service.insertAddress(dto);
@@ -786,7 +763,6 @@ public class MemberController {
 			e.printStackTrace();
 		}
 
-		// 저장 후 목록 페이지로 리다이렉트 (새로고침 효과)
 		return new ModelAndView("redirect:/member/mypage/addr");
 	}
 
@@ -802,11 +778,9 @@ public class MemberController {
 		}
 
 		try {
-			// 삭제할 배송지 번호(PK) 받기
-			long addrId = Long.parseLong(req.getParameter("addrIdx"));
-
-			// Service에 삭제 요청
-			service.deleteAddress(addrId);
+	        long addrId = Long.parseLong(req.getParameter("addrId"));
+	       
+	        service.deleteAddress(addrId);
 
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -404,4 +404,11 @@
 		DELETE FROM address
 		WHERE addr_id = #{addrId}
 	</delete>
+	
+	<update id="updateAddressBasicReset" parameterType="Long">
+		UPDATE address 
+		SET isbasic = 0 
+		WHERE memberIdx = #{memberIdx}
+	</update>
+	
 </mapper>

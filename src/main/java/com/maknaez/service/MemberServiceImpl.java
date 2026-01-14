@@ -219,14 +219,25 @@ public class MemberServiceImpl implements MemberService {
 		
 		return result;
 	}
+	
 	@Override
 	public void insertAddress(AddressDTO dto) throws Exception {
-		try {
-			mapper.insertAddress(dto);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw e;
-		}
+	    try {
+	        // [추가 로직] 만약 '기본 배송지'로 설정(isBasic=1)했다면, 
+	        // 해당 회원의 기존 기본 배송지 설정을 모두 해제(0) 먼저 수행
+	        if (dto.getIsBasic() == 1) {
+	            mapper.updateAddressBasicReset(dto.getMemberIdx());
+	        }
+	        
+	        // 그 다음 새로운 배송지 추가
+	        mapper.insertAddress(dto);
+	        
+	    } catch (Exception e) {
+	        // 에러 발생 시 롤백 처리
+	        SqlSessionManager.setRollbackOnly();
+	        e.printStackTrace();
+	        throw e;
+	    }
 	}
 
 	@Override
