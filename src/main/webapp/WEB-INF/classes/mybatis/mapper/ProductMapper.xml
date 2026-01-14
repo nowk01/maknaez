@@ -141,6 +141,19 @@
         <include refid="where-list"/>
     </select>
 	
+	<!-- 카테고리 관리(관리자용) -->
+	<select id="listCategory" resultType="com.maknaez.model.CategoryDTO">
+	    SELECT 
+	        CATE_CODE   AS cateCode,
+	        CATE_NAME   AS cateName,
+	        CATE_PARENT AS cateParent,
+	        DEPTH       AS depth,
+	        STATUS      AS status,
+	        ORDER_NO    AS orderNo
+	    FROM EZ.CATEGORY
+	    ORDER BY COALESCE(CATE_PARENT, CATE_CODE) ASC, ORDER_NO ASC
+	</select>
+	
 	<insert id="insertCategory" parameterType="com.maknaez.model.CategoryDTO">
 	    INSERT INTO EZ.CATEGORY (CATE_CODE, CATE_NAME, CATE_PARENT, DEPTH, STATUS, ORDER_NO)
 	    VALUES (
