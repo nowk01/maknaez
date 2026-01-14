@@ -340,7 +340,7 @@
             msgEl.style.display = 'block';
             if(data.passed === true || data.passed === 'true') {
                 msgEl.innerText = "사용 가능한 아이디입니다.";
-                msgEl.style.color = "#000";
+                msgEl.style.color = "blue";
                 isIdChecked = true;
             } else {
                 msgEl.innerText = "이미 사용중인 아이디입니다.";
