@@ -71,6 +71,7 @@ public class ProductManageController {
 	@PostMapping("category_update")
     public ModelAndView updateCategoryApi(HttpServletRequest req, HttpServletResponse resp) throws Exception {
         CategoryDTO dto = new CategoryDTO();
+        dto.setOriginCateCode(req.getParameter("originCateCode"));
         dto.setCateCode(req.getParameter("cateCode"));
         dto.setCateName(req.getParameter("cateName"));
         dto.setStatus(Integer.parseInt(req.getParameter("status")));
