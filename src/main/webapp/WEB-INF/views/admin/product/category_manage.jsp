@@ -53,40 +53,33 @@
                             <div class="card-body-custom">
                                 <form id="categoryForm" name="categoryForm">
 								    <input type="hidden" id="mode" name="mode" value="insert">
-								    <input type="hidden" id="originParentCode" value=""> 
+								    <input type="hidden" id="originCateCode" name="originCateCode" value="">
+								    <input type="hidden" id="depth" name="depth" value="1">
 								
 								    <div class="row mb-4">
 								        <div class="col-12">
 								            <h6 class="form-section-title">기본 정보</h6>
 								        </div>
 								        
+								        <div class="col-md-12 mb-3">
+								            <label for="cateParent" class="form-label">상위 카테고리</label>
+								            <select class="form-select" id="cateParent" name="cateParent" onchange="onChangeParent()">
+								                <option value="">최상위 (ROOT)</option>
+								            </select>
+								        </div>
+								
 								        <div class="col-md-6 mb-3">
 								            <label for="cateCode" class="form-label fw-bold">카테고리 코드 <span class="text-danger">*</span></label>
-								            <input type="text" class="form-control" id="cateCode" name="cateCode" placeholder="예: MEN, MEN_TOP" style="font-family: monospace; font-weight: 700;">
+								            <input type="text" class="form-control" id="cateCode" name="cateCode" 
+								                   placeholder="예: MEN_TOP" style="font-family: monospace; font-weight: 700;">
 								            <div class="form-text text-muted" id="codeHelpText">
-								                영문 대문자와 숫자, 언더바(_)만 사용 가능합니다.
+								                영문 대문자, 숫자, 언더바(_)만 사용 가능
 								            </div>
 								        </div>
 								
 								        <div class="col-md-6 mb-3">
-									        <label for="cateParent" class="form-label">상위 카테고리</label>
-									        <select class="form-select" id="cateParent" name="cateParent" onchange="onChangeParent()">
-									            <option value="">최상위 (ROOT)</option>
-									            </select>
-									    </div>
-									    
-									    <div class="col-md-6 mb-3">
-									        <label for="cateCode" class="form-label fw-bold">카테고리 코드 <span class="text-danger">*</span></label>
-									        <input type="text" class="form-control" id="cateCode" name="cateCode" 
-									               placeholder="예: MEN" style="font-family: monospace; font-weight: 700;">
-									        <div class="form-text text-muted" id="codeHelpText">
-									            영문 대문자 입력 (상위 카테고리 선택 시 접두어 자동 완성)
-									        </div>
-									    </div>
-								
-								        <div class="col-md-12 mb-3">
-								            <label for="cateName" class="form-label fw-bold text-dark">카테고리 이름 <span class="text-danger">*</span></label>
-								            <input type="text" class="form-control" id="cateName" name="cateName" placeholder="한글 카테고리명 입력 (예: 상의)">
+								            <label for="cateName" class="form-label fw-bold">카테고리 이름 <span class="text-danger">*</span></label>
+								            <input type="text" class="form-control" id="cateName" name="cateName" placeholder="한글 명칭">
 								        </div>
 								    </div>
 								

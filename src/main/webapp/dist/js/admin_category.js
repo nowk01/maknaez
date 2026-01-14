@@ -29,6 +29,7 @@ function loadCategoryList() {
 }
 
 // [UI] Accordion Tree 렌더링 (좌측)
+// [UI] Accordion Tree 렌더링 (좌측) - 숨김 배지 기능 추가됨
 function renderCategoryTree(list) {
     const $container = $('#categoryAccordion');
     $container.empty();
@@ -49,6 +50,12 @@ function renderCategoryTree(list) {
         const collapseId = `collapse${index}`;
         const headerId = `heading${index}`;
 
+        // ★ [NEW] 대분류 숨김 배지 로직
+        // status가 0이면 회색 배지 표시
+        const parentBadge = (parent.status == 0) 
+            ? '<span class="badge bg-secondary ms-2 rounded-pill" style="font-size:0.7em;">숨김</span>' 
+            : '';
+
         // HTML 조립
         let html = `
             <div class="accordion-item">
@@ -58,7 +65,7 @@ function renderCategoryTree(list) {
                             onclick="viewCategory('${parent.cateCode}', '${parent.cateName}', '', 1, ${parent.orderNo}, '${parent.status}')">
                         <span class="fw-bold me-2">${parent.cateName}</span> 
                         <span class="text-muted" style="font-size:0.85em;">(${parent.cateCode})</span>
-                    </button>
+                        ${parentBadge} </button>
                 </h2>
                 <div id="${collapseId}" class="accordion-collapse collapse" aria-labelledby="${headerId}" data-bs-parent="#categoryAccordion">
                     <div class="accordion-body p-0">
@@ -66,13 +73,20 @@ function renderCategoryTree(list) {
 
         if (children.length > 0) {
             children.forEach(child => {
-                // 자식 노드 클릭 시 부모코드는 parent.cateCode
+                // ★ [NEW] 하위분류 숨김 배지 로직
+                const childBadge = (child.status == 0) 
+                    ? '<span class="badge bg-secondary me-2 rounded-pill" style="font-size:0.7em;">숨김</span>' 
+                    : '';
+
                 html += `
                     <button type="button" class="list-group-item list-group-item-action d-flex align-items-center" 
                         onclick="viewCategory('${child.cateCode}', '${child.cateName}', '${parent.cateCode}', ${child.depth}, ${child.orderNo}, '${child.status}')">
                         <i class="bi bi-arrow-return-right text-muted me-2 small"></i>
                         <span>${child.cateName}</span>
-                        <span class="ms-auto text-muted small" style="font-size:0.8em;">${child.cateCode}</span>
+                        
+                        <span class="ms-auto d-flex align-items-center">
+                            ${childBadge} <span class="text-muted small" style="font-size:0.8em;">${child.cateCode}</span>
+                        </span>
                     </button>`;
             });
         } else {
@@ -149,13 +163,12 @@ function onChangeParent() {
 // [Action] 신규 등록 모드 초기화 (Reset)
 function resetForm() {
     $('#mode').val('insert');
-    if(typeof updatePathBadge === 'function') updatePathBadge('신규 대분류 등록');
+    $('#originCateCode').val('');
 
-    // 1. 드롭다운 활성화 및 초기화
-    $('#cateParent').prop('disabled', false).val('');
-    
-    // 2. 코드 입력창 활성화
+	$('#cateParent').prop('disabled', false).val('');
     $('#cateCode').prop('readonly', false).removeClass('bg-light').val('');
+    $('#codeHelpText').text('신규 코드를 입력하세요. (예: MEN)');
+    $('#codeHelpText').removeClass('text-danger').addClass('text-muted');
     
     // 3. 나머지 필드 초기화
     $('#cateName').val('');
@@ -173,7 +186,7 @@ function resetForm() {
 // [Action] 트리 클릭 시 상세 정보 보기
 function viewCategory(code, name, parent, depth, orderNo, status) {
     $('#mode').val('update');
-    if(typeof updatePathBadge === 'function') updatePathBadge(name + ' 상세 정보');
+    $('#originCateCode').val(code);
 
     // 1. 값 바인딩
     $('#cateParent').val(parent || ''); // 부모 선택
@@ -189,9 +202,22 @@ function viewCategory(code, name, parent, depth, orderNo, status) {
         $('#displayN').prop('checked', true);
     }
 
-    // 2. 중요 정보 수정 방지 (무결성 유지)
-    $('#cateParent').prop('disabled', true); // 부모 변경 불가
-    $('#cateCode').prop('readonly', true).addClass('bg-light'); // PK 변경 불가
+	const hasChildren = categoryList.some(item => item.cateParent === code);
+
+    if (hasChildren) {
+        // 자식이 있으면 -> 코드 수정 불가 (Readonly)
+        $('#cateCode').prop('readonly', true).addClass('bg-light');
+        $('#codeHelpText').text('⛔ 하위 카테고리가 존재하여 코드를 변경할 수 없습니다.');
+        $('#codeHelpText').removeClass('text-muted').addClass('text-danger');
+    } else {
+        // 자식이 없으면 -> 코드 수정 가능 (Editable)
+        $('#cateCode').prop('readonly', false).removeClass('bg-light');
+        $('#codeHelpText').text('✏️ 코드를 수정할 수 있습니다. (연결된 상품 정보도 함께 업데이트됩니다)');
+        $('#codeHelpText').removeClass('text-danger').addClass('text-muted');
+    }
+
+    // 3. 상위 카테고리는 구조 꼬임 방지를 위해 항상 비활성
+    $('#cateParent').prop('disabled', true);
     
     // 3. 버튼 노출
     $('#btnDelete').show();

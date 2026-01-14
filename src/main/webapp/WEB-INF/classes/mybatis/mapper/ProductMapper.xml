@@ -176,7 +176,7 @@
 	<update id="updateCategory" parameterType="com.maknaez.model.CategoryDTO">
 		 UPDATE EZ.CATEGORY SET
 		     CATE_CODE = #{cateCode}, CATE_NAME = #{cateName}, STATUS = #{status}, ORDER_NO = #{orderNo}
-		 WHERE CATE_CODE = #{originCateCode} 
+		 WHERE CATE_CODE = #{originCateCode, jdbcType=VARCHAR} 
     </update>
 	
 	<delete id="deleteCategory" parameterType="string">

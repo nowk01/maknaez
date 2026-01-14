@@ -11,8 +11,17 @@ public class CategoryDTO {
     private int depth;         // 계층 깊이 (1:대분류, 2:중분류 .. )
     private int status;        // 1: 노출, 0: 숨김
     private int orderNo;       // 정렬 순서
+    private String originCateCode;
 
-    public CategoryDTO() {
+    public String getOriginCateCode() {
+		return originCateCode;
+	}
+
+	public void setOriginCateCode(String originCateCode) {
+		this.originCateCode = originCateCode;
+	}
+
+	public CategoryDTO() {
     }
 
     public CategoryDTO(String cateCode, String cateName, String cateParent, int depth) {
