@@ -12,36 +12,7 @@
 
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/mypage.css">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/my_address.css">
-
-<script>
-function toggleAddrForm(show) {
-    document.getElementById("addr_btn_area").style.display = show ? "none" : "flex";
-    document.getElementById("addr_form_area").style.display = show ? "block" : "none";
-
-    if (!show) {
-        document.addrForm.reset();
-    }
-}
-
-function sendOk() {
-    const f = document.addrForm;
-
-    if (!f.addrName.value.trim()) { alert("배송지 이름을 입력하세요."); f.addrName.focus(); return; }
-    if (!f.receiverName.value.trim()) { alert("받는 분 성함을 입력하세요."); f.receiverName.focus(); return; }
-    if (!f.receiverTel.value.trim()) { alert("전화번호를 입력하세요."); f.receiverTel.focus(); return; }
-    if (!f.zipCode.value.trim()) { alert("우편번호를 검색해주세요."); return; }
-    if (!f.addr2.value.trim()) { alert("상세 주소를 입력해주세요."); f.addr2.focus(); return; }
-
-    f.action = "${pageContext.request.contextPath}/member/mypage/addr/write";
-    f.submit();
-}
-
-function deleteAddr(addrId) {
-    if (confirm("정말 삭제하시겠습니까?")) {
-        location.href = "${pageContext.request.contextPath}/member/mypage/addr/delete?addrId=" + addrId;
-    }
-}
-</script>
+<script src="${pageContext.request.contextPath}/dist/js/my_address.js"></script>
 </head>
 
 <body>
@@ -127,7 +98,7 @@ function deleteAddr(addrId) {
                         </button>
                     </div>
 
-                    <div id="addr_form_area" style="display:none;">
+                    <div id="addr_form_area" style="display: none;">
                         <form name="addrForm" method="post" class="customer_address">
 
                             <div class="customer_address_table">
@@ -174,18 +145,7 @@ function deleteAddr(addrId) {
 <jsp:include page="/WEB-INF/views/layout/footer.jsp" />
 <jsp:include page="/WEB-INF/views/layout/footerResources.jsp" />
 
-<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
-<script>
-function daumPostcode() {
-    new daum.Postcode({
-        oncomplete: function(data) {
-            zipCode.value = data.zonecode;
-            addr1.value = data.roadAddress || data.jibunAddress;
-            addr2.focus();
-        }
-    }).open();
-}
-</script>
+<script src="${pageContext.request.contextPath}/dist/js/address.js"></script>
 
 </body>
 </html>
