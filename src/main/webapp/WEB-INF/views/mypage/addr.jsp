@@ -99,7 +99,7 @@
                     </div>
 
                     <div id="addr_form_area" style="display: none;">
-                        <form name="addrForm" method="post" class="customer_address">
+                        <form name="addrForm" method="post" class="customer_address" data-action="${pageContext.request.contextPath}/member/mypage/addr/write">
 
                             <div class="customer_address_table">
                                 <label class="label">이름 / 배송지명 *</label>
@@ -145,6 +145,7 @@
 <jsp:include page="/WEB-INF/views/layout/footer.jsp" />
 <jsp:include page="/WEB-INF/views/layout/footerResources.jsp" />
 
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script src="${pageContext.request.contextPath}/dist/js/address.js"></script>
 
 </body>

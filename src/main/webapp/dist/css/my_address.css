@@ -1,5 +1,23 @@
 @charset "UTF-8";
 
+.addr-btns {
+    display: flex;
+    flex-direction: column; /* 세로로 배치 */
+    gap: 10px; /* 버튼과 링크 사이 간격 */
+}
+
+.addr-btns button {
+    width: 200px; /* 버튼 너비 조정 가능 */
+}
+
+.addr-btns a {
+    font-size: 14px;
+    color: #333;
+    text-decoration: underline;
+    text-align: center; /* 가운데 정렬 */
+}
+
+
 /* =========================================
    변수 및 공통 설정 (Salomon Style)
 ========================================= */
@@ -253,6 +271,7 @@ body {
     cursor: pointer;
     display: block;         /* 블록 요소로 변경하여 터치 영역 확보 */
     padding: 5px;
+    margin-top: 10px;
 }
 
 .note__text:hover {
@@ -373,13 +392,14 @@ body {
 ========================================= */
 @media (min-width: 768px) {
     .action_bottom {
-        flex-direction: row;
+       flex-direction: column; /* row -> column */
         align-items: center;
+        gap: 12px; /* 버튼과 링크 사이 간격 */
     }
     
     /* PC에서는 취소 버튼을 우측으로 */
     .note__text {
-        margin-left: 20px;
+        margin-left: 0px;
     }
     
     /* 배송지 관리 타이틀 중앙 정렬 */
