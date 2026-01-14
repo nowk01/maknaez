@@ -14,7 +14,6 @@ public interface ProductMapper {
     // ��ǰ ���� ��ȸ
     public int dataCount(Map<String, Object> map) throws SQLException;
     
- // 기존 인터페이스에 추가
     public List<CategoryDTO> listCategory() throws SQLException;
     public void insertCategory(CategoryDTO dto) throws SQLException;
     public void updateCategory(CategoryDTO dto) throws SQLException;

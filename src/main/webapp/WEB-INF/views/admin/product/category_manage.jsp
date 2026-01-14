@@ -16,87 +16,80 @@
             <jsp:include page="/WEB-INF/views/admin/layout/header.jsp" />
 
             <div class="content-container">
-                <div class="page-header">
+                <div class="page-header mb-4">
                     <h3 class="page-title">카테고리 관리</h3>
-                    <p class="page-desc">Shoes Category Hierarchy Management</p>
+                    								<!-- OR 상품 카테고리 체계를 관리합니다. -->
+                    <p class="page-desc text-muted">Shoes Category Hierarchy Management</p>
                 </div>
 
-                <div class="row g-5">
-                    <div class="col-lg-4">
-                        <div class="card-box" style="min-height: 650px;">
-                            <div class="d-flex justify-content-between align-items-center mb-5">
-                                <h5 style="font-size: 12px; font-weight: 800; color: #ccc; letter-spacing: 0.1em;">STRUCTURE</h5>
-                                <button class="btn btn-new-root" onclick="resetForm()">NEW ROOT</button>
+                <div class="row g-4">
+                    <div class="col-lg-5">
+                        <div class="card shadow-sm h-100">
+                            <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0">Categories</h5>
+                                <button type="button" class="btn btn-sm btn-outline-secondary" onclick="resetForm()">Root Add</button>
                             </div>
-                            
-                            <ul class="category-tree">
-                                <li>
-                                    <div class="tree-item active" onclick="selectCategory(1, 'SNEAKERS', 'ROOT', 'Y')">
-                                        <i class="fas fa-chevron-right tree-arrow"></i> SNEAKERS
+                            <div class="card-body scrollable-tree">
+                                <div class="accordion" id="categoryAccordion">
                                     </div>
-                                    <ul>
-                                        <li><div class="tree-item" onclick="selectCategory(11, 'Running', 'SNEAKERS', 'Y')">Running</div></li>
-                                        <li><div class="tree-item" onclick="selectCategory(12, 'Lifestyle', 'SNEAKERS', 'Y')">Lifestyle</div></li>
-                                    </ul>
-                                </li>
-                                <li>
-                                    <div class="tree-item" onclick="selectCategory(2, 'BOOTS', 'ROOT', 'Y')">
-                                        <i class="fas fa-chevron-right tree-arrow"></i> BOOTS
-                                    </div>
-                                </li>
-                            </ul>
+                            </div>
                         </div>
-                    </div>
+                    </div> 
 
-                    <div class="col-lg-8">
-                        <div class="card-box" style="min-height: 650px;">
-                            <div class="mb-5 pb-2" style="border-bottom: 1px solid #f8f8f8;">
-                                <h5 style="font-size: 12px; font-weight: 800; color: #ccc; letter-spacing: 0.1em;">CONFIGURATION</h5>
+                    <div class="col-lg-7">
+                        <div class="card shadow-sm h-100">
+                            <div class="card-header bg-white">
+                                <h5 class="mb-0">Detail Information</h5>
                             </div>
-                            
-                            <form action="" method="post">
-                                <div class="row g-4">
-                                    <div class="col-md-6">
-                                        <label class="form-label">Category ID</label>
-                                        <input type="text" class="form-control" id="cateNo" readonly placeholder="Auto">
+                            <div class="card-body">
+                                <form id="categoryForm" name="categoryForm">
+                                    <input type="hidden" id="mode" name="mode" value="insert">
+                                    
+                                    <div class="mb-3">
+                                        <label class="form-label text-muted">Category Code</label>
+                                        <input type="text" class="form-control" id="cateCode" name="cateCode" readonly placeholder="자동 생성됩니다.">
                                     </div>
-                                    <div class="col-md-6">
-                                        <label class="form-label">상위 카테고리 (Parent)</label>
-                                        <select class="form-select" id="parentCate">
-                                            <option value="0">None (최상위)</option>
-                                            <option value="1">SNEAKERS</option>
-                                            <option value="2">BOOTS</option>
-                                        </select>
+                                    
+                                    <input type="hidden" id="cateParent" name="cateParent">
+                                    <div class="mb-3">
+                                        <label class="form-label text-muted">Parent Category</label>
+                                        <input type="text" class="form-control" id="parentName" readonly placeholder="Root (대분류)">
                                     </div>
-                                    <div class="col-12">
-                                        <label class="form-label">카테고리 명칭 (Name) *</label>
-                                        <input type="text" class="form-control" id="cateName" placeholder="Enter name">
+                                    
+                                    <input type="hidden" id="depth" name="depth" value="1">
+
+                                    <div class="mb-3">
+                                        <label class="form-label fw-bold">카테고리명 (Name)</label>
+                                        <input type="text" class="form-control" id="cateName" name="cateName" placeholder="카테고리 이름을 입력하세요">
                                     </div>
-                                    <div class="col-md-6">
-                                        <label class="form-label">노출 여부 (Status)</label>
-                                        <div class="d-flex gap-5 mt-3">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="displayYn" id="displayY" checked>
-                                                <label class="form-check-label" for="displayY">Visible</label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="displayYn" id="displayN">
-                                                <label class="form-check-label" for="displayN">Hidden</label>
+
+                                    <div class="row mb-4">
+                                        <div class="col-md-6">
+                                            <label class="form-label fw-bold">노출 여부 (Status)</label>
+                                            <div class="d-flex gap-3 mt-1">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" name="status" id="displayY" value="1" checked>
+                                                    <label class="form-check-label" for="displayY">Show (1)</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" name="status" id="displayN" value="0">
+                                                    <label class="form-check-label" for="displayN">Hidden (0)</label>
+                                                </div>
                                             </div>
                                         </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label fw-bold">정렬 순서 (Order)</label>
+                                            <input type="number" class="form-control" id="orderNo" name="orderNo" value="1">
+                                        </div>
                                     </div>
-                                    <div class="col-md-6">
-                                        <label class="form-label">정렬 순서 (Order)</label>
-                                        <input type="number" class="form-control" id="sortOrder" value="1">
-                                    </div>
-                                </div>
 
-                                <div class="btn-group-custom">
-                                    <button type="button" class="btn btn-luxury btn-delete-sub">DELETE</button>
-                                    <button type="button" class="btn btn-luxury btn-dark-sub" onclick="setParent()">SUB ADD</button>
-                                    <button type="submit" class="btn btn-luxury btn-orange-main">SAVE CHANGES</button>
-                                </div>
-                            </form>
+                                    <div class="d-flex justify-content-end gap-2">
+                                        <button type="button" class="btn btn-danger" id="btnDelete" onclick="deleteCategoryFunc()" style="display:none;">DELETE</button>
+                                        <button type="button" class="btn btn-secondary" id="btnSubAdd" onclick="prepareSubAdd()" style="display:none;">SUB ADD</button>
+                                        <button type="button" class="btn btn-primary" onclick="submitCategory()">SAVE CHANGES</button>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div> 
