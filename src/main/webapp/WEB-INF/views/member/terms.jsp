@@ -245,13 +245,6 @@ body {
     line-height: 1.6;
 }
 
-@media (max-width: 768px) {
-    .privacy-container { padding: 0 20px; margin-top: 100px; }
-    .page-title { font-size: 32px; }
-    .data-row { flex-direction: column; }
-    .data-th { width: 100%; padding-bottom: 5px; color: #888; }
-    .data-td { padding: 0 0 20px 0; }
-}
 </style>
 
 <jsp:include page="/WEB-INF/views/layout/footer.jsp"/>

@@ -108,11 +108,11 @@ function submitPointUpdate() {
     const memberIdxsStr = memberIdxList.join(",");
 
     // 4. 요청 파라미터 구성
-    const url = "${pageContext.request.contextPath}/admin/member/updatePoint";
+    const url = "/maknaez/admin/member/updatePoint";
     const query = {
         memberIdxs: memberIdxsStr, // 문자열로 전송
         mode: mode,
-        amount: amount,
+        point_amount: amount,
         reason: reason
     };
 
