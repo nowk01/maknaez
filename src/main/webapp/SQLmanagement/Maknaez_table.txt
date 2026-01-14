@@ -134,7 +134,9 @@ CREATE TABLE category (
     cate_code   VARCHAR2(50)    NOT NULL, 
     cate_name   VARCHAR2(100)   NULL,
     cate_parent NUMBER          NULL,           -- FK: category.cate_code (자기 자신 참조, 상위 카테고리)
-    depth       NUMBER          NULL                -- 카테고리 깊이 (1차, 2차...)
+    depth       NUMBER          NULL,                -- 카테고리 깊이 (1차, 2차...)
+    status      NUMBER          NULL,			-- 노출 여부(0 : 없음, 1 : 노출)
+    order_no    NUMBER          NULL			-- 정렬 순서
 );
 
 -- 12. 상품 마스터
