@@ -6,16 +6,16 @@ import java.util.Map;
 import com.maknaez.mapper.ProductMapper;
 import com.maknaez.model.CategoryDTO;
 import com.maknaez.model.ProductDTO;
-import com.maknaez.mybatis.support.SqlSessionManager;
+import com.maknaez.mybatis.support.MapperContainer;
 
 public class ProductServiceImpl implements ProductService {
     
+	private ProductMapper mapper = MapperContainer.get(ProductMapper.class);
+	
     @Override
     public List<ProductDTO> listProduct(Map<String, Object> map) {
         List<ProductDTO> list = null;
         try {
-            var sqlSession = SqlSessionManager.getSession();
-            ProductMapper mapper = sqlSession.getMapper(ProductMapper.class);
             list = mapper.listProduct(map);
         } catch (Exception e) {
             e.printStackTrace();
@@ -27,8 +27,6 @@ public class ProductServiceImpl implements ProductService {
     public int dataCount(Map<String, Object> map) {
         int result = 0;
         try {
-            var sqlSession = SqlSessionManager.getSession();
-            ProductMapper mapper = sqlSession.getMapper(ProductMapper.class);
             result = mapper.dataCount(map);
         } catch (Exception e) {
             e.printStackTrace();
@@ -39,9 +37,9 @@ public class ProductServiceImpl implements ProductService {
 	@Override
 	public List<CategoryDTO> listCategory() {
 		List<CategoryDTO> list = null;
-        try (var sqlSession = SqlSessionManager.getSession()) {
-            ProductMapper mapper = sqlSession.getMapper(ProductMapper.class);
+        try {
             list = mapper.listCategory();
+            return list;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -50,19 +48,28 @@ public class ProductServiceImpl implements ProductService {
 
 	@Override
 	public void insertCategory(CategoryDTO dto) throws Exception {
-		// TODO Auto-generated method stub
-		
+		try {
+			mapper.insertCategory(dto);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
 	public void updateCategory(CategoryDTO dto) throws Exception {
-		// TODO Auto-generated method stub
-		
+		try {
+			mapper.updateCategory(dto);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
 	public void deleteCategory(String cateCode) throws Exception {
-		// TODO Auto-generated method stub
-		
+		try {
+			mapper.deleteCategory(cateCode);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 }

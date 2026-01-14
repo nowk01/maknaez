@@ -11,6 +11,7 @@ public interface ProductService {
     public int dataCount(Map<String, Object> map); // 페이징 처리를 위해
     
     public List<CategoryDTO> listCategory();
+    
     public void insertCategory(CategoryDTO dto) throws Exception;
     public void updateCategory(CategoryDTO dto) throws Exception;
     public void deleteCategory(String cateCode) throws Exception;
