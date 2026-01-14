@@ -51,7 +51,7 @@ function changeReason(select) {
 function submitPointUpdate() {
     const f = document.pointForm;
     const query = $(f).serialize();
-    const url = "/admin/member/updatePoint"; // 프로젝트 경로에 맞게 수정 필요
+    const url = "updatePoint";
 
     if (!f.reason.value.trim()) { alert("사유를 입력해주세요."); return; }
     if (!f.point_amount.value || f.point_amount.value <= 0) { alert("포인트를 입력해주세요."); return; }

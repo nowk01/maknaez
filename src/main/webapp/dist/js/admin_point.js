@@ -122,7 +122,7 @@ function submitPointUpdate() {
             alert("성공적으로 처리되었습니다.");
             location.reload(); 
         } else {
-            alert("처리에 실패했습니다. " + (data.message ? data.message : ""));
+            alert("처리에 실패했습니다. ");
         }
     };
 
