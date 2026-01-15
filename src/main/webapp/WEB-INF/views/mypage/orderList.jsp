@@ -25,7 +25,7 @@
 					<li><a
 						href="${pageContext.request.contextPath}/member/mypage/orderList"
 						class="active">주문/배송조회</a></li>
-					<li><a href="${pageContext.request.contextPath}/member/mypage/cancelList">취소/반품조회</a></li>
+					<li><a href="${pageContext.request.contextPath}/member/mypage/cancelList">취소상품조회</a></li>
 				</ul>
 			</div>
 
