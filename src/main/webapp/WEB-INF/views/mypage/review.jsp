@@ -24,7 +24,7 @@
                 <span class="menu-title">구매내역</span>
                 <ul>
                     <li><a href="${pageContext.request.contextPath}/member/mypage/orderList">주문/배송조회</a></li>
-                    <li><a href="${pageContext.request.contextPath}/member/mypage/cancelList">취소/반품조회</a></li>
+                    <li><a href="${pageContext.request.contextPath}/member/mypage/cancelList">취소상품조회</a></li>
                 </ul>
             </div>
 
