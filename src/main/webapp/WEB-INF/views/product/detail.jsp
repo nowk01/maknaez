@@ -328,6 +328,8 @@
 const contextPath = "${pageContext.request.contextPath}";
 const productNum = "${dto.prodId}"; // DB 상품 ID
 
+const isLoggedIn = ${not empty sessionScope.member ? 'true' : 'false'}; //야호
+
 // ... (공유하기 등 기존 스크립트 그대로) ...
 
 function copyLink() {
@@ -389,6 +391,29 @@ $(document).ready(function() {
     if(productNum) {
         loadReviews(productNum);
     }
+    
+ 	// [추가] 찜하기(하트) 버튼 클릭 이벤트
+    $('#wishBtn').click(function() {
+        // 1. 비로그인 상태 체크
+        if (!isLoggedIn) {
+            if(confirm("로그인이 필요한 서비스입니다.\n로그인 페이지로 이동하시겠습니까?")) {
+                location.href = contextPath + "/member/login";
+            }
+            return; // 이후 로직 실행 방지
+        }
+
+        // 2. 로그인 상태라면 찜하기 로직 실행 (백엔드 연동)
+        // 백엔드 구현이 되어 있다면 이곳에 AJAX 코드를 작성하시면 됩니다.
+        
+        // (예시: UI만 토글하는 임시 코드)
+        $(this).toggleClass('bi-heart bi-heart-fill text-danger');
+        if($(this).hasClass('bi-heart-fill')) {
+            // 찜 추가 AJAX 호출
+             alert("찜 목록에 추가되었습니다."); // 테스트용 알림
+        } else {
+            // 찜 해제 AJAX 호출
+        }
+    });
 });
 
 // Ajax로 리뷰 로드
