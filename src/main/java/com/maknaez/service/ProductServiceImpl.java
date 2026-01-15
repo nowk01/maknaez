@@ -177,5 +177,50 @@ public class ProductServiceImpl implements ProductService {
 	        return null;
 	    }
 	}
+	
+	@Override
+	public int dataCountManage(Map<String, Object> map) {
+	    int result = 0;
+	    try {
+	        result = mapper.countProductManage(map);
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	    return result;
+	}
+
+	@Override
+	public List<ProductDTO> listProductManage(Map<String, Object> map) {
+	    List<ProductDTO> list = null;
+	    try {
+	        list = mapper.listProductManage(map);
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	    return list;
+	}
+
+	@Override
+	public List<CategoryDTO> listCategoryAll() {
+	    List<CategoryDTO> list = null;
+	    try {
+	        list = mapper.listCategoryAll();
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	    return list;
+	}
+
+	@Override
+	public void deleteProductList(long[] prodIds) throws Exception {
+	    try {
+	        for(long prodId : prodIds) {
+	            mapper.deleteProduct(prodId);
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        throw e;
+	    }
+	}
 
 }

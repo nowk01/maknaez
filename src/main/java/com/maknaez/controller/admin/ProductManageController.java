@@ -2,9 +2,13 @@ package com.maknaez.controller.admin;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.maknaez.model.CategoryDTO;
 import com.maknaez.model.ProductDTO;
@@ -18,6 +22,7 @@ import com.maknaez.service.ProductService;
 import com.maknaez.service.ProductServiceImpl;
 import com.maknaez.util.FileManager;
 import com.maknaez.util.MyMultipartFile;
+import com.maknaez.util.MyUtil;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -31,14 +36,8 @@ public class ProductManageController {
 	
 	private ProductService service = new ProductServiceImpl();
 	private FileManager fileManager = new FileManager();
-	
-	@GetMapping("product_list")
-	public ModelAndView productList(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		ModelAndView mav = new ModelAndView("admin/product/product_list");
-		
-		return mav;
-	}
-	
+	private MyUtil util = new MyUtil();
+
 	@GetMapping("category_manage")
     public ModelAndView categoryManage(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         return new ModelAndView("admin/product/category_manage");
@@ -117,14 +116,91 @@ public class ProductManageController {
 		return mav;
 	}
 	
-	@GetMapping("product_write")
-	public ModelAndView productWriteForm(HttpServletRequest req, HttpServletResponse resp) throws Exception {
-	    List<CategoryDTO> list = service.listCategorySelect();
+	@GetMapping("product_list")
+    public ModelAndView productList(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        ModelAndView mav = new ModelAndView("admin/product/product_list");
+        
+        // 1. 페이징 및 검색 파라미터 처리
+        String page = req.getParameter("page");
+        int current_page = 1;
+        if(page != null && page.length() != 0) {
+            try {
+                current_page = Integer.parseInt(page);
+            } catch (NumberFormatException e) { }
+        }
+        
+        String searchKey = req.getParameter("searchKey");
+        String searchValue = req.getParameter("searchValue");
+        if(searchValue == null) {
+            searchKey = "prodName";
+            searchValue = "";
+        }
+        
+        if(req.getMethod().equalsIgnoreCase("GET")) {
+            searchValue = URLDecoder.decode(searchValue, "UTF-8"); // Import 추가로 에러 해결
+        }
+        
+        // 2. 데이터 가져오기
+        int rows = 10;
+        Map<String, Object> map = new HashMap<>();
+        map.put("searchKey", searchKey);
+        map.put("searchValue", searchValue);
+        
+        int dataCount = service.dataCountManage(map); // Service에 해당 메소드가 있어야 함
+        int total_page = util.pageCount(rows, dataCount);
+        if(current_page > total_page) current_page = total_page;
+        
+        int start = (current_page - 1) * rows + 1;
+        int end = current_page * rows;
+        map.put("start", start);
+        map.put("end", end);
+        
+        List<ProductDTO> list = service.listProductManage(map); // Service에 해당 메소드가 있어야 함
+        
+        // 3. 카테고리 트리 구조 생성
+        List<CategoryDTO> allCats = service.listCategoryAll(); // Service에 해당 메소드가 있어야 함
+        List<CategoryDTO> parentCats = new ArrayList<>();
+        Map<String, List<CategoryDTO>> childCatsMap = new HashMap<>();
+        
+        if(allCats != null) {
+            for(CategoryDTO dto : allCats) {
+                if(dto.getDepth() == 1 || dto.getCateParent() == null) {
+                    parentCats.add(dto);
+                } else {
+                    String pCode = dto.getCateParent();
+                    List<CategoryDTO> children = childCatsMap.getOrDefault(pCode, new ArrayList<>());
+                    children.add(dto);
+                    childCatsMap.put(pCode, children);
+                }
+            }
+        }
+        
+        // 4. 페이징 URL 처리
+        String cp = req.getContextPath();
+        String listUrl = cp + "/admin/product/product_list";
+        
+        String query = "rows=" + rows;
+        if(searchValue.length() != 0) {
+            query += "&searchKey=prodName&searchValue=" + URLEncoder.encode(searchValue, "UTF-8"); // Import 추가로 에러 해결
+        }
+        listUrl += "?" + query;
+        
+        String paging = util.paging(current_page, total_page, listUrl);
+        
+        // 5. 모델 전송
+        mav.addObject("list", list);
+        mav.addObject("parentCats", parentCats);
+        mav.addObject("childCatsMap", childCatsMap);
+        mav.addObject("page", current_page);
+        mav.addObject("total_page", total_page);
+        mav.addObject("dataCount", dataCount);
+        mav.addObject("paging", paging);
+        mav.addObject("searchValue", searchValue);
+        
+        return mav;
+    }
 	    
-	    ModelAndView mav = new ModelAndView("admin/product/product_write");
-	    mav.addObject("categoryList", list);
-	    return mav;
-	}
+	   
 	
 	@PostMapping("writeSubmit")
 	public String writeSubmit(HttpServletRequest req, HttpServletResponse resp) { // 인자를 2개로 수정
@@ -169,7 +245,7 @@ public class ProductManageController {
 
 	        // [2] 파일 저장 경로 설정
 	        String root = session.getServletContext().getRealPath("/");
-	        String pathname = root + "uploads" + File.separator + "guest";
+	        String pathname = root + "uploads" + File.separator + "product";
 
 	        // [3] 썸네일 이미지 처리
 	        Part thumbPart = req.getPart("thumbnailFile");
@@ -204,5 +280,23 @@ public class ProductManageController {
 	        return "redirect:/admin/product/product_write"; // write_ok가 아니라 product_write로 가야 함 (매핑 확인 필요)
 	    }
 	    return "redirect:/admin/product/product_list";
+	}
+	
+	@PostMapping("delete")
+	public void deleteProduct(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	    try {
+	        String[] sParams = req.getParameterValues("prodIds");
+	        if(sParams != null) {
+	            long[] prodIds = new long[sParams.length];
+	            for(int i=0; i<sParams.length; i++) {
+	                prodIds[i] = Long.parseLong(sParams[i]);
+	            }
+	            service.deleteProductList(prodIds);
+	        }
+	        resp.setStatus(200); // 성공
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        resp.sendError(500);
+	    }
 	}
 }

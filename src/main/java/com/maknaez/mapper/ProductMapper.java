@@ -26,4 +26,9 @@ public interface ProductMapper {
     public void insertStockLog(Map<String, Object> map) throws Exception;
     public List<CategoryDTO> listCategorySelect();
     
+    public int countProductManage(Map<String, Object> map);
+    public List<ProductDTO> listProductManage(Map<String, Object> map);
+    public List<CategoryDTO> listCategoryAll();
+    public void deleteProduct(long prodId) throws Exception;
+    
 }
