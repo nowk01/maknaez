@@ -231,7 +231,7 @@
 	
 	<insert id="insertProduct" parameterType="com.maknaez.model.ProductDTO">
         <selectKey keyProperty="prodId" resultType="long" order="BEFORE">
-            SELECT seq_product.NEXTVAL FROM DUAL
+            SELECT product_seq.NEXTVAL FROM DUAL
         </selectKey>
         INSERT INTO products (
             prod_id, 
@@ -253,12 +253,12 @@
     
     <insert id="insertProductImg" parameterType="map">
         INSERT INTO product_img (img_id, prod_id, img)
-        VALUES (seq_img.NEXTVAL, #{prodId}, #{filename})
+        VALUES (img_seq.NEXTVAL, #{prodId}, #{filename})
     </insert>
     
     <insert id="insertPdSize" parameterType="com.maknaez.model.ProductDTO">
         <selectKey keyProperty="optId" resultType="long" order="BEFORE">
-            SELECT seq_opt.NEXTVAL FROM DUAL
+            SELECT opt_seq.NEXTVAL FROM DUAL
         </selectKey>
         INSERT INTO pd_size (opt_id, prod_id, pd_size)
         VALUES (#{optId}, #{prodId}, #{pdSize})
@@ -268,7 +268,7 @@
         INSERT INTO stock_logs (
             log_id, prod_id, opt_id, change_type, change_qty, reg_date, prod_stock
         ) VALUES (
-            seq_stock.NEXTVAL, #{prodId}, #{optId}, '입고', #{qty}, SYSDATE, #{qty}
+            stock_seq.NEXTVAL, #{prodId}, #{optId}, '입고', #{qty}, SYSDATE, #{qty}
         )
     </insert>
     
