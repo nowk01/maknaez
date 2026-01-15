@@ -130,7 +130,8 @@ public class LoginFilter implements Filter {
 			"/about/terms",
 			"/about/privacy",
 			"/collections/**", 
-			"/product/**"
+			"/product/**",
+			"/review/**"
 		};
 
 		if (path.length() <= 1) { 
