@@ -126,48 +126,83 @@ public class ProductManageController {
 	    return mav;
 	}
 	
-	@PostMapping("write_ok")
-    public String writeSubmit(ProductDTO dto, HttpServletRequest req, HttpSession session) {
-        try {
-            // 1. 파일 저장 경로 설정 (GuestController 방식)
-            String root = session.getServletContext().getRealPath("/");
-            String pathname = root + "uploads" + File.separator + "guest"; // 요청하신 경로
+	@PostMapping("writeSubmit")
+	public String writeSubmit(HttpServletRequest req, HttpServletResponse resp) { // 인자를 2개로 수정
+	    try {
+	        HttpSession session = req.getSession(); // 세션은 req에서 꺼냅니다.
+	        ProductDTO dto = new ProductDTO();
 
-            // 2. 썸네일 이미지 처리 (thumbnailFile)
-            Part thumbPart = req.getPart("thumbnailFile");
-            if (thumbPart != null && thumbPart.getSize() > 0) {
-                // FileManager가 업로드 수행 후 결과 객체 리턴
-                MyMultipartFile mf = fileManager.doFileUpload(thumbPart, pathname);
-                dto.setThumbnailImg(mf); // DTO에 결과 담기
-            }
+	        // [1] 파라미터 수동 매핑 (프레임워크가 안 해주므로 직접 해야 함)
+	        dto.setCateCode(req.getParameter("cateCode"));
+	        dto.setProdName(req.getParameter("prodName"));
+	        dto.setColorCode(req.getParameter("colorCode"));
+	        dto.setDescription(req.getParameter("description")); // 스마트에디터 내용
+	        
+	        // 숫자형 변환 처리
+	        String priceStr = req.getParameter("price");
+	        if(priceStr != null && !priceStr.isEmpty()) {
+	            dto.setPrice(Integer.parseInt(priceStr));
+	        }
 
-            // 3. 추가 이미지 처리 (imgs) - 여러개
-            Collection<Part> parts = req.getParts();
-            List<Part> imgParts = new ArrayList<>();
-            for(Part p : parts) {
-                // name="imgs" 이고 파일이 있는 경우만 골라내기
-                if("imgs".equals(p.getName()) && p.getSize() > 0) {
-                    imgParts.add(p);
-                }
-            }
-            
-            if(!imgParts.isEmpty()) {
-                // FileManager가 리스트 통째로 업로드 수행
-                List<MyMultipartFile> uploadedFiles = fileManager.doFileUpload(imgParts, pathname);
-                dto.setListFile(uploadedFiles); // DTO에 결과 리스트 담기
-            }
+	        // 옵션(사이즈/재고) 배열 처리
+	        String[] sizes = req.getParameterValues("sizes");
+	        String[] stocks = req.getParameterValues("stocks");
+	        
+	        List<String> sizeList = new ArrayList<>();
+	        List<Integer> stockList = new ArrayList<>();
 
-            // 4. 제품명 완성 (기존 로직)
-            String fullName = dto.getProdName() + dto.getColorCode();
-            dto.setProdName(fullName);
+	        if(sizes != null && stocks != null) {
+	            for(int i=0; i<sizes.length; i++) {
+	                sizeList.add(sizes[i]);
+	                try {
+	                    stockList.add(Integer.parseInt(stocks[i]));
+	                } catch (NumberFormatException e) {
+	                    stockList.add(0);
+	                }
+	            }
+	            dto.setSizes(sizeList);
+	            dto.setStocks(stockList);
+	        }
+	        
+	        // isDisplayed(status) 등 필요한 기본값 설정 (필요시)
+	        dto.setIsDisplayed(1); // 예: 기본 1(표시)
 
-            // 5. Service 호출 (DTO만 넘김)
-            service.insertProduct(dto); // 경로(pathname)를 넘길 필요가 없어짐!
-            
-        } catch (Exception e) {
-            e.printStackTrace();
-            return "redirect:/admin/product/write"; 
-        }
-        return "redirect:/admin/product/product_list";
-    }
+	        // [2] 파일 저장 경로 설정
+	        String root = session.getServletContext().getRealPath("/");
+	        String pathname = root + "uploads" + File.separator + "guest";
+
+	        // [3] 썸네일 이미지 처리
+	        Part thumbPart = req.getPart("thumbnailFile");
+	        if (thumbPart != null && thumbPart.getSize() > 0) {
+	            MyMultipartFile mf = fileManager.doFileUpload(thumbPart, pathname);
+	            dto.setThumbnailImg(mf);
+	        }
+
+	        // [4] 추가 이미지 처리
+	        Collection<Part> parts = req.getParts();
+	        List<Part> imgParts = new ArrayList<>();
+	        for(Part p : parts) {
+	            if("imgs".equals(p.getName()) && p.getSize() > 0) {
+	                imgParts.add(p);
+	            }
+	        }
+	        
+	        if(!imgParts.isEmpty()) {
+	            List<MyMultipartFile> uploadedFiles = fileManager.doFileUpload(imgParts, pathname);
+	            dto.setListFile(uploadedFiles);
+	        }
+
+	        // [5] 제품명 완성 (상품명 + 색상코드)
+	        String fullName = dto.getProdName() + " " + dto.getColorCode(); // 공백이나 구분자 추가 권장
+	        dto.setProdName(fullName);
+
+	        // [6] Service 호출
+	        service.insertProduct(dto);
+	        
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        return "redirect:/admin/product/product_write"; // write_ok가 아니라 product_write로 가야 함 (매핑 확인 필요)
+	    }
+	    return "redirect:/admin/product/product_list";
+	}
 }

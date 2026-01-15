@@ -40,17 +40,23 @@ document.addEventListener("DOMContentLoaded", function() {
         sizeList.forEach(size => {
             const tr = document.createElement('tr');
             // [수정 1] 삭제 버튼 td 제거 (3칸 구성: 색상, 사이즈, 재고)
-            tr.innerHTML = `
-                <td style="font-weight:800;">${color}</td>
-                <td style="font-weight:700; color:#666;">
-                    ${size} mm
-                    <input type="hidden" name="sizes" value="${size}">
-                    <input type="hidden" name="pdSize" value="${size}">
-                </td>
-                <td>
-                    <input type="number" class="form-control input-stock" name="stocks" value="0" min="0" style="width:100px;">
-                </td>
-            `;
+			tr.innerHTML = `
+			                <td style="font-weight:800; vertical-align:middle;">${color}</td>
+			                <td style="font-weight:700; color:#666; vertical-align:middle;">
+			                    ${size} mm
+			                    <input type="hidden" name="sizes" value="${size}">
+			                    <input type="hidden" name="pdSize" value="${size}">
+			                </td>
+			                <td style="vertical-align:middle;">
+			                    <input type="number" class="form-control input-stock" name="stocks" value="0" min="0" style="width:100px;">
+			                </td>
+							<td style="vertical-align:middle; text-align: center;"> <button type="button" 
+			                            style="border:none; background:none; color:black; font-weight:bold; font-size:1.2em; cursor:pointer;" 
+			                            onclick="removeOptionRow(this)">
+			                        X
+			                    </button>
+			                </td>
+			            `;
             fragment.appendChild(tr);
         });
         optionTbody.appendChild(fragment);
@@ -89,6 +95,11 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     };
 });
+
+function removeOptionRow(btn) {
+    var row = btn.parentNode.parentNode;
+    row.parentNode.removeChild(row);
+}
 
 // [4] 폼 전송 (에디터 내용 동기화 필수)
 function submitProduct() {

@@ -24,7 +24,7 @@
             <jsp:include page="/WEB-INF/views/admin/layout/header.jsp" />
             <div class="content-container">
    
-            <form id="productForm" action="${pageContext.request.contextPath}/admin/product/write_ok" method="post" enctype="multipart/form-data">
+            <form id="productForm" action="${pageContext.request.contextPath}/admin/product/writeSubmit" method="post" enctype="multipart/form-data">
                 
                 <div class="card-box">
                     <h5 class="section-title"><span class="section-num">01.</span> 카테고리 선택</h5>
@@ -65,7 +65,7 @@
                         <button type="button" class="btn btn-dark btn-sm" onclick="generateOptions()">+ 사이즈 생성</button>
                     </div>
                     <table class="table option-table">
-                        <thead><tr><th>색상</th><th>사이즈</th><th>재고</th></tr></thead>
+                        <thead><tr><th>색상</th><th>사이즈</th><th>재고</th><th>삭제</th></tr></thead>
                         <tbody id="optionTbody"></tbody>
                     </table>
                 </div>
