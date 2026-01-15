@@ -328,7 +328,7 @@
 const contextPath = "${pageContext.request.contextPath}";
 const productNum = "${dto.prodId}"; // DB 상품 ID
 
-const isLoggedIn = ${not empty sessionScope.member ? 'true' : 'false'}; //야호
+const isLoggedIn = ${not empty sessionScope.member ? 'true' : 'false'};
 
 // ... (공유하기 등 기존 스크립트 그대로) ...
 
