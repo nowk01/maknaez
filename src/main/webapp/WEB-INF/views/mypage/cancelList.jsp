@@ -54,7 +54,7 @@
 		</aside>
 
 		<main class="main-content">
-			<h1 class="page-title">취소/반품조회</h1>
+			<h1 class="page-title">취소조회</h1>
 
 			<div class="notice-box">
 				<p>취소/반품 신청 내역을 확인하실 수 있습니다.</p>
