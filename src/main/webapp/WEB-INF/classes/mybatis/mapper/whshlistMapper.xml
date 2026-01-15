@@ -12,22 +12,18 @@
         WHERE memberIdx = #{memberIdx} AND prod_id = #{prodId}
     </delete>
 
-    <select id="listWish" parameterType="map" resultType="com.maknaez.model.WishlistDTO">
-        SELECT * FROM (
-            SELECT ROWNUM rnum, tb.* FROM (
-                SELECT 
-                    w.wish_id AS wishId, 
-                    w.memberIdx, 
-                    w.prod_id AS prodId,
-                    p.prod_name AS prodName, 
-                    p.base_price AS price, 
-                    p.thumb_nail AS thumbnail
-                FROM wishlist w
-                JOIN products p ON w.prod_id = p.prod_id
-                WHERE w.memberIdx = #{memberIdx}
-                ORDER BY w.wish_id DESC
-            ) tb WHERE ROWNUM &lt;= #{end}
-        ) WHERE rnum &gt;= #{start}
+	<select id="listWish" parameterType="map" resultType="com.maknaez.model.WishlistDTO">
+        SELECT 
+            w.wish_id AS wishId, 
+            w.memberIdx, 
+            w.prod_id AS prodId,
+            p.prod_name AS prodName, 
+            p.base_price AS price, 
+            p.thumb_nail AS thumbnail
+        FROM wishlist w
+        JOIN products p ON w.prod_id = p.prod_id
+        WHERE w.memberIdx = #{memberIdx}
+        ORDER BY w.wish_id DESC
     </select>
 
     <select id="dataCountWish" parameterType="map" resultType="Integer">
