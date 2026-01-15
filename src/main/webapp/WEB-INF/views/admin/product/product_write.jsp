@@ -6,99 +6,104 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>상품 등록 | MAKNAEZ ADMIN</title>
+    <title>상품 등록</title>
+    
+    <script>
+        const contextPath = "${pageContext.request.contextPath}";
+    </script>
+    
     <jsp:include page="/WEB-INF/views/admin/layout/headerResources.jsp" />
     <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/admin_product_write.css?v=6.2">
+    
+    <script type="text/javascript" src="${pageContext.request.contextPath}/dist/vendor/se2/js/service/HuskyEZCreator.js" charset="utf-8"></script>
 </head>
 <body>
     <div id="wrapper">
         <jsp:include page="/WEB-INF/views/admin/layout/left.jsp" />
         <div id="page-content-wrapper">
             <jsp:include page="/WEB-INF/views/admin/layout/header.jsp" />
-
             <div class="content-container">
-                <div class="page-header">
-                    <h3 class="page-title">신규 상품 등록</h3>
-                    <p style="color:#888; font-size:14px; margin-top:5px;">등록 일자: <fmt:formatDate value="${now}" pattern="yyyy-MM-dd" /></p>
+   
+            <form id="productForm" action="${pageContext.request.contextPath}/admin/product/write_ok" method="post" enctype="multipart/form-data">
+                
+                <div class="card-box">
+                    <h5 class="section-title"><span class="section-num">01.</span> 카테고리 선택</h5>
+                    <select class="form-select" name="cateCode" required>
+                        <option value="">:: 카테고리를 선택하세요 ::</option>
+                        <c:forEach var="vo" items="${categoryList}">
+                            <option value="${vo.cateCode}">${vo.cateName}</option>
+                        </c:forEach>
+                    </select>
                 </div>
 
-                <form id="productForm" action="product_write_ok" method="post" enctype="multipart/form-data">
-                    
-                    <div class="card-box">
-                        <h5 class="section-title"><span class="section-num">01.</span> 상품 기본 정보 (Basic)</h5>
-                        <div class="row g-5">
-                            <div class="col-md-4">
-                                <label class="form-label">카테고리 분류</label>
-                                <select class="form-select" name="cateNo">
-                                    <option value="1">SNEAKERS</option><option value="2">BOOTS</option>
-                                </select>
-                            </div>
-                            <div class="col-md-8">
-                                <label class="form-label">상품명 (Product Name) *</label>
-                                <input type="text" class="form-control" name="pName" placeholder="공식 모델명 입력">
-                            </div>
-                            <div class="col-md-12">
-                                <label class="form-label">상품 설명 (Description)</label>
-                                <textarea class="form-control desc-area" name="content" placeholder="상품의 특징, 소재, 착화감 등을 자유롭게 적어주세요."></textarea>
-                            </div>
+                <div class="card-box">
+                    <h5 class="section-title"><span class="section-num">02.</span> 기본 정보</h5>
+                    <div class="row">
+                        <div class="col-8">
+                            <label class="form-label">상품명</label>
+                            <input type="text" name="prodName" class="form-control" placeholder="상품명 입력">
+                        </div>
+                        <div class="col-4">
+                            <label class="form-label">가격</label>
+                            <input type="number" name="price" class="form-control" value="0">
                         </div>
                     </div>
+                    <div class="mt-3">
+                        <label class="form-label">색상</label>
+                        <select name="colorCode" id="colorInput" class="form-select">
+                            <option value="BK">BK (Black)</option>
+                            <option value="WH">WH (White)</option>
+                            <option value="GY">GY (Grey)</option>
+                            <option value="NV">NV (Navy)</option>
+                        </select>
+                    </div>
+                </div>
 
-                    <div class="card-box">
-                        <h5 class="section-title"><span class="section-num">02.</span> 옵션 및 재고 관리 (Stock)</h5>
-                        <div class="row g-3 align-items-end mb-4">
-                            <div class="col-md-5">
-                                <label class="form-label">색상 입력 (Color)</label>
-                                <input type="text" id="colorInput" class="form-control" placeholder="예: Triple White">
+                <div class="card-box">
+                    <div class="d-flex justify-content-between mb-3">
+                        <h5 class="section-title mb-0"><span class="section-num">03.</span> 옵션 설정</h5>
+                        <button type="button" class="btn btn-dark btn-sm" onclick="generateOptions()">+ 사이즈 생성</button>
+                    </div>
+                    <table class="table option-table">
+                        <thead><tr><th>색상</th><th>사이즈</th><th>재고</th></tr></thead>
+                        <tbody id="optionTbody"></tbody>
+                    </table>
+                </div>
+
+                <div class="card-box">
+                    <h5 class="section-title"><span class="section-num">04.</span> 이미지</h5>
+                    <div class="img-grid">
+                        <div class="img-upload-box main" id="box0" onclick="openFile('f0')">
+                            <span>대표 이미지</span>
+                            <input type="file" id="f0" name="thumbnailFile" style="display:none" accept="image/*" onchange="previewImage(this, 'box0')">
+                        </div>
+                        
+                        <c:forEach var="i" begin="1" end="5">
+                            <div class="img-upload-box" id="box${i}" onclick="openFile('f${i}')">
+                                <span>추가 ${i}</span>
+                                <input type="file" id="f${i}" name="imgs" style="display:none" accept="image/*" onchange="previewImage(this, 'box${i}')">
                             </div>
-                            <div class="col-md-3">
-                                <button type="button" class="btn btn-luxury btn-dark w-100" style="height:52px;" onclick="generateOptions()">+ 사이즈 생성</button>
-                            </div>
-                        </div>
-                        <div class="table-responsive">
-                            <table class="option-table">
-                                <thead>
-                                    <tr><th style="width:25%;">COLOR</th><th style="width:20%;">SIZE</th><th style="width:25%;">STOCK</th><th style="width:25%;">EXTRA</th><th style="width:5%;"></th></tr>
-                                </thead>
-                                <tbody id="optionTbody"></tbody>
-                            </table>
-                        </div>
+                        </c:forEach>
                     </div>
+                </div>
 
-                    <div class="card-box">
-                        <h5 class="section-title"><span class="section-num">03.</span> 이미지 등록 (Assets)</h5>
-                        <div class="img-grid">
-                            <div class="img-upload-box main" onclick="openFile('f0')">
-                                <i class="fas fa-star"></i><span>메인 썸네일</span>
-                                <input type="file" id="f0" name="thumb" style="display:none">
-                            </div>
-                            <c:forEach var="i" begin="1" end="5">
-                                <div class="img-upload-box" onclick="openFile('f${i}')">
-                                    <i class="fas fa-plus"></i><span>추가 이미지 ${i}</span>
-                                    <input type="file" id="f${i}" name="imgs" style="display:none">
-                                </div>
-                            </c:forEach>
-                        </div>
-                    </div>
+                <div class="card-box">
+                    <h5 class="section-title"><span class="section-num">05.</span> 상세 설명</h5>
+                    <textarea name="description" id="prodDesc" style="width:100%; height:400px; display:none;"></textarea>
+                </div>
 
-                    <div class="card-box">
-                        <h5 class="section-title"><span class="section-num">04.</span> 상세 페이지 (Detail)</h5>
-                        <div class="img-upload-box" style="width:100%; height:150px;" onclick="openFile('fd')">
-                            <i class="fas fa-file-alt"></i><span>상세 페이지 통이미지 업로드</span>
-                            <input type="file" id="fd" name="detail" style="display:none">
-                        </div>
-                    </div>
-
-                    <div class="btn-footer">
-                        <button type="button" class="btn btn-luxury btn-dark" onclick="history.back()">CANCEL</button>
-                        <button type="submit" class="btn btn-luxury btn-orange">SAVE PRODUCT</button>
-                    </div>
-
-                </form>
+                <div class="btn-footer">
+                    <button type="button" class="btn btn-dark" onclick="history.back()">취소</button>
+                    <button type="button" class="btn btn-orange" onclick="submitProduct()">저장</button>
+                </div>
+            </form>
+            
             </div>
         </div>
     </div>
+    
     <jsp:include page="/WEB-INF/views/admin/layout/footerResources.jsp" />
+    
     <script src="${pageContext.request.contextPath}/dist/js/admin_product_write.js"></script>
 </body>
 </html>

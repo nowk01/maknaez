@@ -1,5 +1,8 @@
 package com.maknaez.model;
 
+import java.util.List;
+import com.maknaez.util.MyMultipartFile;
+
 public class ProductDTO {
     // PRODUCTS 테이블 컬럼
     private long prodId;         // prod_id (PK)
@@ -21,8 +24,86 @@ public class ProductDTO {
     // 편의성 필드 (화면 표시용)
     private int originalPrice;   // 정가 (price와 동일, 표기용)
     private String techLine;     // 필터링용 태그 (DB컬럼 없으면 이름에서 추출)
+    
+    private MyMultipartFile thumbnailImg;      // 썸네일 업로드 결과 객체
+    private List<MyMultipartFile> listFile;    // 추가 이미지들 업로드 결과 리스트
+    
+    private long optId;      // pd_size 테이블의 PK (시퀀스로 생성됨)
+    private String pdSize;   // 리스트(sizes)에서 하나씩 꺼낸 단일 사이즈 값
+    public long getOptId() {
+		return optId;
+	}
 
-    public ProductDTO() {
+
+	public void setOptId(long optId) {
+		this.optId = optId;
+	}
+
+
+	public String getPdSize() {
+		return pdSize;
+	}
+
+
+	public void setPdSize(String pdSize) {
+		this.pdSize = pdSize;
+	}
+
+	private List<String> sizes;
+    private List<Integer> stocks;
+    private String colorCode;
+    
+    public MyMultipartFile getThumbnailImg() {
+		return thumbnailImg;
+	}
+
+
+	public void setThumbnailImg(MyMultipartFile thumbnailImg) {
+		this.thumbnailImg = thumbnailImg;
+	}
+
+
+	public List<MyMultipartFile> getListFile() {
+		return listFile;
+	}
+
+
+	public void setListFile(List<MyMultipartFile> listFile) {
+		this.listFile = listFile;
+	}
+
+
+	public List<String> getSizes() {
+		return sizes;
+	}
+
+
+	public void setSizes(List<String> sizes) {
+		this.sizes = sizes;
+	}
+
+
+	public List<Integer> getStocks() {
+		return stocks;
+	}
+
+
+	public void setStocks(List<Integer> stocks) {
+		this.stocks = stocks;
+	}
+
+
+	public String getColorCode() {
+		return colorCode;
+	}
+
+
+	public void setColorCode(String colorCode) {
+		this.colorCode = colorCode;
+	}
+
+
+	public ProductDTO() {
     	
     }
 
