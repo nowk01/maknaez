@@ -32,4 +32,6 @@ public interface MemberService {
 	public void insertAddress(AddressDTO dto) throws Exception;
     public List<AddressDTO> listAddress(long memberIdx);
     public void deleteAddress(long addrId) throws Exception;
+    
+    public void updateAddress(AddressDTO dto) throws Exception;
 }

@@ -411,4 +411,22 @@
 		WHERE memberIdx = #{memberIdx}
 	</update>
 	
+	<update id="updateAddressReset" parameterType="Long">
+    UPDATE address
+    SET isBasic = 0
+    WHERE memberIdx = #{memberIdx}
+</update>
+
+<update id="updateAddress" parameterType="com.maknaez.model.AddressDTO">
+    UPDATE address
+    SET receiver_name = #{receiverName},
+        addr_name = #{addrName},
+        receiver_tel = #{receiverTel},
+        zip_code = #{zipCode},
+        addr1 = #{addr1},
+        addr2 = #{addr2},
+        isBasic = #{isBasic}
+    WHERE addr_id = #{addrId}
+</update>
+	
 </mapper>

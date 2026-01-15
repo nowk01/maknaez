@@ -270,4 +270,23 @@ public class MemberServiceImpl implements MemberService {
 		}
 		
 	}
+	
+	@Override
+	public void updateAddress(AddressDTO dto) throws Exception {
+	    try {
+	        // [중요 로직]
+	        // 만약 이번에 수정하는 배송지를 '기본 배송지(1)'로 설정했다면?
+	        // -> 기존에 있던 다른 기본 배송지를 '일반(0)'으로 바꿔줘야 합니다. (중복 방지)
+	        if (dto.getIsBasic() == 1) {
+	            mapper.updateAddressReset(dto.getMemberIdx()); 
+	        }
+
+	        // 배송지 정보 수정 실행
+	        mapper.updateAddress(dto);
+	        
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        throw e;
+	    }
+	}
 }
