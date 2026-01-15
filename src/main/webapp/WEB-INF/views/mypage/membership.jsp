@@ -6,8 +6,10 @@
 <head>
 <meta charset="UTF-8">
 <title>마이페이지 | 포인트/쿠폰</title>
+
 <jsp:include page="/WEB-INF/views/layout/headerResources.jsp" />
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/mypage.css">
+
 <style>
     /* 탭 스타일 */
     .benefit-tabs { display: flex; border-bottom: 1px solid #ddd; margin: 20px 0 30px; padding-left: 0; }
@@ -76,6 +78,7 @@
 <div class="mypage-container">
     <aside class="sidebar">
         <h2>마이페이지</h2>
+
         <div class="menu-group">
             <span class="menu-title">구매내역</span>
             <ul>
@@ -83,20 +86,31 @@
                 <li><a href="${pageContext.request.contextPath}/member/mypage/cancelList">취소상품조회</a></li>
             </ul>
         </div>
+
         <div class="menu-group">
             <span class="menu-title">혜택내역</span>
             <ul>
                 <li><a href="${pageContext.request.contextPath}/member/mypage/review">상품 리뷰</a></li>
-                <li><a href="${pageContext.request.contextPath}/member/mypage/membership" style="font-weight:bold;">포인트/쿠폰</a></li>
+                <li><a href="${pageContext.request.contextPath}/member/mypage/membership" class="active">포인트/쿠폰</a></li>
             </ul>
         </div>
+
+        <div class="menu-group">
+            <span class="menu-title">상품내역</span>
+            <ul>
+                <li><a href="${pageContext.request.contextPath}/member/mypage/wishList">관심 상품</a></li>
+            </ul>
+        </div>
+
         <div class="menu-group">
             <span class="menu-title">회원정보</span>
             <ul>
                 <li><a href="${pageContext.request.contextPath}/member/mypage/myInfo">내 정보 관리</a></li>
                 <li><a href="${pageContext.request.contextPath}/member/mypage/addr">배송지 관리</a></li>
+                <li><a href="${pageContext.request.contextPath}/member/mypage/membership">회원등급</a></li>
             </ul>
         </div>
+        
         <div class="menu-group">
              <ul>
                 <li><a href="${pageContext.request.contextPath}/member/logout" style="color:#999;">로그아웃</a></li>
