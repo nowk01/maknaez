@@ -3,6 +3,7 @@
 -- - Project: Maknaez[DoubleDragon Semi Project]
 -- - DB: Oracle DBMS
 -- - 작성일: 2026-01-12
+-- - 마지막 수정일 : 2026-01-15
 -- -----------------------------------------------------------------
 
 /* -- -----------------------------------------------------------------
@@ -24,6 +25,7 @@ CREATE SEQUENCE wish_seq        START WITH 1 INCREMENT BY 1 NOCACHE; -- [wishlis
 CREATE SEQUENCE discount_seq    START WITH 1 INCREMENT BY 1 NOCACHE; -- [discounts]       discount_id
 CREATE SEQUENCE od_seq          START WITH 1 INCREMENT BY 1 NOCACHE; -- [order_discounts] od_id
 CREATE SEQUENCE pm_seq          START WITH 1 INCREMENT BY 1 NOCACHE; -- [point_member]    pm_id
+CREATE SEQUENCE loginLog_seq    START WITH 1 INCREMENT BY 1 NOCACHE; -- [login_history]   log_id
 
 /* -- -----------------------------------------------------------------
    2. 테이블 생성 (PK 선언 제거, 주석 복구)
@@ -184,7 +186,7 @@ CREATE TABLE stock_logs (
 
 -- 17. 주문 마스터 (주문서 헤더)
 CREATE TABLE orders (
-    order_id            VARCHAR2(20)    NOT NULL,   -- PK: 시퀀스+날짜 조합 (예: ORD-20240101-001) 자바단에서 처리할것
+    items_id            VARCHAR2(20)    NOT NULL,   -- PK: 시퀀스+날짜 조합 (예: ORD-20240101-001) 자바단에서 처리할것
     memberIdx           NUMBER          NOT NULL,   -- FK: member1.memberIdx (주문자)
     order_date          DATE            NULL,
     total_amount        NUMBER          NULL,       -- 할인 전 총액
@@ -340,13 +342,15 @@ ALTER TABLE stock_logs  ADD CONSTRAINT FK_products_TO_stock     FOREIGN KEY (pro
 ALTER TABLE stock_logs  ADD CONSTRAINT FK_size_TO_stock         FOREIGN KEY (opt_id)      REFERENCES pd_size(opt_id);
 
 -- Orders 관련
-ALTER TABLE reviews         ADD CONSTRAINT FK_orders_TO_reviews  FOREIGN KEY (order_id)  REFERENCES orders(order_id);
-ALTER TABLE order_items     ADD CONSTRAINT FK_orders_TO_items    FOREIGN KEY (order_id)  REFERENCES orders(order_id);
-ALTER TABLE order_items     ADD CONSTRAINT FK_size_TO_items      FOREIGN KEY (opt_id)    REFERENCES pd_size(opt_id);
-ALTER TABLE payments        ADD CONSTRAINT FK_orders_TO_payments FOREIGN KEY (order_id)  REFERENCES orders(order_id);
-ALTER TABLE claims          ADD CONSTRAINT FK_orders_TO_claims   FOREIGN KEY (order_id)  REFERENCES orders(order_id);
-ALTER TABLE order_discounts ADD CONSTRAINT FK_orders_TO_od       FOREIGN KEY (order_id)  REFERENCES orders(order_id);
-ALTER TABLE point_member    ADD CONSTRAINT FK_orders_TO_point    FOREIGN KEY (order_id)  REFERENCES orders(order_id);
+ALTER TABLE reviews 		ADD CONSTRAINT ck_reviews_rating          CHECK (rating BETWEEN 0 AND 5) ;
+ALTER TABLE reviews         ADD CONSTRAINT FK_order_items_TO_reviews  FOREIGN KEY (item_id)   REFERENCES order_item(item_id);
+ALTER TABLE reviews 		ADD CONSTRAINT fk_reviews_item 			  FOREIGN KEY (item_id)   REFERENCES order_items(item_id) ; 
+ALTER TABLE order_items     ADD CONSTRAINT FK_orders_TO_items    	  FOREIGN KEY (order_id)  REFERENCES orders(order_id);
+ALTER TABLE order_items     ADD CONSTRAINT FK_size_TO_items      	  FOREIGN KEY (opt_id)    REFERENCES pd_size(opt_id);
+ALTER TABLE payments        ADD CONSTRAINT FK_orders_TO_payments 	  FOREIGN KEY (order_id)  REFERENCES orders(order_id);
+ALTER TABLE claims          ADD CONSTRAINT FK_orders_TO_claims   	  FOREIGN KEY (order_id)  REFERENCES orders(order_id);
+ALTER TABLE order_discounts ADD CONSTRAINT FK_orders_TO_od       	  FOREIGN KEY (order_id)  REFERENCES orders(order_id);
+ALTER TABLE point_member    ADD CONSTRAINT FK_orders_TO_point    	  FOREIGN KEY (order_id)  REFERENCES orders(order_id);
 
 -- Cart / Wishlist 관련
 ALTER TABLE cart     ADD CONSTRAINT FK_products_TO_cart     FOREIGN KEY (prod_id)   REFERENCES products(prod_id);
@@ -378,6 +382,8 @@ COMMENT ON COLUMN address.addr2 IS '나머지 주소';
 COMMENT ON COLUMN address.isbasic IS '기본 배송지 여부 (1:기본, 0:일반)';
 
 COMMENT ON COLUMN reviews.rating IS '별점 (0~5)';
+COMMENT ON TABLE reviews IS '상품 구매 후기';
+COMMENT ON COLUMN reviews.item_id IS '주문 상세 식별자 (구매인증)';
 COMMENT ON COLUMN qna_answer.type IS '질문 유형';
 COMMENT ON COLUMN qna_answer.answer_date IS '답변 완료일';
 
