@@ -2,6 +2,7 @@
 <%@ taglib prefix="c" uri="jakarta.tags.core"%>
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt"%>
 
+<!-- 이미지 경로 변수 설정 -->
 <jsp:include page="/WEB-INF/views/common/image_config.jsp" />
 
 <!DOCTYPE html>
@@ -42,9 +43,9 @@
     .btn-buy-custom:hover { background-color: #333; border-color: #111 !important; color: #fff; }
     
     /* ==========================================================================
-       [NEW] Review CSS Style (사진 먼저, 더보기 적용, 간격 조정)
+       [NEW] Review CSS Style (사진 2배 확대, 레이아웃 밀림 적용, 간격 최소화)
        ========================================================================== */
-    .review-wrapper { padding: 50px 0; }
+    .review-wrapper { padding: 40px 0; background-color: #fff; }
     
     /* 헤더 */
     .review-header-container { 
@@ -52,7 +53,7 @@
         justify-content: space-between; 
         align-items: flex-end; 
         border-bottom: 2px solid #111; 
-        padding-bottom: 12px; 
+        padding-bottom: 10px; 
     }
     .review-header-title { font-size: 1.3rem; font-weight: 800; margin: 0; color: #111; letter-spacing: -0.5px; }
     .review-header-title span { color: #888; font-weight: 400; margin-left: 6px; font-size: 0.95rem; }
@@ -61,53 +62,77 @@
     .review-search-box input { width: 100%; padding: 5px 25px 5px 0; border: none; border-bottom: 1px solid #ddd; font-size: 0.85rem; outline: none; background: transparent; }
     .review-search-box i { position: absolute; right: 0; top: 50%; transform: translateY(-50%); color: #333; cursor: pointer; }
 
-    /* 리스트 아이템 간격 축소 */
+    /* 리스트 아이템 */
     .review-item { 
-        padding: 20px 5px;  /* 간격 줄임 (30px -> 20px) */
+        padding: 15px 2px; /* 좌우 패딩 줄이고 상하 패딩 유지 */
         border-bottom: 1px solid #eee; 
         display: flex; 
         flex-direction: column; 
     }
     .review-item:last-child { border-bottom: 1px solid #111; }
     
-    /* 상단 정보 */
-    .review-meta-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
-    .review-badge { background-color: #222; color: #fff; font-size: 0.65rem; padding: 2px 6px; font-weight: 600; margin-right: 8px; vertical-align: middle; }
+    /* 상단 정보 (간격 좁힘) */
+    .review-meta-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+    .review-badge { background-color: #222; color: #fff; font-size: 0.65rem; padding: 2px 6px; font-weight: 600; margin-right: 6px; vertical-align: middle; }
     .review-option { font-size: 0.8rem; color: #777; }
     .review-writer { font-weight: 600; font-size: 0.85rem; color: #333; }
     
-    /* 별점 */
-    .star-rating-custom { color: #ddd; font-size: 0.8rem; letter-spacing: 0px; margin-bottom: 10px; }
+    /* 별점 (간격 좁힘) */
+    .star-rating-custom { color: #ddd; font-size: 0.8rem; letter-spacing: -1px; margin-bottom: 5px; line-height: 1; }
     .star-rating-custom .filled { color: #111; } 
     
-    /* 이미지 (먼저 나옴) */
+    /* 이미지 스타일 (공백 제거 및 2배 확대, 레이아웃 밀기) */
+    .review-img-wrapper {
+        margin: 0; /* 불필요한 마진 제거 */
+        font-size: 0; /* 이미지 하단 미세 공백 제거 */
+        line-height: 0;
+        display: block; /* 블록 요소로 변경 */
+    }
     .review-img-thumb { 
         width: 120px; 
         height: 120px; 
         object-fit: cover; 
-        margin-bottom: 12px; /* 텍스트와의 간격 */
-        cursor: pointer; 
+        cursor: zoom-in; 
         border: 1px solid #f1f1f1;
-        display: block;
+        display: inline-block; 
+        margin-top: 5px;
+        margin-bottom: 5px;
+        /* 크기 변화에 애니메이션을 주어 자연스럽게 밀리도록 함 */
+        transition: width 0.3s ease, height 0.3s ease; 
+    }
+    
+    /* [확대 클래스] transform이 아닌 width/height를 변경하여 컨텐츠를 밀어냄 */
+    .review-img-thumb.zoomed {
+        width: 360px; /* 2배 크기 (120px * 2) */
+        height: 240px;
+        cursor: zoom-out;
+        margin-bottom: 10px; /* 확대 시 텍스트와 간격 확보 */
     }
 
-    /* 내용 텍스트 */
-    .review-content { font-size: 0.9rem; color: #333; line-height: 1.5; white-space: pre-wrap; }
+    /* 내용 텍스트 & 더보기 (간격 좁힘) */
+    .review-content { 
+        font-size: 0.9rem; 
+        color: #333; 
+        line-height: 1.3; /* 줄 간격 좁힘 */
+        white-space: pre-wrap; 
+        margin-top: 2px;
+    }
     .review-text-short { display: inline; }
     .review-text-full { display: none; }
     .review-more-btn { color: #999; font-size: 0.8rem; margin-left: 5px; cursor: pointer; text-decoration: underline; }
     .review-more-btn:hover { color: #333; }
 
-    .review-date { margin-top: 8px; font-size: 0.75rem; color: #bbb; text-align: left; }
+    .review-date { margin-top: 5px; font-size: 0.75rem; color: #bbb; text-align: left; }
 
     /* 페이징 */
-    .pagination-container { display: flex; justify-content: center; margin-top: 40px; }
-    .pagination-custom { display: flex; gap: 5px; list-style: none; padding: 0; margin: 0; }
-    .page-item-custom { cursor: pointer; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; border: 1px solid #eee; background-color: #fff; font-size: 0.85rem; color: #555; transition: all 0.2s; }
+    .pagination-container { display: flex; justify-content: center; margin-top: 30px; }
+    .pagination-custom { display: flex; gap: 4px; list-style: none; padding: 0; margin: 0; }
+    .page-item-custom { cursor: pointer; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; border: 1px solid #eee; background-color: #fff; font-size: 0.8rem; color: #555; transition: all 0.2s; }
     .page-item-custom:hover { border-color: #333; color: #333; }
     .page-item-custom.active { background-color: #333; color: #fff; border-color: #333; }
     .page-item-custom.disabled { color: #ddd; border-color: #fafafa; cursor: default; }
 
+    /* 상단 별점 (기존 유지용) */
     .star-rating-header i { font-size: 0.75rem; color: #ddd; margin-right: 1px; }
     .star-rating-header i.filled { color: #333; }
     .star-text-header { font-size: 0.75rem; color: #888; margin-left: 4px; font-weight: 400; vertical-align: middle; position: relative; top: 1px; }
@@ -308,6 +333,9 @@
 
 		<div id="sentinelNode" class="sentinel-point"></div>
 
+		<!-- ==========================================================================
+		     [REVIEW SECTION] 리뉴얼 완료
+		     ========================================================================== -->
 		<div id="reviewSection" class="review-wrapper mt-5">
              <div class="review-header-container">
                 <h3 class="review-header-title">PRODUCT REVIEWS <span id="reviewTotalCount">(0)</span></h3>
@@ -326,6 +354,7 @@
                 </div>
             </div>
             
+            <!-- 페이지네이션 -->
             <div id="reviewPagination" class="pagination-container"></div>
 		</div>
 
@@ -378,6 +407,7 @@ function copyLink() {
     document.body.appendChild(t);
     t.value = url;
     t.select();
+    
     try {
         const successful = document.execCommand('copy');
         if (successful) showToast(msg);
@@ -514,7 +544,8 @@ function renderReviews(reviews) {
         let imgHtml = '';
         if (item.reviewImg && item.reviewImg.trim() !== '') {
             const imgPath = '${pageContext.request.contextPath}/uploads/review/' + item.reviewImg;
-            imgHtml = `<img src="\${imgPath}" class="review-img-thumb" alt="리뷰 이미지" onclick="window.open(this.src)">`;
+            // div로 감싸지 않고 바로 img 태그 사용, 클릭 시 줌 기능 연결
+            imgHtml = `<div class="review-img-wrapper"><img src="\${imgPath}" class="review-img-thumb" alt="리뷰 이미지" onclick="toggleZoom(this)"></div>`;
         }
 
         // 더보기 로직
@@ -542,7 +573,7 @@ function renderReviews(reviews) {
             <div class="star-rating-custom">\${stars}</div>
             
             <div class="review-content">
-                \${imgHtml}  <div style="margin-top:5px;">\${contentHtml}</div>
+                \${imgHtml}  <div style="margin-top:2px;">\${contentHtml}</div>
                 <div class="review-date">\${item.regDate}</div>
             </div>
         </div>`;
@@ -568,6 +599,17 @@ function toggleReview(btn) {
         parent.find('.review-text-full').show(); // display:inline or block
         parent.find('.review-text-full').css('display', 'inline');
         $(btn).text("접기");
+    }
+}
+
+// [추가] 이미지 줌 토글 함수
+function toggleZoom(img) {
+    if (img.classList.contains('zoomed')) {
+        img.classList.remove('zoomed');
+    } else {
+        // 다른 이미지가 확대되어 있다면 축소 (선택 사항)
+        document.querySelectorAll('.review-img-thumb.zoomed').forEach(el => el.classList.remove('zoomed'));
+        img.classList.add('zoomed');
     }
 }
 
