@@ -85,12 +85,18 @@ public class MemberController {
 				mav.addObject("message", "아이디 또는 패스워드가 일치하지 않습니다.");
 				return mav;
 			}
-
+			
+			dto.setIp_info(req.getRemoteAddr());
+			
+			service.insertLoginLog(dto);
+			
 			session.setMaxInactiveInterval(20 * 60);
-
+			
 			SessionInfo info = new SessionInfo();
 			info.setMemberIdx(dto.getMemberIdx());
 			info.setUserId(dto.getUserId());
+			
+			
 
 			if ("admin".equals(dto.getUserId())) {
 				info.setUserName("관리자");

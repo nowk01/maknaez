@@ -260,4 +260,14 @@ public class MemberServiceImpl implements MemberService {
 			throw e;
 		}
 	}
+
+	@Override
+	public void insertLoginLog(MemberDTO dto) throws Exception {
+		try {
+			mapper.insertLoginLog(dto);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
 }
