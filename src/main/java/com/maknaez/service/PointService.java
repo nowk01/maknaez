@@ -14,4 +14,7 @@ public interface PointService {
     
     public void insertPoint(PointDTO dto) throws Exception;
     public void insertPointList(List<Long> memberIdxs, int amount, String reason) throws Exception;
+    
+    public int findCurrentPoint(long memberIdx);
+    
 }

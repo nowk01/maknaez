@@ -36,11 +36,16 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.Part;
 
+import com.maknaez.service.PointService;
+import com.maknaez.service.PointServiceImpl;
+import com.maknaez.model.PointDTO;
+
 @Controller
 @RequestMapping("/member")
 public class MemberController {
 	private MemberService service = new MemberServiceImpl();
 	private FileManager fileManager = new FileManager();
+	private PointService pointService = new PointServiceImpl();
 
 	@GetMapping("consent")
 	public ModelAndView consentForm(HttpServletRequest req, HttpServletResponse resp)
@@ -165,8 +170,8 @@ public class MemberController {
 			String tel3 = req.getParameter("tel3");
 			String tel = "";
 
-			if(tel1 != null && !tel1.isEmpty()) {
-			    tel = tel1 + "-" + tel2 + "-" + tel3;
+			if (tel1 != null && !tel1.isEmpty()) {
+				tel = tel1 + "-" + tel2 + "-" + tel3;
 			}
 
 			dto.setTel(tel);
@@ -599,7 +604,6 @@ public class MemberController {
 		return mav;
 	}
 
-	
 	@GetMapping("mypage/review")
 	public ModelAndView review(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		ModelAndView mav = new ModelAndView("mypage/review");
@@ -713,7 +717,7 @@ public class MemberController {
 
 		return mav;
 	}
-	
+
 	// 1. 배송지 목록 페이지 이동
 	@GetMapping("mypage/addr")
 	public ModelAndView addressList(HttpServletRequest req, HttpServletResponse resp)
@@ -739,7 +743,6 @@ public class MemberController {
 		return mav;
 	}
 
-	
 	@PostMapping("mypage/addr/write")
 	public ModelAndView addressWrite(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
@@ -754,16 +757,16 @@ public class MemberController {
 			AddressDTO dto = new AddressDTO();
 			dto.setMemberIdx(info.getMemberIdx());
 
-			dto.setReceiverName(req.getParameter("receiverName")); 
-	        dto.setAddrName(req.getParameter("addrName"));
-	        dto.setReceiverTel(req.getParameter("receiverTel"));  
-	        dto.setZipCode(req.getParameter("zipCode"));         
-	        dto.setAddr1(req.getParameter("addr1"));
-	        dto.setAddr2(req.getParameter("addr2"));
+			dto.setReceiverName(req.getParameter("receiverName"));
+			dto.setAddrName(req.getParameter("addrName"));
+			dto.setReceiverTel(req.getParameter("receiverTel"));
+			dto.setZipCode(req.getParameter("zipCode"));
+			dto.setAddr1(req.getParameter("addr1"));
+			dto.setAddr2(req.getParameter("addr2"));
 
 			// 기본 배송지 체크 여부 (체크되면 1, 아니면 0)
-	        String isBasic = req.getParameter("isBasic");       
-	        dto.setIsBasic(isBasic != null ? 1 : 0);
+			String isBasic = req.getParameter("isBasic");
+			dto.setIsBasic(isBasic != null ? 1 : 0);
 
 			// Service에 저장 요청
 			service.insertAddress(dto);
@@ -787,9 +790,9 @@ public class MemberController {
 		}
 
 		try {
-	        long addrId = Long.parseLong(req.getParameter("addrId"));
-	       
-	        service.deleteAddress(addrId);
+			long addrId = Long.parseLong(req.getParameter("addrId"));
+
+			service.deleteAddress(addrId);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -798,9 +801,72 @@ public class MemberController {
 		// 삭제 후 목록으로 리다이렉트
 		return new ModelAndView("redirect:/member/mypage/addr");
 	}
-	
-	@GetMapping("membership")
-	public ModelAndView membership(HttpServletRequest req, HttpServletResponse resp) {
-	    return new ModelAndView("mypage/membership");
+
+	// [MemberController.java]
+
+	// 1. 서비스 주입 확인 (필드 변수)
+	// private PointService pointService = new PointServiceImpl(); 
+
+	// 2. 포인트/쿠폰/멤버십 전용 페이지 매핑
+	@GetMapping("mypage/membership")
+	public ModelAndView membership(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	    // 뷰 페이지: membership.jsp (마이페이지 메인이 아님)
+	    ModelAndView mav = new ModelAndView("mypage/membership");
+	    
+	    HttpSession session = req.getSession();
+	    SessionInfo info = (SessionInfo) session.getAttribute("member");
+	    if (info == null) {
+	        return new ModelAndView("redirect:/member/login");
+	    }
+
+	    MyUtil util = new MyUtil();
+
+	    try {
+	        String page = req.getParameter("page");
+	        int current_page = 1;
+	        if (page != null) current_page = Integer.parseInt(page);
+
+	        Map<String, Object> map = new HashMap<>();
+	        map.put("memberIdx", info.getMemberIdx());
+
+	        // 포인트 내역 개수 및 페이징
+	        int dataCount = pointService.dataCountPointHistory(map);
+	        int size = 10;
+	        int total_page = util.pageCount(dataCount, size);
+	        if (current_page > total_page) current_page = total_page;
+
+	        int start = (current_page - 1) * size + 1;
+	        int end = current_page * size;
+	        map.put("start", start);
+	        map.put("end", end);
+
+	        // 포인트 리스트 및 현재 보유 포인트
+	        List<PointDTO> list = pointService.listPointHistory(map);
+	        int currentPoint = pointService.findCurrentPoint(info.getMemberIdx());
+
+	        // 리스트 페이징 URL
+	        String listUrl = req.getContextPath() + "/member/mypage/membership";
+	        
+	        // 탭 상태 유지를 위한 파라미터 처리
+	        String mode = req.getParameter("mode");
+	        if(mode != null && !mode.isEmpty()) {
+	            listUrl += "?mode=" + mode;
+	        }
+
+	        String paging = util.paging(current_page, total_page, listUrl);
+
+	        mav.addObject("list", list);
+	        mav.addObject("dataCount", dataCount);
+	        mav.addObject("currentPoint", currentPoint);
+	        mav.addObject("paging", paging);
+	        mav.addObject("page", current_page);
+	        mav.addObject("mode", mode); // JSP에서 탭 활성화에 사용
+
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+
+	    return mav;
 	}
+
 }
