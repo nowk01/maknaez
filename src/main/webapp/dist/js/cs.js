@@ -77,6 +77,11 @@ function searchEnter(event) {
 	}
 }
 
+window.onpageshow = function(event) {
+    if (event.persisted || (window.performance && window.performance.navigation.type === 2)) {
+        window.location.reload();
+    }
+};
 /* ===========================
    FAQ 아코디언 토글
    =========================== */

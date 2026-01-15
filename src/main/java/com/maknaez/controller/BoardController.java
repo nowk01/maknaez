@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -428,6 +429,19 @@ public class BoardController {
 		try {
 			long num = Long.parseLong(req.getParameter("num"));
 			String page = req.getParameter("page");
+			
+			HttpSession session = req.getSession();
+	        @SuppressWarnings("unchecked")
+	        List<Long> readNoticeList = (List<Long>) session.getAttribute("readNoticeList");
+	        if (readNoticeList == null) {
+	            readNoticeList = new ArrayList<>();
+	        }
+
+	        if (!readNoticeList.contains(num)) {
+	            service.updateHitCountNotice(num); 
+	            readNoticeList.add(num);
+	            session.setAttribute("readNoticeList", readNoticeList);
+	        }
 
 			BoardDTO dto = service.findByIdNotice(num);
 			if (dto != null) {

@@ -121,6 +121,25 @@ public class BoardServiceImpl implements BoardService {
 	}
 
 	@Override
+	public void updateHitCountNotice(long num) throws Exception {
+	    try {
+	        mapper.updateHitCountNotice(num);
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        throw e;
+	    }
+	}
+
+	@Override
+	public BoardDTO findByIdNotice(long num) {
+	    try {
+	        return mapper.findByIdNotice(num);
+	    } catch (Exception e) {
+	        return null;
+	    }
+	}
+	
+	@Override
 	public void deleteNotice(long num) throws Exception {
 		try {
 			mapper.deleteNotice(num);
@@ -148,15 +167,6 @@ public class BoardServiceImpl implements BoardService {
 		}
 	}
 
-	@Override
-	public BoardDTO findByIdNotice(long num) {
-		try {
-			mapper.updateHitCountNotice(num);
-			return mapper.findByIdNotice(num);
-		} catch (Exception e) {
-			return null;
-		}
-	}
 
 	// FAQ
 	@Override

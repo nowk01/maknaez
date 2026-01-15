@@ -24,6 +24,7 @@ public interface BoardService {
 	public List<BoardDTO> listNotice(Map<String, Object> map);
 	public int dataCountNotice(Map<String, Object> map); // 파라미터 추가됨
 	public BoardDTO findByIdNotice(long num);
+	public void updateHitCountNotice(long num) throws Exception;
 	
 	// FAQ
 	public List<FaqDTO> listFaq(Map<String, Object> map);

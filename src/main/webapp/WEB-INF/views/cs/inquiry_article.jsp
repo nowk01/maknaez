@@ -18,7 +18,6 @@
 				<li><a href="${pageContext.request.contextPath}/cs/faq">FAQ</a></li>
 				<li><a href="${pageContext.request.contextPath}/cs/list"
 					class="active">1:1 Inquiry</a></li>
-				<li><a href="#">Guide</a></li>
 			</ul>
 		</div>
 
