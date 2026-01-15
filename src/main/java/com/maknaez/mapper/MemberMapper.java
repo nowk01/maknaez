@@ -9,7 +9,7 @@ import com.maknaez.model.MemberDTO;
 
 public interface MemberMapper {
 	public MemberDTO loginMember(Map<String, Object> map);
-	public void insertLoginLog(Map<String, Object> map);
+	public void insertLoginLog(MemberDTO dto) throws SQLException;
 	
 	public void insertMember1(MemberDTO dto) throws SQLException;
 	public void insertMember2(MemberDTO dto) throws SQLException;

@@ -8,6 +8,7 @@ import com.maknaez.model.MemberDTO;
 
 public interface MemberService {
 	public MemberDTO loginMember(Map<String, Object> map);
+	public void insertLoginLog(MemberDTO dto) throws Exception;
 	
 	public void insertMember(MemberDTO dto) throws Exception;
 	public void updateMember(MemberDTO dto) throws Exception;	
