@@ -10,7 +10,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>${dto.prodName} - Maknaez Style</title>
+<title>${dto.prodName} - Maknaez </title>
 
 <jsp:include page="/WEB-INF/views/layout/headerResources.jsp"/>
 
@@ -45,7 +45,21 @@
     .btn-cart-custom:hover { background-color: #fff; border-color: #000 !important; color: #000; }
     .btn-buy-custom { border-radius: 30px; border: 1px solid #111; background-color: #111; color: #fff; transition: all 0.2s; margin-top: 10px; width: 100%; }
     .btn-buy-custom:hover { background-color: #333; border-color: #111 !important; color: #fff; }
+    
+    /* 리뷰 이미지 스타일 추가 */
+    .review-img-thumb {
+        width: 80px; 
+        height: 80px; 
+        object-fit: cover; 
+        border-radius: 4px; 
+        margin-top: 10px; 
+        margin-bottom: 10px;
+        cursor: pointer;
+        border: 1px solid #eee;
+    }
 </style>
+
+<!-- [FIX] 중복 스크립트 제거됨: 상단에 있던 불완전한 loadReviewList 스크립트를 삭제했습니다. -->
 
 </head>
 <body>
@@ -78,10 +92,10 @@
 						<button class="nav-link active" id="info-tab" data-bs-toggle="tab" data-bs-target="#info-pane" type="button" role="tab">제품 정보</button>
 					</li>
 					<li class="nav-item" role="presentation">
-						<button class="nav-link" id="review-tab" type="button" onclick="scrollToReview()">리뷰</button>
+						<button class="nav-link" id="review-tab" type="button" onclick="document.getElementById('reviewSection').scrollIntoView({behavior: 'smooth'})">리뷰</button>
 					</li>
 					<li class="nav-item" role="presentation">
-						<button class="nav-link" id="recommend-tab" type="button" onclick="scrollToRecommend()">추천</button>
+						<button class="nav-link" id="recommend-tab" type="button" onclick="document.getElementById('recommendSection').scrollIntoView({behavior: 'smooth'})">추천</button>
 					</li>
 				</ul>
 
@@ -244,11 +258,10 @@
 
 		<div id="sentinelNode" class="sentinel-point"></div>
 
-		<!--  REVIEW SECTION (기존 유지) -->
+		<!--  REVIEW SECTION -->
 		<div id="reviewSection" class="review-wrapper">
-            <!-- (리뷰 헤더 생략 - 원본 그대로) -->
              <div class="review-header-container">
-                <h3 class="review-header-title">Reviews <span id="reviewTotalCount" style="font-weight:400; font-size:0.9em; color:#888;">(128)</span></h3>
+                <h3 class="review-header-title">Reviews <span id="reviewTotalCount" style="font-weight:400; font-size:0.9em; color:#888;">(0)</span></h3>
                 
                 <div class="review-search-box">
                     <input type="text" id="reviewKeyword" placeholder="리뷰 키워드 검색" onkeyup="if(window.event.keyCode==13){searchReview()}">
@@ -257,18 +270,20 @@
             </div>
             
             <div id="reviewContentArea">
-                 <!-- 리뷰 내용은 스크립트로 로드됨 -->
+                 <div class="text-center py-5">
+                    <div class="spinner-border text-secondary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
             </div>
             
-            <div id="reviewPagination" class="mt-4 d-flex justify-content-center">
-                <!-- Static Pagination -->
+            <!-- 페이징은 아직 구현되지 않아 주석 처리 혹은 숨김 -->
+            <div id="reviewPagination" class="mt-4 d-flex justify-content-center" style="display:none !important;">
                 <nav aria-label="Page navigation">
                   <ul class="pagination">
                     <li class="page-item disabled"><a class="page-link" href="#">Previous</a></li>
-                    <li class="page-item active"><a class="page-link" href="#" style="background-color:#333; border-color:#333;">1</a></li>
-                    <li class="page-item"><a class="page-link" href="#" style="color:#333;">2</a></li>
-                    <li class="page-item"><a class="page-link" href="#" style="color:#333;">3</a></li>
-                    <li class="page-item"><a class="page-link" href="#" style="color:#333;">Next</a></li>
+                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                    <li class="page-item"><a class="page-link" href="#">Next</a></li>
                   </ul>
                 </nav>
             </div>
@@ -287,7 +302,6 @@
 							</div>
 						</div>
 					</div>
-                    <!-- (나머지 추천상품) -->
                     <div class="col-3">
 						<div class="card border-0">
 							<img src="https://placehold.co/300x300" class="card-img-top" alt="Rec 2">
@@ -312,7 +326,7 @@
 
 <script>
 const contextPath = "${pageContext.request.contextPath}";
-const productNum = "${dto.prodId}"; // [수정] DB ID 사용
+const productNum = "${dto.prodId}"; // DB 상품 ID
 
 // ... (공유하기 등 기존 스크립트 그대로) ...
 
@@ -338,8 +352,7 @@ function copyLink() {
 // ...
 
 $(document).ready(function() {
-	// ... (기존 이벤트 핸들러 유지) ...
-    
+	// 수량 조절 버튼
 	$('.plus').click(function() {
 		let q = parseInt($('.qty-input').val());
 		if(q < 10) { $('.qty-input').val(q + 1); $('#selectedQty').val(q + 1); }
@@ -353,18 +366,14 @@ $(document).ready(function() {
     // 구매하기 버튼
 	window.buyNow = function() {
 		if(!checkSelection()) return;
-        
-        // 결제 페이지 이동 (prod_id + quantity + size)
         const qty = $('#selectedQty').val();
         const size = $('input[name="optionDetailNum"]:checked').val();
-        
         location.href = "${pageContext.request.contextPath}/order/payment?prod_id=${dto.prodId}&quantity=" + qty + "&size=" + size;
 	};
 
     // 장바구니 버튼
 	window.addToCart = function() {
 		if(!checkSelection()) return;
-        // 추후 장바구니 로직 연결
 		alert("장바구니에 담았습니다 (기능 미구현)");
 	};
 
@@ -376,14 +385,107 @@ $(document).ready(function() {
 		return true;
 	}
 	
-    // 리뷰 로드 (일단 더미)
-    setTimeout(function() {
-        let mockData = generateMockReviews("");
-        renderReviews(mockData);
-    }, 100);
+    // 페이지 로딩 시 리뷰 불러오기
+    if(productNum) {
+        loadReviews(productNum);
+    }
 });
 
-// ... (나머지 리뷰 렌더링 함수들 - 그대로 복사) ...
+// Ajax로 리뷰 로드
+function loadReviews(prodId) {
+    $.ajax({
+        url: '${pageContext.request.contextPath}/review/list',
+        type: 'GET',
+        data: { prodId: prodId },
+        dataType: 'json',
+        success: function(response) {
+            console.log("Review Data:", response); // 디버깅용 로그
+            
+            if (response.status === 'success') {
+                renderReviews(response.data);
+                // 리뷰 전체 개수 업데이트
+                $('#reviewTotalCount').text('(' + response.count + ')');
+            } else {
+                console.error('리뷰 로드 실패:', response.message);
+                $('#reviewContentArea').html('<div class="text-center py-5 text-muted">리뷰를 불러오는 중 오류가 발생했습니다.<br>(' + response.message + ')</div>');
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error('Ajax Error:', xhr.responseText);
+            $('#reviewContentArea').html('<div class="text-center py-5 text-muted">서버 통신 오류가 발생했습니다.</div>');
+        }
+    });
+}
+
+// 리뷰 목록 HTML 렌더링
+function renderReviews(reviews) {
+    let container = $('#reviewContentArea');
+    container.empty();
+
+    if (!reviews || reviews.length === 0) {
+        container.html(`
+            <div class="text-center py-5 bg-light rounded" style="color: #888;">
+                <p class="mb-0">아직 등록된 리뷰가 없습니다.<br>첫 번째 리뷰의 주인공이 되어보세요!</p>
+            </div>
+        `);
+        return;
+    }
+
+    let html = '<div id="reviewListContainer">';
+    
+    // reviews 배열 순회
+    $.each(reviews, function(idx, item) {
+        // 별점 생성 로직 (1~5)
+        let stars = '';
+        for (let i = 0; i < 5; i++) {
+            if (i < item.starRating) {
+                // 채워진 별
+                stars += '<i class="bi bi-star-fill filled"></i>';
+            } else {
+                // 비어있는 별 (색상은 CSS filled 클래스 없는 상태 or 회색 처리)
+                stars += '<i class="bi bi-star-fill" style="color: #e0e0e0;"></i>';
+            }
+        }
+
+        // 이미지 HTML 생성 (이미지가 있을 경우에만)
+        let imgHtml = '';
+        if (item.reviewImg && item.reviewImg.trim() !== '') {
+            // ContextPath 포함한 이미지 경로
+            const imgPath = '${pageContext.request.contextPath}/uploads/review/' + item.reviewImg;
+            imgHtml = `
+                <div>
+                    <img src="\${imgPath}" class="review-img-thumb" alt="리뷰 이미지" onclick="window.open(this.src)">
+                </div>
+            `;
+        }
+
+        // HTML 조립 (기존 디자인 클래스 활용)
+        html += `
+        <div class="review-item">
+            <div class="review-meta-top">
+                <div class="d-flex align-items-center">
+                    <span class="badge bg-dark me-2" style="font-weight:normal; border-radius:2px;">REVIEW</span>
+                    <span style="font-size:0.85rem; color:#555;">옵션 : \${item.optionValue}</span>
+                </div>
+                <div class="review-writer-id">\${item.writerName}</div>
+            </div>
+            
+            <div class="review-meta-mid">
+                <div class="star-rating-custom">\${stars}</div>
+            </div>
+            
+            <div class="review-content">
+                \${imgHtml}
+                <div style="white-space: pre-wrap; margin-top:10px;">\${item.content}</div>
+                <div class="review-date" style="margin-top:5px; color:#999; font-size:0.8rem;">\${item.regDate}</div>
+            </div>
+        </div>`;
+    });
+    
+    html += '</div>';
+    container.html(html);
+}
+
 function showToast(message) {
     const existingToast = document.querySelector('.toast-message');
     if (existingToast) existingToast.remove();
@@ -400,55 +502,8 @@ function showToast(message) {
     }, 2500);
 }
 
-function generateMockReviews(keyword) {
-    if(keyword && keyword === "없음") return { count: 0, list: [], photoList: [] };
-
-    const contents = [
-        "배송도 빠르고 포장도 꼼꼼합니다. 실물이 훨씬 예쁘네요! 정사이즈 추천합니다.",
-        "발볼이 넓은 편인데 반업하니까 딱 좋습니다. 쿠션감이 예술이네요."
-    ];
-    let list = [];
-    for(let i=0; i<2; i++) {
-        list.push({
-            reviewNo: i,
-            memberId: "user" + i,
-            optionValue: "260mm",
-            starRating: 5,
-            footSize: "정사이즈",
-            content: contents[i],
-            regDate: "2023-10-15",
-            isNew: true,
-            images: [] 
-        });
-    }
-    return { count: 128, list: list, photoList: [] };
-}
-
-function renderReviews(data) {
-    let container = $('#reviewContentArea');
-    let html = "";
-    $('#reviewTotalCount').text("("+data.count+")");
-    
-    // 필터바 생략 (위 원본 코드 참고)
-    html += '<div class="review-filter-row">...</div>';
-
-    html += '<div id="reviewListContainer">';
-    data.list.forEach(item => {
-        html += `
-        <div class="review-item">
-            <div class="review-meta-top">
-                <div class="d-flex align-items-center"><span class="review-badge-new">NEW</span><span>옵션 : ${item.optionValue}</span></div>
-                <div class="review-writer-id">${item.memberId}***</div>
-            </div>
-            <div class="review-meta-mid">
-                <div class="star-rating-custom"><i class="bi bi-star-fill filled"></i><i class="bi bi-star-fill filled"></i><i class="bi bi-star-fill filled"></i><i class="bi bi-star-fill filled"></i><i class="bi bi-star-fill filled"></i></div>
-                <span class="foot-size-tag bg-light px-2 py-1 rounded text-secondary small ms-2">발 사이즈 : ${item.footSize}</span>
-            </div>
-            <div class="review-content">${item.content}<div class="review-date">${item.regDate}</div></div>
-        </div>`;
-    });
-    html += '</div>';
-    container.html(html);
+function searchReview() {
+    alert("검색 기능은 준비중입니다.");
 }
 </script>
 

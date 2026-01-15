@@ -7,16 +7,13 @@ public class ReviewDTO {
     private String content;
     private int starRating;
     private String reviewImg;
-    private String optionValue; // 구매 옵션 (예: 260mm)
+    private String optionValue;
     private String regDate;
-    
-    // JOIN된 회원 정보 (화면 표시용)
-    private String writerId;   // 작성자 ID (마스킹 처리용)
-    private String writerName; // 작성자 이름
+    private String writerId;
+    private String writerName;
 
     public ReviewDTO() {}
 
-    // Getters & Setters
     public long getReviewId() { return reviewId; }
     public void setReviewId(long reviewId) { this.reviewId = reviewId; }
 
