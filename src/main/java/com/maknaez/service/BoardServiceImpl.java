@@ -151,8 +151,7 @@ public class BoardServiceImpl implements BoardService {
 	@Override
 	public BoardDTO findByIdNotice(long num) {
 		try {
-			// 조회수 증가 로직은 필요에 따라 추가
-			// mapper.updateHitCountNotice(num);
+			mapper.updateHitCountNotice(num);
 			return mapper.findByIdNotice(num);
 		} catch (Exception e) {
 			return null;
