@@ -226,4 +226,61 @@
 	<delete id="deleteCategory" parameterType="string">
 	    DELETE FROM EZ.CATEGORY WHERE CATE_CODE = #{cateCode}
 	</delete>
+	
+	<!-- 제품 관리(관리자용) -->
+	
+	<insert id="insertProduct" parameterType="com.maknaez.model.ProductDTO">
+        <selectKey keyProperty="prodId" resultType="long" order="BEFORE">
+            SELECT seq_product.NEXTVAL FROM DUAL
+        </selectKey>
+        INSERT INTO products (
+            prod_id, 
+            cate_code, 
+            prod_name, 
+            prod_desc, 
+            base_price, 
+            is_displayed, 
+            thumb_nail, 
+            prod_date
+        ) VALUES (
+            #{prodId}, 
+            #{cateCode}, 
+            #{prodName}, 
+            #{description},  #{price},        #{isDisplayed}, 
+            #{thumbnail},    SYSDATE
+        )
+    </insert>
+    
+    <insert id="insertProductImg" parameterType="map">
+        INSERT INTO product_img (img_id, prod_id, img)
+        VALUES (seq_img.NEXTVAL, #{prodId}, #{filename})
+    </insert>
+    
+    <insert id="insertPdSize" parameterType="com.maknaez.model.ProductDTO">
+        <selectKey keyProperty="optId" resultType="long" order="BEFORE">
+            SELECT seq_opt.NEXTVAL FROM DUAL
+        </selectKey>
+        INSERT INTO pd_size (opt_id, prod_id, pd_size)
+        VALUES (#{optId}, #{prodId}, #{pdSize})
+    </insert>
+    
+    <insert id="insertStockLog" parameterType="map">
+        INSERT INTO stock_logs (
+            log_id, prod_id, opt_id, change_type, change_qty, reg_date, prod_stock
+        ) VALUES (
+            seq_stock.NEXTVAL, #{prodId}, #{optId}, '입고', #{qty}, SYSDATE, #{qty}
+        )
+    </insert>
+    
+    <select id="listCategorySelect" resultType="com.maknaez.model.CategoryDTO">
+	    SELECT 
+	        cate_code   AS cateCode,
+	        SUBSTR(SYS_CONNECT_BY_PATH(cate_name, ' > '), 4) AS cateName,
+	        depth
+	    FROM category
+	    WHERE status = 1
+	    START WITH cate_parent IS NULL
+	    CONNECT BY PRIOR cate_code = cate_parent
+	    ORDER SIBLINGS BY order_no ASC
+	</select>
 </mapper>

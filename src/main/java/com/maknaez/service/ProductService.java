@@ -18,4 +18,8 @@ public interface ProductService {
     public void insertCategory(CategoryDTO dto) throws Exception;
     public void updateCategory(CategoryDTO dto) throws Exception;
     public void deleteCategory(String cateCode) throws Exception;
+    
+    public void insertProduct(ProductDTO dto) throws Exception;
+    
+    public List<CategoryDTO> listCategorySelect();
 }

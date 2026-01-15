@@ -2,8 +2,9 @@ package com.maknaez.mapper;
 
 import java.util.List;
 import java.util.Map;
-import com.maknaez.model.ProductDTO;
+
 import com.maknaez.model.CategoryDTO;
+import com.maknaez.model.ProductDTO;
 
 public interface ProductMapper {
     
@@ -18,4 +19,11 @@ public interface ProductMapper {
     public void insertCategory(CategoryDTO dto) throws Exception;
     public void updateCategory(CategoryDTO dto) throws Exception;
     public void deleteCategory(String cateCode) throws Exception;
+    
+    public void insertProduct(ProductDTO dto) throws Exception;
+    public void insertPdSize(ProductDTO dto) throws Exception;
+    public void insertProductImg(Map<String, Object> map) throws Exception;
+    public void insertStockLog(Map<String, Object> map) throws Exception;
+    public List<CategoryDTO> listCategorySelect();
+    
 }
