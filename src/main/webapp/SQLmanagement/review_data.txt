@@ -1,0 +1,56 @@
+-- ---------------------------------------------
+-- Categry 데이터 삽입 ( 2026.01.15 업데이트 ) 
+-- ---------------------------------------------
+-- [1] 리뷰 테이블 초기화
+DROP TABLE reviews CASCADE CONSTRAINTS;
+DROP SEQUENCE review_seq;
+
+CREATE SEQUENCE review_seq START WITH 1 INCREMENT BY 1 NOCACHE;
+
+CREATE TABLE reviews (
+    review_id       NUMBER          PRIMARY KEY,    -- 리뷰 고유 번호
+    prod_id         NUMBER          NOT NULL,       -- 상품 번호 (FK)
+    member_idx      NUMBER          NOT NULL,       -- 작성자 (FK)
+    content         CLOB            NOT NULL,       -- 리뷰 내용
+    star_rating     NUMBER(1)       DEFAULT 5,      -- 별점 (1~5)
+    review_img      VARCHAR2(255)   NULL,           -- 리뷰 이미지 (대표 1장)
+    option_value    VARCHAR2(50)    NULL,           -- 구매 옵션 (예: 260mm)
+    reg_date        DATE            DEFAULT SYSDATE,-- 작성일
+    
+    CONSTRAINT fk_review_prod FOREIGN KEY (prod_id) REFERENCES PRODUCTS(prod_id),
+    CONSTRAINT fk_review_mem FOREIGN KEY (member_idx) REFERENCES MEMBER1(memberIdx)
+);
+
+-- [2] 샘플 데이터 입력 
+-- 전제: PRODUCTS 테이블에 데이터가 있고, MEMBER1 테이블에 회원(memberIdx=1)이 있어야 함.
+-- 회원이 없다면 임시로 하나 만드세요: 
+-- INSERT INTO MEMBER1 (memberIdx, id, pwd, name, role, status, reg_date) VALUES (1, 'testUser', '1234', '홍길동', 'USER', 'ACTIVE', SYSDATE);
+
+SET DEFINE OFF;
+
+-- 1. [MEN_ROAD] 상품에 대한 리뷰 (prod_name으로 ID 찾아서 입력)
+INSERT INTO reviews (review_id, prod_id, member_idx, content, star_rating, option_value, reg_date)
+SELECT review_seq.NEXTVAL, prod_id, 1, '쿠션감이 정말 좋습니다. 데일리 러닝화로 딱이네요!', 5, '270mm', SYSDATE-10
+FROM PRODUCTS WHERE prod_name LIKE 'M_1080v13_BK%';
+
+INSERT INTO reviews (review_id, prod_id, member_idx, content, star_rating, option_value, reg_date)
+SELECT review_seq.NEXTVAL, prod_id, 1, '생각보다 발볼이 좁게 나온 것 같아요. 반업 추천합니다.', 4, '265mm', SYSDATE-5
+FROM PRODUCTS WHERE prod_name LIKE 'M_1080v13_BK%';
+
+
+-- 2. [WOMEN_SPORTSTYLE] 상품 리뷰 (이미지 포함)
+INSERT INTO reviews (review_id, prod_id, member_idx, content, star_rating, review_img, option_value, reg_date)
+SELECT review_seq.NEXTVAL, prod_id, 1, '색감이 화면이랑 똑같아요! 너무 예쁩니다. 배송도 빨랐어요.', 5, 'review_sample_1.jpg', '235mm', SYSDATE-2
+FROM PRODUCTS WHERE prod_name LIKE 'F_327_BE%';
+
+
+-- 3. [SPORTSTYLE] 유니섹스 상품 리뷰
+INSERT INTO reviews (review_id, prod_id, member_idx, content, star_rating, option_value, reg_date)
+SELECT review_seq.NEXTVAL, prod_id, 1, '국민신발인 이유가 있네요. 가볍고 편합니다.', 5, '250mm', SYSDATE-30
+FROM PRODUCTS WHERE prod_name LIKE 'U_530_SV%';
+
+INSERT INTO reviews (review_id, prod_id, member_idx, content, star_rating, review_img, option_value, reg_date)
+SELECT review_seq.NEXTVAL, prod_id, 1, '코디하기 정말 편해요. 청바지, 슬랙스 다 잘 어울림.', 5, 'review_sample_2.jpg', '260mm', SYSDATE-15
+FROM PRODUCTS WHERE prod_name LIKE 'U_530_SV%';
+
+COMMIT;
