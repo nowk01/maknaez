@@ -153,7 +153,32 @@
     </button>
 
     <form name="loginForm" method="post">
-        <input type="text" name="userId" class="form-input slide-item" placeholder="아이디">
+    <%
+        String returnUrl = request.getParameter("returnUrl");
+        if (returnUrl == null || returnUrl.trim().isEmpty()) {
+            String referer = request.getHeader("Referer");
+            if (referer != null && !referer.contains("/member/login")) {
+                try {
+                    java.net.URL url = new java.net.URL(referer);
+                    String path = url.getPath(); // 예: /maknaez/collections/list
+                    String query = url.getQuery();
+                    
+                    // [중요] 컨텍스트 패스(/maknaez)를 찾아 제거하여 중복 방지
+                    String cp = request.getContextPath();
+                    if (cp != null && !cp.isEmpty() && path.startsWith(cp)) {
+                        path = path.substring(cp.length()); // /collections/list 만 남김
+                    }
+                    
+                    returnUrl = path + (query != null ? "?" + query : "");
+                } catch (Exception e) {
+                    returnUrl = "";
+                }
+            }
+        }
+        if (returnUrl == null) returnUrl = "";
+    %>
+    	<input type="hidden" name="returnUrl" value="<%= returnUrl %>">
+   		<input type="text" name="userId" class="form-input slide-item" placeholder="아이디">
         <input type="password" name="userPwd" class="form-input slide-item" placeholder="비밀번호">
 
         <div class="login-options slide-item">
