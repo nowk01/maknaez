@@ -8,7 +8,6 @@ body {
     letter-spacing: -0.5px;
 }
 
-/* 갓벽 애니메이션 */
 .content-container { 
     padding: 40px; 
     animation: fadeIn 0.5s ease-out;
