@@ -94,4 +94,15 @@ public class PointServiceImpl implements PointService {
             throw e; 
         }
     }
+
+    @Override
+    public int findCurrentPoint(long memberIdx) {
+        int currentPoint = 0;
+        try {
+            currentPoint = mapper.findCurrentPoint(memberIdx);
+        } catch (Exception e) {
+            currentPoint = 0;
+        }
+        return currentPoint;
+    }
 }
