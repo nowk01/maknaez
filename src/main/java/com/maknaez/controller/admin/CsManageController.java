@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.URLDecoder;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -267,16 +268,31 @@ public class CsManageController {
 
 	    return new ModelAndView("redirect:/admin/cs/notice_list");
 	}
+	
 	// 공지사항 상세 보기
     @GetMapping("notice_article")
     public ModelAndView noticeArticle(HttpServletRequest req, HttpServletResponse resp) {
         String numStr = req.getParameter("num");
+        HttpSession session = req.getSession();
+        
         if (numStr == null || numStr.isEmpty()) {
             return new ModelAndView("redirect:/admin/cs/notice_list");
         }
 
         try {
             long num = Long.parseLong(numStr);
+            
+            @SuppressWarnings("unchecked")
+            List<Long> readList = (List<Long>) session.getAttribute("readNoticeList");
+            if (readList == null) {
+                readList = new ArrayList<>();
+            }
+
+            // 2. 리스트에 현재 게시물 번호가 없으면 조회수 증가시키고 리스트에 추가
+            if (!readList.contains(num)) {
+                readList.add(num);
+                session.setAttribute("readNoticeList", readList);
+            }
 
             BoardDTO dto = service.findByIdNotice(num);
 
@@ -299,7 +315,7 @@ public class CsManageController {
     
 	// 공지사항 삭제
 	@GetMapping("notice_delete")
-	public ModelAndView noticeDelete(HttpServletRequest req) {
+	public ModelAndView noticeDelete(HttpServletRequest req, HttpServletResponse resp) {
 		try {
 			long num = Long.parseLong(req.getParameter("num"));
 			service.deleteNotice(num);
