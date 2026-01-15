@@ -3,8 +3,8 @@
 <mapper namespace="com.maknaez.mapper.WishlistMapper">
 
     <insert id="insertWish" parameterType="com.maknaez.model.WishlistDTO">
-        INSERT INTO wishlist (wish_id, memberIdx, prod_id, isliked, reg_date)
-        VALUES (wish_seq.NEXTVAL, #{memberIdx}, #{prodId}, 1, SYSDATE)
+        INSERT INTO wishlist (wish_id, memberIdx, prod_id, isliked)
+        VALUES (wish_seq.NEXTVAL, #{memberIdx}, #{prodId}, 1)
     </insert>
 
     <delete id="deleteWish" parameterType="map">

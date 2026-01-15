@@ -1,6 +1,9 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ page contentType="text/html; charset=UTF-8" %>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
+
+<jsp:include page="/WEB-INF/views/common/image_config.jsp" />
+
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -46,7 +49,7 @@
         <div class="menu-group">
             <span class="menu-title">회원정보</span>
             <ul>
-                <li><a href="${pageContext.request.contextPath}/member/mypage/muInfo" class="active">내 정보 관리</a></li>
+                <li><a href="${pageContext.request.contextPath}/member/mypage/myInfo" class="active">내 정보 관리</a></li>
                 <li><a href="${pageContext.request.contextPath}/member/mypage/addr" class="active">배송지 관리</a></li>
                 <li><a href="${pageContext.request.contextPath}/member/mypage/membership">회원등급</a></li>
             </ul>
@@ -84,13 +87,14 @@
                             <div class="as-wishlist__productItem">
                                 <div class="as-wishlist__productImageWrap">
                                     <div class="as-wishlist__productImageInnerWrap">
-                                        <a href="${pageContext.request.contextPath}/product/detail?productNo=${dto.productNo}" class="as-wishlist__productLink">
+                                        <a href="${pageContext.request.contextPath}/product/detail?prod_id=${dto.prodId}" class="as-wishlist__productLink">
                                             <img class="as-wishlist__productImage" 
-                                                 src="${not empty dto.imageFile ? dto.imageFile : 'https://placehold.co/500x500?text=No+Image'}" 
-                                                 alt="${dto.productName}">
+                                                 src="${uploadPath}/${dto.thumbnail}" 
+                                                 alt="${dto.prodName}"
+                                                 onerror="this.src='https://placehold.co/500x500?text=No+Image'">
                                         </a>
 
-                                        <div class="as-wishlist__iconContainer" onclick="deleteWish('${dto.productNo}')">
+                                        <div class="as-wishlist__iconContainer" onclick="deleteWish('${dto.prodId}')">
                                             <div class="as-wishlist__icons">
                                                 <div class="as-wishlist__icon">
                                                     <svg class="as-icon as-icon--fill-heart" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -102,8 +106,8 @@
                                     </div>
                                 </div>
 
-                                <a href="${pageContext.request.contextPath}/product/detail?productNo=${dto.productNo}" class="as-wishlist__productLink" style="text-decoration:none;">
-                                    <h3 class="as-wishlist__productTitle">${dto.productName}</h3>
+                                <a href="${pageContext.request.contextPath}/product/detail?prod_id=${dto.prodId}" class="as-wishlist__productLink" style="text-decoration:none;">
+                                    <h3 class="as-wishlist__productTitle">${dto.prodName}</h3>
                                 </a>
                                 <p class="as-wishlist__productType">CATEGORY</p>
                                 <p class="as-wishlist__productPrice">₩<fmt:formatNumber value="${dto.price}" pattern="#,###" /></p>
@@ -125,25 +129,36 @@
 <jsp:include page="/WEB-INF/views/layout/footerResources.jsp" />
 
 <script>
-    function deleteWish(productNo) {
+    function deleteWish(prodId) {
         if(!confirm("관심 상품에서 삭제하시겠습니까?")) return;
         
-        // 실제 백엔드 연동 시 아래 주석 해제하여 사용
-        /*
+        // [수정] ProductController의 insertWish 메서드를 재활용하여 삭제 처리
+        // 이미 찜 되어있는 상품에 대해 insertWish를 호출하면 찜이 해제(삭제)됩니다.
         $.ajax({
             type: "POST",
-            url: "${pageContext.request.contextPath}/member/mypage/deleteWish",
-            data: { productNo: productNo },
+            url: "${pageContext.request.contextPath}/product/insertWish",
+            data: { prod_id: prodId },
             dataType: "json",
             success: function(data) {
-                location.reload();
+                if(data.state === "false") {
+                    // 삭제 성공 시 새로고침
+                    location.reload();
+                } else if(data.state === "true") {
+                    // 혹시라도 추가된 경우 (비정상 케이스지만 처리)
+                    alert("처리되었습니다.");
+                    location.reload();
+                } else if(data.state === "login_required") {
+                	alert("로그인이 필요합니다.");
+                	location.href = "${pageContext.request.contextPath}/member/login";
+                } else {
+                    alert("오류가 발생했습니다. 다시 시도해주세요.");
+                }
             },
             error: function(e) {
                 console.log(e);
+                alert("서버 통신 중 오류가 발생했습니다.");
             }
         });
-        */
-        alert("삭제 기능은 백엔드 구현이 필요합니다. (상품번호: " + productNo + ")");
     }
 </script>
 
