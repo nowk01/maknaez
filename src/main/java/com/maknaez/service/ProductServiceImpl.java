@@ -58,6 +58,16 @@ public class ProductServiceImpl implements ProductService {
         return list;
     }
     
+    @Override
+    public ProductDTO readProduct(long prodId) {
+        ProductDTO dto = null;
+        try  {
+            dto = mapper.readProduct(prodId);
+        } catch (Exception e) { e.printStackTrace(); }
+        return dto;
+    }
+    
+    
     
     // 관리자 사용
 	@Override
