@@ -117,10 +117,10 @@
 }
 
 .sm-salomon__detailsCustomersTierImage {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100px;
+    border-radius: 50% !important;
+    overflow: hidden !important;
+    padding: 0 !important;
+    background-color: transparent !important;
 }
 
 .sm-salomon__detailsImage {
@@ -352,8 +352,7 @@
 .action-btn.write-btn { font-weight: 800; }
 
 /* =========================================
-   6. [최종 수정] 관심 상품 (Wishlist)
-   (JSP 내부 스타일을 이곳으로 옮겨와 통합)
+   6. 관심 상품 (Wishlist)
    ========================================= */
 
 .as-wishlist__contentWrap { width: 100%; padding: 0 20px; box-sizing: border-box; }
@@ -482,10 +481,33 @@
 }
 
 @media (max-width: 768px) {
-    .sm-salomon__detailsCustomersTag { flex-direction: column; padding: 30px; gap: 30px; text-align: center; }
-    .sm-salomon__detailsCustomersTier--tier { flex-direction: column; border-right: none; border-bottom: 1px solid #eee; padding-right: 0; margin-right: 0; padding-bottom: 30px; width: 100%; }
+    .sm-salomon__detailsCustomersTag { 
+        flex-direction: column; 
+        padding: 30px; 
+        gap: 30px; 
+        text-align: center; 
+        border: none !important; /* 전체 박스 테두리 제거 확실히 */
+    }
+    
+    .sm-salomon__detailsCustomersTier--tier { 
+        flex-direction: column; 
+        border-right: none; 
+        /* ▼▼▼ 여기가 핵심입니다 (아래쪽 회색 선 제거) ▼▼▼ */
+        border-bottom: none !important; 
+        padding-right: 0; 
+        margin-right: 0; 
+        padding-bottom: 30px; 
+        width: 100%; 
+    }
+    
     .sm-salomon__detailsCustomersTier--orderCount { width: 100%; }
-    .sm-salomon__statusBar { flex-direction: row; flex-wrap: wrap; }
+    
+    .sm-salomon__statusBar { 
+        flex-direction: row; 
+        flex-wrap: wrap; 
+        border: none !important; /* 현황판 테두리 제거 확실히 */
+    }
+    
     .sm-salomon__statusBarItem { min-width: 50%; margin-bottom: 20px; }
     .sm-salomon__statusBarBorder { display: none; }
     
