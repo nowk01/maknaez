@@ -81,15 +81,21 @@ public class MemberController {
 			session.setAttribute("member", info);
 
 			String preLoginURI = (String) session.getAttribute("preLoginURI");
-			session.removeAttribute("preLoginURI");
-			if (preLoginURI != null) {
-				return new ModelAndView(preLoginURI);
-			}
+            session.removeAttribute("preLoginURI");
+            if (preLoginURI != null) {
+                return new ModelAndView(preLoginURI);
+            }
 
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return new ModelAndView("redirect:/member/mypage/main.do");
+            String returnUrl = req.getParameter("returnUrl");
+            if (returnUrl != null && !returnUrl.isEmpty()) {
+                return new ModelAndView("redirect:" + returnUrl);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return new ModelAndView("redirect:/member/mypage/main.do");
 	}
 
 	@GetMapping("logout")
