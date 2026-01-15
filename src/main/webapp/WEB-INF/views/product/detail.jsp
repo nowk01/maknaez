@@ -2,7 +2,6 @@
 <%@ taglib prefix="c" uri="jakarta.tags.core"%>
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt"%>
 
-<!-- 이미지 경로 변수 설정 -->
 <jsp:include page="/WEB-INF/views/common/image_config.jsp" />
 
 <!DOCTYPE html>
@@ -167,7 +166,6 @@
 					</div>
 				</div>
 
-				<!-- 좌-하1: 제품 특징 (테이블 스타일) -->
 				<div class="product-features">
 					<h4>제품 특징</h4>
 					<table class="detail-table">
@@ -177,7 +175,6 @@
 					</table>
 				</div>
 
-				<!-- 좌-하2: 고시 정보 (테이블 스타일) -->
 				<div class="product-notice">
 					<h4>상품 고시 정보</h4>
 					<table class="detail-table">
@@ -190,17 +187,12 @@
 					</table>
 				</div>
 
-			</div> <!-- End Left Column -->
-
-			<!-- ================= RIGHT COLUMN (옵션 & 결제) ================= -->
-			<div class="col-lg-4 detail-right-section">
+			</div> <div class="col-lg-4 detail-right-section">
 				<div id="stickySidebar" class="sticky-sidebar">
 					
-                    <!-- [DB 데이터] 상품명 -->
-					<div class="product-name">${dto.prodName}</div>
+                    <div class="product-name">${dto.prodName}</div>
                     
-                    <!-- [DB 데이터] 가격 표시 로직 (할인 적용) -->
-					<div class="product-price">
+                    <div class="product-price">
                         <c:choose>
                             <c:when test="${dto.discountRate > 0}">
                                 <span style="text-decoration: line-through; font-size: 0.9em; color: #999; margin-right: 8px;">
@@ -220,7 +212,6 @@
                     </div>
 
 					<div class="product-actions-top">
-						<!-- [유지] 별점 흑백 테마 & 사이즈 축소 -->
 						<div class="star-rating-header">
 							<i class="bi bi-star-fill filled"></i>
 							<i class="bi bi-star-fill filled"></i>
@@ -248,7 +239,14 @@
                                 </div>
                             </div>
 
-							<i class="bi bi-heart" id="wishBtn" title="찜하기" style="cursor: pointer;"></i>
+							<c:choose>
+                                <c:when test="${isUserLiked}">
+                                    <i class="bi bi-heart-fill text-danger" id="wishBtn" title="찜 취소" style="cursor: pointer;"></i>
+                                </c:when>
+                                <c:otherwise>
+                                    <i class="bi bi-heart" id="wishBtn" title="찜하기" style="cursor: pointer;"></i>
+                                </c:otherwise>
+                            </c:choose>
 						</div>
 					</div>
 
@@ -310,9 +308,6 @@
 
 		<div id="sentinelNode" class="sentinel-point"></div>
 
-		<!-- ==========================================================================
-		     [REVIEW SECTION] 디자인 리뉴얼 (이미지 우선, 더보기 기능)
-		     ========================================================================== -->
 		<div id="reviewSection" class="review-wrapper mt-5">
              <div class="review-header-container">
                 <h3 class="review-header-title">PRODUCT REVIEWS <span id="reviewTotalCount">(0)</span></h3>
@@ -331,7 +326,6 @@
                 </div>
             </div>
             
-            <!-- 페이지네이션 -->
             <div id="reviewPagination" class="pagination-container"></div>
 		</div>
 
@@ -422,6 +416,7 @@ $(document).ready(function() {
         loadReviews(productNum, 1);
     }
     
+    // [수정됨] 찜하기 AJAX 처리
     $('#wishBtn').click(function() {
         if (!isLoggedIn) {
             if(confirm("로그인이 필요한 서비스입니다.\n로그인 페이지로 이동하시겠습니까?")) {
@@ -429,10 +424,35 @@ $(document).ready(function() {
             }
             return;
         }
-        $(this).toggleClass('bi-heart bi-heart-fill text-danger');
-        if($(this).hasClass('bi-heart-fill')) {
-             alert("찜 목록에 추가되었습니다."); 
-        }
+
+        let $btn = $(this);
+        
+        $.ajax({
+            url: contextPath + "/product/insertWish",
+            type: "POST",
+            data: { prod_id: productNum }, 
+            dataType: "json",
+            success: function(data) {
+                if(data.state === "true") {
+                    // 찜 추가 성공: 하트 채우기
+                    $btn.removeClass('bi-heart').addClass('bi-heart-fill text-danger');
+                    showToast("관심 상품에 추가되었습니다.");
+                } else if(data.state === "false") {
+                    // 찜 해제 성공: 하트 비우기
+                    $btn.removeClass('bi-heart-fill text-danger').addClass('bi-heart');
+                    showToast("관심 상품에서 삭제되었습니다.");
+                } else if(data.state === "login_required") {
+                    alert("로그인이 필요합니다.");
+                    location.href = contextPath + "/member/login";
+                } else {
+                    alert("처리에 실패했습니다.");
+                }
+            },
+            error: function(e) {
+                console.log(e);
+                alert("서버 통신 중 오류가 발생했습니다.");
+            }
+        });
     });
 });
 
@@ -522,8 +542,7 @@ function renderReviews(reviews) {
             <div class="star-rating-custom">\${stars}</div>
             
             <div class="review-content">
-                \${imgHtml}  <!-- 이미지가 내용보다 먼저 나옴 -->
-                <div style="margin-top:5px;">\${contentHtml}</div>
+                \${imgHtml}  <div style="margin-top:5px;">\${contentHtml}</div>
                 <div class="review-date">\${item.regDate}</div>
             </div>
         </div>`;
@@ -611,7 +630,6 @@ function searchReview() {
 }
 </script>
 
-<!-- Restock Modal -->
 <div class="modal fade" id="restockModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
