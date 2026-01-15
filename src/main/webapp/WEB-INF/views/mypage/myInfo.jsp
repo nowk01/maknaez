@@ -104,7 +104,7 @@
 						href="${pageContext.request.contextPath}/member/mypage/myInfo"
 						class="active">내 정보 관리</a></li>
 					<li><a href="${pageContext.request.contextPath}/member/mypage/addr">배송지 관리</a></li>
-					<li><a href="${pageContext.request.contextPath}/member/mypage/membership">회원등급</a></li>
+					<li><a href="${pageContext.request.contextPath}/member/mypage/level_benefit">회원등급</a></li>
 				</ul>
 			</div>
 			<div class="menu-group">
