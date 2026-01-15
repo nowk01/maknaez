@@ -1,9 +1,12 @@
 package com.maknaez.mapper;
 
 import java.util.List;
+import java.util.Map;
 
 import com.maknaez.model.ReviewDTO;
 
 public interface ReviewMapper {
-	List<ReviewDTO> selectReviewsByProdId(long prodId);
+	
+	int dataCount(long prodId);// 전체 리뷰 수
+	List<ReviewDTO> selectReviewsByProdId(Map<String, Object> map); // 페이징용
 }
