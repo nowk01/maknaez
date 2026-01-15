@@ -107,11 +107,8 @@ public class CsManageController {
 				jobj.put("userId", dto.getUserId());
 				jobj.put("reg_date", dto.getReg_date());
 
-				// [연동수정] null 방지를 위해 빈 문자열 처리 (JS 에러 방지)
 				jobj.put("replyContent", dto.getReplyContent() != null ? dto.getReplyContent() : "");
 				jobj.put("replyDate", dto.getReplyDate() != null ? dto.getReplyDate() : "");
-
-				// 파일 정보 (원본 기능 유지)
 				jobj.put("saveFilename", dto.getSaveFilename() != null ? dto.getSaveFilename() : "");
 				jobj.put("originalFilename", dto.getOriginalFilename() != null ? dto.getOriginalFilename() : "");
 			} else {
@@ -159,7 +156,7 @@ public class CsManageController {
 		out.print(jobj.toString());
 	}
 
-	// 공지사항 리스트 (원본 기능 전체 포함)
+	// 공지사항 리스트
 	@GetMapping("notice_list")
 	public ModelAndView noticeList(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
@@ -281,9 +278,7 @@ public class CsManageController {
         try {
             long num = Long.parseLong(numStr);
 
-            service.updateHitCount(num);
-
-            BoardDTO dto = service.findById(num);
+            BoardDTO dto = service.findByIdNotice(num);
 
             if (dto == null) {
                 return new ModelAndView("redirect:/admin/cs/notice_list");
