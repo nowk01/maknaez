@@ -22,4 +22,9 @@ public interface ProductService {
     public void insertProduct(ProductDTO dto) throws Exception;
     
     public List<CategoryDTO> listCategorySelect();
+    
+    public int dataCountManage(Map<String, Object> map);
+    public List<ProductDTO> listProductManage(Map<String, Object> map);
+    public List<CategoryDTO> listCategoryAll();
+    public void deleteProductList(long[] prodIds) throws Exception;
 }

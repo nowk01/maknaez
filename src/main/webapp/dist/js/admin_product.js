@@ -1,13 +1,11 @@
-/**
- * MAKNAEZ Admin Product List Script
- */
+// admin_product.js
 
+// 기존 checkAll 로직 유지
 document.addEventListener("DOMContentLoaded", function() {
-    // 1. 전체 선택 체크박스
     const checkAll = document.getElementById('checkAll');
     if (checkAll) {
         checkAll.addEventListener('change', function() {
-            const checkboxes = document.querySelectorAll('tbody input[type="checkbox"]');
+            const checkboxes = document.querySelectorAll('tbody input[name="prodIds"]');
             checkboxes.forEach(cb => {
                 cb.checked = checkAll.checked;
             });
@@ -15,19 +13,38 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 });
 
-// 상품 상태 변경 예시
-function updateProductStatus() {
-    const selected = document.querySelectorAll('tbody input[type="checkbox"]:checked');
-    if (selected.length === 0) {
-        alert("상태를 변경할 상품을 선택해주세요.");
+// [추가] 선택 삭제 기능
+function deleteSelected() {
+    // 체크된 항목 찾기
+    const checkedBoxes = document.querySelectorAll('tbody input[name="prodIds"]:checked');
+    if(checkedBoxes.length === 0) {
+        alert("삭제할 상품을 선택해주세요.");
         return;
     }
-    alert(`${selected.length}개의 상품 상태를 업데이트합니다.`);
-}
 
-// 엑셀 다운로드
-function excelDownload() {
-    if(confirm("현재 목록을 Excel로 다운로드하시겠습니까?")) {
-        console.log("Downloading excel...");
+    if(!confirm("선택한 상품을 정말 삭제하시겠습니까?")) {
+        return;
     }
+
+    // 값 배열로 변환
+    let prodIds = [];
+    checkedBoxes.forEach(function(cb) {
+        prodIds.push(cb.value);
+    });
+
+    // jQuery Ajax 사용
+    $.ajax({
+        type: "POST",
+        url:  cp + "/admin/product/delete", // cp는 jsp 상단 script에서 정의 필요
+        traditional: true, // 배열 전송 시 필수
+        data: { prodIds: prodIds },
+        success: function(data) {
+            alert("삭제되었습니다.");
+            location.reload();
+        },
+        error: function(e) {
+            console.log(e);
+            alert("삭제 중 오류가 발생했습니다.");
+        }
+    });
 }

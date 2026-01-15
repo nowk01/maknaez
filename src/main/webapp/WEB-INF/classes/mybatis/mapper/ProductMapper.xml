@@ -283,4 +283,53 @@
 	    CONNECT BY PRIOR cate_code = cate_parent
 	    ORDER SIBLINGS BY order_no ASC
 	</select>
+	
+	<!-- 제품 관리(관리자) -->
+	<sql id="where-manage">
+	    <if test="searchKey == 'prodName' and searchValue != null and searchValue != ''">
+	        AND INSTR(p.prod_name, #{searchValue}) &gt; 0
+	    </if>
+    </sql>
+	
+	<select id="countProductManage" parameterType="map" resultType="Integer">
+	    SELECT NVL(COUNT(*), 0)
+	    FROM products p
+	    JOIN category c ON p.cate_code = c.cate_code
+	    <where>
+	        <include refid="where-manage"/>
+	    </where>
+	</select>
+	
+	<select id="listProductManage" parameterType="map" resultType="com.maknaez.model.ProductDTO">
+	    SELECT * FROM (
+	        SELECT ROWNUM rnum, tb.* FROM (
+	            SELECT 
+	                p.prod_id      AS prodId, 
+                    p.cate_code    AS cateCode, 
+                    p.prod_name    AS prodName, 
+                    p.base_price   AS price, 
+                    p.is_displayed AS isDisplayed, 
+                    p.thumb_nail   AS thumbnail, 
+                    p.prod_date    AS prodDate,
+                    c.cate_name    AS cateName
+	            FROM products p
+	            JOIN category c ON p.cate_code = c.cate_code
+	            <where>
+	                <include refid="where-manage"/>
+	            </where>
+	            ORDER BY p.prod_id DESC
+	        ) tb WHERE ROWNUM &lt;= #{end}
+	    ) WHERE rnum &gt;= #{start}
+	</select>
+	
+	<select id="listCategoryAll" resultType="com.maknaez.model.CategoryDTO">
+	    SELECT cate_code, cate_name, cate_parent, depth
+	    FROM category
+	    WHERE status = 1
+	    ORDER BY depth ASC, cate_code ASC
+	</select>
+	
+	<delete id="deleteProduct" parameterType="long">
+	    DELETE FROM products WHERE prod_id = #{prodId}
+	</delete>
 </mapper>
