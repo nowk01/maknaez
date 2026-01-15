@@ -26,6 +26,7 @@ CREATE SEQUENCE discount_seq    START WITH 1 INCREMENT BY 1 NOCACHE; -- [discoun
 CREATE SEQUENCE od_seq          START WITH 1 INCREMENT BY 1 NOCACHE; -- [order_discounts] od_id
 CREATE SEQUENCE pm_seq          START WITH 1 INCREMENT BY 1 NOCACHE; -- [point_member]    pm_id
 CREATE SEQUENCE loginLog_seq    START WITH 1 INCREMENT BY 1 NOCACHE; -- [login_history]   log_id
+CREATE SEQUENCE img_seq         START WITH 1 INCREMENT BY 1 NOCACHE; -- [product_img]     img_id
 
 /* -- -----------------------------------------------------------------
    2. 테이블 생성 (PK 선언 제거, 주석 복구)
@@ -169,7 +170,8 @@ CREATE TABLE pd_color (
 
 -- 15. 상품 추가 이미지
 CREATE TABLE product_img (
-    prod_id NUMBER          NOT NULL,               -- PK, FK: products.prod_id 참조 (1:1 구조로 되어있음)
+	img_id  NUMBER          NOT NULL,				-- PK : 시퀀스(img_seq) 
+    prod_id NUMBER          NOT NULL,               -- FK: products.prod_id 참조 (1:1 구조로 되어있음)
     img     VARCHAR2(4000)  NULL
 );
 
@@ -296,7 +298,7 @@ ALTER TABLE category        ADD CONSTRAINT PK_category          PRIMARY KEY (cat
 ALTER TABLE products        ADD CONSTRAINT PK_products          PRIMARY KEY (prod_id);
 ALTER TABLE pd_size         ADD CONSTRAINT PK_pd_size           PRIMARY KEY (opt_id);
 ALTER TABLE pd_color        ADD CONSTRAINT PK_pd_color          PRIMARY KEY (prod_id);
-ALTER TABLE product_img     ADD CONSTRAINT PK_product_img       PRIMARY KEY (prod_id);
+ALTER TABLE product_img     ADD CONSTRAINT PK_product_img       PRIMARY KEY (img_id);
 ALTER TABLE stock_logs      ADD CONSTRAINT PK_stock_logs        PRIMARY KEY (log_id);
 ALTER TABLE orders          ADD CONSTRAINT PK_orders            PRIMARY KEY (order_id);
 ALTER TABLE order_items     ADD CONSTRAINT PK_order_items       PRIMARY KEY (item_id);
