@@ -42,6 +42,21 @@
     .btn-buy-custom { border-radius: 30px; border: 1px solid #111; background-color: #111; color: #fff; transition: all 0.2s; margin-top: 10px; width: 100%; }
     .btn-buy-custom:hover { background-color: #333; border-color: #111 !important; color: #fff; }
     
+    /* [안전 장치 추가] 에디터로 등록된 이미지가 영역을 벗어나지 않도록 제어 */
+    .product-info-content img {
+        max-width: 100%;
+        height: auto;
+    }
+
+    /* 품절(비활성) 상태의 사이즈 버튼 스타일 추가 */
+    input[type="radio"]:disabled + .size-btn {
+        color: #ddd !important;
+        border-color: #f0f0f0 !important;
+        background-color: #fbfbfb !important;
+        cursor: not-allowed !important;
+        text-decoration: line-through; /* 취소선 효과 */
+    }
+
     /* ==========================================================================
        [NEW] Review CSS Style (사진 2배 확대, 레이아웃 밀림 적용, 간격 최소화)
        ========================================================================== */
@@ -178,6 +193,7 @@
 				<div class="tab-content" id="myTabContent">
 					<div class="tab-pane fade show active" id="info-pane" role="tabpanel">
 						<div class="product-info-content">
+                            <!-- 스마트 에디터 데이터 출력 (HTML 해석) -->
 							<c:out value="${dto.description}" escapeXml="false" />
                             
 							<c:if test="${empty dto.description}">
@@ -290,16 +306,42 @@
 							<a href="#" class="text-decoration-underline text-muted" style="font-size:0.8rem;">사이즈 가이드</a>
 						</div>
 						<div class="size-grid">
-                            <!-- [수정] DB 연동: sizeList 사용 (ProductDTO의 필드명 optId, prodSize, stockQty) -->
-							<c:forEach var="size" items="${sizeList}">
+                            <!-- [수정됨] 220~320 전체 사이즈 루프 및 재고 매칭 -->
+							<c:set var="stdSizes" value="220,225,230,235,240,245,250,255,260,265,270,275,280,285,290,295,300,305,310,315,320"/>
+							<c:forTokens items="${stdSizes}" delims="," var="stdSize">
+                                <c:set var="targetOptId" value=""/>
+                                <c:set var="targetStock" value="-1"/>
+                                <c:set var="isFound" value="false"/>
+                                
+                                <!-- DB sizeList와 현재 표준 사이즈(stdSize) 비교 -->
+                                <c:forEach var="dbSize" items="${sizeList}">
+                                    <c:if test="${dbSize.prodSize eq stdSize}">
+                                        <c:set var="targetOptId" value="${dbSize.optId}"/>
+                                        <c:set var="targetStock" value="${dbSize.stockQty}"/>
+                                        <c:set var="isFound" value="true"/>
+                                    </c:if>
+                                </c:forEach>
+                                
 								<div class="size-item">
-                                    <input type="radio" name="optionDetailNum" id="size_${size.optId}" value="${size.optId}" ${size.stockQty <= 0 ? 'disabled' : ''}>
-                                    <label for="size_${size.optId}" class="size-btn">${size.prodSize}</label>
+									<c:choose>
+                                        <%-- 1. DB에 존재하고 재고가 있는 경우 --%>
+										<c:when test="${isFound && targetStock > 0}">
+											<input type="radio" name="optionDetailNum" id="size_${targetOptId}" value="${targetOptId}">
+											<label for="size_${targetOptId}" class="size-btn">${stdSize}</label>
+										</c:when>
+                                        <%-- 2. DB에 존재하지만 재고가 없는 경우 --%>
+                                        <c:when test="${isFound && targetStock <= 0}">
+                                            <input type="radio" name="optionDetailNum" id="size_${targetOptId}" value="${targetOptId}" disabled>
+                                            <label for="size_${targetOptId}" class="size-btn">${stdSize}</label>
+                                        </c:when>
+                                        <%-- 3. DB에 아예 없는 경우 (품절 취급) --%>
+										<c:otherwise>
+											<input type="radio" name="optionDetailNum" id="size_null_${stdSize}" value="" disabled>
+											<label for="size_null_${stdSize}" class="size-btn">${stdSize}</label>
+										</c:otherwise>
+									</c:choose>
 								</div>
-							</c:forEach>
-                            <c:if test="${empty sizeList}">
-                                <p class="text-muted small">선택 가능한 옵션이 없습니다.</p>
-                            </c:if>
+							</c:forTokens>
 						</div>
 					</div>
 
