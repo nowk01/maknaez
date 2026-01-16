@@ -43,4 +43,4 @@
 	
 	
 	<%-- list에서 이미지 뽑아오기 --%>
-	<c:set var="uploadPath" value="${pageContext.request.contextPath}/uploads" scope="request"/>
+	<c:set var="uploadPath" value="${pageContext.request.contextPath}/uploads/product" scope="request"/>

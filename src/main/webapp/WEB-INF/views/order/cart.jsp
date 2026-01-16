@@ -385,7 +385,7 @@
                                     <div class="prd-info">
                                         <div class="prd-img">
                                             <!-- 이미지 경로: uploads/파일명 (없으면 대체 이미지) -->
-                                            <img src="${pageContext.request.contextPath}/uploads/${dto.prodImg}" 
+                                            <img src="${pageContext.request.contextPath}/uploads/product/${dto.prodImg}" 
                                                  alt="${dto.prodName}"
                                                  onerror="this.src='https://placehold.co/110x110/f4f4f4/aaa?text=No+Image'">
                                         </div>

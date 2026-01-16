@@ -162,7 +162,7 @@
 
     <form name="paymentForm" id="paymentForm">
         <!-- 서버 전송용 Hidden Data -->
-        <input type="hidden" name="prod_id" value="${product.productNo}">
+        <input type="hidden" name="prod_id" value="${product.prodId}">
         <input type="hidden" name="quantity" value="${quantity}">
         <input type="hidden" name="total_amount" value="${totalPrice}">
 
