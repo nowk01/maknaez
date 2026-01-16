@@ -68,9 +68,7 @@ public class MyPageController {
 
 		try {
 			String page = req.getParameter("page");
-			int current_page = 1;
-			if (page != null)
-				current_page = Integer.parseInt(page);
+			int current_page = (page != null) ? Integer.parseInt(page) : 1;
 
 			Map<String, Object> map = new HashMap<>();
 			map.put("memberIdx", info.getMemberIdx());
@@ -112,7 +110,7 @@ public class MyPageController {
 		return mav;
 	}
 
-	// 3. 취소/반품 내역
+	// 3. 취소/반품 내역 (취소처리중/취소완료/반품진행중/환불완료 중심)
 	@GetMapping("cancelList")
 	public ModelAndView cancelList(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
@@ -127,9 +125,7 @@ public class MyPageController {
 
 		try {
 			String page = req.getParameter("page");
-			int current_page = 1;
-			if (page != null)
-				current_page = Integer.parseInt(page);
+			int current_page = (page != null) ? Integer.parseInt(page) : 1;
 
 			Map<String, Object> map = new HashMap<>();
 			map.put("memberIdx", info.getMemberIdx());
@@ -137,13 +133,14 @@ public class MyPageController {
 
 			int dataCount = mapper.dataCount(map);
 
+			// 상단 탭 카운트 (DB와 동일하게 문자열 수정)
 			map.put("orderState", "취소완료");
 			int cancelCount = mapper.dataCount(map);
-			map.put("orderState", "반품신청");
-			int returnCheckCount = mapper.dataCount(map);
-			map.put("orderState", "반품중");
+			map.put("orderState", "취소처리중");
+			int cancelIngCount = mapper.dataCount(map);
+			map.put("orderState", "반품진행중");
 			int returnIngCount = mapper.dataCount(map);
-			map.put("orderState", "반품완료");
+			map.put("orderState", "환불완료");
 			int returnDoneCount = mapper.dataCount(map);
 			map.remove("orderState");
 
@@ -165,7 +162,7 @@ public class MyPageController {
 			mav.addObject("dataCount", dataCount);
 			mav.addObject("paging", paging);
 			mav.addObject("cancelCount", cancelCount);
-			mav.addObject("returnCheckCount", returnCheckCount);
+			mav.addObject("cancelIngCount", cancelIngCount);
 			mav.addObject("returnIngCount", returnIngCount);
 			mav.addObject("returnDoneCount", returnDoneCount);
 
@@ -225,7 +222,7 @@ public class MyPageController {
 		} catch (NumberFormatException e) {
 		}
 
-		int rows = 20; 
+		int rows = 20;
 		int total_page = 0;
 		int dataCount = 0;
 
@@ -336,20 +333,22 @@ public class MyPageController {
 
 	// 8. 배송지 관리 목록
 	@GetMapping("addr")
-    public ModelAndView addressList(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        HttpSession session = req.getSession();
-        SessionInfo info = (SessionInfo) session.getAttribute("member");
-        if (info == null) return new ModelAndView("redirect:/member/login");
+	public ModelAndView addressList(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException {
+		HttpSession session = req.getSession();
+		SessionInfo info = (SessionInfo) session.getAttribute("member");
+		if (info == null)
+			return new ModelAndView("redirect:/member/login");
 
-        ModelAndView mav = new ModelAndView("mypage/addr");
-        try {
-            List<AddressDTO> list = service.listAddress(info.getMemberIdx());
-            mav.addObject("list", list);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return mav;
-    }
+		ModelAndView mav = new ModelAndView("mypage/addr");
+		try {
+			List<AddressDTO> list = service.listAddress(info.getMemberIdx());
+			mav.addObject("list", list);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return mav;
+	}
 
 	// 9. 배송지 추가
 	@PostMapping("addr/write")
@@ -482,6 +481,7 @@ public class MyPageController {
 		return mav;
 	}
 
+	// 13. 회원 등급
 	@GetMapping("/level_benefit")
 	public ModelAndView levelBenefit(HttpServletRequest req, HttpServletResponse resp) {
 		HttpSession session = req.getSession();
@@ -490,59 +490,65 @@ public class MyPageController {
 		}
 		return new ModelAndView("mypage/level_benefit"); // 뷰 이름 추가
 	}
-	
-	// 13. 취소/교환 신청 폼 이동
-		@GetMapping("claimForm")
-		public ModelAndView claimForm(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-			HttpSession session = req.getSession();
-			SessionInfo info = (SessionInfo) session.getAttribute("member");
-			if (info == null) return new ModelAndView("redirect:/member/login");
 
-			ModelAndView mav = new ModelAndView("order/claimForm"); // WEB-INF/views/order/claimForm.jsp
-			
-			// JSP에서 사용할 파라미터 전달 (order_id, image 등)
-			mav.addObject("order_id", req.getParameter("order_id"));
-			mav.addObject("image", req.getParameter("image"));
-			
-			return mav;
-		}
+	// 14. 취소/반품 신청 폼 이동
+	@GetMapping("claimForm")
+	public ModelAndView claimForm(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException {
+		HttpSession session = req.getSession();
+		SessionInfo info = (SessionInfo) session.getAttribute("member");
+		if (info == null)
+			return new ModelAndView("redirect:/member/login");
 
-		// 14. 취소/교환 신청 처리 (POST)
-		@PostMapping("claimRequest")
-		public ModelAndView claimRequest(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-			HttpSession session = req.getSession();
-			SessionInfo info = (SessionInfo) session.getAttribute("member");
-			if (info == null) return new ModelAndView("redirect:/member/login");
+		ModelAndView mav = new ModelAndView("order/claimForm");
+		mav.addObject("order_id", req.getParameter("order_id"));
+		mav.addObject("image", req.getParameter("image"));
+		mav.addObject("type", req.getParameter("type"));
 
-			try {
-				// 파라미터 수집
-				String orderId = req.getParameter("order_id");
-				String type = req.getParameter("type"); // CANCEL 또는 EXCH
-				String reasonCategory = req.getParameter("reason_category");
-				String reasonDetail = req.getParameter("reason");
-				String fullReason = "[" + reasonCategory + "] " + reasonDetail;
+		return mav;
+	}
 
-				// 콘솔 확인
-				System.out.println("----- 클레임 신청 접수 -----");
-				System.out.println("주문번호: " + orderId);
-				System.out.println("유형: " + type);
-				System.out.println("사유: " + fullReason);
+	// 15. 취소/반품 신청 처리
+	@PostMapping("claimRequest")
+	public ModelAndView claimRequest(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException {
+		HttpSession session = req.getSession();
+		SessionInfo info = (SessionInfo) session.getAttribute("member");
+		if (info == null)
+			return new ModelAndView("redirect:/member/login");
 
-				/*
-				   [추후 DB 연동 시]
-				   OrderMapper mapper = MapperContainer.get(OrderMapper.class);
-				   Map<String, Object> map = new HashMap<>();
-				   map.put("orderId", orderId);
-				   map.put("type", type);
-				   map.put("reason", fullReason);
-				   // mapper.insertClaim(map);  <-- 클레임 테이블 INSERT
-				   // mapper.updateOrderState(map); <-- 주문 상태 UPDATE
-				*/
+		OrderMapper mapper = MapperContainer.get(OrderMapper.class);
 
-			} catch (Exception e) {
-				e.printStackTrace();
+		try {
+			String orderId = req.getParameter("order_id");
+			String type = req.getParameter("type"); // CANCEL 또는 REFUND
+			String reasonCategory = req.getParameter("reason_category");
+			String reasonDetail = req.getParameter("reason");
+			String fullReason = "[" + reasonCategory + "] " + reasonDetail;
+
+			Map<String, Object> map = new HashMap<>();
+			map.put("orderId", orderId);
+			map.put("reason", fullReason);
+			map.put("claimStatus", "접수");
+
+			if ("CANCEL".equals(type)) {
+				map.put("orderState", "취소처리중");
+				map.put("claimType", "취소");
+			} else if ("REFUND".equals(type)) {
+				map.put("orderState", "반품진행중");
+				map.put("claimType", "환불");
 			}
 
-			return new ModelAndView("redirect:/member/mypage/orderList");
+			mapper.updateOrderState(map);
+
+			mapper.insertClaim(map);
+
+			System.out.println("----- 클레임 접수 완료: " + orderId + " -----");
+
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
+
+		return new ModelAndView("redirect:/member/mypage/cancelList");
+	}
 }

@@ -195,7 +195,7 @@ CREATE TABLE orders (
     total_amount        NUMBER          NULL,       -- 할인 전 총액
     real_total_amount   NUMBER          NULL,       -- 실 결제 금액
     point               NUMBER          NULL,       -- 사용 포인트
-    status              VARCHAR2(20)    NULL,       -- 주문상태 (결제완료, 배송중, 취소, 환불 )
+    status              VARCHAR2(50)    NULL,       -- 주문상태 (결제완료, 배송중, 배송완료, 구매확정, 취소처리중, 취소완료, 반품진행중, 환불완료)
     delivery_number     NUMBER          NULL        -- FK: shipments.delivery_number(송장번호) 
 );
 
