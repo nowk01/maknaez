@@ -222,5 +222,53 @@ public class ProductServiceImpl implements ProductService {
 	        throw e;
 	    }
 	}
+	
+	// 장바구니
+	@Override
+    public ProductDTO findById(long prod_id) {
+        return mapper.findById(prod_id);
+    }
+
+    @Override
+    public List<ProductDTO> listProductSizes(long prod_id) {
+        try {
+            return mapper.listProductSize(prod_id);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e;
+        }
+    }
+
+
+    @Override
+    public int getOptionStock(long optId) {
+        return mapper.getOptionStock(optId);
+    }
+    
+
+    @Override
+    public void reserveStock(long optId, int quantity) throws Exception {
+        Map<String, Object> map = new HashMap<>();
+        map.put("opt_id", optId);
+        map.put("quantity", -quantity); // 차감을 위해 음수 전달
+        map.put("remarks", "BUY_NOW_RESERVATION");
+        
+        mapper.insertStockLog(map);
+    }
+
+	@Override
+	public void insertStockLog(Map<String, Object> map) throws Exception {
+		mapper.insertStockLog(map);
+	}
+	
+	@Override
+    public void updateProduct(ProductDTO dto) throws Exception {
+        try {
+            mapper.updateProduct(dto);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e;
+        }
+    }
 
 }
