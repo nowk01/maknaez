@@ -21,7 +21,6 @@
 
     <aside class="sidebar">
         <h2>마이페이지</h2>
-
         <div class="menu-group">
             <span class="menu-title">구매내역</span>
             <ul>
@@ -29,7 +28,6 @@
                 <li><a href="${pageContext.request.contextPath}/member/mypage/cancelList">취소상품조회</a></li>
             </ul>
         </div>
-
         <div class="menu-group">
             <span class="menu-title">혜택내역</span>
             <ul>
@@ -37,14 +35,12 @@
                 <li><a href="${pageContext.request.contextPath}/member/mypage/membership">포인트/쿠폰</a></li>
             </ul>
         </div>
-
         <div class="menu-group">
             <span class="menu-title">상품내역</span>
             <ul>
                 <li><a href="${pageContext.request.contextPath}/member/mypage/wishList" class="active">관심 상품</a></li>
             </ul>
         </div>
-
         <div class="menu-group">
     		<span class="menu-title">회원정보</span>
     			<ul>
@@ -53,7 +49,6 @@
         			<li><a href="${pageContext.request.contextPath}/member/mypage/level_benefit">회원등급</a></li>
     			</ul>
 		</div>
-        
         <div class="menu-group">
              <ul>
                 <li><a href="${pageContext.request.contextPath}/member/logout" style="color:#999;">로그아웃</a></li>
@@ -83,7 +78,7 @@
                 <c:if test="${not empty list}">
                     <div class="as-wishlist__products">
                         <c:forEach var="dto" items="${list}">
-                            <div class="as-wishlist__productItem">
+                            <div class="as-wishlist__productItem" id="wish-item-${dto.prodId}">
                                 <div class="as-wishlist__productImageWrap">
                                     <div class="as-wishlist__productImageInnerWrap">
                                         <a href="${pageContext.request.contextPath}/product/detail?prod_id=${dto.prodId}" class="as-wishlist__productLink">
@@ -93,7 +88,7 @@
                                                  onerror="this.src='https://placehold.co/500x500?text=No+Image'">
                                         </a>
 
-                                        <div class="as-wishlist__iconContainer" onclick="deleteWish('${dto.prodId}')">
+                                        <div class="as-wishlist__iconContainer" onclick="deleteWish('${dto.prodId}')" style="cursor:pointer;">
                                             <div class="as-wishlist__icons">
                                                 <div class="as-wishlist__icon">
                                                     <svg class="as-icon as-icon--fill-heart" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -124,12 +119,15 @@
     </main>
 </div>
 
+<div id="toast-notification">ITEM REMOVED</div>
+
 <jsp:include page="/WEB-INF/views/layout/footer.jsp" />
 <jsp:include page="/WEB-INF/views/layout/footerResources.jsp" />
 
 <script>
+    // [수정 3] deleteWish 함수 로직 변경 (기존 이름 유지)
     function deleteWish(prodId) {
-        if(!confirm("관심 상품에서 삭제하시겠습니까?")) return;
+        // confirm 창 제거 (쿨하게 바로 실행)
         
         $.ajax({
             type: "POST",
@@ -138,54 +136,81 @@
             dataType: "json",
             success: function(data) {
                 if(data.state === "false") {
-                    location.reload();
+                    // 1. 토스트 메시지 표시
+                    showToast("ITEM REMOVED");
+                    
+                    // 2. 해당 상품 박스만 부드럽게 삭제
+                    const item = document.getElementById("wish-item-" + prodId);
+                    if(item) {
+                        item.classList.add('wish-item-removing'); // CSS 애니메이션 시작
+                        
+                        setTimeout(() => {
+                            item.remove(); // 0.4초 후 DOM 제거
+                            
+                            // 목록이 다 지워졌으면 새로고침(빈 화면 표시 위해)
+                            if(document.querySelectorAll('.as-wishlist__productItem').length === 0) {
+                                location.reload();
+                            }
+                        }, 400);
+                    } else {
+                        // 혹시 DOM을 못 찾으면 그냥 새로고침
+                        location.reload();
+                    }
                 } else if(data.state === "true") {
-                    alert("처리되었습니다.");
-                    location.reload();
+                	// 찜 추가된 경우 (혹시 모를 상황)
+                    showToast("ADDED TO WISHLIST");
+                    setTimeout(() => location.reload(), 1000);
                 } else if(data.state === "login_required") {
                 	alert("로그인이 필요합니다.");
                 	location.href = "${pageContext.request.contextPath}/member/login";
                 } else {
-                    alert("오류가 발생했습니다. 다시 시도해주세요.");
+                    showToast("ERROR");
                 }
             },
             error: function(e) {
                 console.log(e);
-                alert("서버 통신 중 오류가 발생했습니다.");
+                showToast("SYSTEM ERROR");
             }
         });
+    }
+
+    // 토스트 메시지 표시 헬퍼 함수
+    function showToast(message) {
+        const toast = document.getElementById("toast-notification");
+        if(toast) {
+            toast.innerText = message;
+            toast.classList.add("show");
+            setTimeout(function(){ 
+                toast.classList.remove("show"); 
+            }, 3000);
+        }
     }
 </script>
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {
-        // [1] 감시 설정
+        // 기존 스크롤 애니메이션 유지
         const observerOptions = {
             root: null,
             rootMargin: '0px',
-            threshold: 0.05 // 5%만 보여도 시작
+            threshold: 0.05 
         };
 
         const observer = new IntersectionObserver((entries, observer) => {
             entries.forEach((entry) => {
                 if (entry.isIntersecting) {
-                    // [2] 요소마다 delay 값을 읽어서 순차 적용
                     const delay = entry.target.getAttribute('data-delay') || 0;
-                    
                     setTimeout(() => {
                         entry.target.classList.add('is-visible');
                     }, delay);
-                    
                     observer.unobserve(entry.target);
                 }
             });
         }, observerOptions);
 
-        // [3] 애니메이션 대상 선정 (제목 -> 개수 -> 제품들 순서)
         const targets = document.querySelectorAll('.page-title, .as-wishlist__productCount, .as-wishlist__productItem');
         
         targets.forEach((target, index) => {
-            // 순서대로 0.05초씩 딜레이를 줘서 "따다닥" 뜨게 함
             target.setAttribute('data-delay', index * 50);
             observer.observe(target);
         });
