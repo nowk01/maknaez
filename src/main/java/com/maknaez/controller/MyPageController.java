@@ -24,6 +24,7 @@ import com.maknaez.service.MemberServiceImpl;
 import com.maknaez.service.PointService;
 import com.maknaez.service.PointServiceImpl;
 import com.maknaez.service.ProductService;
+import com.maknaez.service.ProductServiceImpl;
 import com.maknaez.service.WishlistService;
 import com.maknaez.service.WishlistServiceImpl;
 import com.maknaez.util.MyUtil;
@@ -37,26 +38,23 @@ import jakarta.servlet.http.HttpSession;
 @RequestMapping("/member/mypage")
 public class MyPageController {
 
-	// 서비스 객체 선언
 	private MemberService service;
 	private PointService pointService;
 	private WishlistService wishlistService;
 	private ProductService productService;
 
-	// [중요] 생성자에서 모든 서비스 수동 초기화 (스프링이 아니므로 new 사용)
 	public MyPageController() {
 		this.service = new MemberServiceImpl();
 		this.pointService = new PointServiceImpl();
 		this.wishlistService = new WishlistServiceImpl();
+		this.productService = new ProductServiceImpl();
 	}
 
-	// 1. 마이페이지 메인
 	@GetMapping("main.do")
 	public ModelAndView myPageMain(HttpServletRequest req, HttpServletResponse resp) {
 		return new ModelAndView("mypage/myMain");
 	}
 
-	// 2. 주문 내역 조회
 	@GetMapping("orderList")
 	public ModelAndView orderList(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
@@ -549,21 +547,10 @@ public class MyPageController {
 			return new ModelAndView("redirect:/member/mypage/orderList");
 		}
 		
-		// 생성자 수정 (ProductService 초기화 추가)
-	    /* public MyPageController() {
-	        this.service = new MemberServiceImpl();
-	        this.pointService = new PointServiceImpl();
-	        this.wishlistService = new WishlistServiceImpl();
-	        this.productService = new ProductServiceImpl(); // <--- 이거 꼭 추가해주세요!
-	    }
-	    */
-
-	    // 15. 최근 본 상품 목록 (프레임워크 스타일에 맞게 수정됨)
 	    @GetMapping("recent")
 	    public ModelAndView recentList(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 	        ModelAndView mav = new ModelAndView("mypage/recentList");
 	        
-	        // 1. 쿠키에서 최근 본 상품 ID 가져오기
 	        String recentProducts = "";
 	        jakarta.servlet.http.Cookie[] cookies = req.getCookies();
 	        if (cookies != null) {
@@ -572,14 +559,12 @@ public class MyPageController {
 	                    try {
 	                        recentProducts = java.net.URLDecoder.decode(c.getValue(), "UTF-8");
 	                    } catch (Exception e) {
-	                        // 디코딩 에러 무시
 	                    }
 	                    break;
 	                }
 	            }
 	        }
 
-	        // 2. ID 리스트로 변환 및 상품 조회
 	        List<ProductDTO> list = new java.util.ArrayList<>();
 	        if (!recentProducts.isEmpty()) {
 	            String[] ids = recentProducts.split(",");
@@ -590,16 +575,13 @@ public class MyPageController {
 	                }
 	            }
 	            
-	            // ProductService에 listProductByIds 메소드가 있어야 함
 	            if (!idList.isEmpty()) {
-	                // ProductServiceImpl 인스턴스가 생성자에 초기화되어 있어야 합니다.
-	                // 만약 productService가 null이면 생성자에서 new ProductServiceImpl() 했는지 확인하세요.
 	                list = productService.listProductByIds(idList);
 	            }
 	        }
 
 	        mav.addObject("list", list);
-	        mav.addObject("menuIndex", 99); // 사이드바 활성화용 (필요시)
+	        mav.addObject("menuIndex", 99); 
 	        
 	        return mav;
 	    }
