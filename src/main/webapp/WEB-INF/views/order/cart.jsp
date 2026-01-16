@@ -327,6 +327,10 @@
     }
     .empty-cart i { font-size: 60px; margin-bottom: 20px; display: block; }
 
+    /* [추가] 배송비 무료 스타일 */
+    .deli-free-tag { font-size: 14px; font-weight: 600; color: #000; }
+    .deli-strike { text-decoration: line-through; color: #bbb; margin-left: 5px; font-size: 15px; }
+
 </style>
 </head>
 <body>
@@ -384,7 +388,7 @@
                                 <td class="td-product">
                                     <div class="prd-info">
                                         <div class="prd-img">
-                                            <!-- 이미지 경로: uploads/파일명 (없으면 대체 이미지) -->
+                                            <!-- [수정됨] 이미지 경로: uploads/product/파일명 -->
                                             <img src="${pageContext.request.contextPath}/uploads/product/${dto.prodImg}" 
                                                  alt="${dto.prodName}"
                                                  onerror="this.src='https://placehold.co/110x110/f4f4f4/aaa?text=No+Image'">
@@ -410,7 +414,11 @@
                                         <fmt:formatNumber value="${dto.prodPrice * dto.quantity}" pattern="#,###"/>원
                                     </div>
                                 </td>
-                                <td><div class="deli-txt">무료배송</div></td>
+                                <td>
+                                    <div class="deli-txt">
+                                        <span class="deli-free-tag">무료배송</span>
+                                    </div>
+                                </td>
                                 <td>
                                     <button type="button" class="btn btn-black" onclick="location.href='${pageContext.request.contextPath}/order/payment?cartIds=${dto.cartId}'">주문하기</button>
                                     <button type="button" class="btn btn-line" onclick="deleteItem(${dto.cartId})">삭제</button>
@@ -432,7 +440,9 @@
         <div class="summary-area">
             <div class="sum-row delivery">
                 <span class="lbl">배송비</span>
-                <span class="val"><span id="res-deli">0</span>원</span>
+                <span class="val">
+                    <span class="deli-strike">0원</span> Maknaez 에서는 배송비가 무료 ! 
+                </span>
             </div>
             <div class="sum-row total">
                 <span class="lbl">결제 예정 금액 <span class="count">[총 <span id="res-count">${count}</span>건]</span></span>
@@ -513,22 +523,21 @@ $(function(){
 
 function updateTotal() {
     let sumProd = 0;
-    let sumDeli = 0;
+    let sumDeli = 0; // 항상 0
     let count = 0;
 
     $(".chk-item:checked").each(function(){
         let $row = $(this).closest("tr");
         let qty = parseInt($row.find(".qty-input").val());
         let price = parseInt($row.data("price"));
-        let deli = parseInt($row.data("deli"));
+        // let deli = parseInt($row.data("deli")); // 배송비 계산 제거
 
         sumProd += price * qty;
-        sumDeli += deli; 
         count++;
     });
 
-    $("#res-deli").text(sumDeli.toLocaleString());
-    $("#res-total").text((sumProd + sumDeli).toLocaleString());
+    // 배송비는 항상 0원이므로 업데이트 불필요 (HTML에 고정)
+    $("#res-total").text(sumProd.toLocaleString());
     $("#res-count").text(count);
 }
 
