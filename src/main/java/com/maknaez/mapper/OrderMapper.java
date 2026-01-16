@@ -17,4 +17,7 @@ public interface OrderMapper {
     public void insertOrderItem(OrderItemDTO dto) throws SQLException; // 2. 주문 상세 테이블 저장 (상품별)
     public void insertPayment(OrderDTO dto) throws SQLException; // 3. 결제 테이블 저장
     public void updateStock(OrderItemDTO dto) throws SQLException; // 재고 감소
+    public void updateOrderState(Map<String, Object> map) throws SQLException;
+    public void insertClaim(Map<String, Object> map) throws SQLException;
+    public Map<String, Object> findByIdClaim(String orderId) throws SQLException;
 }
