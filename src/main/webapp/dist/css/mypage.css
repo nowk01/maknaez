@@ -290,6 +290,47 @@
 .btn-basic { padding: 8px 16px; border: 1px solid #ccc; background: #fff; font-size: 13px; cursor: pointer; border-radius: 4px; }
 .btn-basic:hover { background: #f9f9f9; }
 
+.mypage-container .buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 120px;
+}
+
+.mypage-container .btn-sm {
+    display: block;
+    width: 100%;
+    padding: 10px 0;
+    font-size: 12px;
+    font-weight: 500;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    border-radius: 0;
+    letter-spacing: -0.2px;
+}
+
+.mypage-container .btn-black {
+    background-color: #000;
+    color: #fff;
+    border: 1px solid #000;
+}
+
+.mypage-container .btn-black:hover {
+    background-color: #333;
+}
+
+.mypage-container .btn-outline {
+    background-color: #fff;
+    color: #000;
+    border: 1px solid #d0d0d0;
+}
+
+.mypage-container .btn-outline:hover {
+    background-color: #f8f8f8;
+    border-color: #000;
+}
+
 .no-data-msg { padding: 80px 0; text-align: center; color: #666; font-size: 14px; font-weight: 500; border-bottom: 1px solid #eee; }
 .page-navigation { margin-top: 30px; text-align: center; }
 
