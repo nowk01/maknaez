@@ -201,6 +201,16 @@ public class ProductManageController {
     }
 	    
 	   
+	@GetMapping("product_write")
+	public ModelAndView productWriteForm(HttpServletRequest req, HttpServletResponse resp) throws Exception {
+	    // [변경] listCategory() -> listCategorySelect() 호출
+	    List<CategoryDTO> list = service.listCategorySelect();
+	    
+	    ModelAndView mav = new ModelAndView("admin/product/product_write");
+	    mav.addObject("categoryList", list);
+	    return mav;
+	}
+	
 	
 	@PostMapping("writeSubmit")
 	public String writeSubmit(HttpServletRequest req, HttpServletResponse resp) { // 인자를 2개로 수정
