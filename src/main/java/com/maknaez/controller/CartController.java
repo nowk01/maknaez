@@ -1,7 +1,10 @@
 package com.maknaez.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -11,71 +14,142 @@ import com.maknaez.model.SessionInfo;
 import com.maknaez.mvc.annotation.Controller;
 import com.maknaez.mvc.annotation.RequestMapping;
 import com.maknaez.mvc.annotation.RequestMethod;
-import com.maknaez.mvc.annotation.PostMapping;
 import com.maknaez.mvc.annotation.ResponseBody;
 import com.maknaez.mvc.view.ModelAndView;
-import com.maknaez.service.ProductService;
-import com.maknaez.service.ProductServiceImpl;
-import com.maknaez.mybatis.support.SqlSessionManager;
+import com.maknaez.service.CartService;
+import com.maknaez.service.CartServiceImpl;
 
 @Controller
-@RequestMapping("/order") 
 public class CartController {
+    
+    private CartService service = new CartServiceImpl();
 
-    private ProductService productService = new ProductServiceImpl();
-
-    // 1. 장바구니 페이지 이동
-    @RequestMapping(value = "/cart", method = RequestMethod.GET)
-    public ModelAndView cartList(HttpServletRequest req, HttpServletResponse resp) {
+    // 1. 장바구니 담기 (Ajax)
+    @ResponseBody
+    @RequestMapping(value = "/cart/insert", method = RequestMethod.POST)
+    public Map<String, Object> insert(HttpServletRequest req, HttpServletResponse resp) {
+        Map<String, Object> model = new HashMap<>();
         HttpSession session = req.getSession();
         SessionInfo info = (SessionInfo) session.getAttribute("member");
-        if (info == null) {
-            return new ModelAndView("redirect:/member/login");
-        }
-        return new ModelAndView("order/cart");
-    }
 
-    // 2. 장바구니 담기 Ajax 처리 (재고 체크 및 중복 확인 로직 통합)
-    @PostMapping("/cart/insert")
-    @ResponseBody
-    public Map<String, Object> insertCart(CartDTO dto, HttpSession session) {
-        Map<String, Object> model = new HashMap<>();
-        SessionInfo info = (SessionInfo) session.getAttribute("member");
-        
         if (info == null) {
-            model.put("state", "login_required");
+            model.put("status", "login_required");
             return model;
         }
 
         try {
-            // [데이터 세팅] 세션에서 로그인한 사용자의 고유 번호(memberIdx)를 가져옴
-            dto.setMemberIdx(info.getMemberIdx());
-
-            // 1. 실시간 재고 확인 (productService에 getOptionStock 메서드가 구현되어 있어야 함)
-            // optId를 기준으로 stock_logs의 합계를 가져옵니다.
-            int currentStock = productService.getOptionStock(dto.getOptId());
-            if (currentStock < dto.getQuantity()) {
-                model.put("state", "false");
-                model.put("message", "재고가 부족합니다. (현재 재고: " + currentStock + "개)");
-                return model;
-            }
-
-            // 2. 장바구니 중복 체크 (Canvas에 있는 CartMapper.xml의 checkExistingCart 호출)
-            Integer existingCount = SqlSessionManager.getSession().selectOne("com.maknaez.mapper.CartMapper.checkExistingCart", dto);
+            long prodId = Long.parseLong(req.getParameter("prodId"));
+            // optId 파라미터 처리 (옵션이 없는 경우 0 또는 예외처리)
+            String optIdStr = req.getParameter("optId");
+            long optId = (optIdStr != null && !optIdStr.isEmpty()) ? Long.parseLong(optIdStr) : 0; 
             
-            if (existingCount != null && existingCount > 0) {
-                // 이미 존재하면 수량 업데이트
-                SqlSessionManager.getSession().update("com.maknaez.mapper.CartMapper.updateCartQuantity", dto);
-            } else {
-                // 존재하지 않으면 신규 추가
-                SqlSessionManager.getSession().insert("com.maknaez.mapper.CartMapper.insertCart", dto);
-            }
+            int quantity = Integer.parseInt(req.getParameter("quantity"));
 
-            model.put("state", "true");
+            CartDTO dto = new CartDTO();
+            dto.setMemberIdx(info.getMemberIdx());
+            dto.setProdId(prodId);
+            dto.setOptId(optId);
+            dto.setQuantity(quantity);
+
+            service.insertCart(dto);
+
+            model.put("status", "success");
         } catch (Exception e) {
             e.printStackTrace();
-            model.put("state", "error");
-            model.put("message", "장바구니 담기 중 시스템 오류가 발생했습니다.");
+            model.put("status", "fail");
+            model.put("message", e.getMessage());
+        }
+
+        return model;
+    }
+
+    // 2. 장바구니 목록 페이지 (URL 수정: /cart/list -> /order/cart)
+    // 에러 원인 해결: 사용자가 접근하는 URL(/order/cart)과 매핑을 일치시킴
+    @RequestMapping(value = "/order/cart", method = RequestMethod.GET)
+    public ModelAndView list(HttpServletRequest req, HttpServletResponse resp) {
+        // View 경로: /WEB-INF/views/order/cart.jsp
+        ModelAndView mav = new ModelAndView("order/cart");
+        
+        HttpSession session = req.getSession();
+        SessionInfo info = (SessionInfo) session.getAttribute("member");
+
+        // 비로그인 상태면 로그인 페이지로 리다이렉트
+        if (info == null) {
+            return new ModelAndView("redirect:/member/login");
+        }
+
+        // 서비스 호출
+        List<CartDTO> list = service.listCart(info.getMemberIdx());
+        
+        // 총 금액 계산
+        int totalProdPrice = 0;
+        if(list != null) {
+            for(CartDTO dto : list) {
+                totalProdPrice += (dto.getProdPrice() * dto.getQuantity());
+            }
+        }
+
+        // JSP로 데이터 전달
+        mav.addObject("list", list);
+        mav.addObject("count", list != null ? list.size() : 0);
+        mav.addObject("totalProdPrice", totalProdPrice);
+        mav.addObject("deliveryFee", 0); // 무료배송
+
+        return mav;
+    }
+    
+    // 3. 장바구니 삭제 (Ajax)
+    @ResponseBody
+    @RequestMapping(value = "/cart/delete", method = RequestMethod.POST)
+    public Map<String, Object> delete(HttpServletRequest req, HttpServletResponse resp) {
+        Map<String, Object> model = new HashMap<>();
+        HttpSession session = req.getSession();
+        SessionInfo info = (SessionInfo) session.getAttribute("member");
+        
+        if (info == null) {
+            model.put("status", "login_required");
+            return model;
+        }
+        
+        try {
+            String[] ids = req.getParameterValues("cartIds[]"); // 배열 형태
+            if(ids == null) {
+                String id = req.getParameter("cartId"); // 단일 값
+                if(id != null) ids = new String[]{id};
+            }
+            
+            if(ids != null && ids.length > 0) {
+                List<Long> list = new ArrayList<>();
+                for(String s : ids) {
+                    list.add(Long.parseLong(s));
+                }
+                service.deleteCart(list);
+            }
+            
+            model.put("status", "success");
+        } catch (Exception e) {
+            e.printStackTrace();
+            model.put("status", "fail");
+        }
+        
+        return model;
+    }
+    
+    // 4. 수량 변경 (Ajax)
+    @ResponseBody
+    @RequestMapping(value = "/cart/updateQty", method = RequestMethod.POST)
+    public Map<String, Object> updateQty(HttpServletRequest req, HttpServletResponse resp) {
+        Map<String, Object> model = new HashMap<>();
+        
+        try {
+            long cartId = Long.parseLong(req.getParameter("cartId"));
+            int quantity = Integer.parseInt(req.getParameter("quantity"));
+            
+            service.updateQuantity(cartId, quantity);
+            model.put("status", "success");
+        } catch (Exception e) {
+            e.printStackTrace();
+            model.put("status", "fail");
         }
         
         return model;

@@ -3,26 +3,16 @@
 
 <mapper namespace="com.maknaez.mapper.CartMapper">
 
-    <!-- 장바구니 추가: DDL의 CART_ID, MEMBERIDX, OPT_ID 반영 -->
+    <!-- 장바구니 추가 -->
     <insert id="insertCart" parameterType="com.maknaez.model.CartDTO">
         INSERT INTO cart (
-            cart_id, 
-            memberIdx, 
-            prod_id, 
-            opt_id, 
-            quantity, 
-            reg_date
+            cart_id, memberIdx, prod_id, opt_id, quantity, reg_date
         ) VALUES (
-            cart_seq.NEXTVAL, 
-            #{memberIdx}, 
-            #{prodId}, 
-            #{optId}, 
-            #{quantity}, 
-            SYSDATE
+            cart_seq.NEXTVAL, #{memberIdx}, #{prodId}, #{optId}, #{quantity}, SYSDATE
         )
     </insert>
 
-    <!-- 중복 확인: MEMBERIDX와 OPT_ID로 체크 -->
+    <!-- 중복 확인 -->
     <select id="checkExistingCart" parameterType="com.maknaez.model.CartDTO" resultType="Integer">
         SELECT NVL(SUM(quantity), 0)
         FROM cart
@@ -33,11 +23,47 @@
 
     <!-- 수량 업데이트 -->
     <update id="updateCartQuantity" parameterType="com.maknaez.model.CartDTO">
-        UPDATE cart 
+        UPDATE cart
         SET quantity = quantity + #{quantity}
         WHERE memberIdx = #{memberIdx} 
           AND prod_id = #{prodId} 
           AND opt_id = #{optId}
     </update>
+    
+    <!-- 수량 변경 (장바구니 페이지용) -->
+    <update id="editCartQuantity" parameterType="com.maknaez.model.CartDTO">
+        UPDATE cart
+        SET quantity = #{quantity}
+        WHERE cart_id = #{cartId}
+    </update>
+
+    <!-- 장바구니 목록 조회 (컬럼명 수정 완료) -->
+    <select id="listCart" parameterType="long" resultType="com.maknaez.model.CartDTO">
+        SELECT 
+            c.cart_id AS cartId,
+            c.memberIdx,
+            c.prod_id AS prodId,
+            c.opt_id AS optId,
+            c.quantity,
+            TO_CHAR(c.reg_date, 'YYYY-MM-DD') AS regDate,
+            p.PROD_NAME AS prodName,
+            p.BASE_PRICE AS prodPrice,   <!-- DDL 기준: BASE_PRICE -->
+            p.THUMB_NAIL AS prodImg,     <!-- DDL 기준: THUMB_NAIL -->
+            s.PD_SIZE AS sizeValue
+        FROM cart c
+        JOIN PRODUCTS p ON c.prod_id = p.prod_id
+        LEFT JOIN PD_SIZE s ON c.opt_id = s.opt_id
+        WHERE c.memberIdx = #{memberIdx}
+        ORDER BY c.cart_id DESC
+    </select>
+
+    <!-- 장바구니 삭제 -->
+    <delete id="deleteCart" parameterType="java.util.List">
+        DELETE FROM cart
+        WHERE cart_id IN
+        <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
 
 </mapper>
