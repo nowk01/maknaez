@@ -160,4 +160,33 @@ public class ProductDTO {
         }
         return price;
     }
+    
+
+    // 
+    private long opt_id;       // 사이즈 옵션 고유 번호
+    private String size_name;  // 사이즈 명칭 (S, M, L 등)
+    private int stock_count;   // stock_logs를 통해 계산된 실시간 재고량
+
+    public long getOpt_id() { return opt_id; }
+    public void setOpt_id(long opt_id) { this.opt_id = opt_id; }
+
+    public String getSize_name() { return size_name; }
+    public void setSize_name(String size_name) { this.size_name = size_name; }
+
+    public int getStock_count() { return stock_count; }
+    public void setStock_count(int stock_count) { this.stock_count = stock_count; }
+    
+    
+
+	private int status;       // 삭제 여부 (1:활성, 0:삭제)
+  
+    public int getStatus() {
+		return status;
+	}
+
+
+	public void setStatus(int status) {
+		this.status = status;
+	}
+    
 }
