@@ -338,7 +338,8 @@
                     p.cate_code    AS cateCode, 
                     p.prod_name    AS prodName, 
                     p.base_price   AS price, 
-                    p.is_displayed AS isDisplayed, 
+                    p.is_displayed AS isDisplayed,
+                    p.thumb_nail   AS thumbnail, 
                     p.prod_date    AS prodDate,
                     c.cate_name    AS cateName,
                     c.cate_parent  AS cateParent  FROM products p

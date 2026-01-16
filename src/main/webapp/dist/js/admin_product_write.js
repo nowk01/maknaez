@@ -96,31 +96,89 @@ document.addEventListener("DOMContentLoaded", function() {
     };
 });
 
+function previewImage(input, boxId) {
+    const box = document.getElementById(boxId);
+    
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        
+        reader.onload = function(e) {
+            // 1. 기존에 있던 이미지(서버에서 불러온 것 or 이전 미리보기) 모두 삭제
+            const oldImages = box.querySelectorAll('img');
+            oldImages.forEach(img => img.remove());
+            
+            // 2. 텍스트(span) 숨기기
+            const span = box.querySelector('span');
+            if(span) span.style.display = 'none';
+
+            // 3. 새 미리보기 이미지 생성
+            const newImg = document.createElement('img');
+            newImg.src = e.target.result;
+            newImg.style.width = '100%';
+            newImg.style.height = '100%';
+            newImg.style.objectFit = 'cover';
+            newImg.style.borderRadius = '8px';
+            
+            // input 뒤에 추가하지 않고 box에 append
+            box.appendChild(newImg);
+        };
+        
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
 function removeOptionRow(btn) {
     var row = btn.parentNode.parentNode;
     row.parentNode.removeChild(row);
 }
 
-// [4] 폼 전송 (에디터 내용 동기화 필수)
 function submitProduct() {
-    // 에디터의 내용을 textarea에 적용
+    // 1. 스마트 에디터 내용 동기화
     if(oEditors.length > 0 && oEditors.getById["prodDesc"]) {
         oEditors.getById["prodDesc"].exec("UPDATE_CONTENTS_FIELD", []);
     }
     
     const f = document.getElementById("productForm");
+    const mode = f.mode.value; 
     
-    if(!f.prodName.value.trim()) { alert("상품명을 입력하세요."); f.prodName.focus(); return; }
-    if(!f.price.value.trim()) { alert("가격을 입력하세요."); f.price.focus(); return; }
-    if(!f.cateCode.value) { alert("카테고리를 선택하세요."); f.cateCode.focus(); return; }
+    // 2. 필수 입력값 검사
+    if(!f.cateCode.value) {
+        alert("카테고리를 선택하세요.");
+        f.cateCode.focus();
+        return;
+    }
     
-    // 내용 유효성 검사 (HTML 태그 제거 후 검사)
+    if(!f.prodName.value.trim()) {
+        alert("상품명을 입력하세요.");
+        f.prodName.focus();
+        return;
+    }
+    
+    // 가격 검사 (숫자만)
+    if(!f.base_price.value.trim() || isNaN(f.base_price.value)) {
+        alert("판매가를 숫자로 올바르게 입력하세요.");
+        f.base_price.focus();
+        return;
+    }
+    
+    // [중요] 이미지 유효성 검사 수정
+    // mode가 'write'(등록)일 때만 대표 이미지가 필수입니다.
+    // 'update'(수정)일 때는 파일이 없으면 기존 이미지를 유지하므로 검사하지 않습니다.
+    if(mode === "write") {
+        if(!f.thumbnailFile.value) {
+            alert("대표 이미지를 등록해주세요.");
+            return;
+        }
+    }
+    
+    // 내용 검사
     let content = document.getElementById("prodDesc").value;
-    if( content == ""  || content == null || content == '&nbsp;' || content == '<p>&nbsp;</p>')  {
-         alert("상품 상세 설명을 입력하세요.");
-         if(oEditors.length > 0) oEditors.getById["prodDesc"].exec("FOCUS"); //포커싱
-         return;
+    if(content === "" || content === "<p>&nbsp;</p>") {
+        alert("상품 상세 설명을 입력하세요.");
+        return;
     }
 
+    
+    // 3. 전송
     f.submit();
 }

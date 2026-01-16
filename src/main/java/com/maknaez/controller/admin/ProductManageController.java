@@ -36,7 +36,6 @@ public class ProductManageController {
 	
 	private ProductService service = new ProductServiceImpl();
 	private FileManager fileManager = new FileManager();
-	private MyUtil util = new MyUtil();
 
 	@GetMapping("category_manage")
     public ModelAndView categoryManage(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -117,75 +116,80 @@ public class ProductManageController {
 	}
 	
 	@GetMapping("product_list")
-    public String list(HttpServletRequest req, HttpServletResponse resp) throws Exception {
-        MyUtil myUtil = new MyUtil();
-        String cp = req.getContextPath();
-        
-        String page = req.getParameter("page");
-        int current_page = 1;
-        if(page != null) current_page = Integer.parseInt(page);
+	public String list(HttpServletRequest req, HttpServletResponse resp) throws Exception {
+	    MyUtil myUtil = new MyUtil();
+	    String cp = req.getContextPath();
+	    
+	    String page = req.getParameter("page");
+	    int current_page = 1;
+	    if(page != null) current_page = Integer.parseInt(page);
 
-        String schType = req.getParameter("schType");
-        String kwd = req.getParameter("kwd");
-        String category = req.getParameter("category"); // 카테고리 필터
+	    String schType = req.getParameter("schType");
+	    String kwd = req.getParameter("kwd");
+	    String category = req.getParameter("category");
 
-        if(schType == null) schType = "all";
-        if(kwd == null) kwd = "";
-        if(category == null) category = "";
+	    if(schType == null) schType = "all";
+	    if(kwd == null) kwd = "";
+	    if(category == null) category = "";
 
-        if(req.getMethod().equalsIgnoreCase("GET")) {
-            kwd = URLDecoder.decode(kwd, "UTF-8");
-        }
+	    if(req.getMethod().equalsIgnoreCase("GET")) {
+	        kwd = URLDecoder.decode(kwd, "UTF-8");
+	    }
 
-        Map<String, Object> map = new HashMap<>();
-        map.put("schType", schType);
-        map.put("kwd", kwd);
-        map.put("category", category);
+	    Map<String, Object> map = new HashMap<>();
+	    map.put("schType", schType);
+	    map.put("kwd", kwd);
+	    map.put("category", category);
 
-        // 전체 데이터 개수
-        int dataCount = service.dataCountManage(map);
+	    // 1. 전체 데이터 개수 가져오기
+	    int dataCount = service.dataCountManage(map);
 
-        int rows = 10;
-        int total_page = myUtil.pageCount(rows, dataCount);
-        if(current_page > total_page) current_page = total_page;
+	    int rows = 10;
+	    
+	    // [수정 포인트 1] 파라미터 순서 변경: (총데이터수, 한페이지개수)
+	    int total_page = myUtil.pageCount(dataCount, rows);
+	    
+	    if(current_page > total_page) current_page = total_page;
 
-        int start = (current_page - 1) * rows + 1;
-        int end = current_page * rows;
-        map.put("start", start);
-        map.put("end", end);
+	    // 데이터가 없는 경우 1페이지로 설정 안하면 에러 날 수 있음
+	    if(current_page < 1) current_page = 1;
 
-        // 리스트 조회
-        List<ProductDTO> list = service.listProductManage(map);
-        
-        // 검색창용 카테고리 목록
-        List<CategoryDTO> categoryList = service.listCategory();
+	    int start = (current_page - 1) * rows + 1;
+	    int end = current_page * rows;
+	    map.put("start", start);
+	    map.put("end", end);
 
-        // 페이징 처리
-        String query = "schType=" + schType + "&kwd=" + URLEncoder.encode(kwd, "UTF-8") + "&category=" + category;
-        String listUrl = cp + "/admin/product/product_list";
-        if(!query.equals("")) {
-            listUrl += "?" + query;
-        }
-        
-        String paging = myUtil.paging(current_page, total_page, listUrl);
+	    // 리스트 조회
+	    List<ProductDTO> list = service.listProductManage(map);
+	    List<CategoryDTO> categoryList = service.listCategory();
 
-        // JSP로 데이터 전달
-        req.setAttribute("list", list);
-        req.setAttribute("categoryList", categoryList);
-        req.setAttribute("page", current_page);
-        req.setAttribute("dataCount", dataCount);
-        req.setAttribute("total_page", total_page);
-        req.setAttribute("paging", paging);
-        req.setAttribute("schType", schType);
-        req.setAttribute("kwd", kwd);
-        req.setAttribute("category", category);
+	    // 2. 페이징 URL 생성
+	    String query = "schType=" + schType + "&kwd=" + URLEncoder.encode(kwd, "UTF-8") + "&category=" + category;
+	    String listUrl = cp + "/admin/product/product_list";
+	    
+	    if(!query.equals("")) {
+	        listUrl += "?" + query;
+	    }
+	    
+	    // [수정 포인트 2] MyUtil paging 호출
+	    String paging = myUtil.paging(current_page, total_page, listUrl);
 
-        return "admin/product/product_list";
-    }
+	    req.setAttribute("list", list);
+	    req.setAttribute("categoryList", categoryList);
+	    req.setAttribute("page", current_page);
+	    req.setAttribute("dataCount", dataCount);
+	    req.setAttribute("total_page", total_page);
+	    req.setAttribute("paging", paging); // JSP에서 ${paging}으로 사용
+	    req.setAttribute("schType", schType);
+	    req.setAttribute("kwd", kwd);
+	    req.setAttribute("category", category);
+
+	    return "admin/product/product_list";
+	}
 	    
 	   
 	@GetMapping("product_write")
-    public String writeForm(HttpServletRequest req) throws Exception {
+    public String writeForm(HttpServletRequest req, HttpServletResponse resp) throws Exception {
         List<CategoryDTO> categoryList = service.listCategory();
         req.setAttribute("categoryList", categoryList);
         req.setAttribute("mode", "write");
@@ -260,7 +264,7 @@ public class ProductManageController {
 	        }
 
 	        // [5] 제품명 완성 (상품명 + 색상코드)
-	        String fullName = dto.getProdName() + " " + dto.getColorCode(); // 공백이나 구분자 추가 권장
+	        String fullName = dto.getProdName() + "_" + dto.getColorCode(); // 공백이나 구분자 추가 권장
 	        dto.setProdName(fullName);
 
 	        // [6] Service 호출
@@ -299,23 +303,53 @@ public class ProductManageController {
         }
     }
 	
+	@PostMapping("updateSubmit")
+    public String updateSubmit(HttpServletRequest req, HttpServletResponse resp) throws Exception {
+        try {
+            // 파일 업로드 처리가 필요하면 기존 writeSubmit의 FileManager 로직을 가져와야 함.
+            // 여기서는 텍스트 데이터 업데이트 위주로 작성합니다.
+            ProductDTO dto = new ProductDTO();
+            
+            dto.setProdId(Long.parseLong(req.getParameter("prodId")));
+            dto.setCateCode(req.getParameter("cateCode"));
+            dto.setProdName(req.getParameter("prodName"));
+            dto.setPrice(Integer.parseInt(req.getParameter("base_price")));
+            dto.setDescription(req.getParameter("prodDesc"));
+            dto.setIsDisplayed(Integer.parseInt(req.getParameter("isDisplayed")));
+            
+            // 서비스 호출
+            service.updateProduct(dto);
+            
+            String page = req.getParameter("page");
+            return "redirect:/admin/product/product_list?page=" + page;
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "redirect:/admin/product/product_list";
+        }
+    }
+	
 	
 	
 	@PostMapping("delete")
-	public void deleteProduct(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-	    try {
-	        String[] sParams = req.getParameterValues("prodIds");
-	        if(sParams != null) {
-	            long[] prodIds = new long[sParams.length];
-	            for(int i=0; i<sParams.length; i++) {
-	                prodIds[i] = Long.parseLong(sParams[i]);
-	            }
-	            service.deleteProductList(prodIds);
-	        }
-	        resp.setStatus(200); // 성공
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	        resp.sendError(500);
-	    }
-	}
+    public void delete(HttpServletRequest req, HttpServletResponse resp) throws Exception {
+        try {
+            String[] sParams = req.getParameterValues("prodIds");
+            
+            if(sParams != null && sParams.length > 0) {
+                long[] prodIds = new long[sParams.length];
+                for(int i=0; i<sParams.length; i++) {
+                    prodIds[i] = Long.parseLong(sParams[i]);
+                }
+                
+                service.deleteProductList(prodIds);
+            }
+            
+            resp.sendError(200); 
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            resp.sendError(500);
+        }
+    }
 }
