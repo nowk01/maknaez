@@ -589,5 +589,45 @@
     @media (max-width: 768px) {
         .as-wishlist__products { grid-template-columns: repeat(2, 1fr); }
     }
+    
+    /* --- [추가] 테크니컬 토스트 알림 & 애니메이션 --- */
+#toast-notification {
+    visibility: hidden;
+    min-width: 250px;
+    background-color: #000; /* Deep Black */
+    color: #fff;
+    text-align: center;
+    padding: 16px; /* 넉넉한 여백 */
+    position: fixed;
+    z-index: 9999;
+    left: 50%;
+    bottom: 30px;
+    transform: translateX(-50%);
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase; /* 대문자 강조 */
+    letter-spacing: 1px;
+    opacity: 0;
+    transition: opacity 0.5s, bottom 0.5s;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+#toast-notification.show {
+    visibility: visible;
+    opacity: 1;
+    bottom: 50px; /* 위로 살짝 떠오르는 효과 */
+}
+
+/* 삭제 시 부드럽게 사라지는 효과 */
+.wish-item-removing {
+    transform: scale(0.95);
+    opacity: 0;
+    height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden;
+    transition: all 0.4s ease-in-out;
+}
 
 
