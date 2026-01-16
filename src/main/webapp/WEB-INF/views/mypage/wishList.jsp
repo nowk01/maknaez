@@ -131,8 +131,6 @@
     function deleteWish(prodId) {
         if(!confirm("관심 상품에서 삭제하시겠습니까?")) return;
         
-        // [수정] ProductController의 insertWish 메서드를 재활용하여 삭제 처리
-        // 이미 찜 되어있는 상품에 대해 insertWish를 호출하면 찜이 해제(삭제)됩니다.
         $.ajax({
             type: "POST",
             url: "${pageContext.request.contextPath}/product/insertWish",
@@ -140,10 +138,8 @@
             dataType: "json",
             success: function(data) {
                 if(data.state === "false") {
-                    // 삭제 성공 시 새로고침
                     location.reload();
                 } else if(data.state === "true") {
-                    // 혹시라도 추가된 경우 (비정상 케이스지만 처리)
                     alert("처리되었습니다.");
                     location.reload();
                 } else if(data.state === "login_required") {
@@ -159,6 +155,41 @@
             }
         });
     }
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // [1] 감시 설정
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.05 // 5%만 보여도 시작
+        };
+
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    // [2] 요소마다 delay 값을 읽어서 순차 적용
+                    const delay = entry.target.getAttribute('data-delay') || 0;
+                    
+                    setTimeout(() => {
+                        entry.target.classList.add('is-visible');
+                    }, delay);
+                    
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        // [3] 애니메이션 대상 선정 (제목 -> 개수 -> 제품들 순서)
+        const targets = document.querySelectorAll('.page-title, .as-wishlist__productCount, .as-wishlist__productItem');
+        
+        targets.forEach((target, index) => {
+            // 순서대로 0.05초씩 딜레이를 줘서 "따다닥" 뜨게 함
+            target.setAttribute('data-delay', index * 50);
+            observer.observe(target);
+        });
+    });
 </script>
 
 </body>
