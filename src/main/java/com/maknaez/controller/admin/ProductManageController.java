@@ -262,9 +262,12 @@ public class ProductManageController {
 	            List<MyMultipartFile> uploadedFiles = fileManager.doFileUpload(imgParts, pathname);
 	            dto.setListFile(uploadedFiles);
 	        }
+	        
+	        String gender = req.getParameter("gender");
+            if(gender == null) gender = "M"; // 기본값
 
 	        // [5] 제품명 완성 (상품명 + 색상코드)
-	        String fullName = dto.getProdName() + "_" + dto.getColorCode(); // 공백이나 구분자 추가 권장
+	        String fullName = gender + "_" + dto.getProdName() + "_" + dto.getColorCode(); // 공백이나 구분자 추가 권장
 	        dto.setProdName(fullName);
 
 	        // [6] Service 호출
@@ -272,7 +275,7 @@ public class ProductManageController {
 	        
 	    } catch (Exception e) {
 	        e.printStackTrace();
-	        return "redirect:/admin/product/product_write"; // write_ok가 아니라 product_write로 가야 함 (매핑 확인 필요)
+	        return "redirect:/admin/product/product_write"; 
 	    }
 	    return "redirect:/admin/product/product_list";
 	}
@@ -306,17 +309,41 @@ public class ProductManageController {
 	@PostMapping("updateSubmit")
     public String updateSubmit(HttpServletRequest req, HttpServletResponse resp) throws Exception {
         try {
-            // 파일 업로드 처리가 필요하면 기존 writeSubmit의 FileManager 로직을 가져와야 함.
-            // 여기서는 텍스트 데이터 업데이트 위주로 작성합니다.
+            HttpSession session = req.getSession(); // 세션 가져오기
             ProductDTO dto = new ProductDTO();
             
             dto.setProdId(Long.parseLong(req.getParameter("prodId")));
             dto.setCateCode(req.getParameter("cateCode"));
             dto.setProdName(req.getParameter("prodName"));
             dto.setPrice(Integer.parseInt(req.getParameter("base_price")));
-            dto.setDescription(req.getParameter("prodDesc"));
+            dto.setDescription(req.getParameter("prodDesc")); // prodDesc 이름 확인
             dto.setIsDisplayed(Integer.parseInt(req.getParameter("isDisplayed")));
             
+            // [추가] 파일 업로드 경로 설정
+            String root = session.getServletContext().getRealPath("/");
+            String pathname = root + "uploads" + File.separator + "product";
+
+            // [추가] 썸네일 이미지 수정 처리
+            Part thumbPart = req.getPart("thumbnailFile");
+            if (thumbPart != null && thumbPart.getSize() > 0) {
+                MyMultipartFile mf = fileManager.doFileUpload(thumbPart, pathname);
+                dto.setThumbnailImg(mf);
+            }
+
+            // [추가] 추가 이미지 수정(추가) 처리
+            Collection<Part> parts = req.getParts();
+            List<Part> imgParts = new ArrayList<>();
+            for(Part p : parts) {
+                if("imgs".equals(p.getName()) && p.getSize() > 0) {
+                    imgParts.add(p);
+                }
+            }
+            
+            if(!imgParts.isEmpty()) {
+                List<MyMultipartFile> uploadedFiles = fileManager.doFileUpload(imgParts, pathname);
+                dto.setListFile(uploadedFiles);
+            }
+
             // 서비스 호출
             service.updateProduct(dto);
             

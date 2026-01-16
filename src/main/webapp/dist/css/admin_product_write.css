@@ -33,16 +33,37 @@ body { background-color: #fafafa; color: #111; font-family: 'Inter', 'Pretendard
 
 /* 이미지 그리드 */
 .img-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 15px; }
-.img-upload-box { aspect-ratio: 1/1; border: 1px dashed #ddd; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #fdfdfd; cursor: pointer; transition: 0.3s; }
+.img-upload-box {
+    aspect-ratio: 1/1; 
+    border: 1px dashed #ddd; 
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    justify-content: center; 
+    background: #fdfdfd; 
+    cursor: pointer; 
+    transition: 0.3s;
+    position: relative; 
+    overflow: hidden; 
+    width: 100%; 
+}
 .img-upload-box:hover { border-color: #ff4e00; background: #fff5f0; }
 .img-upload-box.main { border: 2px solid #111; }
 .img-upload-box i { font-size: 20px; color: #ccc; margin-bottom: 8px; }
 .img-upload-box span { font-size: 11px; font-weight: 800; color: #bbb; }
 .img-upload-box .existing-img {
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
-    object-fit: cover;
-    border-radius: 8px;
+    object-fit: cover; 
+    z-index: 1; 
+    border-radius: 2px;
+}
+.img-upload-box:has(.existing-img) span,
+.img-upload-box:has(img) span {
+    display: none;
 }
 
 /* 하단 버튼 */

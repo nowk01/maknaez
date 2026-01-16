@@ -264,7 +264,30 @@ public class ProductServiceImpl implements ProductService {
 	@Override
     public void updateProduct(ProductDTO dto) throws Exception {
         try {
+            // 1. 썸네일 이미지가 변경된 경우 DTO에 파일명 설정
+            if (dto.getThumbnailImg() != null) {
+                String saveFilename = dto.getThumbnailImg().getSaveFilename();
+                dto.setThumbnail(saveFilename);
+            }
+
+            // 2. 기본 정보 및 썸네일 업데이트 (Mapper XML 수정 필요)
             mapper.updateProduct(dto);
+
+            // 3. 추가 이미지 저장 (새로 업로드된 파일이 있는 경우)
+            List<MyMultipartFile> listFile = dto.getListFile();
+            if (listFile != null && !listFile.isEmpty()) {
+                for (MyMultipartFile mf : listFile) {
+                    String saveImg = mf.getSaveFilename();
+                    
+                    Map<String, Object> imgMap = new HashMap<>();
+                    imgMap.put("prodId", dto.getProdId());
+                    imgMap.put("filename", saveImg);
+                    
+                    // 기존 insertProductImg 재사용하여 추가 이미지 등록
+                    mapper.insertProductImg(imgMap);
+                }
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
             throw e;
