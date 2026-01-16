@@ -11,6 +11,7 @@ public class OrderDTO {
     private Integer totalAmount;  // 결제금액
     private Integer qty;          // 수량
     private Integer price;        // 단가
+    private String pdSize;
 
     // Getter & Setter
     public String getOrderNum() { return orderNum; }
@@ -39,4 +40,7 @@ public class OrderDTO {
     
     public Integer getPrice() { return price; }
     public void setPrice(Integer price) { this.price = price; }
+    
+    public String getPdSize() { return pdSize; }
+    public void setPdSize(String pdSize) { this.pdSize = pdSize; }
 }

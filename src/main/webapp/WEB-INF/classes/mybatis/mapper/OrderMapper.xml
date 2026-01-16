@@ -2,38 +2,77 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.maknaez.mapper.OrderMapper">
 
-    <select id="dataCount" parameterType="map" resultType="Integer">
-        SELECT NVL(COUNT(*), 0)
-        FROM orders
-        WHERE memberIdx = #{memberIdx}
-    </select>
+	<select id="dataCount" parameterType="map" resultType="Integer">
+		SELECT NVL(COUNT(*), 0)
+		FROM orders
+		WHERE MEMBERIDX = #{memberIdx}
+		<if test="orderState != null">
+			AND STATUS = #{orderState}
+		</if>
+		<if test="mode == 'cancel'">
+			AND STATUS IN ('취소처리중', '취소완료', '반품진행중', '환불완료')
+		</if>
+	</select>
 
-    <select id="listOrder" parameterType="map" resultType="com.maknaez.model.OrderDTO">
-        SELECT * FROM (
-            SELECT ROWNUM rnum, tb.* FROM (
-                SELECT 
-                    o.order_id AS orderNum,
-                    TO_CHAR(o.order_date, 'YYYY-MM-DD') AS orderDate,
-                    NVL(o.total_amount, 0) AS totalAmount,
-                    o.status AS orderState,
-                    p.prod_name AS productName,
-                    NVL(oi.count, 0) AS qty,
-                    NVL(oi.price, 0) AS price,
-                    p.thumb_nail AS thumbNail
-                FROM orders o
-                JOIN order_items oi ON o.order_id = oi.order_id
-                JOIN pd_size ps ON oi.opt_id = ps.opt_id
-                JOIN products p ON ps.prod_id = p.prod_id
-                WHERE o.memberIdx = #{memberIdx}
-                ORDER BY o.order_date DESC
-            ) tb WHERE ROWNUM &lt;= #{end}
-        ) WHERE rnum &gt;= #{start}
-    </select>
+	<select id="listOrder" parameterType="map" resultType="com.maknaez.model.OrderDTO">
+		SELECT * FROM (
+			SELECT ROWNUM rnum, tb.* FROM (
+				SELECT
+					o.ITEMS_ID AS orderNum,
+					TO_CHAR(o.ORDER_DATE, 'YYYY-MM-DD') AS orderDate,
+					NVL(o.TOTAL_AMOUNT, 0) AS totalAmount,
+					o.STATUS AS orderState,
+					p.PROD_NAME AS productName,
+					NVL(oi.COUNT, 0) AS qty,
+					NVL(oi.PRICE, 0) AS price,
+					p.THUMB_NAIL AS thumbNail,
+					ps.PD_SIZE AS pdSize
+				FROM orders o
+				JOIN order_items oi ON o.ITEMS_ID = oi.ORDER_ID
+				JOIN pd_size ps ON oi.OPT_ID = ps.OPT_ID
+				JOIN products p ON ps.PROD_ID = p.PROD_ID
+				WHERE o.MEMBERIDX = #{memberIdx}
+				<if test="orderState != null">
+					AND o.STATUS = #{orderState}
+				</if>
+				<if test="mode == 'cancel'">
+					AND o.STATUS IN ('취소처리중', '취소완료', '반품진행중', '환불완료')
+				</if>
+				ORDER BY o.ORDER_DATE DESC
+			) tb WHERE ROWNUM &lt;= #{end}
+		) WHERE rnum &gt;= #{start}
+	</select>
 
-<!-- OderItems 관리요  -->
+	<update id="updateOrderState" parameterType="map">
+		UPDATE orders
+		SET STATUS = #{orderState}
+		WHERE ITEMS_ID = #{orderId}
+	</update>
 
+	<insert id="insertClaim" parameterType="map">
+		INSERT INTO claims (
+			claim_id,
+			ITEMS_ID,
+			type,
+			reason,
+			status,
+			req_date
+		) VALUES (
+			claims_seq.NEXTVAL,
+			#{orderId},
+			#{claimType},
+			#{reason},
+			#{claimStatus},
+			SYSDATE
+		)
+	</insert>
 
-
-
+	<select id="findByIdClaim" parameterType="String" resultType="map">
+		SELECT
+			c.CLAIM_ID, c.ITEMS_ID, c.TYPE, c.REASON, c.STATUS,
+			TO_CHAR(c.REQ_DATE, 'YYYY-MM-DD') AS REQ_DATE
+		FROM claims c
+		WHERE c.ITEMS_ID = #{orderId}
+	</select>
 
 </mapper>
