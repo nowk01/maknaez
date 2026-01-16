@@ -456,22 +456,66 @@ function copyLink() {
 }
 
 $(document).ready(function() {
+    // 수량 조절 버튼 로직 (기존 유지)
 	$('.plus').click(function() { let q = parseInt($('.qty-input').val()); if(q < 10) { $('.qty-input').val(q + 1); $('#selectedQty').val(q + 1); } });
 	$('.minus').click(function() { let q = parseInt($('.qty-input').val()); if(q > 1) { $('.qty-input').val(q - 1); $('#selectedQty').val(q - 1); } });
 
+    // 바로구매 함수 (기존 유지)
 	window.buyNow = function() {
 		if(!checkSelection()) return;
         const qty = $('#selectedQty').val();
         const sizeOptId = $('input[name="optionDetailNum"]:checked').val();
-        // [수정] DB 연동 후 올바른 파라미터(opt_id) 전달
+        
         location.href = contextPath + "/order/payment?prod_id=" + productNum + "&quantity=" + qty + "&opt_id=" + sizeOptId;
 	};
 
+    // [수정 완료] 장바구니 담기 Ajax 연결
 	window.addToCart = function() {
+        // 1. 로그인 체크
+        if (!isLoggedIn) {
+            if(confirm("로그인이 필요한 서비스입니다.\n로그인 페이지로 이동하시겠습니까?")) {
+                location.href = contextPath + "/member/login";
+            }
+            return;
+        }
+
+        // 2. 유효성 검사 (사이즈 선택)
 		if(!checkSelection()) return;
-		alert("장바구니에 담았습니다 (기능 미구현)");
+
+        // 3. 데이터 수집
+        const qty = $('#selectedQty').val();
+        const sizeOptId = $('input[name="optionDetailNum"]:checked').val();
+
+        // 4. Ajax 요청
+        $.ajax({
+            type: "POST",
+            url: contextPath + "/cart/insert",
+            data: {
+                prodId: productNum,
+                optId: sizeOptId,
+                quantity: qty
+            },
+            dataType: "json",
+            success: function(res) {
+                if(res.status === "success") {
+                    if(confirm("장바구니에 담았습니다.\n장바구니로 이동하시겠습니까?")) {
+                        location.href = contextPath + "/order/cart";
+                    }
+                } else if(res.status === "login_required") {
+                    alert("로그인이 필요합니다.");
+                    location.href = contextPath + "/member/login";
+                } else {
+                    alert("장바구니 담기 실패: " + (res.message || "오류가 발생했습니다."));
+                }
+            },
+            error: function(xhr) {
+                console.error(xhr);
+                alert("서버 통신 중 오류가 발생했습니다.");
+            }
+        });
 	};
 
+    // 옵션 선택 체크 함수 (기존 유지)
 	function checkSelection() {
 		if(!$('input[name="optionDetailNum"]:checked').val()) {
 			alert("사이즈를 선택해주세요.");
@@ -480,11 +524,12 @@ $(document).ready(function() {
 		return true;
 	}
 	
+    // 초기 로딩 시 리뷰 불러오기
     if(productNum) {
         loadReviews(productNum, 1);
     }
     
-    // [수정됨] 찜하기 AJAX 처리
+    // 찜하기 버튼 동작 (기존 유지)
     $('#wishBtn').click(function() {
         if (!isLoggedIn) {
             if(confirm("로그인이 필요한 서비스입니다.\n로그인 페이지로 이동하시겠습니까?")) {
@@ -502,11 +547,9 @@ $(document).ready(function() {
             dataType: "json",
             success: function(data) {
                 if(data.state === "true") {
-                    // 찜 추가 성공: 하트 채우기
                     $btn.removeClass('bi-heart').addClass('bi-heart-fill text-danger');
                     showToast("관심 상품에 추가되었습니다.");
                 } else if(data.state === "false") {
-                    // 찜 해제 성공: 하트 비우기
                     $btn.removeClass('bi-heart-fill text-danger').addClass('bi-heart');
                     showToast("관심 상품에서 삭제되었습니다.");
                 } else if(data.state === "login_required") {
