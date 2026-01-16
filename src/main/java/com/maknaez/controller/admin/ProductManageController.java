@@ -117,99 +117,80 @@ public class ProductManageController {
 	}
 	
 	@GetMapping("product_list")
-    public ModelAndView productList(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        ModelAndView mav = new ModelAndView("admin/product/product_list");
+    public String list(HttpServletRequest req, HttpServletResponse resp) throws Exception {
+        MyUtil myUtil = new MyUtil();
+        String cp = req.getContextPath();
         
-        // 1. 페이징 및 검색 파라미터 처리
         String page = req.getParameter("page");
         int current_page = 1;
-        if(page != null && page.length() != 0) {
-            try {
-                current_page = Integer.parseInt(page);
-            } catch (NumberFormatException e) { }
-        }
-        
-        String searchKey = req.getParameter("searchKey");
-        String searchValue = req.getParameter("searchValue");
-        if(searchValue == null) {
-            searchKey = "prodName";
-            searchValue = "";
-        }
-        
+        if(page != null) current_page = Integer.parseInt(page);
+
+        String schType = req.getParameter("schType");
+        String kwd = req.getParameter("kwd");
+        String category = req.getParameter("category"); // 카테고리 필터
+
+        if(schType == null) schType = "all";
+        if(kwd == null) kwd = "";
+        if(category == null) category = "";
+
         if(req.getMethod().equalsIgnoreCase("GET")) {
-            searchValue = URLDecoder.decode(searchValue, "UTF-8"); // Import 추가로 에러 해결
+            kwd = URLDecoder.decode(kwd, "UTF-8");
         }
-        
-        // 2. 데이터 가져오기
-        int rows = 10;
+
         Map<String, Object> map = new HashMap<>();
-        map.put("searchKey", searchKey);
-        map.put("searchValue", searchValue);
-        
-        int dataCount = service.dataCountManage(map); // Service에 해당 메소드가 있어야 함
-        int total_page = util.pageCount(rows, dataCount);
+        map.put("schType", schType);
+        map.put("kwd", kwd);
+        map.put("category", category);
+
+        // 전체 데이터 개수
+        int dataCount = service.dataCountManage(map);
+
+        int rows = 10;
+        int total_page = myUtil.pageCount(rows, dataCount);
         if(current_page > total_page) current_page = total_page;
-        
+
         int start = (current_page - 1) * rows + 1;
         int end = current_page * rows;
         map.put("start", start);
         map.put("end", end);
+
+        // 리스트 조회
+        List<ProductDTO> list = service.listProductManage(map);
         
-        List<ProductDTO> list = service.listProductManage(map); // Service에 해당 메소드가 있어야 함
-        
-        // 3. 카테고리 트리 구조 생성
-        List<CategoryDTO> allCats = service.listCategoryAll(); // Service에 해당 메소드가 있어야 함
-        List<CategoryDTO> parentCats = new ArrayList<>();
-        Map<String, List<CategoryDTO>> childCatsMap = new HashMap<>();
-        
-        if(allCats != null) {
-            for(CategoryDTO dto : allCats) {
-                if(dto.getDepth() == 1 || dto.getCateParent() == null) {
-                    parentCats.add(dto);
-                } else {
-                    String pCode = dto.getCateParent();
-                    List<CategoryDTO> children = childCatsMap.getOrDefault(pCode, new ArrayList<>());
-                    children.add(dto);
-                    childCatsMap.put(pCode, children);
-                }
-            }
-        }
-        
-        // 4. 페이징 URL 처리
-        String cp = req.getContextPath();
+        // 검색창용 카테고리 목록
+        List<CategoryDTO> categoryList = service.listCategory();
+
+        // 페이징 처리
+        String query = "schType=" + schType + "&kwd=" + URLEncoder.encode(kwd, "UTF-8") + "&category=" + category;
         String listUrl = cp + "/admin/product/product_list";
-        
-        String query = "rows=" + rows;
-        if(searchValue.length() != 0) {
-            query += "&searchKey=prodName&searchValue=" + URLEncoder.encode(searchValue, "UTF-8"); // Import 추가로 에러 해결
+        if(!query.equals("")) {
+            listUrl += "?" + query;
         }
-        listUrl += "?" + query;
         
-        String paging = util.paging(current_page, total_page, listUrl);
-        
-        // 5. 모델 전송
-        mav.addObject("list", list);
-        mav.addObject("parentCats", parentCats);
-        mav.addObject("childCatsMap", childCatsMap);
-        mav.addObject("page", current_page);
-        mav.addObject("total_page", total_page);
-        mav.addObject("dataCount", dataCount);
-        mav.addObject("paging", paging);
-        mav.addObject("searchValue", searchValue);
-        
-        return mav;
+        String paging = myUtil.paging(current_page, total_page, listUrl);
+
+        // JSP로 데이터 전달
+        req.setAttribute("list", list);
+        req.setAttribute("categoryList", categoryList);
+        req.setAttribute("page", current_page);
+        req.setAttribute("dataCount", dataCount);
+        req.setAttribute("total_page", total_page);
+        req.setAttribute("paging", paging);
+        req.setAttribute("schType", schType);
+        req.setAttribute("kwd", kwd);
+        req.setAttribute("category", category);
+
+        return "admin/product/product_list";
     }
 	    
 	   
 	@GetMapping("product_write")
-	public ModelAndView productWriteForm(HttpServletRequest req, HttpServletResponse resp) throws Exception {
-	    // [변경] listCategory() -> listCategorySelect() 호출
-	    List<CategoryDTO> list = service.listCategorySelect();
-	    
-	    ModelAndView mav = new ModelAndView("admin/product/product_write");
-	    mav.addObject("categoryList", list);
-	    return mav;
-	}
+    public String writeForm(HttpServletRequest req) throws Exception {
+        List<CategoryDTO> categoryList = service.listCategory();
+        req.setAttribute("categoryList", categoryList);
+        req.setAttribute("mode", "write");
+        return "admin/product/product_write";
+    }
 	
 	
 	@PostMapping("writeSubmit")
@@ -291,6 +272,34 @@ public class ProductManageController {
 	    }
 	    return "redirect:/admin/product/product_list";
 	}
+	
+	@GetMapping("update")
+    public String updateForm(HttpServletRequest req, HttpServletResponse resp) throws Exception {
+        try {
+            long prodId = Long.parseLong(req.getParameter("prodId"));
+            String page = req.getParameter("page");
+
+            ProductDTO dto = service.readProduct(prodId);
+            if(dto == null) {
+                return "redirect:/admin/product/product_list?page=" + page;
+            }
+
+            List<CategoryDTO> categoryList = service.listCategory();
+
+            req.setAttribute("mode", "update"); // 모드 설정
+            req.setAttribute("dto", dto);
+            req.setAttribute("categoryList", categoryList);
+            req.setAttribute("page", page);
+
+            return "admin/product/product_write"; // 등록 폼 재사용
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "redirect:/admin/product/product_list";
+        }
+    }
+	
+	
 	
 	@PostMapping("delete")
 	public void deleteProduct(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

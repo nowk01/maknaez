@@ -3,64 +3,57 @@
 
 <mapper namespace="com.maknaez.mapper.ProductMapper">
 
-     <sql id="where-list">
+      <!-- [공통] 할인율 조회 서브쿼리 -->
+    <sql id="discount-subquery">
+        (SELECT NVL(MAX(val), 0)
+         FROM DISCOUNTS 
+         WHERE target_id = p.prod_id 
+           AND SYSDATE BETWEEN start_date AND end_date
+           AND is_active = 1)
+    </sql>
+
+    <!-- [공통] WHERE 절 (필터링) -->
+    <sql id="where-list">
         <where>
             p.is_displayed = 1
             AND c.status = 1
 
-            <!-- 1. 대분류 필터 (MEN, WOMEN) -->
-            <!-- MEN: 남성(M) + 유니섹스(U) -->
+            <!-- 1. 대분류 필터 -->
             <if test="category == 'men'">
                 AND (p.prod_name LIKE 'M\_%' ESCAPE '\' OR p.prod_name LIKE 'U\_%' ESCAPE '\')
             </if>
-            
-            <!-- WOMEN: 여성(F) + 유니섹스(U) -->
             <if test="category == 'women'">
                 AND (p.prod_name LIKE 'F\_%' ESCAPE '\' OR p.prod_name LIKE 'U\_%' ESCAPE '\')
             </if>
-            
-            <!-- SPORTSTYLE: 카테고리 계층 구조 사용 (또는 U_ 로만 검색해도 됨) -->
             <if test="category == 'sportstyle'">
                 AND UPPER(c.cate_parent) = 'SPORTSTYLE'
             </if>
 
             <!-- 2. SALE 대분류: 할인값이 0보다 큰 경우 -->
             <if test="category == 'sale'">
-                AND (SELECT val 
-                     FROM DISCOUNTS 
-                     WHERE target_id = p.prod_id 
-                     AND SYSDATE BETWEEN start_date AND end_date
-                     AND is_active = 1) > 0
+                AND <include refid="discount-subquery"/> > 0
             </if>
 
-            <!-- 3. 중분류 필터 (상단 메뉴 링크용) -->
+            <!-- 3. 중분류 및 사이드바 필터 -->
             <if test="subCategory != null and subCategory != ''">
                 AND p.cate_code LIKE '%' || UPPER(#{subCategory}) || '%'
             </if>
-
-            <!-- 3-1. 사이드바 - 카테고리(중분류) 체크박스 -->
             <if test="sports != null and sports.length > 0">
                 AND c.cate_name IN 
                 <foreach collection="sports" item="sport" open="(" close=")" separator=",">
                     #{sport}
                 </foreach>
             </if>
-
-            <!-- 3-2. 사이드바 - 성별 체크박스 (이름 기반 필터링) -->
             <if test="genders != null and genders.length > 0">
                 AND (
                     <foreach collection="genders" item="gender" separator=" OR ">
-                        <!-- M, F, U 값에 따라 이름 앞글자 매칭 -->
                         p.prod_name LIKE #{gender} || '\_%' ESCAPE '\'
                     </foreach>
                 )
             </if>
-
-            <!-- 3-3. 사이드바 - 색상 체크박스 (이름 기반 필터링) -->
             <if test="colors != null and colors.length > 0">
                 AND (
                     <foreach collection="colors" item="color" separator=" OR ">
-                        <!-- _BK, _WH 등 접미사 매칭 -->
                         p.prod_name LIKE '%\_' || #{color} ESCAPE '\'
                     </foreach>
                 )
@@ -77,7 +70,7 @@
                 AND UPPER(p.prod_name) LIKE '%S/LAB%'
             </if>
 
-            <!-- 5. 가격대 필터 (슬라이더) -->
+            <!-- 5. 가격대 필터 -->
             <if test="minPrice != null and minPrice != ''">
                 AND p.base_price >= TO_NUMBER(#{minPrice})
             </if>
@@ -87,10 +80,10 @@
             
             <!-- 6. 할인율 필터 -->
             <if test="discountRate == 'under10'"> 
-                AND (SELECT val FROM DISCOUNTS WHERE target_id = p.prod_id AND SYSDATE BETWEEN start_date AND end_date AND is_active=1) &lt; 10 
+                AND <include refid="discount-subquery"/> &lt; 10 
             </if>
             <if test="discountRate == 'under20'"> 
-                AND (SELECT val FROM DISCOUNTS WHERE target_id = p.prod_id AND SYSDATE BETWEEN start_date AND end_date AND is_active=1) &lt; 20 
+                AND <include refid="discount-subquery"/> &lt; 20 
             </if>
         </where>
     </sql>
@@ -104,35 +97,23 @@
             p.thumb_nail    AS thumbnail,
             p.prod_desc     AS description,
             TO_CHAR(p.prod_date, 'YYYY-MM-DD') AS regDate,
-            
             p.cate_code     AS cateCode,
             c.cate_name     AS cateName,
             c.cate_parent   AS cateParent,
-            
-            <!-- 할인율 조회 -->
-            NVL((SELECT val 
-                 FROM DISCOUNTS 
-                 WHERE target_id = p.prod_id 
-                 AND SYSDATE BETWEEN start_date AND end_date
-                 AND is_active = 1), 0) AS discountRate,
-                 
+            <include refid="discount-subquery"/> AS discountRate,
             p.base_price    AS originalPrice
-            
         FROM PRODUCTS p
         LEFT JOIN CATEGORY c ON p.cate_code = c.cate_code
-        
         <include refid="where-list"/>
-        
         <choose>
             <when test="sort == 'price_asc'">ORDER BY p.base_price ASC</when>
             <when test="sort == 'price_desc'">ORDER BY p.base_price DESC</when>
             <otherwise>ORDER BY p.prod_date DESC</otherwise>
         </choose>
-        
         OFFSET #{offset} ROWS FETCH NEXT #{size} ROWS ONLY
     </select>
 
-    <!-- 개수 조회 -->
+    <!-- 전체 개수 조회 -->
     <select id="dataCount" parameterType="map" resultType="int">
         SELECT COUNT(*)
         FROM PRODUCTS p
@@ -140,16 +121,7 @@
         <include refid="where-list"/>
     </select>
     
-    <!-- 사이드바 카테고리명 목록 조회 -->
-    <select id="listCategoryNames" parameterType="String" resultType="String">
-        SELECT cate_name
-        FROM CATEGORY
-        WHERE status = 1 
-          AND cate_parent = UPPER(#{categoryCode})
-        ORDER BY order_no ASC
-    </select>
-    
-    <!-- 제품조회 -->
+    <!-- 상품 상세 정보 조회 (통합됨) -->
     <select id="readProduct" parameterType="long" resultType="com.maknaez.model.ProductDTO">
         SELECT 
             p.prod_id       AS prodId,
@@ -159,37 +131,86 @@
             p.prod_desc     AS description,
             p.is_displayed  AS isDisplayed,
             TO_CHAR(p.prod_date, 'YYYY-MM-DD') AS regDate,
-            
             p.cate_code     AS cateCode,
             c.cate_name     AS cateName,
             c.cate_parent   AS cateParent,
-            
-            NVL((SELECT val 
-                 FROM DISCOUNTS 
-                 WHERE target_id = p.prod_id 
-                 AND SYSDATE BETWEEN start_date AND end_date
-                 AND is_active = 1), 0) AS discountRate,
-                 
+            <include refid="discount-subquery"/> AS discountRate,
             p.base_price    AS originalPrice
-            
         FROM PRODUCTS p
         LEFT JOIN CATEGORY c ON p.cate_code = c.cate_code
         WHERE p.prod_id = #{prodId}
     </select>
     
+     <!-- [수정] 상품별 사이즈 및 실시간 재고 리스트 조회 -->
+    <!-- STOCK_LOGS 테이블에서 각 OPT_ID별 가장 최신의 PROD_STOCK 값을 가져옵니다. -->
+    <select id="listProductSize" parameterType="long" resultType="com.maknaez.model.ProductDTO">
+        SELECT 
+            s.opt_id AS optId, 
+            s.prod_id AS prodId, 
+            s.pd_size AS prodSize,
+            NVL(l.prod_stock, 0) AS stockQty
+        FROM pd_size s
+        LEFT JOIN (
+            SELECT opt_id, prod_stock
+            FROM (
+                SELECT opt_id, prod_stock,
+                       ROW_NUMBER() OVER (PARTITION BY opt_id ORDER BY reg_date DESC, log_id DESC) AS rn
+                FROM stock_logs
+            ) WHERE rn = 1
+        ) l ON s.opt_id = l.opt_id
+        WHERE s.prod_id = #{prodId}
+        ORDER BY s.pd_size ASC
+    </select>
+
+    <!-- [추가] findById 구현 -->
+    <select id="findById" parameterType="long" resultType="com.maknaez.model.ProductDTO">
+        SELECT 
+            prod_id AS prodId, 
+            prod_name AS prodName, 
+            base_price AS price, 
+            thumb_nail AS thumbnail
+        FROM products
+        WHERE prod_id = #{prodId}
+    </select>
     
-    <!-- 세일카테고리 -->
+    
+    <!-- 사이즈별 실시간 재고 목록 조회 (통합됨) -->
+    <select id="listProductSizes" parameterType="Long" resultType="com.maknaez.model.ProductDTO">
+        SELECT 
+            s.opt_id AS opt_id, 
+            s.pd_size AS size_name, 
+            NVL(SUM(l.change_qty), 0) AS stock_count
+        FROM pd_size s
+        LEFT JOIN stock_logs l ON s.opt_id = l.opt_id
+        WHERE s.prod_id = #{prodId}
+        GROUP BY s.opt_id, s.pd_size
+        ORDER BY s.opt_id ASC
+    </select>
+
+
+    <!-- 기타 조회 쿼리들 -->
+    <select id="listCategoryNames" parameterType="String" resultType="String">
+        SELECT cate_name FROM CATEGORY
+        WHERE status = 1 AND cate_parent = UPPER(#{categoryCode})
+        ORDER BY order_no ASC
+    </select>
+
+    <select id="getOptionStock" parameterType="Long" resultType="Integer">
+        SELECT NVL(SUM(change_qty), 0) FROM stock_logs WHERE opt_id = #{optId}
+    </select>
+    
     <select id="listSaleCategoryNames" resultType="String">
         SELECT DISTINCT c.cate_name
         FROM PRODUCTS p
         JOIN CATEGORY c ON p.cate_code = c.cate_code
-        WHERE (SELECT val 
-               FROM DISCOUNTS 
-               WHERE target_id = p.prod_id 
-               AND SYSDATE BETWEEN start_date AND end_date
-               AND is_active = 1) > 0
+        WHERE <include refid="discount-subquery"/> > 0
         ORDER BY c.cate_name
     </select>
+
+    <insert id="insertCart" parameterType="map">
+        INSERT INTO cart (cart_id, memberIdx, prod_id, opt_id, quantity, created_date)
+        VALUES (seq_cart.NEXTVAL, #{memberIdx}, #{prod_id}, #{opt_id}, #{quantity}, SYSDATE)
+    </insert>
     
 	
 	<!-- 카테고리 관리(관리자용) -->
@@ -286,41 +307,47 @@
 	
 	<!-- 제품 관리(관리자) -->
 	<sql id="where-manage">
-	    <if test="searchKey == 'prodName' and searchValue != null and searchValue != ''">
-	        AND INSTR(p.prod_name, #{searchValue}) &gt; 0
-	    </if>
+        <where>
+            p.status = 1  <if test="schType == 'all' and kwd != null and kwd != ''">
+                AND (INSTR(p.prod_name, #{kwd}) &gt; 0 OR INSTR(p.prod_id, #{kwd}) &gt; 0)
+            </if>
+            <if test="schType == 'name' and kwd != null and kwd != ''">
+                AND INSTR(p.prod_name, #{kwd}) &gt; 0
+            </if>
+            <if test="schType == 'code' and kwd != null and kwd != ''">
+                AND p.prod_id = #{kwd}
+            </if>
+            <if test="category != null and category != ''">
+                AND p.cate_code = #{category}
+            </if>
+        </where>
     </sql>
 	
 	<select id="countProductManage" parameterType="map" resultType="Integer">
-	    SELECT NVL(COUNT(*), 0)
-	    FROM products p
-	    JOIN category c ON p.cate_code = c.cate_code
-	    <where>
-	        <include refid="where-manage"/>
-	    </where>
-	</select>
+        SELECT NVL(COUNT(*), 0)
+        FROM products p
+        JOIN category c ON p.cate_code = c.cate_code
+        <include refid="where-manage"/>
+    </select>
 	
 	<select id="listProductManage" parameterType="map" resultType="com.maknaez.model.ProductDTO">
-	    SELECT * FROM (
-	        SELECT ROWNUM rnum, tb.* FROM (
-	            SELECT 
-	                p.prod_id      AS prodId, 
+        SELECT * FROM (
+            SELECT ROWNUM rnum, tb.* FROM (
+                SELECT 
+                    p.prod_id      AS prodId, 
                     p.cate_code    AS cateCode, 
                     p.prod_name    AS prodName, 
                     p.base_price   AS price, 
                     p.is_displayed AS isDisplayed, 
-                    p.thumb_nail   AS thumbnail, 
                     p.prod_date    AS prodDate,
-                    c.cate_name    AS cateName
-	            FROM products p
-	            JOIN category c ON p.cate_code = c.cate_code
-	            <where>
-	                <include refid="where-manage"/>
-	            </where>
-	            ORDER BY p.prod_id DESC
-	        ) tb WHERE ROWNUM &lt;= #{end}
-	    ) WHERE rnum &gt;= #{start}
-	</select>
+                    c.cate_name    AS cateName,
+                    c.cate_parent  AS cateParent  FROM products p
+                JOIN category c ON p.cate_code = c.cate_code
+                <include refid="where-manage"/>
+                ORDER BY p.prod_id DESC
+            ) tb WHERE ROWNUM &lt;= #{end}
+        ) WHERE rnum &gt;= #{start}
+    </select>
 	
 	<select id="listCategoryAll" resultType="com.maknaez.model.CategoryDTO">
 	    SELECT cate_code, cate_name, cate_parent, depth
@@ -329,7 +356,18 @@
 	    ORDER BY depth ASC, cate_code ASC
 	</select>
 	
-	<delete id="deleteProduct" parameterType="long">
-	    DELETE FROM products WHERE prod_id = #{prodId}
-	</delete>
+	<update id="deleteProduct" parameterType="long">
+        UPDATE products SET status = 0 WHERE prod_id = #{prodId}
+    </update>
+    
+    <update id="updateProduct" parameterType="com.maknaez.model.ProductDTO">
+	    UPDATE products SET
+	        cate_code = #{cateCode},
+	        prod_name = #{prodName},
+	        base_price = #{price},
+	        prod_desc = #{description},
+	        is_displayed = #{isDisplayed}
+	        WHERE prod_id = #{prodId}
+	</update>
+    
 </mapper>
