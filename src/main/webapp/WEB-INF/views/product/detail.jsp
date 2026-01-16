@@ -290,21 +290,16 @@
 							<a href="#" class="text-decoration-underline text-muted" style="font-size:0.8rem;">사이즈 가이드</a>
 						</div>
 						<div class="size-grid">
-							<c:set var="sizes" value="220,225,230,235,240,245,250,255,260,265,270,275,280,285,290,295,300,305,310"/>
-							<c:forTokens items="${sizes}" delims="," var="size" varStatus="st">
+                            <!-- [수정] DB 연동: sizeList 사용 (ProductDTO의 필드명 optId, prodSize, stockQty) -->
+							<c:forEach var="size" items="${sizeList}">
 								<div class="size-item">
-									<c:choose>
-										<c:when test="${size eq '235' or size eq '260'}">
-											<input type="radio" name="optionDetailNum" id="size_${size}" value="${size}" disabled>
-											<label for="size_${size}" class="size-btn">${size}</label>
-										</c:when>
-										<c:otherwise>
-											<input type="radio" name="optionDetailNum" id="size_${size}" value="${size}">
-											<label for="size_${size}" class="size-btn">${size}</label>
-										</c:otherwise>
-									</c:choose>
+                                    <input type="radio" name="optionDetailNum" id="size_${size.optId}" value="${size.optId}" ${size.stockQty <= 0 ? 'disabled' : ''}>
+                                    <label for="size_${size.optId}" class="size-btn">${size.prodSize}</label>
 								</div>
-							</c:forTokens>
+							</c:forEach>
+                            <c:if test="${empty sizeList}">
+                                <p class="text-muted small">선택 가능한 옵션이 없습니다.</p>
+                            </c:if>
 						</div>
 					</div>
 
@@ -425,8 +420,9 @@ $(document).ready(function() {
 	window.buyNow = function() {
 		if(!checkSelection()) return;
         const qty = $('#selectedQty').val();
-        const size = $('input[name="optionDetailNum"]:checked').val();
-        location.href = "${pageContext.request.contextPath}/order/payment?prod_id=${dto.prodId}&quantity=" + qty + "&size=" + size;
+        const sizeOptId = $('input[name="optionDetailNum"]:checked').val();
+        // [수정] DB 연동 후 올바른 파라미터(opt_id) 전달
+        location.href = contextPath + "/order/payment?prod_id=" + productNum + "&quantity=" + qty + "&opt_id=" + sizeOptId;
 	};
 
 	window.addToCart = function() {

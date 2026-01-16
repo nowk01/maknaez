@@ -188,5 +188,14 @@ public class ProductDTO {
 	public void setStatus(int status) {
 		this.status = status;
 	}
+	
+    private String prodSize;   // 사이즈 명칭 (220, 230 ...)
+    private int stockQty;      // 재고 수량
+
+    public String getProdSize() { return prodSize; }
+    public void setProdSize(String prodSize) { this.prodSize = prodSize; }
+
+    public int getStockQty() { return stockQty; }
+    public void setStockQty(int stockQty) { this.stockQty = stockQty; }
     
 }

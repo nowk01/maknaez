@@ -13,6 +13,11 @@ public interface ProductService {
     public List<String> listSaleCategoryNames(); // 세일 카태고리
     public ProductDTO readProduct(long prodId); // 제품 조회 detail
     
+    public List<ProductDTO> listProductSizes(long prodId); // 상품의 사이즈별 재고 목록 조회
+    public void reserveStock(long optId, int quantity) throws Exception; // 재고 선점 (구매하기 클릭 시 - 처리)
+    public int getOptionStock(long optId);
+    public void insertStockLog(Map<String, Object> map) throws Exception;
+    
     // (기존 관리자용 메소드 유지)
     public List<CategoryDTO> listCategory();
     public void insertCategory(CategoryDTO dto) throws Exception;
@@ -27,4 +32,8 @@ public interface ProductService {
     public List<ProductDTO> listProductManage(Map<String, Object> map);
     public List<CategoryDTO> listCategoryAll();
     public void deleteProductList(long[] prodIds) throws Exception;
+    
+    public void updateProduct(ProductDTO dto) throws Exception;
+    
+    public ProductDTO findById(long prod_id);
 }

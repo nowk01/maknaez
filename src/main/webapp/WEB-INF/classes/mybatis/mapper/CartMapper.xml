@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.maknaez.mapper.CartMapper">
+
+    <!-- 장바구니 추가: DDL의 CART_ID, MEMBERIDX, OPT_ID 반영 -->
+    <insert id="insertCart" parameterType="com.maknaez.model.CartDTO">
+        INSERT INTO cart (
+            cart_id, 
+            memberIdx, 
+            prod_id, 
+            opt_id, 
+            quantity, 
+            reg_date
+        ) VALUES (
+            cart_seq.NEXTVAL, 
+            #{memberIdx}, 
+            #{prodId}, 
+            #{optId}, 
+            #{quantity}, 
+            SYSDATE
+        )
+    </insert>
+
+    <!-- 중복 확인: MEMBERIDX와 OPT_ID로 체크 -->
+    <select id="checkExistingCart" parameterType="com.maknaez.model.CartDTO" resultType="Integer">
+        SELECT NVL(SUM(quantity), 0)
+        FROM cart
+        WHERE memberIdx = #{memberIdx} 
+          AND prod_id = #{prodId} 
+          AND opt_id = #{optId}
+    </select>
+
+    <!-- 수량 업데이트 -->
+    <update id="updateCartQuantity" parameterType="com.maknaez.model.CartDTO">
+        UPDATE cart 
+        SET quantity = quantity + #{quantity}
+        WHERE memberIdx = #{memberIdx} 
+          AND prod_id = #{prodId} 
+          AND opt_id = #{optId}
+    </update>
+
+</mapper>
