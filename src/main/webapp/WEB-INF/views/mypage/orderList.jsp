@@ -153,15 +153,14 @@
 								<div class="card-content">
 									<div class="thumb">
 										<img
-											src="${pageContext.request.contextPath}/uploads/product/${dto.imageFilename}"
+											src="${pageContext.request.contextPath}/uploads/product/${dto.thumbNail}"
 											onerror="this.src='${pageContext.request.contextPath}/dist/images/no-image.png'">
 									</div>
 
 									<div class="info">
 										<div class="state-text">${dto.orderState}</div>
 										<div class="prod-name">${dto.productName}</div>
-										<div class="options">[옵션] ${not empty dto.colorName ? dto.colorName : '-'}
-											/ ${not empty dto.sizeName ? dto.sizeName : '-'}</div>
+										<div class="options">[옵션] ${not empty dto.pdSize ? dto.pdSize : '-'}</div>
 										<div class="price-qty">
 											<strong> <fmt:formatNumber
 													value="${dto.totalAmount}" pattern="#,###" />원
