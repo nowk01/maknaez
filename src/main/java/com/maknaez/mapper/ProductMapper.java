@@ -31,4 +31,13 @@ public interface ProductMapper {
     public List<CategoryDTO> listCategoryAll();
     public void deleteProduct(long prodId) throws Exception;
     
+    ProductDTO findById(long prod_id); // 상품 상세 정보 조회
+    List<ProductDTO> listProductSize(long prod_id); // 상품별 사이즈 및 실시간 재고 리스트 조회
+    void insertCart(Map<String, Object> map); // 장바구니 담기
+    public List<ProductDTO> listProductSizes(long prodId);  // 상품별 사이즈 및 합산 재고 리스트 조회
+    public Integer getOptionStock(long optId); // 특정 옵션의 현재 실시간 재고량 조회
+
+    
+    
+    
 }
