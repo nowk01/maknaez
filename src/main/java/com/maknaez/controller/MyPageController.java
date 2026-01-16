@@ -10,6 +10,7 @@ import com.maknaez.model.AddressDTO;
 import com.maknaez.model.MemberDTO;
 import com.maknaez.model.OrderDTO;
 import com.maknaez.model.PointDTO;
+import com.maknaez.model.ProductDTO;
 import com.maknaez.model.SessionInfo;
 import com.maknaez.model.WishlistDTO;
 import com.maknaez.mvc.annotation.Controller;
@@ -22,6 +23,7 @@ import com.maknaez.service.MemberService;
 import com.maknaez.service.MemberServiceImpl;
 import com.maknaez.service.PointService;
 import com.maknaez.service.PointServiceImpl;
+import com.maknaez.service.ProductService;
 import com.maknaez.service.WishlistService;
 import com.maknaez.service.WishlistServiceImpl;
 import com.maknaez.util.MyUtil;
@@ -39,6 +41,7 @@ public class MyPageController {
 	private MemberService service;
 	private PointService pointService;
 	private WishlistService wishlistService;
+	private ProductService productService;
 
 	// [중요] 생성자에서 모든 서비스 수동 초기화 (스프링이 아니므로 new 사용)
 	public MyPageController() {
@@ -68,7 +71,9 @@ public class MyPageController {
 
 		try {
 			String page = req.getParameter("page");
-			int current_page = (page != null) ? Integer.parseInt(page) : 1;
+			int current_page = 1;
+			if (page != null)
+				current_page = Integer.parseInt(page);
 
 			Map<String, Object> map = new HashMap<>();
 			map.put("memberIdx", info.getMemberIdx());
@@ -110,7 +115,7 @@ public class MyPageController {
 		return mav;
 	}
 
-	// 3. 취소/반품 내역 (취소처리중/취소완료/반품진행중/환불완료 중심)
+	// 3. 취소/반품 내역
 	@GetMapping("cancelList")
 	public ModelAndView cancelList(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
@@ -125,7 +130,9 @@ public class MyPageController {
 
 		try {
 			String page = req.getParameter("page");
-			int current_page = (page != null) ? Integer.parseInt(page) : 1;
+			int current_page = 1;
+			if (page != null)
+				current_page = Integer.parseInt(page);
 
 			Map<String, Object> map = new HashMap<>();
 			map.put("memberIdx", info.getMemberIdx());
@@ -133,14 +140,13 @@ public class MyPageController {
 
 			int dataCount = mapper.dataCount(map);
 
-			// 상단 탭 카운트 (DB와 동일하게 문자열 수정)
 			map.put("orderState", "취소완료");
 			int cancelCount = mapper.dataCount(map);
-			map.put("orderState", "취소처리중");
-			int cancelIngCount = mapper.dataCount(map);
-			map.put("orderState", "반품진행중");
+			map.put("orderState", "반품신청");
+			int returnCheckCount = mapper.dataCount(map);
+			map.put("orderState", "반품중");
 			int returnIngCount = mapper.dataCount(map);
-			map.put("orderState", "환불완료");
+			map.put("orderState", "반품완료");
 			int returnDoneCount = mapper.dataCount(map);
 			map.remove("orderState");
 
@@ -162,7 +168,7 @@ public class MyPageController {
 			mav.addObject("dataCount", dataCount);
 			mav.addObject("paging", paging);
 			mav.addObject("cancelCount", cancelCount);
-			mav.addObject("cancelIngCount", cancelIngCount);
+			mav.addObject("returnCheckCount", returnCheckCount);
 			mav.addObject("returnIngCount", returnIngCount);
 			mav.addObject("returnDoneCount", returnDoneCount);
 
@@ -222,7 +228,7 @@ public class MyPageController {
 		} catch (NumberFormatException e) {
 		}
 
-		int rows = 20;
+		int rows = 20; 
 		int total_page = 0;
 		int dataCount = 0;
 
@@ -333,22 +339,20 @@ public class MyPageController {
 
 	// 8. 배송지 관리 목록
 	@GetMapping("addr")
-	public ModelAndView addressList(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
-		HttpSession session = req.getSession();
-		SessionInfo info = (SessionInfo) session.getAttribute("member");
-		if (info == null)
-			return new ModelAndView("redirect:/member/login");
+    public ModelAndView addressList(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        HttpSession session = req.getSession();
+        SessionInfo info = (SessionInfo) session.getAttribute("member");
+        if (info == null) return new ModelAndView("redirect:/member/login");
 
-		ModelAndView mav = new ModelAndView("mypage/addr");
-		try {
-			List<AddressDTO> list = service.listAddress(info.getMemberIdx());
-			mav.addObject("list", list);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return mav;
-	}
+        ModelAndView mav = new ModelAndView("mypage/addr");
+        try {
+            List<AddressDTO> list = service.listAddress(info.getMemberIdx());
+            mav.addObject("list", list);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return mav;
+    }
 
 	// 9. 배송지 추가
 	@PostMapping("addr/write")
@@ -481,7 +485,6 @@ public class MyPageController {
 		return mav;
 	}
 
-	// 13. 회원 등급
 	@GetMapping("/level_benefit")
 	public ModelAndView levelBenefit(HttpServletRequest req, HttpServletResponse resp) {
 		HttpSession session = req.getSession();
@@ -490,65 +493,115 @@ public class MyPageController {
 		}
 		return new ModelAndView("mypage/level_benefit"); // 뷰 이름 추가
 	}
+	
+	// 13. 취소/교환 신청 폼 이동
+		@GetMapping("claimForm")
+		public ModelAndView claimForm(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+			HttpSession session = req.getSession();
+			SessionInfo info = (SessionInfo) session.getAttribute("member");
+			if (info == null) return new ModelAndView("redirect:/member/login");
 
-	// 14. 취소/반품 신청 폼 이동
-	@GetMapping("claimForm")
-	public ModelAndView claimForm(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
-		HttpSession session = req.getSession();
-		SessionInfo info = (SessionInfo) session.getAttribute("member");
-		if (info == null)
-			return new ModelAndView("redirect:/member/login");
-
-		ModelAndView mav = new ModelAndView("order/claimForm");
-		mav.addObject("order_id", req.getParameter("order_id"));
-		mav.addObject("image", req.getParameter("image"));
-		mav.addObject("type", req.getParameter("type"));
-
-		return mav;
-	}
-
-	// 15. 취소/반품 신청 처리
-	@PostMapping("claimRequest")
-	public ModelAndView claimRequest(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
-		HttpSession session = req.getSession();
-		SessionInfo info = (SessionInfo) session.getAttribute("member");
-		if (info == null)
-			return new ModelAndView("redirect:/member/login");
-
-		OrderMapper mapper = MapperContainer.get(OrderMapper.class);
-
-		try {
-			String orderId = req.getParameter("order_id");
-			String type = req.getParameter("type"); // CANCEL 또는 REFUND
-			String reasonCategory = req.getParameter("reason_category");
-			String reasonDetail = req.getParameter("reason");
-			String fullReason = "[" + reasonCategory + "] " + reasonDetail;
-
-			Map<String, Object> map = new HashMap<>();
-			map.put("orderId", orderId);
-			map.put("reason", fullReason);
-			map.put("claimStatus", "접수");
-
-			if ("CANCEL".equals(type)) {
-				map.put("orderState", "취소처리중");
-				map.put("claimType", "취소");
-			} else if ("REFUND".equals(type)) {
-				map.put("orderState", "반품진행중");
-				map.put("claimType", "환불");
-			}
-
-			mapper.updateOrderState(map);
-
-			mapper.insertClaim(map);
-
-			System.out.println("----- 클레임 접수 완료: " + orderId + " -----");
-
-		} catch (Exception e) {
-			e.printStackTrace();
+			ModelAndView mav = new ModelAndView("order/claimForm"); // WEB-INF/views/order/claimForm.jsp
+			
+			// JSP에서 사용할 파라미터 전달 (order_id, image 등)
+			mav.addObject("order_id", req.getParameter("order_id"));
+			mav.addObject("image", req.getParameter("image"));
+			
+			return mav;
 		}
 
-		return new ModelAndView("redirect:/member/mypage/cancelList");
-	}
+		// 14. 취소/교환 신청 처리 (POST)
+		@PostMapping("claimRequest")
+		public ModelAndView claimRequest(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+			HttpSession session = req.getSession();
+			SessionInfo info = (SessionInfo) session.getAttribute("member");
+			if (info == null) return new ModelAndView("redirect:/member/login");
+
+			try {
+				// 파라미터 수집
+				String orderId = req.getParameter("order_id");
+				String type = req.getParameter("type"); // CANCEL 또는 EXCH
+				String reasonCategory = req.getParameter("reason_category");
+				String reasonDetail = req.getParameter("reason");
+				String fullReason = "[" + reasonCategory + "] " + reasonDetail;
+
+				// 콘솔 확인
+				System.out.println("----- 클레임 신청 접수 -----");
+				System.out.println("주문번호: " + orderId);
+				System.out.println("유형: " + type);
+				System.out.println("사유: " + fullReason);
+
+				/*
+				   [추후 DB 연동 시]
+				   OrderMapper mapper = MapperContainer.get(OrderMapper.class);
+				   Map<String, Object> map = new HashMap<>();
+				   map.put("orderId", orderId);
+				   map.put("type", type);
+				   map.put("reason", fullReason);
+				   // mapper.insertClaim(map);  <-- 클레임 테이블 INSERT
+				   // mapper.updateOrderState(map); <-- 주문 상태 UPDATE
+				*/
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+			return new ModelAndView("redirect:/member/mypage/orderList");
+		}
+		
+		// 생성자 수정 (ProductService 초기화 추가)
+	    /* public MyPageController() {
+	        this.service = new MemberServiceImpl();
+	        this.pointService = new PointServiceImpl();
+	        this.wishlistService = new WishlistServiceImpl();
+	        this.productService = new ProductServiceImpl(); // <--- 이거 꼭 추가해주세요!
+	    }
+	    */
+
+	    // 15. 최근 본 상품 목록 (프레임워크 스타일에 맞게 수정됨)
+	    @GetMapping("recent")
+	    public ModelAndView recentList(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	        ModelAndView mav = new ModelAndView("mypage/recentList");
+	        
+	        // 1. 쿠키에서 최근 본 상품 ID 가져오기
+	        String recentProducts = "";
+	        jakarta.servlet.http.Cookie[] cookies = req.getCookies();
+	        if (cookies != null) {
+	            for (jakarta.servlet.http.Cookie c : cookies) {
+	                if (c.getName().equals("recent_products")) {
+	                    try {
+	                        recentProducts = java.net.URLDecoder.decode(c.getValue(), "UTF-8");
+	                    } catch (Exception e) {
+	                        // 디코딩 에러 무시
+	                    }
+	                    break;
+	                }
+	            }
+	        }
+
+	        // 2. ID 리스트로 변환 및 상품 조회
+	        List<ProductDTO> list = new java.util.ArrayList<>();
+	        if (!recentProducts.isEmpty()) {
+	            String[] ids = recentProducts.split(",");
+	            List<String> idList = new java.util.ArrayList<>();
+	            for (String id : ids) {
+	                if(!id.trim().isEmpty()) {
+	                    idList.add(id.trim());
+	                }
+	            }
+	            
+	            // ProductService에 listProductByIds 메소드가 있어야 함
+	            if (!idList.isEmpty()) {
+	                // ProductServiceImpl 인스턴스가 생성자에 초기화되어 있어야 합니다.
+	                // 만약 productService가 null이면 생성자에서 new ProductServiceImpl() 했는지 확인하세요.
+	                list = productService.listProductByIds(idList);
+	            }
+	        }
+
+	        mav.addObject("list", list);
+	        mav.addObject("menuIndex", 99); // 사이드바 활성화용 (필요시)
+	        
+	        return mav;
+	    }
+		
 }

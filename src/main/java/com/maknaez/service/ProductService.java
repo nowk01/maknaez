@@ -36,4 +36,6 @@ public interface ProductService {
     public void updateProduct(ProductDTO dto) throws Exception;
     
     public ProductDTO findById(long prod_id);
+    
+    public List<ProductDTO> listProductByIds(List<String> ids);
 }

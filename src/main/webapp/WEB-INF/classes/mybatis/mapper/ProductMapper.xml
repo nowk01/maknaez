@@ -370,5 +370,25 @@
 	        is_displayed = #{isDisplayed}
 	        WHERE prod_id = #{prodId}
 	</update>
+	
+	<select id="listProductByIds" parameterType="java.util.List" resultType="com.maknaez.model.ProductDTO">
+    SELECT prod_id, prod_name, price, save_filename, discount_rate
+    FROM product
+    WHERE prod_id IN
+    <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+        #{item}
+    </foreach>
+	</select>
+	
+	<select id="listProductImg" parameterType="long" resultType="com.maknaez.model.ProductDTO">
+    	SELECT img_id AS fileId, prod_id AS prodId, img AS fileName
+    	FROM product_img
+   	 	WHERE prod_id = #{prodId}
+    	ORDER BY img_id ASC
+	</select>
+
+	<delete id="deleteProductImg" parameterType="long">
+   	 	DELETE FROM product_img WHERE img_id = #{imgId}
+	</delete>
     
 </mapper>

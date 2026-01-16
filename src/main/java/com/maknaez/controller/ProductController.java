@@ -54,6 +54,49 @@ public class ProductController {
             return new ModelAndView("redirect:/collections/list");
         }
         
+        
+        String recentCookieName = "recent_products";
+        String recentProducts = "";
+        jakarta.servlet.http.Cookie[] cookies = req.getCookies();
+        
+        if (cookies != null) {
+            for (jakarta.servlet.http.Cookie c : cookies) {
+                if (c.getName().equals(recentCookieName)) {
+                    try {
+                        recentProducts = java.net.URLDecoder.decode(c.getValue(), "UTF-8");
+                    } catch (Exception e) {
+                    }
+                    break;
+                }
+            }
+        }
+
+        java.util.LinkedList<String> idList = new java.util.LinkedList<>();
+        if (!recentProducts.isEmpty()) {
+            String[] ids = recentProducts.split(",");
+            for (String id : ids) {
+                if(!id.trim().isEmpty()) idList.add(id.trim());
+            }
+        }
+
+        String currentId = String.valueOf(prodId);
+        
+        idList.remove(currentId);
+        idList.addFirst(currentId);
+
+        if (idList.size() > 5) {
+            idList.removeLast();
+        }
+
+        String newValue = String.join(",", idList);
+        try {
+            jakarta.servlet.http.Cookie newCookie = new jakarta.servlet.http.Cookie(recentCookieName, java.net.URLEncoder.encode(newValue, "UTF-8"));
+            newCookie.setPath("/");       
+            newCookie.setMaxAge(60 * 60 * 24); // 1일 유지
+            resp.addCookie(newCookie);
+        } catch (Exception e) {
+        }
+        
         List<ProductDTO> sizeList = productService.listProductSizes(prodId);
 
         ModelAndView mav = new ModelAndView("product/detail");
@@ -111,4 +154,6 @@ public class ProductController {
         
         return model;
     }
+    
+    
 }

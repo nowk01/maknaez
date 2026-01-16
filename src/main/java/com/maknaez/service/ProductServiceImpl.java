@@ -270,5 +270,39 @@ public class ProductServiceImpl implements ProductService {
             throw e;
         }
     }
+	
+	@Override
+    public List<ProductDTO> listProductByIds(List<String> ids) {
+        // 1. null 체크
+        if (ids == null || ids.isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        List<ProductDTO> list = null;
+        try {
+            // 2. DB에서 상품 목록 조회
+            list = mapper.listProductByIds(ids);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        if (list == null) {
+            return new ArrayList<>();
+        }
+
+        // 3. 쿠키에 저장된 순서(최신순)대로 정렬
+        List<ProductDTO> sortedList = new ArrayList<>();
+        for (String id : ids) {
+            for (ProductDTO dto : list) {
+                // dto.getProdId()는 long 타입이므로 문자열로 변환하여 비교
+                if (String.valueOf(dto.getProdId()).equals(id)) {
+                    sortedList.add(dto);
+                    break;
+                }
+            }
+        }
+        return sortedList;
+    }
+	
 
 }

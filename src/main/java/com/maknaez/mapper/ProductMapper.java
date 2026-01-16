@@ -38,6 +38,8 @@ public interface ProductMapper {
     public Integer getOptionStock(long optId); // 특정 옵션의 현재 실시간 재고량 조회
     
     public void updateProduct(ProductDTO dto) throws Exception;
+    
+    public List<ProductDTO> listProductByIds(List<String> ids);
 
     
     
