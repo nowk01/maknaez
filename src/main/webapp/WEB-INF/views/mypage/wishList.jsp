@@ -34,26 +34,25 @@
             <span class="menu-title">혜택내역</span>
             <ul>
                 <li><a href="${pageContext.request.contextPath}/member/mypage/review">상품 리뷰</a></li>
-                <li><a href="#">포인트/쿠폰</a></li>
+                <li><a href="${pageContext.request.contextPath}/member/mypage/membership">포인트/쿠폰</a></li>
             </ul>
         </div>
 
         <div class="menu-group">
             <span class="menu-title">상품내역</span>
             <ul>
-                <li><a href="#">최근 본 상품</a></li>
                 <li><a href="${pageContext.request.contextPath}/member/mypage/wishList" class="active">관심 상품</a></li>
             </ul>
         </div>
 
         <div class="menu-group">
-            <span class="menu-title">회원정보</span>
-            <ul>
-                <li><a href="${pageContext.request.contextPath}/member/mypage/myInfo" class="active">내 정보 관리</a></li>
-                <li><a href="${pageContext.request.contextPath}/member/mypage/addr" class="active">배송지 관리</a></li>
-                <li><a href="${pageContext.request.contextPath}/member/mypage/membership">회원등급</a></li>
-            </ul>
-        </div>
+    		<span class="menu-title">회원정보</span>
+    			<ul>
+        			<li><a href="${pageContext.request.contextPath}/member/mypage/myInfo">내 정보 관리</a></li>
+        			<li><a href="${pageContext.request.contextPath}/member/mypage/addr">배송지 관리</a></li>
+        			<li><a href="${pageContext.request.contextPath}/member/mypage/level_benefit">회원등급</a></li>
+    			</ul>
+		</div>
         
         <div class="menu-group">
              <ul>
