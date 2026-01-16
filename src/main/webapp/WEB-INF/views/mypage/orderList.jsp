@@ -25,14 +25,17 @@
 					<li><a
 						href="${pageContext.request.contextPath}/member/mypage/orderList"
 						class="active">주문/배송조회</a></li>
-					<li><a href="${pageContext.request.contextPath}/member/mypage/cancelList">취소상품조회</a></li>
+					<li><a
+						href="${pageContext.request.contextPath}/member/mypage/cancelList">취소상품조회</a></li>
 				</ul>
 			</div>
 
 			<div class="menu-group">
 				<span class="menu-title">혜택내역</span>
 				<ul>
-					<li><a href="${pageContext.request.contextPath}/member/mypage/review">상품 리뷰</a></li>
+					<li><a
+						href="${pageContext.request.contextPath}/member/mypage/review">상품
+							리뷰</a></li>
 					<li><a href="#">포인트/쿠폰</a></li>
 				</ul>
 			</div>
@@ -41,16 +44,23 @@
 				<span class="menu-title">상품내역</span>
 				<ul>
 					<li><a href="#">최근 본 상품</a></li>
-					<li><a href="${pageContext.request.contextPath}/member/mypage/wishList">관심 상품</a></li>
+					<li><a
+						href="${pageContext.request.contextPath}/member/mypage/wishList">관심
+							상품</a></li>
 				</ul>
 			</div>
 
 			<div class="menu-group">
 				<span class="menu-title">회원정보</span>
 				<ul>
-					<li><a href="${pageContext.request.contextPath}/member/mypage/myImfo">내 정보 관리</a></li>
-					<li><a href="${pageContext.request.contextPath}/member/mypage/addr">배송지 관리</a></li>
-					<li><a href="${pageContext.request.contextPath}/member/mypage/level_benefit">회원등급</a></li>
+					<li><a
+						href="${pageContext.request.contextPath}/member/mypage/myImfo">내
+							정보 관리</a></li>
+					<li><a
+						href="${pageContext.request.contextPath}/member/mypage/addr">배송지
+							관리</a></li>
+					<li><a
+						href="${pageContext.request.contextPath}/member/mypage/level_benefit">회원등급</a></li>
 				</ul>
 			</div>
 		</aside>
@@ -65,10 +75,10 @@
 
 
 			<div class="sm-salomon__statusBar">
-				
+
 				<div class="sm-salomon__statusBarItem" data-status-bar-item="">
-					<span class="sm-salomon__statusBarItemTitle">전체</span> 
-					<span class="sm-salomon__statusBarItemValue" data-status-total="">
+					<span class="sm-salomon__statusBarItemTitle">전체</span> <span
+						class="sm-salomon__statusBarItemValue" data-status-total="">
 						<c:out value="${dataCount}" default="0" />
 					</span>
 				</div>
@@ -81,8 +91,8 @@
 				</div>
 
 				<div class="sm-salomon__statusBarItem" data-status-bar-item="">
-					<span class="sm-salomon__statusBarItemTitle">결제완료</span> 
-					<span class="sm-salomon__statusBarItemValue" data-status-paid="">
+					<span class="sm-salomon__statusBarItemTitle">결제완료</span> <span
+						class="sm-salomon__statusBarItemValue" data-status-paid="">
 						<c:out value="${paymentCount}" default="0" />
 					</span>
 				</div>
@@ -95,8 +105,8 @@
 				</div>
 
 				<div class="sm-salomon__statusBarItem" data-status-bar-item="">
-					<span class="sm-salomon__statusBarItemTitle">배송중</span> 
-					<span class="sm-salomon__statusBarItemValue" data-status-in-transit="">
+					<span class="sm-salomon__statusBarItemTitle">배송중</span> <span
+						class="sm-salomon__statusBarItemValue" data-status-in-transit="">
 						<c:out value="${shippingCount}" default="0" />
 					</span>
 				</div>
@@ -109,8 +119,8 @@
 				</div>
 
 				<div class="sm-salomon__statusBarItem" data-status-bar-item="">
-					<span class="sm-salomon__statusBarItemTitle">배송완료</span> 
-					<span class="sm-salomon__statusBarItemValue" data-status-delivered="">
+					<span class="sm-salomon__statusBarItemTitle">배송완료</span> <span
+						class="sm-salomon__statusBarItemValue" data-status-delivered="">
 						<c:out value="${completeCount}" default="0" />
 					</span>
 				</div>
@@ -161,11 +171,14 @@
 
 									<div class="buttons">
 										<button type="button" class="btn-basic">배송조회</button>
-										<button type="button" class="btn-basic">교환/반품 신청</button>
+										<button type="button" class="btn-basic" onclick="location.href='${pageContext.request.contextPath}/order/claimForm?order_id=${dto.orderNum}'">
+											교환/취소 신청</button>
 										<button type="button" class="btn-basic">리뷰 작성하기</button>
 									</div>
 								</div>
 							</div>
+							<button type="button" class="btn-basic btn-manage-order"
+								data-order-num="${dto.orderNum}">상태관리</button>
 						</c:forEach>
 					</c:when>
 					<c:otherwise>
@@ -192,6 +205,13 @@
 				});
 			});
 		});
+		
+		function openCancelModal(orderId) {
+		    const reason = prompt("취소 사유를 입력해주세요.");
+		    if(reason) {
+		        location.href = "/order/claimRequest?order_id=" + orderId + "&reason=" + reason;
+		    }
+		}
 	</script>
 
 </body>

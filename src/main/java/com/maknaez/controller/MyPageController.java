@@ -493,4 +493,59 @@ public class MyPageController {
 		}
 		return new ModelAndView("mypage/level_benefit"); // 뷰 이름 추가
 	}
+	
+	// 13. 취소/교환 신청 폼 이동
+		@GetMapping("claimForm")
+		public ModelAndView claimForm(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+			HttpSession session = req.getSession();
+			SessionInfo info = (SessionInfo) session.getAttribute("member");
+			if (info == null) return new ModelAndView("redirect:/member/login");
+
+			ModelAndView mav = new ModelAndView("order/claimForm"); // WEB-INF/views/order/claimForm.jsp
+			
+			// JSP에서 사용할 파라미터 전달 (order_id, image 등)
+			mav.addObject("order_id", req.getParameter("order_id"));
+			mav.addObject("image", req.getParameter("image"));
+			
+			return mav;
+		}
+
+		// 14. 취소/교환 신청 처리 (POST)
+		@PostMapping("claimRequest")
+		public ModelAndView claimRequest(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+			HttpSession session = req.getSession();
+			SessionInfo info = (SessionInfo) session.getAttribute("member");
+			if (info == null) return new ModelAndView("redirect:/member/login");
+
+			try {
+				// 파라미터 수집
+				String orderId = req.getParameter("order_id");
+				String type = req.getParameter("type"); // CANCEL 또는 EXCH
+				String reasonCategory = req.getParameter("reason_category");
+				String reasonDetail = req.getParameter("reason");
+				String fullReason = "[" + reasonCategory + "] " + reasonDetail;
+
+				// 콘솔 확인
+				System.out.println("----- 클레임 신청 접수 -----");
+				System.out.println("주문번호: " + orderId);
+				System.out.println("유형: " + type);
+				System.out.println("사유: " + fullReason);
+
+				/*
+				   [추후 DB 연동 시]
+				   OrderMapper mapper = MapperContainer.get(OrderMapper.class);
+				   Map<String, Object> map = new HashMap<>();
+				   map.put("orderId", orderId);
+				   map.put("type", type);
+				   map.put("reason", fullReason);
+				   // mapper.insertClaim(map);  <-- 클레임 테이블 INSERT
+				   // mapper.updateOrderState(map); <-- 주문 상태 UPDATE
+				*/
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+			return new ModelAndView("redirect:/member/mypage/orderList");
+		}
 }
