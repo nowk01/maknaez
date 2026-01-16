@@ -152,7 +152,8 @@ CREATE TABLE products (
     is_displayed    NUMBER          NULL,           -- 진열 여부
     thumb_nail      VARCHAR2(255)   NULL,
     prod_date       DATE            NULL,           -- 제조일
-    shipped_date    DATE            NULL            -- 입고일
+    shipped_date    DATE            NULL,            -- 입고일
+    status          NUMBER          NULL            -- 삭제 여부 (0 : 삭제, 1 :정상 )
 );
 
 -- 13. 상품 옵션 (사이즈) - 실제 판매 단위(SKU)가 될 가능성 높음
