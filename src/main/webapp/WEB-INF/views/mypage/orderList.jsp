@@ -168,10 +168,37 @@
 										</div>
 									</div>
 
+
 									<div class="buttons">
-										<button type="button" class="btn-basic">배송조회</button>
-										<button type="button" class="btn-basic" onclick="location.href='${pageContext.request.contextPath}/order/claimForm?order_id=${dto.orderNum}'">
-											교환/취소 신청</button>
+										<c:choose>
+											<%-- 1. 결제완료 상태: 주문취소만 가능 --%>
+											<c:when test="${dto.orderState == '결제완료'}">
+												<button type="button" class="btn-sm btn-outline"
+													onclick="openCancelModal('${dto.orderNum}')">주문취소</button>
+											</c:when>
+
+											<%-- 2. 배송중 상태: 배송조회 필수 --%>
+											<c:when test="${dto.orderState == '배송중'}">
+												<button type="button" class="btn-sm btn-black"
+													onclick="openDeliveryTracking('${dto.orderNum}')">배송조회</button>
+											</c:when>
+
+											<%-- 3. 배송완료 상태: 배송조회 + 교환/반품 신청 --%>
+											<c:when test="${dto.orderState == '배송완료'}">
+												<button type="button" class="btn-sm btn-black"
+													onclick="openDeliveryTracking('${dto.orderNum}')">배송조회</button>
+												<button type="button" class="btn-sm btn-outline"
+													onclick="location.href='${pageContext.request.contextPath}/order/claimForm?order_id=${dto.orderNum}'">
+													교환/반품 신청</button>
+											</c:when>
+
+											<%-- 4. 취소완료/반품완료 등: 버튼 미노출 또는 상세기능 --%>
+											<c:otherwise>
+												<button type="button" class="btn-sm btn-outline"
+													onclick="location.href='${pageContext.request.contextPath}/member/mypage/orderDetail?orderNum=${dto.orderNum}'">
+													주문상세</button>
+											</c:otherwise>
+										</c:choose>
 									</div>
 								</div>
 							</div>
@@ -208,6 +235,18 @@
 		        location.href = "/order/claimRequest?order_id=" + orderId + "&reason=" + reason;
 		    }
 		}
+		
+		function openCancelModal(orderId) {
+		    if(confirm("주문을 취소하시겠습니까?")) {
+		        location.href = "${pageContext.request.contextPath}/order/cancelRequest?orderNum=" + orderId;
+		    }
+		}
+
+		function openDeliveryTracking(orderNum) {
+		    window.open("${pageContext.request.contextPath}/member/mypage/deliveryInfo?orderNum=" + orderNum, 
+		                "deliveryPop", "width=550,height=700");
+		}
+		
 	</script>
 
 </body>

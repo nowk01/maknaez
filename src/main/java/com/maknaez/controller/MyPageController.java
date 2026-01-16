@@ -586,4 +586,33 @@ public class MyPageController {
 	        return mav;
 	    }
 		
+	    @GetMapping("orderDetail")
+	    public String orderDetail(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	        // 1. 주문번호(orderNum)를 이용해 DB에서 주문 상세 및 배송지 정보 조회
+	    	String orderNum = req.getParameter("orderNum"); 
+	    	
+	    	HttpSession session = req.getSession();
+	        SessionInfo info = (SessionInfo) session.getAttribute("member");
+	        
+	        try {
+	            // OrderDTO dto = service.findById(orderNum); 
+	            
+//	            수정 필요
+//	            OrderDTO dto = new OrderDTO();
+//	            dto.setOrderNum(orderNum);
+//	            dto.setOrderDate("2026-01-16");
+//	            dto.setProductName("M_HIERRO_V7_GR");
+//	            dto.setTotalAmount(199000);
+//	            dto.setOrderState("결제완료");
+//	           
+
+//	            req.setAttribute("dto", dto);
+	            
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	            return "redirect:/member/mypage/orderList";
+	        }
+
+	        return "mypage/orderDetail"; 
+	    }
 }
