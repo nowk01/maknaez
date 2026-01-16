@@ -36,6 +36,8 @@ public interface ProductMapper {
     void insertCart(Map<String, Object> map); // 장바구니 담기
     public List<ProductDTO> listProductSizes(long prodId);  // 상품별 사이즈 및 합산 재고 리스트 조회
     public Integer getOptionStock(long optId); // 특정 옵션의 현재 실시간 재고량 조회
+    
+    public void updateProduct(ProductDTO dto) throws Exception;
 
     
     
