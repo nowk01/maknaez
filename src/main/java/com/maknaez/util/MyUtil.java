@@ -360,4 +360,41 @@ public class MyUtil {
 
 		return Pattern.matches("[\\w\\~\\-\\.]+@[\\w\\~\\-]+(\\.[\\w\\~\\-]+)+", email.trim());
 	}
+	
+
+	public String pagingCustom(int current_page, int total_page, String list_url) {
+		StringBuilder sb = new StringBuilder();
+
+		if (current_page < 1 || total_page <= 1 || list_url == null) {
+			return "";
+		}
+
+		list_url += list_url.contains("?") ? "&" : "?";
+		
+		sb.append("<div class='as-wishlist__pagination' style='display: flex; justify-content: center; align-items: center; gap: 20px; margin-top: 40px;'>");
+
+		if (current_page > 1) {
+			sb.append("<a href='" + list_url + "page=" + (current_page - 1) + "' class='as-wishlist__paginationButton' title='Prev' style='cursor: pointer;'>");
+			sb.append("<svg width='7' height='11' viewBox='0 0 7 11' fill='none' xmlns='http://www.w3.org/2000/svg'><path d='M6 1L1 5.5L6 10' stroke='#777780' stroke-linecap='round'></path></svg>");
+			sb.append("</a>");
+		} else {
+			sb.append("<span class='as-wishlist__paginationButton' style='opacity: 0.3; cursor: default;'>");
+			sb.append("<svg width='7' height='11' viewBox='0 0 7 11' fill='none' xmlns='http://www.w3.org/2000/svg'><path d='M6 1L1 5.5L6 10' stroke='#777780' stroke-linecap='round'></path></svg>");
+			sb.append("</span>");
+		}
+
+		if (current_page < total_page) {
+			sb.append("<a href='" + list_url + "page=" + (current_page + 1) + "' class='as-wishlist__paginationButton' title='Next' style='cursor: pointer;'>");
+			sb.append("<svg width='7' height='11' viewBox='0 0 7 11' fill='none' xmlns='http://www.w3.org/2000/svg'><path d='M1 1L6 5.5L1 10' stroke='#777780' stroke-linecap='round'></path></svg>");
+			sb.append("</a>");
+		} else {
+			sb.append("<span class='as-wishlist__paginationButton' style='opacity: 0.3; cursor: default;'>");
+			sb.append("<svg width='7' height='11' viewBox='0 0 7 11' fill='none' xmlns='http://www.w3.org/2000/svg'><path d='M1 1L6 5.5L1 10' stroke='#777780' stroke-linecap='round'></path></svg>");
+			sb.append("</span>");
+		}
+
+		sb.append("</div>");
+
+		return sb.toString();
+	}
 }

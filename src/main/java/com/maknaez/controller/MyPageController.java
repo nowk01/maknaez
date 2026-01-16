@@ -204,7 +204,6 @@ public class MyPageController {
 		return mav;
 	}
 
-	// [수정됨] 5. 관심 상품 (WishList) - DB 연동 및 RequestParam 제거
 	@GetMapping("wishList")
 	public ModelAndView wishList(HttpServletRequest req, HttpServletResponse resp) {
 		ModelAndView mav = new ModelAndView("mypage/wishList");
@@ -217,7 +216,6 @@ public class MyPageController {
 
 		MyUtil util = new MyUtil();
 
-		// [수정] RequestParam 대신 req.getParameter로 페이지 번호 받기
 		String pageStr = req.getParameter("page");
 		int current_page = 1;
 		try {
@@ -225,10 +223,9 @@ public class MyPageController {
 				current_page = Integer.parseInt(pageStr);
 			}
 		} catch (NumberFormatException e) {
-			// 페이지 번호가 숫자가 아니면 1페이지로 유지
 		}
 
-		int rows = 10;
+		int rows = 20; 
 		int total_page = 0;
 		int dataCount = 0;
 
@@ -237,7 +234,7 @@ public class MyPageController {
 
 		dataCount = wishlistService.dataCountWish(map);
 		if (dataCount != 0) {
-			total_page = util.pageCount(rows, dataCount);
+			total_page = util.pageCount(dataCount, rows);
 		}
 
 		if (current_page > total_page)
@@ -250,7 +247,7 @@ public class MyPageController {
 
 		List<WishlistDTO> list = wishlistService.listWish(map);
 
-		String paging = util.paging(current_page, total_page, "wishList");
+		String paging = util.pagingCustom(current_page, total_page, "wishList");
 
 		mav.addObject("list", list);
 		mav.addObject("page", current_page);
