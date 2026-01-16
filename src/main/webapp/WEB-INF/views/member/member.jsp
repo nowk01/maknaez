@@ -404,11 +404,73 @@
     }
 
     function submitForm() {
+        const f = document.memberForm;
+
+        // 1. 아이디 및 닉네임 중복 확인 체크
         if(!isIdChecked) { alert("아이디 중복확인을 완료해주세요."); return; }
         if(!isNickChecked) { alert("닉네임 중복확인을 완료해주세요."); return; }
         
-        const f = document.memberForm;
-        if(!f.userPwd.value) { alert("비밀번호를 입력하세요."); f.userPwd.focus(); return; }
+        // 2. 비밀번호 체크
+        if(!f.userPwd.value.trim()) { alert("비밀번호를 입력하세요."); f.userPwd.focus(); return; }
+        
+        // 3. 성별 체크
+        const gender = f.gender;
+        let genderChecked = false;
+        for(let i=0; i<gender.length; i++) {
+            if(gender[i].checked) {
+                genderChecked = true;
+                break;
+            }
+        }
+
+        if(!genderChecked) {
+            alert("성별을 선택해주세요.");
+            return;
+        }
+
+        // 4. 이름 체크
+        if(!f.userName.value.trim()) { alert("이름을 입력하세요."); f.userName.focus(); return; }
+
+        // 5. 생년월일 체크
+        if(!f.birth.value.trim()) { 
+            alert("생년월일을 입력하세요."); 
+            f.birth.focus(); 
+            return; 
+        }
+        if(f.birth.value.length !== 8) {
+            alert("생년월일은 8자리 숫자로 입력해주세요. (예: 19950101)");
+            f.birth.focus();
+            return;
+        }
+
+        // 6. 이메일 체크
+        if(!f.email1.value.trim() || !f.email2.value.trim()) {
+            alert("이메일을 입력하세요.");
+            f.email1.focus();
+            return;
+        }
+        
+    	// 7. 전화번호 체크 추가
+        if(!f.tel1.value.trim() || !f.tel2.value.trim() || !f.tel3.value.trim()) {
+            alert("전화번호를 모두 입력해주세요.");
+            if(!f.tel1.value.trim()) f.tel1.focus();
+            else if(!f.tel2.value.trim()) f.tel2.focus();
+            else f.tel3.focus();
+            return;
+        }
+
+        // 전화번호 자리수 체크
+        if(f.tel2.value.length < 3 || f.tel3.value.length < 4) {
+            alert("전화번호 형식이 올바르지 않습니다.");
+            f.tel2.focus();
+            return;
+        }
+        
+        // 8. 주소 체크
+        if(!f.zip.value || !f.addr1.value) {
+    	alert("주소 찾기를 통해 주소를 입력해주세요.");
+    	return;
+		}
         
         f.submit();
     }

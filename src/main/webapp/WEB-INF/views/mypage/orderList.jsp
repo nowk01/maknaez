@@ -172,12 +172,9 @@
 										<button type="button" class="btn-basic">배송조회</button>
 										<button type="button" class="btn-basic" onclick="location.href='${pageContext.request.contextPath}/order/claimForm?order_id=${dto.orderNum}'">
 											교환/취소 신청</button>
-										<button type="button" class="btn-basic">리뷰 작성하기</button>
 									</div>
 								</div>
 							</div>
-							<button type="button" class="btn-basic btn-manage-order"
-								data-order-num="${dto.orderNum}">상태관리</button>
 						</c:forEach>
 					</c:when>
 					<c:otherwise>
