@@ -291,14 +291,33 @@
 						</div>
 					</div>
 
-					<div class="color-options">
-						<div class="color-label">컬러 : ${dto.cateCode} (임시 표시)</div>
-						<div class="color-thumbs">
-							<div class="color-thumb active"><img src="https://placehold.co/60/000000/FFFFFF?text=BK" alt="Black"></div>
-							<div class="color-thumb"><img src="https://placehold.co/60/FFFFFF/000000?text=WH" alt="White"></div>
-							<div class="color-thumb"><img src="https://placehold.co/60/FF0000/FFFFFF?text=RD" alt="Red"></div>
-						</div>
-					</div>
+					<!-- ★★★ 컬러 옵션 영역 (DB 연동 적용) ★★★ -->
+                <div class="color-options mb-4">
+                    <!-- 현재 상품의 컬러 코드 표시 (Service에서 세팅됨) -->
+                    <div class="color-label mb-2 fw-bold">
+                        컬러 : <span class="text-primary">${dto.colorCode}</span>
+                    </div>
+                    
+                    <div class="color-thumbs">
+                        <c:choose>
+                            <c:when test="${not empty dto.colorOptions}">
+                                <c:forEach var="colorItem" items="${dto.colorOptions}">
+                                    <div class="color-thumb ${colorItem.prodId == dto.prodId ? 'active' : ''}" 
+                                         onclick="location.href='${pageContext.request.contextPath}/product/detail?prod_id=${colorItem.prodId}'"
+                                         title="${colorItem.prodName}">
+                                        <img src="${productUrl}/${colorItem.thumbnail}" alt="${colorItem.colorCode}" onerror="this.src='https://placehold.co/60x60?text=IMG'">
+                                    </div>
+                                </c:forEach>
+                            </c:when>
+                            <c:otherwise>
+                                <!-- 연관 컬러 상품이 없을 경우 현재 상품만 표시 -->
+                                <div class="color-thumb active">
+                                    <img src="${productUrl}/${dto.thumbnail}" alt="${dto.colorCode}" onerror="this.src='https://placehold.co/60x60?text=IMG'">
+                                </div>
+                            </c:otherwise>
+                        </c:choose>
+                    </div>
+                </div>
 
 					<div class="size-options">
 						<div class="d-flex justify-content-between mb-2">

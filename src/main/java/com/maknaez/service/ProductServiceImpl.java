@@ -64,8 +64,35 @@ public class ProductServiceImpl implements ProductService {
     public ProductDTO readProduct(long prodId) {
         ProductDTO dto = null;
         try  {
-            dto = mapper.readProduct(prodId);
-        } catch (Exception e) { e.printStackTrace(); }
+            dto = mapper.findById(prodId); 
+            
+            if (dto != null) {
+                String name = dto.getProdName();
+                
+                if (name != null && name.contains("_")) {
+                    int lastIdx = name.lastIndexOf("_");
+                    if (lastIdx > 0) {
+                        String colorCode = name.substring(lastIdx + 1);
+                        dto.setColorCode(colorCode);
+                        List<ProductDTO> colors = this.listProductColors(name);
+                        if (colors != null) {
+                            for (ProductDTO c : colors) {
+                                String cName = c.getProdName();
+                                if (cName != null && cName.lastIndexOf("_") > 0) {
+                                    c.setColorCode(cName.substring(cName.lastIndexOf("_") + 1));
+                                }
+                            }
+                        }
+                        
+                        dto.setColorOptions(colors);
+                    }
+                } else {
+                    dto.setColorCode("");
+                }
+            }
+        } catch (Exception e) { 
+            e.printStackTrace(); 
+        }
         return dto;
     }
     
