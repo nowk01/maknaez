@@ -4,19 +4,21 @@
 
 	<select id="dataCount" parameterType="map" resultType="Integer">
 		SELECT NVL(COUNT(*), 0)
-		FROM orders
+		FROM orders o
 		<where>
 			<if test="memberIdx != null and memberIdx != ''">
-				AND MEMBERIDX = #{memberIdx}
+				AND o.MEMBERIDX = #{memberIdx}
 			</if>
 			<if test="orderState != null and orderState != ''">
-				AND STATUS = #{orderState}
+				AND o.STATUS = #{orderState}
 			</if>
+			
 			<if test="mode == 'cancel'">
-				AND STATUS IN ('취소처리중', '취소완료', '반품진행중', '환불완료')
+				AND o.STATUS IN ('취소신청', '취소처리중', '취소완료', '반품신청', '반품진행중', '반품완료', '환불완료', '교환신청', '교환완료')
 			</if>
+			
 			<if test="mode == 'claim'">
-				AND STATUS IN ('취소신청', '반품신청', '취소완료', '반품완료')
+				AND o.STATUS IN ('취소신청', '취소처리중', '취소완료', '반품신청', '반품진행중', '반품완료', '환불완료', '교환신청', '교환완료')
 			</if>
 		</where>
 	</select>
@@ -29,12 +31,18 @@
 				TO_CHAR(o.ORDER_DATE, 'YYYY-MM-DD') AS orderDate,
 				NVL(o.TOTAL_AMOUNT, 0) AS totalAmount,
 				o.STATUS AS orderState,
+				
+				/* 상품 정보 (없으면 '삭제된 상품' 표시) */
 				NVL(p.PROD_NAME, '상품정보없음') AS productName,
 				NVL(p.PROD_ID, 0) AS productNum,
+				NVL(p.THUMB_NAIL, 'no-image.png') AS thumbNail,
+				
+				/* 주문 상세 정보 */
 				NVL(oi.COUNT, 0) AS qty,
 				NVL(oi.PRICE, 0) AS price,
-				p.THUMB_NAIL AS thumbNail,
-				ps.PD_SIZE AS pdSize,
+				NVL(ps.PD_SIZE, '-') AS pdSize,
+				
+				/* 회원 정보 (LEFT JOIN으로 탈퇴 회원도 표시) */
 				NVL(m2.userName, '탈퇴회원') AS userName,  NVL(m1.userId, 'unknown') AS userId       FROM orders o
 			LEFT JOIN order_items oi ON o.ITEMS_ID = oi.ORDER_ID
 			LEFT JOIN pd_size ps ON oi.OPT_ID = ps.OPT_ID
@@ -48,12 +56,15 @@
 				<if test="orderState != null and orderState != ''">
 					AND o.STATUS = #{orderState}
 				</if>
+				
 				<if test="mode == 'cancel'">
-					AND o.STATUS IN ('취소처리중', '취소완료', '반품진행중', '환불완료')
+					AND o.STATUS IN ('취소신청', '취소처리중', '취소완료', '반품신청', '반품진행중', '반품완료', '환불완료', '교환신청', '교환완료')
 				</if>
+				
 				<if test="mode == 'claim'">
-					AND o.STATUS IN ('취소신청', '반품신청', '취소완료', '반품완료')
+					AND o.STATUS IN ('취소신청', '취소처리중', '취소완료', '반품신청', '반품진행중', '반품완료', '환불완료', '교환신청', '교환완료')
 				</if>
+				
 				<if test="historyStartDate != null and historyStartDate != ''">
 					AND o.ORDER_DATE &gt;= TO_DATE(#{historyStartDate}, 'YYYY-MM-DD')
 				</if>
