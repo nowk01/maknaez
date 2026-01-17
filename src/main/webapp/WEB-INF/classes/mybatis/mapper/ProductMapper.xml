@@ -213,10 +213,15 @@
     </insert>
     
     <select id="listProductColors" parameterType="String" resultType="com.maknaez.model.ProductDTO">
-        SELECT prod_id AS prodId, prod_name AS prodName, thumb_nail AS thumbnail, cate_code AS cateCode
-        FROM products
-        WHERE prod_name LIKE #{baseName} || '_%'
-        ORDER BY prod_name ASC
+        SELECT 
+            prod_id     AS prodId,
+            prod_name   AS prodName,
+            thumb_nail  AS thumbnail
+        FROM PRODUCTS
+        WHERE prod_name LIKE #{baseName} || '\_%' ESCAPE '\'
+          AND is_displayed = 1
+          AND status = 1
+        ORDER BY prod_name
     </select>
 
     
