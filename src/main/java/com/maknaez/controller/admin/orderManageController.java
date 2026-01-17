@@ -110,6 +110,7 @@ public class orderManageController {
 			String productNum = req.getParameter("productNum");
 			String pdSize = req.getParameter("pdSize");
 			String qtyStr = req.getParameter("qty");
+			
 			int qty = (qtyStr != null && !qtyStr.isEmpty()) ? Integer.parseInt(qtyStr) : 0;
 
 			Map<String, Object> map = new HashMap<String, Object>();
@@ -117,7 +118,6 @@ public class orderManageController {
 			map.put("productNum", productNum);
 			map.put("pdSize", pdSize);
 			map.put("qty", qty);
-			
 
 			if ("취소".equals(claimType)) {
 				map.put("status", "취소완료");
@@ -126,12 +126,13 @@ public class orderManageController {
 			}
 
 			mapper.updateOrderState(map);
+			
 			mapper.updateStockIncrease(map);
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		return new ModelAndView("redirect:/admin/order/claim_list");
+		return new ModelAndView("redirect:/admin/order/claimList");
 	}
 }
