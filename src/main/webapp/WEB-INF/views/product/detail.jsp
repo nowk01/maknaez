@@ -292,13 +292,20 @@
 					</div>
 
 					<div class="color-options">
-						<div class="color-label">컬러 : ${dto.cateCode} (임시 표시)</div>
-						<div class="color-thumbs">
-							<div class="color-thumb active"><img src="https://placehold.co/60/000000/FFFFFF?text=BK" alt="Black"></div>
-							<div class="color-thumb"><img src="https://placehold.co/60/FFFFFF/000000?text=WH" alt="White"></div>
-							<div class="color-thumb"><img src="https://placehold.co/60/FF0000/FFFFFF?text=RD" alt="Red"></div>
-						</div>
-					</div>
+                    <!-- DTO의 getColorName() 메소드를 호출하여 깔끔하게 표시 -->
+                    <div class="color-label">컬러 : ${dto.colorName}</div>
+                    
+                    <div class="color-thumbs">
+                        <c:forEach var="item" items="${colorList}">
+                            <!-- 현재 보고있는 상품이면 active 클래스 추가 -->
+                            <div class="color-thumb ${dto.prodId == item.prodId ? 'active' : ''}" 
+                                 onclick="location.href='${pageContext.request.contextPath}/product/detail?prodId=${item.prodId}'"
+                                 title="${item.colorName}"> <!-- 여기도 item.colorName 사용 가능 -->
+                                <img src="${pageContext.request.contextPath}/uploads/product/${item.thumbnail}" alt="${item.prodName}">
+                            </div>
+                        </c:forEach>
+                    </div>
+                </div>
 
 					<div class="size-options">
 						<div class="d-flex justify-content-between mb-2">

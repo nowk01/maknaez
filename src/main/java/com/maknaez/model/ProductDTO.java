@@ -30,6 +30,15 @@ public class ProductDTO {
     
     private long optId;      // pd_size 테이블의 PK (시퀀스로 생성됨)
     private String pdSize;   // 리스트(sizes)에서 하나씩 꺼낸 단일 사이즈 값
+    
+    public String getColorName() {
+        if (prodName != null && prodName.contains("_")) {
+            return prodName.substring(prodName.lastIndexOf("_") + 1);
+        }
+        return "기본"; //
+    }
+    
+    
     public long getOptId() {
 		return optId;
 	}

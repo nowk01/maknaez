@@ -69,6 +69,26 @@ public class ProductServiceImpl implements ProductService {
         return dto;
     }
     
+    @Override
+    public List<ProductDTO> listProductColors(String prodName) {
+        List<ProductDTO> list = null;
+        
+        try {
+            String baseName = prodName;
+            int lastUnderscore = prodName.lastIndexOf("_");
+            if (lastUnderscore > 0) {
+                baseName = prodName.substring(0, lastUnderscore);
+            }
+            
+            list = mapper.listProductColors(baseName);
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        return list;
+    }
+    
     
     
     // 관리자 사용

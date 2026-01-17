@@ -11,6 +11,8 @@ import com.maknaez.model.WishlistDTO;
 import com.maknaez.mvc.annotation.Controller;
 import com.maknaez.mvc.annotation.GetMapping;
 import com.maknaez.mvc.annotation.PostMapping;
+import com.maknaez.mvc.annotation.RequestMapping;
+import com.maknaez.mvc.annotation.RequestMethod;
 import com.maknaez.mvc.annotation.ResponseBody;
 import com.maknaez.mvc.view.ModelAndView;
 import com.maknaez.service.ProductService;
@@ -36,8 +38,13 @@ public class ProductController {
     @GetMapping("/product/detail") 
     public ModelAndView detail(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String prodIdStr = req.getParameter("prod_id");
-        if(prodIdStr == null) {
+        
+        if(prodIdStr == null || prodIdStr.isEmpty()) {
             prodIdStr = req.getParameter("productNo");
+        }
+        
+        if(prodIdStr == null || prodIdStr.isEmpty()) {
+            prodIdStr = req.getParameter("prod_id"); 
         }
 
         long prodId = 0;
@@ -97,6 +104,8 @@ public class ProductController {
         } catch (Exception e) {
         }
         
+        List<ProductDTO> colorList = productService.listProductColors(dto.getProdName());
+        
         List<ProductDTO> sizeList = productService.listProductSizes(prodId);
 
         ModelAndView mav = new ModelAndView("product/detail");
@@ -111,6 +120,7 @@ public class ProductController {
             isUserLiked = wishlistService.isLiked(info.getMemberIdx(), prodId);
         }
         mav.addObject("isUserLiked", isUserLiked);
+        mav.addObject("colorList", colorList);
 
         return mav;
     }
@@ -154,6 +164,6 @@ public class ProductController {
         
         return model;
     }
-    
+        
     
 }
