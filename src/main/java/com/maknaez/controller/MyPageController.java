@@ -494,7 +494,6 @@ public class MyPageController {
 		return new ModelAndView("mypage/level_benefit"); // 뷰 이름 추가
 	}
 
-	// 13. 취소/교환 신청 폼 이동
 	@GetMapping("claimForm")
 	public ModelAndView claimForm(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
@@ -508,16 +507,20 @@ public class MyPageController {
 
 		try {
 			OrderMapper mapper = MapperContainer.get(OrderMapper.class);
-			// 주문번호로 상품명과 이미지를 가져오기 위해 DB 조회
+			
 			Map<String, Object> map = new HashMap<>();
 			map.put("memberIdx", info.getMemberIdx());
 			map.put("orderNum", orderNum);
+			
+			map.put("start", 1);
+			map.put("end", 10); 
 
-			// 기존 listOrder 메서드를 활용해 해당 주문 한 건만 가져옴
 			List<OrderDTO> list = mapper.listOrder(map);
+			
 			if (!list.isEmpty()) {
 				mav.addObject("dto", list.get(0));
 			}
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
