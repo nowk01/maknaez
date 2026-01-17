@@ -18,8 +18,15 @@ public class OrderDTO {
     private String zip;
     private String addr1;
     private String addr2;
+    private long productNum;
 
-    public String getUserName() {
+    public long getProductNum() {
+		return productNum;
+	}
+	public void setProductNum(long productNum) {
+		this.productNum = productNum;
+	}
+	public String getUserName() {
 		return userName;
 	}
 	public void setUserName(String userName) {
