@@ -213,11 +213,12 @@
     </insert>
     
     <select id="listProductColors" parameterType="String" resultType="com.maknaez.model.ProductDTO">
-        SELECT prod_id AS prodId, prod_name AS prodName, thumb_nail, cate_code AS cateCode
+        SELECT prod_id AS prodId, prod_name AS prodName, thumb_nail AS thumbnail, cate_code AS cateCode
         FROM products
         WHERE prod_name LIKE #{baseName} || '_%'
         ORDER BY prod_name ASC
     </select>
+
     
 	
 	<!-- 카테고리 관리(관리자용) -->
@@ -264,7 +265,7 @@
 	
 	    INSERT INTO PRODUCTS (
 	        prod_id, cate_code, prod_name, base_price, 
-	        prod_desc, is_displayed, reg_date, thumb_nail
+	        prod_desc, is_displayed, reg_date, thumb_nail 
 	    ) VALUES (
 	        #{prodId}, 
 	        #{cateCode}, 
