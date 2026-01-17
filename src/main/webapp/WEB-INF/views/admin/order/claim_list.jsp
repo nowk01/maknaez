@@ -94,9 +94,15 @@
 
                                     <td>
                                         <c:choose>
-                                            <c:when test="${fn:contains(dto.orderState, '취소')}"><span class="badge-luxury">취소</span></c:when>
-                                            <c:when test="${fn:contains(dto.orderState, '반품')}"><span class="badge-luxury st-exchange">반품</span></c:when>
-                                            <c:otherwise><span class="badge-luxury st-exchange">${dto.orderState}</span></c:otherwise>
+                                            <c:when test="${fn:contains(dto.orderState, '취소')}">
+                                                <span class="badge-luxury st-label">취소</span>
+                                            </c:when>
+                                            <c:when test="${fn:contains(dto.orderState, '반품')}">
+                                                <span class="badge-luxury st-label">반품</span>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <span class="badge-luxury st-label">${dto.orderState}</span>
+                                            </c:otherwise>
                                         </c:choose>
                                     </td>
 
@@ -115,11 +121,9 @@
                                     <td>
                                         <c:choose>
                                             <c:when test="${dto.orderState == '취소완료' || dto.orderState == '반품완료' || dto.orderState == '환불완료' || dto.orderState == '교환완료'}">
-                                                <span class="badge-dark">처리완료</span>
-                                            </c:when>
+                                                <span class="badge-luxury st-complete">처리완료</span> </c:when>
                                             <c:otherwise>
-                                                <span class="badge-orange">접수대기</span>
-                                            </c:otherwise>
+                                                <span class="badge-luxury st-wait">접수대기</span> </c:otherwise>
                                         </c:choose>
                                     </td>
 
@@ -180,7 +184,6 @@
     </div>
 
     <jsp:include page="/WEB-INF/views/admin/layout/footerResources.jsp" />
-    
     <script>
         function openApproveModal(orderNum, type, productName, qty, link) {
             document.getElementById('m_orderNum').innerText = orderNum;

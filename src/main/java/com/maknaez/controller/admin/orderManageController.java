@@ -32,58 +32,60 @@ public class orderManageController {
 	}
 
 	@GetMapping("claim_list")
-	public ModelAndView claimList(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	public ModelAndView claimList(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException {
 		ModelAndView mav = new ModelAndView("admin/order/claim_list");
-		
+
 		OrderMapper mapper = MapperContainer.get(OrderMapper.class);
-		MyUtil util = new MyUtil(); 
-		
+		MyUtil util = new MyUtil();
+
 		try {
 			String page = req.getParameter("page");
 			int current_page = 1;
-			if(page != null && !page.equals("")) {
+			if (page != null && !page.equals("")) {
 				current_page = Integer.parseInt(page);
 			}
-			
+
 			String searchKey = req.getParameter("searchKey");
 			String searchValue = req.getParameter("searchValue");
-			
+
 			Map<String, Object> map = new HashMap<String, Object>();
-			map.put("mode", "claim"); 
-			
-			if(searchValue != null && !searchValue.equals("")) {
+			map.put("mode", "claim");
+
+			if (searchValue != null && !searchValue.equals("")) {
 				map.put("searchKey", searchKey);
 				map.put("searchValue", searchValue);
 			}
-			
+
 			int dataCount = mapper.dataCount(map);
-			
+
 			int size = 10;
 			int total_page = util.pageCount(dataCount, size);
-			if(current_page > total_page) current_page = total_page;
-			
+			if (current_page > total_page)
+				current_page = total_page;
+
 			int start = (current_page - 1) * size + 1;
 			int end = current_page * size;
 			map.put("start", start);
 			map.put("end", end);
-			
+
 			List<OrderDTO> list = mapper.listOrder(map);
-			
+
 			String cp = req.getContextPath();
 			String listUrl = cp + "/admin/order/claim_list";
-			
-			if(searchValue != null && !searchValue.equals("")) {
+
+			if (searchValue != null && !searchValue.equals("")) {
 				listUrl += "?searchKey=" + searchKey + "&searchValue=" + URLEncoder.encode(searchValue, "UTF-8");
 			}
-			
+
 			String paging = util.paging(current_page, total_page, listUrl);
-			
+
 			mav.addObject("list", list);
 			mav.addObject("page", current_page);
 			mav.addObject("dataCount", dataCount);
 			mav.addObject("total_page", total_page);
 			mav.addObject("paging", paging);
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -110,7 +112,7 @@ public class orderManageController {
 			String productNum = req.getParameter("productNum");
 			String pdSize = req.getParameter("pdSize");
 			String qtyStr = req.getParameter("qty");
-			
+
 			int qty = (qtyStr != null && !qtyStr.isEmpty()) ? Integer.parseInt(qtyStr) : 0;
 
 			Map<String, Object> map = new HashMap<String, Object>();
@@ -126,13 +128,12 @@ public class orderManageController {
 			}
 
 			mapper.updateOrderState(map);
-			
 			mapper.updateStockIncrease(map);
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		return new ModelAndView("redirect:/admin/order/claimList");
+		return new ModelAndView("redirect:/admin/order/claim_list");
 	}
 }
