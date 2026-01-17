@@ -31,35 +31,10 @@ public class ProductDTO {
     private long optId;      // pd_size 테이블의 PK (시퀀스로 생성됨)
     private String pdSize;   // 리스트(sizes)에서 하나씩 꺼낸 단일 사이즈 값
     
-    public String getColorName() {
-		if (prodName == null || prodName.lastIndexOf('_') == -1) {
-			return "기본";
-		}
-		// 마지막 언더바(_) 뒤의 문자열을 컬러 코드로 인식
-		String colorCode = prodName.substring(prodName.lastIndexOf('_') + 1);
-		
-		switch (colorCode.toUpperCase()) {
-			case "BK": return "Black";
-			case "WH": return "White";
-			case "GY": case "GR": return "Grey";
-			case "NV": return "Navy";
-			case "BE": return "Beige";
-			case "OR": return "Orange";
-			case "RD": return "Red";
-			case "BL": return "Blue";
-			case "GN": return "Green";
-			case "SV": return "Silver";
-			case "IV": return "Ivory";
-			case "KH": return "Khaki";
-			default: return colorCode;
-		}
-	}
+    private List<ProductDTO> colorOptions;
     
-    public void setThumb_nail(String thumb_nail) {
-		this.thumbnail = thumb_nail;
-	}
-
-    
+    public List<ProductDTO> getColorOptions() { return colorOptions; }
+    public void setColorOptions(List<ProductDTO> colorOptions) { this.colorOptions = colorOptions; }
     
     
     public long getOptId() {

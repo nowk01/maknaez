@@ -4,7 +4,6 @@
 
 <!-- 이미지 경로 변수 설정 -->
 <jsp:include page="/WEB-INF/views/common/image_config.jsp" />
-<c:set var="uploadPath" value="${pageContext.request.contextPath}/uploads/product" />
 
 <!DOCTYPE html>
 <html lang="ko">
@@ -152,20 +151,6 @@
     .star-rating-header i { font-size: 0.75rem; color: #ddd; margin-right: 1px; }
     .star-rating-header i.filled { color: #333; }
     .star-text-header { font-size: 0.75rem; color: #888; margin-left: 4px; font-weight: 400; vertical-align: middle; position: relative; top: 1px; }
-
-	.color-thumbs { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
-    .color-thumb { 
-        width: 60px; height: 60px; 
-        border: 1px solid #e0e0e0; 
-        border-radius: 4px; 
-        overflow: hidden; 
-        cursor: pointer; 
-        position: relative;
-        background-color: #f8f9fa; /* 기본 배경색 */
-    }
-    .color-thumb.active { border: 2px solid #111; }
-    .color-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
-	
 </style>
 </head>
 <body>
@@ -307,31 +292,13 @@
 					</div>
 
 					<div class="color-options">
-                    <!-- DTO의 getColorName() 메소드를 호출하여 깔끔하게 표시 -->
-                    <div class="color-label">컬러 : ${dto.colorName}</div>
-                    
-                    <div class="color-thumbs">
-                        <c:forEach var="item" items="${colorList}">
-                            <!-- 현재 보고있는 상품이면 active 클래스 추가 -->
-                            <div class="color-thumb ${dto.prodId == item.prodId ? 'active' : ''}" 
-                                 onclick="location.href='${pageContext.request.contextPath}/product/detail?prodId=${item.prodId}'"
-                                 title="${item.colorName}"> <!-- 마우스 올리면 색상명 툴팁 -->
-                                
-                                <!-- [수정] 썸네일 변수 및 기본 이미지(placehold.co) 적용 -->
-                                <c:choose>
-                                    <c:when test="${not empty item.thumbnail}">
-                                        <img src="${uploadPath}/${item.thumbnail}" 
-                                             alt="${item.prodName}"
-                                             onerror="this.src='https://placehold.co/60x60?text=No+Image'">
-                                    </c:when>
-                                    <c:otherwise>
-                                        <img src="https://placehold.co/60x60?text=No+Image" alt="No Image">
-                                    </c:otherwise>
-                                </c:choose>
-                            </div>
-                        </c:forEach>
-                    </div>
-                </div>
+						<div class="color-label">컬러 : ${dto.cateCode} (임시 표시)</div>
+						<div class="color-thumbs">
+							<div class="color-thumb active"><img src="https://placehold.co/60/000000/FFFFFF?text=BK" alt="Black"></div>
+							<div class="color-thumb"><img src="https://placehold.co/60/FFFFFF/000000?text=WH" alt="White"></div>
+							<div class="color-thumb"><img src="https://placehold.co/60/FF0000/FFFFFF?text=RD" alt="Red"></div>
+						</div>
+					</div>
 
 					<div class="size-options">
 						<div class="d-flex justify-content-between mb-2">
