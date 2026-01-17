@@ -183,13 +183,14 @@
 													onclick="openDeliveryTracking('${dto.orderNum}')">배송조회</button>
 											</c:when>
 
-											<%-- 3. 배송완료 상태: 배송조회 + 교환/반품 신청 --%>
+											<%-- 3. 배송완료 상태: 구매확정 + 반품신청 --%>
 											<c:when test="${dto.orderState == '배송완료'}">
 												<button type="button" class="btn-sm btn-black"
-													onclick="openDeliveryTracking('${dto.orderNum}')">배송조회</button>
+													onclick="confirmOrder('${dto.orderNum}')">구매확정</button>
+
 												<button type="button" class="btn-sm btn-outline"
-													onclick="location.href='${pageContext.request.contextPath}/order/claimForm?order_id=${dto.orderNum}'">
-													교환/반품 신청</button>
+													onclick="location.href='${pageContext.request.contextPath}/member/mypage/claimForm?order_id=${dto.orderNum}&type=RETURN'">
+													반품신청</button>
 											</c:when>
 
 											<%-- 4. 취소완료/반품완료 등: 버튼 미노출 또는 상세기능 --%>
@@ -247,6 +248,12 @@
 		                "deliveryPop", "width=550,height=700");
 		}
 		
+		function confirmOrder(orderNum) {
+		    if(confirm("상품을 잘 받으셨나요? 구매확정 시 포인트가 적립되며 반품이 불가능합니다.")) {
+		        // 컨트롤러의 구매확정 처리 주소로 이동
+		        location.href = "${pageContext.request.contextPath}/member/mypage/confirmOrder?orderNum=" + orderNum;
+		    }
+		}
 	</script>
 
 </body>

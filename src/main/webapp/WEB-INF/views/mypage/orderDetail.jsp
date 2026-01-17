@@ -82,7 +82,7 @@
                             <img src="${pageContext.request.contextPath}/uploads/product/${dto.thumbNail}" onerror="this.src='${pageContext.request.contextPath}/dist/images/no-image.png'">
                             <div class="prod-details">
                                 <span class="name">${dto.productName}</span>
-                                <span class="opt">컬러: ${dto.color} / 사이즈: ${dto.pdSize} / 수량: ${dto.qty}</span>
+                                <span class="opt">사이즈: ${dto.pdSize} / 수량: ${dto.qty}</span>
                             </div>
                         </div>
                     </td>

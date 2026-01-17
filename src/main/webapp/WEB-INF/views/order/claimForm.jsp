@@ -8,7 +8,7 @@
 <jsp:include page="/WEB-INF/views/layout/headerResources.jsp" />
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath}/dist/css/mypage.css">
-	
+
 <style>
 .claim-wrapper {
 	max-width: 700px;
@@ -210,7 +210,7 @@
 				</ul>
 			</div>
 		</aside>
-		
+
 		<main class="main-content">
 			<div class="claim-wrapper">
 				<header class="claim-header">
@@ -219,11 +219,13 @@
 
 				<div class="product-card">
 					<img
-						src="${pageContext.request.contextPath}/uploads/product/${param.image}"
+						src="${pageContext.request.contextPath}/uploads/product/${dto.thumbNail}"
 						onerror="this.src='${pageContext.request.contextPath}/dist/images/no-image.png'">
 					<div class="product-info">
-						<p class="order-num">No. ${param.order_id}</p>
-						<p class="product-name">요청하신 상품 정보를 확인 중입니다.</p>
+						<p class="order-num">No. ${dto.orderNum}</p>
+						<p class="product-name">${dto.productName}</p>
+						<p style="font-size: 13px; color: #666;">[옵션] ${dto.pdSize} /
+							${dto.qty}개</p>
 					</div>
 				</div>
 
@@ -280,49 +282,65 @@
 	<jsp:include page="/WEB-INF/views/layout/footer.jsp" />
 
 	<script>
-document.addEventListener("DOMContentLoaded", function() {
-    const claimForm = document.getElementById("claimForm");
-    
-    claimForm.addEventListener("submit", function(e) {
-        const type = document.getElementById("claimType").value;
-        const category = document.getElementById("reasonCategory").value;
-        const detail = document.getElementById("reasonDetail").value.trim();
+		document
+				.addEventListener(
+						"DOMContentLoaded",
+						function() {
+							const claimForm = document
+									.getElementById("claimForm");
 
-        // 1. 필수 선택 값 확인
-        if(!category) {
-            alert("신청 사유를 선택해 주세요.");
-            e.preventDefault();
-            return;
-        }
+							claimForm
+									.addEventListener(
+											"submit",
+											function(e) {
+												const type = document
+														.getElementById("claimType").value;
+												const category = document
+														.getElementById("reasonCategory").value;
+												const detail = document
+														.getElementById("reasonDetail").value
+														.trim();
 
-        // 2. 교환 시 상세 사유 입력 권장 (재고 연동 때문)
-        if(type === "EXCH" && detail.length < 5) {
-            alert("교환 신청 시 교환을 원하시는 [사이즈/컬러] 정보를 상세 사유에 입력해 주세요.");
-            e.preventDefault();
-            return;
-        }
+												// 1. 필수 선택 값 확인
+												if (!category) {
+													alert("신청 사유를 선택해 주세요.");
+													e.preventDefault();
+													return;
+												}
 
-        // 3. 최종 확인
-        const confirmMsg = type === "CANCEL" 
-            ? "주문 취소를 신청하시겠습니까?\n취소 완료 시 사용된 포인트는 환불되며 재고가 복구됩니다."
-            : "교환을 신청하시겠습니까?\n관리자 확인 후 진행됩니다.";
-            
-        if(!confirm(confirmMsg)) {
-            e.preventDefault();
-        }
-    });
+												// 2. 교환 시 상세 사유 입력 권장 (재고 연동 때문)
+												if (type === "EXCH"
+														&& detail.length < 5) {
+													alert("교환 신청 시 교환을 원하시는 [사이즈/컬러] 정보를 상세 사유에 입력해 주세요.");
+													e.preventDefault();
+													return;
+												}
 
-    // 신청 유형 변경 시 문구 가이드 변경
-    document.getElementById("claimType").addEventListener("change", function() {
-        const detailArea = document.getElementById("reasonDetail");
-        if(this.value === "EXCH") {
-            detailArea.placeholder = "교환을 원하시는 옵션(사이즈, 컬러 등)을 입력해 주세요. (재고 부족 시 처리가 지연될 수 있습니다.)";
-        } else {
-            detailArea.placeholder = "상세한 취소 사유를 입력하시면 빠른 처리에 도움이 됩니다.";
-        }
-    });
-});
-</script>
+												// 3. 최종 확인
+												const confirmMsg = type === "CANCEL" ? "주문 취소를 신청하시겠습니까?\n취소 완료 시 사용된 포인트는 환불되며 재고가 복구됩니다."
+														: "교환을 신청하시겠습니까?\n관리자 확인 후 진행됩니다.";
+
+												if (!confirm(confirmMsg)) {
+													e.preventDefault();
+												}
+											});
+
+							// 신청 유형 변경 시 문구 가이드 변경
+							document
+									.getElementById("claimType")
+									.addEventListener(
+											"change",
+											function() {
+												const detailArea = document
+														.getElementById("reasonDetail");
+												if (this.value === "EXCH") {
+													detailArea.placeholder = "교환을 원하시는 옵션(사이즈, 컬러 등)을 입력해 주세요. (재고 부족 시 처리가 지연될 수 있습니다.)";
+												} else {
+													detailArea.placeholder = "상세한 취소 사유를 입력하시면 빠른 처리에 도움이 됩니다.";
+												}
+											});
+						});
+	</script>
 
 </body>
 </html>
