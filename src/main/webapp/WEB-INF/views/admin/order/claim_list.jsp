@@ -121,9 +121,11 @@
                                     <td>
                                         <c:choose>
                                             <c:when test="${dto.orderState == '취소완료' || dto.orderState == '반품완료' || dto.orderState == '환불완료' || dto.orderState == '교환완료'}">
-                                                <span class="badge-luxury st-complete">처리완료</span> </c:when>
+                                                <span class="badge-luxury st-complete">처리완료</span>
+                                            </c:when>
                                             <c:otherwise>
-                                                <span class="badge-luxury st-wait">접수대기</span> </c:otherwise>
+                                                <span class="badge-luxury st-wait">접수대기</span>
+                                            </c:otherwise>
                                         </c:choose>
                                     </td>
 
@@ -168,13 +170,12 @@
             <h3 class="modal-title">요청 승인 확인</h3>
             <div class="modal-info">
                 <span><b>주문번호:</b> <span id="m_orderNum"></span></span> 
-                <span><b>신청유형:</b> <span id="m_type" style="color: #ff4e00; font-weight: bold;"></span></span>
+                <span><b>신청유형:</b> <span id="m_type" style="font-weight: bold;"></span></span>
                 <span><b>상품정보:</b> <span id="m_product"></span></span> 
                 <span><b>복구수량:</b> <span id="m_qty"></span>개</span>
                 <hr style="margin: 10px 0; border: 0; border-top: 1px dashed #ddd;">
                 <p style="font-size: 12px; color: #888;">
-                    승인 시 해당 주문 건은 '완료' 상태로 변경되며,<br>재고가 자동으로 복구됩니다.
-                </p>
+                    </p>
             </div>
             <div class="modal-btn-group">
                 <button type="button" class="modal-btn btn-cancel" onclick="closeModal()">취소</button>
@@ -184,23 +185,6 @@
     </div>
 
     <jsp:include page="/WEB-INF/views/admin/layout/footerResources.jsp" />
-    <script>
-        function openApproveModal(orderNum, type, productName, qty, link) {
-            document.getElementById('m_orderNum').innerText = orderNum;
-            document.getElementById('m_type').innerText = type;
-            document.getElementById('m_product').innerText = productName;
-            document.getElementById('m_qty').innerText = qty;
-            
-            document.getElementById('realApproveBtn').onclick = function() {
-                location.href = link;
-            };
-
-            document.getElementById('approveModal').style.display = 'flex';
-        }
-
-        function closeModal() {
-            document.getElementById('approveModal').style.display = 'none';
-        }
-    </script>
+    <script src="${pageContext.request.contextPath}/dist/js/admin_claim_list.js"></script>
 </body>
 </html>
