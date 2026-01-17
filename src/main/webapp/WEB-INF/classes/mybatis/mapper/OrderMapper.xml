@@ -14,36 +14,43 @@
 		</if>
 	</select>
 
-	<select id="listOrder" parameterType="map"
-		resultType="com.maknaez.model.OrderDTO">
+	<select id="listOrder" parameterType="map" resultType="com.maknaez.model.OrderDTO">
 		SELECT * FROM (
-		SELECT ROWNUM rnum, tb.* FROM (
-		SELECT
-		o.ITEMS_ID AS orderNum,
-		TO_CHAR(o.ORDER_DATE, 'YYYY-MM-DD') AS orderDate,
-		NVL(o.TOTAL_AMOUNT, 0) AS totalAmount,
-		o.STATUS AS orderState,
-		p.PROD_NAME AS productName,
-		NVL(oi.COUNT, 0) AS qty,
-		NVL(oi.PRICE, 0) AS price,
-		p.THUMB_NAIL AS thumbNail,
-		ps.PD_SIZE AS pdSize
-		FROM orders o
-		JOIN order_items oi ON o.ITEMS_ID = oi.ORDER_ID
-		JOIN pd_size ps ON oi.OPT_ID = ps.OPT_ID
-		JOIN products p ON ps.PROD_ID = p.PROD_ID
-		WHERE o.MEMBERIDX = #{memberIdx}
-		<if test="orderState != null">
-			AND o.STATUS = #{orderState}
-		</if>
-		<if test="mode == 'cancel'">
-			AND o.STATUS IN ('취소처리중', '취소완료', '반품진행중', '환불완료')
-		</if>
-		ORDER BY o.ORDER_DATE DESC
-		) tb WHERE ROWNUM &lt;= #{end}
+			SELECT ROWNUM rnum, tb.* FROM (
+				SELECT
+					o.ITEMS_ID AS orderNum,
+					TO_CHAR(o.ORDER_DATE, 'YYYY-MM-DD') AS orderDate,
+					NVL(o.TOTAL_AMOUNT, 0) AS totalAmount,
+					o.STATUS AS orderState,
+					p.PROD_NAME AS productName,
+					NVL(oi.COUNT, 0) AS qty,
+					NVL(oi.PRICE, 0) AS price,
+					p.THUMB_NAIL AS thumbNail,
+					ps.PD_SIZE AS pdSize
+				FROM orders o
+				JOIN order_items oi ON o.ITEMS_ID = oi.ORDER_ID
+				JOIN pd_size ps ON oi.OPT_ID = ps.OPT_ID
+				JOIN products p ON ps.PROD_ID = p.PROD_ID
+				WHERE o.MEMBERIDX = #{memberIdx}
+				
+				<if test="orderState != null">
+					AND o.STATUS = #{orderState}
+				</if>
+				<if test="mode == 'cancel'">
+					AND o.STATUS IN ('취소처리중', '취소완료', '반품진행중', '환불완료')
+				</if>
+
+				<if test="historyStartDate != null and historyStartDate != ''">
+					AND o.ORDER_DATE &gt;= TO_DATE(#{historyStartDate}, 'YYYY-MM-DD')
+				</if>
+				<if test="historyEndDate != null and historyEndDate != ''">
+					AND o.ORDER_DATE &lt; TO_DATE(#{historyEndDate}, 'YYYY-MM-DD') + 1
+				</if>
+
+				ORDER BY o.ORDER_DATE DESC
+			) tb WHERE ROWNUM &lt;= #{end}
 		) WHERE rnum &gt;= #{start}
 	</select>
-
 
 	<update id="updateOrderState" parameterType="map">
 		UPDATE orders
