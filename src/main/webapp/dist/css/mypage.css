@@ -667,7 +667,6 @@
     bottom: 50px; /* 위로 살짝 떠오르는 효과 */
 }
 
-/* 삭제 시 부드럽게 사라지는 효과 */
 .wish-item-removing {
     transform: scale(0.95);
     opacity: 0;
@@ -678,4 +677,50 @@
     transition: all 0.4s ease-in-out;
 }
 
+.page-navigation {
+    display: flex !important;   
+    flex-direction: row !important;
+    justify-content: center !important; 
+    align-items: center !important;  
+    gap: 8px;                     
+    margin-top: 50px;
+    margin-bottom: 40px;
+    width: 100%;   
+}
+
+.page-navigation a, .page-navigation span {
+    display: inline-flex !important;  
+    justify-content: center;
+    align-items: center;
+    width: 36px;
+    height: 36px;
+    font-size: 14px;
+    color: #888;
+    text-decoration: none;
+    border-radius: 50%;        
+    transition: all 0.2s ease;
+    background-color: transparent;  
+    border: none;                
+}
+
+.page-navigation a:hover {
+    background-color: #f0f0f0;
+    color: #1a1c1e;
+    font-weight: 700;
+}
+
+.page-navigation strong,   
+.page-navigation span.active, 
+.page-navigation a.active {
+    background-color: #1a1c1e !important;
+    color: #fff !important;
+    font-weight: 700;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+.page-navigation * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
