@@ -212,6 +212,13 @@
         VALUES (seq_cart.NEXTVAL, #{memberIdx}, #{prod_id}, #{opt_id}, #{quantity}, SYSDATE)
     </insert>
     
+    <select id="listProductColors" parameterType="String" resultType="com.maknaez.model.ProductDTO">
+        SELECT prod_id AS prodId, prod_name AS prodName, thumb_nail, cate_code AS cateCode
+        FROM products
+        WHERE prod_name LIKE #{baseName} || '_%'
+        ORDER BY prod_name ASC
+    </select>
+    
 	
 	<!-- 카테고리 관리(관리자용) -->
 	<select id="listCategory" resultType="com.maknaez.model.CategoryDTO">

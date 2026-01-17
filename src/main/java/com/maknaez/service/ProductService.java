@@ -18,6 +18,9 @@ public interface ProductService {
     public int getOptionStock(long optId);
     public void insertStockLog(Map<String, Object> map) throws Exception;
     
+    public List<ProductDTO> listProductColors(String prodName); // 연관 색상 제품 가져오기
+
+    
     // (기존 관리자용 메소드 유지)
     public List<CategoryDTO> listCategory();
     public void insertCategory(CategoryDTO dto) throws Exception;
