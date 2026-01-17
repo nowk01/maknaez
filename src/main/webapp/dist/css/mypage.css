@@ -331,6 +331,13 @@
     border-color: #000;
 }
 
+.mypage-container .btn-cancel:hover,
+.mypage-container .btn-return:hover {
+    border-color: #fd6464 !important;
+    color: #fd6464 !important;
+    background-color: #fff0f0 !important;
+    font-weight: 700
+}
 .no-data-msg { padding: 80px 0; text-align: center; color: #666; font-size: 14px; font-weight: 500; border-bottom: 1px solid #eee; }
 .page-navigation { margin-top: 30px; text-align: center; }
 
