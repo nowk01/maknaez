@@ -12,7 +12,13 @@
 	href="${pageContext.request.contextPath}/dist/css/mypage.css">
 </head>
 <body>
-
+	<form name="searchForm"
+		action="${pageContext.request.contextPath}/member/mypage/orderList"
+		method="get">
+		<input type="hidden" name="page" value="${page}"> <input
+			type="hidden" name="historyStartDate" value="${historyStartDate}">
+		<input type="hidden" name="historyEndDate" value="${historyEndDate}">
+	</form>
 	<jsp:include page="/WEB-INF/views/layout/header.jsp" />
 
 	<div class="mypage-container">
@@ -171,13 +177,14 @@
 
 									<div class="buttons">
 										<c:choose>
-											<%-- 1. 결제완료 상태: 주문취소만 가능 --%>
+											<%-- 1. 결제완료 상태: 주문취소 --%>
 											<c:when test="${dto.orderState == '결제완료'}">
-												<button type="button" class="btn-sm btn-outline"
-													onclick="openCancelModal('${dto.orderNum}')">주문취소</button>
+												<button type="button" class="btn-sm btn-outline btn-cancel"
+													onclick="location.href='${pageContext.request.contextPath}/member/mypage/claimForm?order_id=${dto.orderNum}&type=CANCEL'">
+													주문취소</button>
 											</c:when>
 
-											<%-- 2. 배송중 상태: 배송조회 필수 --%>
+											<%-- 2. 배송중 상태: 배송조회 --%>
 											<c:when test="${dto.orderState == '배송중'}">
 												<button type="button" class="btn-sm btn-black"
 													onclick="openDeliveryTracking('${dto.orderNum}')">배송조회</button>
@@ -187,13 +194,12 @@
 											<c:when test="${dto.orderState == '배송완료'}">
 												<button type="button" class="btn-sm btn-black"
 													onclick="confirmOrder('${dto.orderNum}')">구매확정</button>
-
-												<button type="button" class="btn-sm btn-outline"
+												<button type="button" class="btn-sm btn-outline btn-return"
 													onclick="location.href='${pageContext.request.contextPath}/member/mypage/claimForm?order_id=${dto.orderNum}&type=RETURN'">
 													반품신청</button>
 											</c:when>
 
-											<%-- 4. 취소완료/반품완료 등: 버튼 미노출 또는 상세기능 --%>
+											<%-- 4. 기타 상태: 주문상세 --%>
 											<c:otherwise>
 												<button type="button" class="btn-sm btn-outline"
 													onclick="location.href='${pageContext.request.contextPath}/member/mypage/orderDetail?orderNum=${dto.orderNum}'">
@@ -220,29 +226,62 @@
 
 	<script>
 		document.addEventListener("DOMContentLoaded", function() {
-			const pills = document.querySelectorAll('.sm-salomon__filterPill');
+		    const pills = document.querySelectorAll('.sm-salomon__filterPill');
+		    pills.forEach(pill => {
+		        pill.addEventListener('click', function() {
+		            pills.forEach(p => p.removeAttribute('data-selected'));
+		            this.setAttribute('data-selected', '');
 	
-			pills.forEach(pill => {
-				pill.addEventListener('click', () => {
-					pills.forEach(p => p.removeAttribute('data-selected'));
-					pill.setAttribute('data-selected', '');
-				});
-			});
+		            let period = this.getAttribute("data-period");
+		            setPeriod(period);
+		        });
+		    });
 		});
-		
-		function openCancelModal(orderId) {
-		    const reason = prompt("취소 사유를 입력해주세요.");
-		    if(reason) {
-		        location.href = "/order/claimRequest?order_id=" + orderId + "&reason=" + reason;
-		    }
+			
+		function setPeriod(months) {
+		    let now = new Date();
+		    let past = new Date();
+		    past.setMonth(now.getMonth() - parseInt(months));
+	
+		    let endDate = now.toISOString().split('T')[0];
+		    let startDate = past.toISOString().split('T')[0];
+	
+		    const f = document.searchForm;
+		    f.historyStartDate.value = startDate;
+		    f.historyEndDate.value = endDate;
+		    f.page.value = "1";
+		    f.submit();
 		}
 		
-		function openCancelModal(orderId) {
-		    if(confirm("주문을 취소하시겠습니까?")) {
-		        location.href = "${pageContext.request.contextPath}/order/cancelRequest?orderNum=" + orderId;
-		    }
+		function listPage(page) {
+		    const f = document.searchForm;
+		    f.page.value = page;
+		    f.submit();
 		}
-
+		
+		function searchList() {
+		    const f = document.searchForm;
+		    if(!f.historyStartDate.value || !f.historyEndDate.value) {
+		        let startInput = document.querySelector(".input-date:nth-of-type(1)").value;
+		        let endInput = document.querySelector(".input-date:nth-of-type(2)").value;
+		        
+		        if(startInput && endInput) {
+		            f.historyStartDate.value = startInput;
+		            f.historyEndDate.value = endInput;
+		        } else {
+		            alert("시작일과 종료일을 모두 선택해주세요.");
+		            return; 
+		        }
+		    }
+		    f.page.value = "1";
+		    f.submit();
+		}
+	
+		function openCancelModal(orderId) {
+			if(confirm("주문을 취소하시겠습니까?")) {
+				location.href = "${pageContext.request.contextPath}/member/mypage/claimForm?order_id=" + orderId + "&type=CANCEL";
+			}
+		}
 		function openDeliveryTracking(orderNum) {
 		    window.open("${pageContext.request.contextPath}/member/mypage/deliveryInfo?orderNum=" + orderNum, 
 		                "deliveryPop", "width=550,height=700");
