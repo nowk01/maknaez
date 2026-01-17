@@ -35,16 +35,12 @@ public class ProductController {
         this.wishlistService = new WishlistServiceImpl();
     }
     
+
     @GetMapping("/product/detail") 
     public ModelAndView detail(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String prodIdStr = req.getParameter("prod_id");
-        
-        if(prodIdStr == null || prodIdStr.isEmpty()) {
+        if(prodIdStr == null) {
             prodIdStr = req.getParameter("productNo");
-        }
-        
-        if(prodIdStr == null || prodIdStr.isEmpty()) {
-            prodIdStr = req.getParameter("prod_id"); 
         }
 
         long prodId = 0;
@@ -61,7 +57,6 @@ public class ProductController {
             return new ModelAndView("redirect:/collections/list");
         }
         
-        
         String recentCookieName = "recent_products";
         String recentProducts = "";
         jakarta.servlet.http.Cookie[] cookies = req.getCookies();
@@ -71,8 +66,7 @@ public class ProductController {
                 if (c.getName().equals(recentCookieName)) {
                     try {
                         recentProducts = java.net.URLDecoder.decode(c.getValue(), "UTF-8");
-                    } catch (Exception e) {
-                    }
+                    } catch (Exception e) {}
                     break;
                 }
             }
@@ -99,19 +93,19 @@ public class ProductController {
         try {
             jakarta.servlet.http.Cookie newCookie = new jakarta.servlet.http.Cookie(recentCookieName, java.net.URLEncoder.encode(newValue, "UTF-8"));
             newCookie.setPath("/");       
-            newCookie.setMaxAge(60 * 60 * 24); // 1일 유지
+            newCookie.setMaxAge(60 * 60 * 24); // 1일
             resp.addCookie(newCookie);
         } catch (Exception e) {
         }
-        
-        List<ProductDTO> colorList = productService.listProductColors(dto.getProdName());
-        
+
         List<ProductDTO> sizeList = productService.listProductSizes(prodId);
 
         ModelAndView mav = new ModelAndView("product/detail");
         mav.addObject("dto", dto); 
         mav.addObject("sizeList", sizeList); 
         
+        mav.addObject("recentProductIds", idList);
+
         HttpSession session = req.getSession();
         SessionInfo info = (SessionInfo) session.getAttribute("member");
         boolean isUserLiked = false;
@@ -120,7 +114,6 @@ public class ProductController {
             isUserLiked = wishlistService.isLiked(info.getMemberIdx(), prodId);
         }
         mav.addObject("isUserLiked", isUserLiked);
-        mav.addObject("colorList", colorList);
 
         return mav;
     }
