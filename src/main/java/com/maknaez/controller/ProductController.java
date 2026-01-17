@@ -11,8 +11,6 @@ import com.maknaez.model.WishlistDTO;
 import com.maknaez.mvc.annotation.Controller;
 import com.maknaez.mvc.annotation.GetMapping;
 import com.maknaez.mvc.annotation.PostMapping;
-import com.maknaez.mvc.annotation.RequestMapping;
-import com.maknaez.mvc.annotation.RequestMethod;
 import com.maknaez.mvc.annotation.ResponseBody;
 import com.maknaez.mvc.view.ModelAndView;
 import com.maknaez.service.ProductService;
