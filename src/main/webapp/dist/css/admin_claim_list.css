@@ -1,5 +1,6 @@
 @charset "UTF-8";
 
+/* [MAKNAEZ] Premium Claim List - Shoes Mall Professional */
 body { 
     background-color: #fcfcfd; 
     color: #202224; 
@@ -7,8 +8,15 @@ body {
     letter-spacing: -0.5px;
 }
 
-.content-container { padding: 40px; animation: fadeIn 0.5s ease-out; }
-@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+.content-container { 
+    padding: 40px; 
+    animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
 
 /* 헤더 */
 .page-header { margin-bottom: 35px; border-left: 5px solid #ff4e00; padding-left: 20px; }
@@ -29,10 +37,13 @@ body {
     background-color: transparent !important;
 }
 .form-control:focus, .form-select:focus { border-bottom: 2px solid #ff4e00; outline: none; }
-.btn-search { background: #ff4e00; color: #fff; border: none; width: 120px; height: 40px; font-weight: 700; font-size: 13px; transition: 0.3s; }
+
+.btn-search {
+    background: #ff4e00; color: #fff; border: none; width: 120px; height: 40px; font-weight: 700; font-size: 13px; transition: 0.3s;
+}
 .btn-search:hover { background: #000; }
 
-/* 리스트 헤더 */
+/* 리스트 상단 컨트롤 바 */
 .list-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
 .action-group .btn-ctrl { 
     font-size: 12px; font-weight: 600; padding: 8px 18px; border-radius: 0; 
@@ -49,23 +60,24 @@ body {
 .date-text { font-family: 'Inter'; font-weight: 500; color: #444; }
 .order-link { color: #1a1c1e; font-weight: 800; text-decoration: underline; text-underline-offset: 3px; }
 
+/* [디자인 변경] 포인트 관리 페이지 스타일 배지 */
 .badge-luxury {
     font-size: 11px;
     font-weight: 700;
     padding: 5px 12px;
     border: 1px solid #eee;
     display: inline-block;
-    border-radius: 0; /* 각지게 */
+    /* border-radius: 2px; 네모난 느낌 유지 */
 }
 
-/* 1. 접수 대기 */
+/* 1. 접수 대기 (포인트 적립 스타일: 오렌지 톤) */
 .st-wait {
     border-color: #ff4e00 !important;
     color: #ff4e00 !important;
     background: #fffaf7 !important;
 }
 
-/* 2. 처리 완료 */
+/* 2. 처리 완료 (포인트 차감 스타일: 다크 톤) */
 .st-complete {
     border-color: #1a1c1e !important;
     color: #1a1c1e !important;
@@ -79,7 +91,7 @@ body {
     background: #fff;
 }
 
-/* 관리 버튼 스타일 */
+/* 관리 버튼 (3번 스타일: 흰색 + 테두리) */
 .btn-approve {
     background: #fff; border: 1px solid #333; color: #333; width: 100%; padding: 6px 0;
     font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.2s; border-radius: 2px;
@@ -90,11 +102,6 @@ body {
     background: #fcfcfc; border: 1px solid #ddd; color: #bbb; width: 100%; padding: 6px 0;
     font-size: 13px; font-weight: 600; cursor: default; border-radius: 2px;
 }
-
-/* 페이징 */
-.pagination { margin-top: 40px; display: flex; justify-content: center; gap: 5px; }
-.pagination .page-link { border: none; color: #999; font-size: 14px; padding: 8px 15px; font-weight: 600; background: none; }
-.pagination .page-item.active .page-link { color: #ff4e00; font-weight: 800; border-bottom: 2px solid #ff4e00; }
 
 /* 모달창 */
 .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 9999; justify-content: center; align-items: center; }
@@ -109,3 +116,8 @@ body {
 .btn-confirm:hover { background: #333; }
 .btn-cancel { background: #fff; color: #000; }
 .btn-cancel:hover { background: #f0f0f0; }
+
+/* 페이징 */
+.pagination { margin-top: 40px; display: flex; justify-content: center; gap: 5px; }
+.pagination .page-link { border: none; color: #999; font-size: 14px; padding: 8px 15px; font-weight: 600; background: none; }
+.pagination .page-item.active .page-link { color: #ff4e00; font-weight: 800; border-bottom: 2px solid #ff4e00; }
