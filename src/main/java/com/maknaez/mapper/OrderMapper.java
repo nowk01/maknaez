@@ -21,4 +21,6 @@ public interface OrderMapper {
     public void insertClaim(Map<String, Object> map) throws SQLException;
     public Map<String, Object> findByIdClaim(String orderId) throws SQLException;
     public void updateStockIncrease(Map<String, Object> map) throws SQLException;
+    public void updateClaimApprove(Map<String, Object> map) throws SQLException;
+
 }
