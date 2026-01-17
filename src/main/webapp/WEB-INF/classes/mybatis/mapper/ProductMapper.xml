@@ -377,13 +377,18 @@
 	</update>
 	
 	<select id="listProductByIds" parameterType="java.util.List" resultType="com.maknaez.model.ProductDTO">
-    SELECT prod_id, prod_name, price, save_filename, discount_rate
-    FROM product
-    WHERE prod_id IN
-    <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
-        #{item}
-    </foreach>
-	</select>
+        SELECT 
+            p.prod_id       AS prodId,
+            p.prod_name     AS prodName,
+            p.base_price    AS price,
+            p.thumb_nail    AS thumbnail,
+            <include refid="discount-subquery"/> AS discountRate
+        FROM PRODUCTS p
+        WHERE p.prod_id IN
+        <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
 	
 	<select id="listProductImg" parameterType="long" resultType="com.maknaez.model.ProductDTO">
     	SELECT img_id AS fileId, prod_id AS prodId, img AS fileName

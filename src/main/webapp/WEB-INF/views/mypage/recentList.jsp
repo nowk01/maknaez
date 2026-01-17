@@ -11,7 +11,6 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/mypage.css">
     
     <style>
-        /* 최근 본 상품 전용 간단 스타일 (mypage.css에 병합하셔도 됩니다) */
         .recent-header {
             display: flex;
             justify-content: space-between;
