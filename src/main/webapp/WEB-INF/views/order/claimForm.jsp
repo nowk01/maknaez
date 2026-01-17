@@ -9,19 +9,16 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/mypage.css">
 
 <style>
-    /* 기존 스타일 유지하면서 깔끔하게 정리 */
     .claim-wrapper { max-width: 700px; margin: 60px auto; color: #000; font-family: 'Noto Sans KR', sans-serif; }
     .claim-header { border-bottom: 2px solid #000; padding-bottom: 15px; margin-bottom: 40px; }
     .claim-header h2 { font-size: 28px; font-weight: 800; letter-spacing: -1px; text-transform: uppercase; }
 
-    /* 상품 정보 카드 */
     .product-card { display: flex; align-items: center; padding: 20px; background: #f9f9f9; margin-bottom: 40px; border: 1px solid #eee; }
     .product-card img { width: 100px; height: 100px; object-fit: cover; background: #fff; border: 1px solid #e5e5e5; }
     .product-info { margin-left: 20px; }
     .product-info .order-num { font-size: 12px; color: #888; text-transform: uppercase; margin-bottom: 5px; }
     .product-info .product-name { font-size: 16px; font-weight: 700; }
 
-    /* 폼 스타일 */
     .form-section { margin-bottom: 30px; }
     .form-label { display: block; font-size: 13px; font-weight: 700; text-transform: uppercase; margin-bottom: 10px; }
     .form-control { width: 100%; border: 1px solid #e5e5e5; padding: 15px; font-size: 14px; border-radius: 0; }
@@ -29,7 +26,6 @@
     .form-control[readonly] { background-color: #f5f5f5; color: #666; cursor: not-allowed; }
     .form-textarea { resize: none; height: 150px; line-height: 1.6; }
 
-    /* 버튼 그룹 */
     .btn-group { display: flex; gap: 10px; margin-top: 50px; }
     .btn-salomon { flex: 1; padding: 20px; font-size: 15px; font-weight: 700; text-transform: uppercase; border: 1px solid #000; cursor: pointer; transition: 0.3s; }
     .btn-black { background: #000; color: #fff; }
