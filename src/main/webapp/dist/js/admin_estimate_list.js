@@ -1,3 +1,6 @@
+/**
+ * [MAKNAEZ ADMIN] Estimate List 연동
+ */
 document.addEventListener("DOMContentLoaded", function() {
     const checkAll = document.getElementById('checkAll');
     if(checkAll) {
@@ -9,17 +12,17 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 });
 
-function deleteEstimate() {
-    const selected = document.querySelectorAll('tbody input[type="checkbox"]:checked');
-    if(selected.length === 0) return alert("삭제할 견적 요청을 선택해주세요.");
-    if(confirm(`${selected.length}건의 요청을 삭제하시겠습니까?`)) alert("성공적으로 삭제되었습니다.");
+// 주문번호를 가지고 바로 견적서 작성 페이지로 이동
+function openEstimateWrite(orderNum) {
+    if(!orderNum) {
+        alert("주문 정보가 올바르지 않습니다.");
+        return;
+    }
+    // 컨트롤러의 estimate_write?orderNum=... 로 이동
+    location.href = "/admin/order/estimate_write?orderNum=" + orderNum;
 }
 
-function openEstimateWrite() {
-    let orderNum = prompt("조회할 주문번호를 입력하세요.");
-    if(orderNum) {
-        location.href = "${pageContext.request.contextPath}/admin/order/estimate_write?orderNum=" + orderNum;
-    }
+function deleteEstimate() {
 }
 
 function downloadExcel() {
