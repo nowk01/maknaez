@@ -182,3 +182,41 @@ function submitProduct() {
     // 3. 전송
     f.submit();
 }
+
+// [admin_product_write.js] 하단이나 <script> 태그 안에 추가
+
+function deleteExistingFile(fileId, boxId, event) {
+    // 1. 부모 요소(div)의 onclick 이벤트(파일업로드창 열림) 방지
+    event.stopPropagation();
+    
+    if(!confirm("이미지를 삭제하시겠습니까?")) {
+        return;
+    }
+    
+    const url = contextPath + "/admin/product/deleteFile";
+    
+    // jQuery AJAX
+    $.ajax({
+        type: "POST",
+        url: url,
+        data: { fileId: fileId },
+        dataType: "json",
+        success: function(data) {
+            if(data.state === "true") {
+                // 2. 화면에서 이미지 제거 처리
+                const box = document.getElementById(boxId);
+                
+                $(box).find(".existing-img").remove();
+                $(box).find(".btn-img-delete").remove();
+                $(box).find("input[name=prevImgIds]").remove();
+                
+                alert("삭제되었습니다.");
+            } else {
+                alert("삭제 실패");
+            }
+        },
+        error: function() {
+            alert("삭제 중 에러가 발생했습니다.");
+        }
+    });
+}

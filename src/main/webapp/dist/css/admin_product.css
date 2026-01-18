@@ -94,3 +94,53 @@ body {
 
 /* 배지 스타일 */
 .badge-sale { color: #ff4e00; font-weight: 800; font-size: 12px; }
+
+/* [admin_product.css] 하단에 추가 */
+
+/* 페이징(Pagination) 스타일 */
+.page-navigation {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 40px;
+    margin-bottom: 20px;
+    gap: 5px; /* 버튼 사이 간격 */
+}
+
+/* 모든 페이징 버튼 공통 스타일 (링크 및 현재 페이지) */
+.page-navigation a, 
+.page-navigation span {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    min-width: 32px;
+    height: 32px;
+    padding: 0 8px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #555;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px; /* 살짝 둥글게 */
+    text-decoration: none;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+/* 마우스 올렸을 때 (Hover) */
+.page-navigation a:hover {
+    color: #ff4e00; /* 포인트 컬러 (오렌지) */
+    border-color: #ff4e00;
+    background-color: #fff5f0;
+}
+
+/* 현재 페이지 (Active) - span 태그 등으로 처리됨 */
+.page-navigation span.current, /* 일반적인 클래스명 */
+.page-navigation strong,       /* MyUtil 버전에 따라 strong 태그일 수 있음 */
+.page-navigation span:not(:has(a)) { /* 링크가 없는 span (현재 페이지일 가능성 높음) */
+    background-color: #111;
+    color: #fff;
+    border-color: #111;
+    font-weight: 700;
+    cursor: default;
+}

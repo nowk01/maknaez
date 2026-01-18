@@ -34,7 +34,9 @@ public interface ProductService {
     public int dataCountManage(Map<String, Object> map);
     public List<ProductDTO> listProductManage(Map<String, Object> map);
     public List<CategoryDTO> listCategoryAll();
+    public List<ProductDTO> listProductImg(long prodId);
     public void deleteProductList(long[] prodIds) throws Exception;
+    public void deleteProductImg(long fileId, String pathname) throws Exception;
     
     public void updateProduct(ProductDTO dto) throws Exception;
     

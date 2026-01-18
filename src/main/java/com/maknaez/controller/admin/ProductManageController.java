@@ -281,80 +281,136 @@ public class ProductManageController {
 	}
 	
 	@GetMapping("update")
-    public String updateForm(HttpServletRequest req, HttpServletResponse resp) throws Exception {
-        try {
-            long prodId = Long.parseLong(req.getParameter("prodId"));
-            String page = req.getParameter("page");
+	public String updateForm(HttpServletRequest req, HttpServletResponse resp) throws Exception {
+	    try {
+	        long prodId = Long.parseLong(req.getParameter("prodId"));
+	        String page = req.getParameter("page");
 
-            ProductDTO dto = service.readProduct(prodId);
-            if(dto == null) {
-                return "redirect:/admin/product/product_list?page=" + page;
-            }
+	        ProductDTO dto = service.readProduct(prodId);
+	        
+	        if(dto == null) {
+	            return "redirect:/admin/product/product_list?page=" + page;
+	        }
 
-            List<CategoryDTO> categoryList = service.listCategory();
+	        String fullName = dto.getProdName();
+	        String gender = "M"; // 기본값
+	        String pureName = fullName;
+	        String colorCode = "";
+	        List<ProductDTO> listImg = service.listProductImg(prodId);
+	        
+	        String[] tokens = fullName.split("_");
+	        if(tokens.length >= 3) {
+	            gender = tokens[0]; 
+	            colorCode = tokens[tokens.length-1];
+	            
+	            int start = fullName.indexOf("_") + 1;
+	            int end = fullName.lastIndexOf("_");
+	            if(end > start) {
+	                pureName = fullName.substring(start, end);
+	            }
+	        } else if (tokens.length == 2) {
+	             // 예: M_트레일러닝화 (색상 없음)
+	             gender = tokens[0];
+	             pureName = tokens[1];
+	        }
 
-            req.setAttribute("mode", "update"); // 모드 설정
-            req.setAttribute("dto", dto);
-            req.setAttribute("categoryList", categoryList);
-            req.setAttribute("page", page);
+	        dto.setProdName(pureName); 
+	        dto.setColorCode(colorCode);
+	        req.setAttribute("genderVal", gender); 
 
-            return "admin/product/product_write"; // 등록 폼 재사용
+	        List<CategoryDTO> categoryList = service.listCategory();
 
-        } catch (Exception e) {
-            e.printStackTrace();
-            return "redirect:/admin/product/product_list";
-        }
-    }
+	        req.setAttribute("mode", "update");
+	        req.setAttribute("listImg", listImg);
+	        req.setAttribute("dto", dto);
+	        req.setAttribute("categoryList", categoryList);
+	        req.setAttribute("page", page);
+
+	        return "admin/product/product_write";
+
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        return "redirect:/admin/product/product_list";
+	    }
+	}
 	
 	@PostMapping("updateSubmit")
-    public String updateSubmit(HttpServletRequest req, HttpServletResponse resp) throws Exception {
-        try {
-            HttpSession session = req.getSession(); // 세션 가져오기
-            ProductDTO dto = new ProductDTO();
-            
-            dto.setProdId(Long.parseLong(req.getParameter("prodId")));
-            dto.setCateCode(req.getParameter("cateCode"));
-            dto.setProdName(req.getParameter("prodName"));
-            dto.setPrice(Integer.parseInt(req.getParameter("base_price")));
-            dto.setDescription(req.getParameter("prodDesc")); // prodDesc 이름 확인
-            dto.setIsDisplayed(Integer.parseInt(req.getParameter("isDisplayed")));
-            
-            // [추가] 파일 업로드 경로 설정
-            String root = session.getServletContext().getRealPath("/");
-            String pathname = root + "uploads" + File.separator + "product";
+	public String updateSubmit(HttpServletRequest req, HttpServletResponse resp) throws Exception {
+	    try {
+	        HttpSession session = req.getSession();
+	        ProductDTO dto = new ProductDTO();
+	        
+	        long prodId = Long.parseLong(req.getParameter("prodId"));
+	        dto.setProdId(prodId);
+	        dto.setCateCode(req.getParameter("cateCode"));
+	        dto.setPrice(Integer.parseInt(req.getParameter("base_price")));
+	        dto.setDescription(req.getParameter("prodDesc"));
+	        
+	        String isDisplayedStr = req.getParameter("isDisplayed");
+	        dto.setIsDisplayed(isDisplayedStr == null ? 1 : Integer.parseInt(isDisplayedStr));
 
-            // [추가] 썸네일 이미지 수정 처리
-            Part thumbPart = req.getPart("thumbnailFile");
-            if (thumbPart != null && thumbPart.getSize() > 0) {
-                MyMultipartFile mf = fileManager.doFileUpload(thumbPart, pathname);
-                dto.setThumbnailImg(mf);
-            }
+	        String gender = req.getParameter("gender");
+	        String pureName = req.getParameter("prodName");
+	        String colorCode = req.getParameter("colorCode");
+	        
+	        if(gender == null) gender = "U";
+	        if(colorCode == null) colorCode = "";
+	        
+	        String fullName = gender + "_" + pureName + "_" + colorCode;
+	        dto.setProdName(fullName);
 
-            // [추가] 추가 이미지 수정(추가) 처리
-            Collection<Part> parts = req.getParts();
-            List<Part> imgParts = new ArrayList<>();
-            for(Part p : parts) {
-                if("imgs".equals(p.getName()) && p.getSize() > 0) {
-                    imgParts.add(p);
-                }
-            }
-            
-            if(!imgParts.isEmpty()) {
-                List<MyMultipartFile> uploadedFiles = fileManager.doFileUpload(imgParts, pathname);
-                dto.setListFile(uploadedFiles);
-            }
+	        String[] sizes = req.getParameterValues("sizes");
+	        String[] stocks = req.getParameterValues("stocks");
+	        
+	        List<String> sizeList = new ArrayList<>();
+	        List<Integer> stockList = new ArrayList<>();
 
-            // 서비스 호출
-            service.updateProduct(dto);
-            
-            String page = req.getParameter("page");
-            return "redirect:/admin/product/product_list?page=" + page;
-            
-        } catch (Exception e) {
-            e.printStackTrace();
-            return "redirect:/admin/product/product_list";
-        }
-    }
+	        if(sizes != null && stocks != null) {
+	            for(int i=0; i<sizes.length; i++) {
+	                sizeList.add(sizes[i]);
+	                try {
+	                    stockList.add(Integer.parseInt(stocks[i]));
+	                } catch (NumberFormatException e) {
+	                    stockList.add(0);
+	                }
+	            }
+	            dto.setSizes(sizeList);
+	            dto.setStocks(stockList);
+	        }
+
+	        // 파일 업로드 처리
+	        String root = session.getServletContext().getRealPath("/");
+	        String pathname = root + "uploads" + File.separator + "product";
+
+	        Part thumbPart = req.getPart("thumbnailFile");
+	        if (thumbPart != null && thumbPart.getSize() > 0) {
+	            MyMultipartFile mf = fileManager.doFileUpload(thumbPart, pathname);
+	            dto.setThumbnailImg(mf);
+	        }
+
+	        Collection<Part> parts = req.getParts();
+	        List<Part> imgParts = new ArrayList<>();
+	        for(Part p : parts) {
+	            if("imgs".equals(p.getName()) && p.getSize() > 0) {
+	                imgParts.add(p);
+	            }
+	        }
+	        
+	        if(!imgParts.isEmpty()) {
+	            List<MyMultipartFile> uploadedFiles = fileManager.doFileUpload(imgParts, pathname);
+	            dto.setListFile(uploadedFiles);
+	        }
+
+	        service.updateProduct(dto);
+	        
+	        String page = req.getParameter("page");
+	        return "redirect:/admin/product/product_list?page=" + page;
+	        
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        return "redirect:/admin/product/product_list";
+	    }
+	}
 	
 	
 	
@@ -379,4 +435,27 @@ public class ProductManageController {
             resp.sendError(500);
         }
     }
+	
+	@PostMapping("deleteFile")
+	public void deleteFile(HttpServletRequest req, HttpServletResponse resp) throws Exception {
+	    try {
+	        long fileId = Long.parseLong(req.getParameter("fileId"));
+	        
+	        // 실제 파일 저장 경로
+	        HttpSession session = req.getSession();
+	        String root = session.getServletContext().getRealPath("/");
+	        String pathname = root + "uploads" + File.separator + "product";
+	        
+	        // 서비스 호출
+	        service.deleteProductImg(fileId, pathname);
+	        
+	        // 성공 응답 (JSON)
+	        resp.setContentType("application/json; charset=utf-8");
+	        resp.getWriter().print("{\"state\": \"true\"}");
+	        
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        resp.sendError(500);
+	    }
+	}
 }

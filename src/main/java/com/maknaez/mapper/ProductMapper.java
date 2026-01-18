@@ -30,8 +30,10 @@ public interface ProductMapper {
     
     public int countProductManage(Map<String, Object> map);
     public List<ProductDTO> listProductManage(Map<String, Object> map);
+    public List<ProductDTO> listProductImg(long prodId);
     public List<CategoryDTO> listCategoryAll();
     public void deleteProduct(long prodId) throws Exception;
+    public void deleteProductImg(long imgId) throws Exception;
     
     ProductDTO findById(long prod_id); // 상품 상세 정보 조회
     List<ProductDTO> listProductSize(long prod_id); // 상품별 사이즈 및 실시간 재고 리스트 조회
