@@ -354,7 +354,7 @@
         <div class="collapse" id="menu-order">
             <div class="submenu">
                 <a href="${pageContext.request.contextPath}/admin/order/order_list" class="submenu-item">주문 조회 (All)</a>
-                <a href="${pageContext.request.contextPath}/admin/order/estimate_list" class="submenu-item">견적서 (Estimate)</a>
+                <a href="${pageContext.request.contextPath}/admin/order/estimate_list" class="submenu-item">거래명세서 (Estimate)</a>
                 <a href="${pageContext.request.contextPath}/admin/order/claim_list" class="submenu-item">취소/반품 (Claim)</a>
             </div>
         </div>

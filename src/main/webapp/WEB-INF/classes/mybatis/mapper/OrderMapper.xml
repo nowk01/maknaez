@@ -140,31 +140,37 @@
 
 	<select id="estimateCount" parameterType="map"
 		resultType="Integer">
-		SELECT NVL(COUNT(*), 0)
-		FROM board
-		WHERE subject LIKE '%견적%'
+		SELECT NVL(COUNT(*), 0) FROM orders
 	</select>
 
 	<select id="listEstimate" parameterType="map" resultType="map">
 		SELECT * FROM (
 		SELECT rownum rnum, tb.* FROM (
 		SELECT
-		num AS "estimateIdx",
-		userName AS "userName",
-		userId AS "userId",
-		subject AS "content",
-		TO_CHAR(reg_date, 'YYYY.MM.DD') AS "regDate",
-		'견적 대기' AS "status" FROM board
-		WHERE subject LIKE '%견적%'
-		ORDER BY num DESC
+		o.ITEMS_ID AS "orderNum",
+		m2.userName AS "userName",
+		m1.userId AS "userId",
+		m2.tel AS "tel",
+		(SELECT MIN(p2.PROD_NAME) || DECODE(COUNT(*), 1, '', ' 외 ' || (COUNT(*) - 1)
+		|| '건')
+		FROM order_items oi2
+		JOIN pd_size ps2 ON oi2.OPT_ID = ps2.OPT_ID
+		JOIN products p2 ON ps2.PROD_ID = p2.PROD_ID
+		WHERE oi2.ORDER_ID = o.ITEMS_ID) AS "content",
+		(SELECT SUM(COUNT) FROM order_items WHERE ORDER_ID = o.ITEMS_ID) AS "qty",
+		TO_CHAR(o.ORDER_DATE, 'YYYY.MM.DD') AS "regDate",
+		o.STATUS AS "status"
+		FROM orders o
+		JOIN member1 m1 ON o.MEMBERIDX = m1.MEMBERIDX
+		JOIN member2 m2 ON o.MEMBERIDX = m2.MEMBERIDX
+		ORDER BY o.ORDER_DATE DESC
 		) tb WHERE rownum &lt;= #{end}
 		) WHERE rnum &gt;= #{start}
 	</select>
 
 	<select id="waitingEstimateCount" resultType="Integer">
-		SELECT NVL(COUNT(*), 0)
-		FROM board
-		WHERE subject LIKE '%견적%'
+		SELECT
+		NVL(COUNT(*), 0) FROM orders WHERE STATUS = '결제완료'
 	</select>
 
 	<select id="getOrderDetailsForEstimate" parameterType="String"
@@ -173,19 +179,24 @@
 		o.ITEMS_ID AS "orderNum",
 		p.THUMB_NAIL AS "thumbNail",
 		p.PROD_NAME AS "productName",
+		ps.PD_SIZE AS "pdSize",
 		oi.COUNT AS "qty",
 		oi.PRICE AS "price",
 		o.TOTAL_AMOUNT AS "totalAmount",
-		m2.userName AS "userName",
-		m2.tel AS
-		"tel",
-		m2.email AS "email"
+		m2.userName AS
+		"userName",
+		m1.userId AS "userId",
+		m2.tel AS "tel",
+		m2.email AS "email",
+		TO_CHAR(o.ORDER_DATE, 'YYYY-MM-DD') AS "orderDate"
 		FROM orders o
-		JOIN order_items oi ON
-		o.ITEMS_ID = oi.ORDER_ID
-		JOIN pd_size ps ON oi.OPT_ID = ps.OPT_ID
 		JOIN
-		products p ON ps.PROD_ID = p.PROD_ID
+		order_items oi ON o.ITEMS_ID = oi.ORDER_ID
+		JOIN pd_size ps ON oi.OPT_ID
+		= ps.OPT_ID
+		JOIN products p ON ps.PROD_ID = p.PROD_ID
+		JOIN member1 m1 ON
+		o.MEMBERIDX = m1.MEMBERIDX
 		JOIN member2 m2 ON o.MEMBERIDX =
 		m2.MEMBERIDX
 		WHERE o.ITEMS_ID = #{orderNum}
