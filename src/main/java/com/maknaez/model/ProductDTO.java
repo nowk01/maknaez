@@ -205,4 +205,20 @@ public class ProductDTO {
     public int getStockQty() { return stockQty; }
     public void setStockQty(int stockQty) { this.stockQty = stockQty; }
     
+    
+    private long fileId;      // 이미지 고유 번호 (img_id)
+    private String fileName;  // 이미지 파일명 (img)
+
+	public long getFileId() {
+		return fileId;
+	}
+	public void setFileId(long fileId) {
+		this.fileId = fileId;
+	}
+	public String getFileName() {
+		return fileName;
+	}
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
+	}
 }

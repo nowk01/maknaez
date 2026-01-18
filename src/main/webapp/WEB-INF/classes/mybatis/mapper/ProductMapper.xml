@@ -282,7 +282,7 @@
 	</insert>
     
     <insert id="insertProductImg" parameterType="map">
-	    INSERT INTO product_img (img_id, prod_id, filename)
+	    INSERT INTO product_img (img_id, prod_id, img)
 	    VALUES (item_seq.NEXTVAL, #{prodId}, #{filename})
 	</insert>
     

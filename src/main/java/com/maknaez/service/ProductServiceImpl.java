@@ -63,35 +63,32 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductDTO readProduct(long prodId) {
         ProductDTO dto = null;
-        try  {
-            dto = mapper.findById(prodId); 
+        try {
+            dto = mapper.readProduct(prodId);
             
             if (dto != null) {
-                String name = dto.getProdName();
+                List<ProductDTO> sizeList = mapper.listProductSize(prodId);
                 
-                if (name != null && name.contains("_")) {
-                    int lastIdx = name.lastIndexOf("_");
-                    if (lastIdx > 0) {
-                        String colorCode = name.substring(lastIdx + 1);
-                        dto.setColorCode(colorCode);
-                        List<ProductDTO> colors = this.listProductColors(name);
-                        if (colors != null) {
-                            for (ProductDTO c : colors) {
-                                String cName = c.getProdName();
-                                if (cName != null && cName.lastIndexOf("_") > 0) {
-                                    c.setColorCode(cName.substring(cName.lastIndexOf("_") + 1));
-                                }
-                            }
-                        }
-                        
-                        dto.setColorOptions(colors);
+                List<String> sizes = new ArrayList<>();
+                List<Integer> stocks = new ArrayList<>();
+                
+                if(sizeList != null) {
+                    for(ProductDTO s : sizeList) {
+                        sizes.add(s.getProdSize());   // 사이즈 명
+                        stocks.add(s.getStockQty());  // 재고 수량
                     }
-                } else {
-                    dto.setColorCode("");
+                }
+                dto.setSizes(sizes);
+                dto.setStocks(stocks);
+
+                String name = dto.getProdName();
+                if (name != null) {
+                     List<ProductDTO> colors = this.listProductColors(name);
+                     dto.setColorOptions(colors);
                 }
             }
-        } catch (Exception e) { 
-            e.printStackTrace(); 
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return dto;
     }
@@ -270,6 +267,18 @@ public class ProductServiceImpl implements ProductService {
 	    }
 	}
 	
+	@Override
+	public void deleteProductImg(long fileId, String pathname) throws Exception {
+	    try {
+	        
+	        mapper.deleteProductImg(fileId);
+	        
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        throw e;
+	    }
+	}
+	
 	// 장바구니
 	@Override
     public ProductDTO findById(long prod_id) {
@@ -309,37 +318,57 @@ public class ProductServiceImpl implements ProductService {
 	}
 	
 	@Override
-    public void updateProduct(ProductDTO dto) throws Exception {
-        try {
-            // 1. 썸네일 이미지가 변경된 경우 DTO에 파일명 설정
-            if (dto.getThumbnailImg() != null) {
-                String saveFilename = dto.getThumbnailImg().getSaveFilename();
-                dto.setThumbnail(saveFilename);
-            }
+	public void updateProduct(ProductDTO dto) throws Exception {
+	    try {
+	        // 1. 썸네일 이미지 파일명 처리
+	        if (dto.getThumbnailImg() != null) {
+	            String saveFilename = dto.getThumbnailImg().getSaveFilename();
+	            dto.setThumbnail(saveFilename);
+	        }
 
-            // 2. 기본 정보 및 썸네일 업데이트 (Mapper XML 수정 필요)
-            mapper.updateProduct(dto);
+	        // 2. 기본 정보 업데이트 (PRODUCTS 테이블)
+	        mapper.updateProduct(dto);
 
-            // 3. 추가 이미지 저장 (새로 업로드된 파일이 있는 경우)
-            List<MyMultipartFile> listFile = dto.getListFile();
-            if (listFile != null && !listFile.isEmpty()) {
-                for (MyMultipartFile mf : listFile) {
-                    String saveImg = mf.getSaveFilename();
-                    
-                    Map<String, Object> imgMap = new HashMap<>();
-                    imgMap.put("prodId", dto.getProdId());
-                    imgMap.put("filename", saveImg);
-                    
-                    // 기존 insertProductImg 재사용하여 추가 이미지 등록
-                    mapper.insertProductImg(imgMap);
-                }
-            }
+	        // 3. 추가 이미지 등록 (수정 시 새로 업로드한 파일만 INSERT)
+	        List<MyMultipartFile> listFile = dto.getListFile();
+	        if (listFile != null && !listFile.isEmpty()) {
+	            for (MyMultipartFile mf : listFile) {
+	                String saveImg = mf.getSaveFilename();
+	                Map<String, Object> imgMap = new HashMap<>();
+	                imgMap.put("prodId", dto.getProdId());
+	                imgMap.put("filename", saveImg);
+	                mapper.insertProductImg(imgMap);
+	            }
+	        }
+	        
+	        List<String> sizes = dto.getSizes();
+	        List<Integer> stocks = dto.getStocks();
 
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw e;
-        }
-    }
+	        if (sizes != null && stocks != null) {
+	            for (int i = 0; i < sizes.size(); i++) {
+	                try {
+	                    ProductDTO optDto = new ProductDTO();
+	                    optDto.setProdId(dto.getProdId());
+	                    optDto.setPdSize(sizes.get(i));
+	                    
+	                    mapper.insertPdSize(optDto); 
+	                    
+	                    // 재고 로그 추가
+	                    Map<String, Object> stockMap = new HashMap<>();
+	                    stockMap.put("prodId", dto.getProdId());
+	                    stockMap.put("optId", optDto.getOptId()); // 방금 생성된 optId
+	                    stockMap.put("qty", stocks.get(i));
+	                    mapper.insertStockLog(stockMap);
+	                    
+	                } catch (Exception e) {
+	                }
+	            }
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        throw e;
+	    }
+	}
 	
 	@Override
     public List<ProductDTO> listProductByIds(List<String> ids) {
@@ -373,6 +402,18 @@ public class ProductServiceImpl implements ProductService {
         }
         return sortedList;
     }
+	
+	@Override
+	public List<ProductDTO> listProductImg(long prodId) {
+	    List<ProductDTO> list = null;
+	    try {
+	        // Mapper에 정의된 listProductImg 쿼리 호출
+	        list = mapper.listProductImg(prodId);
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	    return list;
+	}
 	
 
 }

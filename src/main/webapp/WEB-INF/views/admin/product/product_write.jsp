@@ -55,13 +55,22 @@
                         </div>
                         
                         <div class="mb-3">
-                            <label class="form-label">성별(구분)</label>
-                            <div class="pt-2">
-                                <label class="me-3"><input type="radio" name="gender" value="M" checked> 남성(M)</label>
-                                <label class="me-3"><input type="radio" name="gender" value="F"> 여성(W)</label>
-                                <label><input type="radio" name="gender" value="U"> 공용(U)</label>
-                            </div>
-                        </div>
+						    <label class="form-label">성별(구분)</label>
+						    <div class="pt-2">
+						        <label class="me-3">
+						            <input type="radio" name="gender" value="M" 
+						                   ${genderVal == 'M' ? "checked" : ""}> 남성(M)
+						        </label>
+						        <label class="me-3">
+						            <input type="radio" name="gender" value="F" 
+						                   ${genderVal == 'F' ? "checked" : ""}> 여성(W)
+						        </label>
+						        <label>
+						            <input type="radio" name="gender" value="U" 
+						                   ${genderVal == 'U' || empty genderVal ? "checked" : ""}> 공용(U)
+						        </label>
+						    </div>
+						</div>
 
                         <div class="row">
                             <div class="col-md-6 mb-3">
@@ -96,16 +105,22 @@
                             </div>
                             
                             <c:forEach var="i" begin="1" end="5">
-                                <div class="img-upload-box" id="box${i}" onclick="openFile('f${i}')">
-                                    <span>추가 ${i}</span>
-                                    <input type="file" id="f${i}" name="imgs" style="display:none" accept="image/*" onchange="previewImage(this, 'box${i}')">
-                                    
-                                    <c:if test="${mode=='update' && not empty dto.listFile && dto.listFile.size() >= i}">
-                                        <c:set var="fileName" value="${dto.listFile[i-1].fileName}" />
-                                        <img src="${pageContext.request.contextPath}/uploads/product/${fileName}" class="existing-img">
-                                    </c:if>
-                                </div>
-                            </c:forEach>
+							    <div class="img-upload-box" id="box${i}" onclick="openFile('f${i}')">
+							        <span>추가 ${i}</span>
+							        <input type="file" id="f${i}" name="imgs" style="display:none" accept="image/*" onchange="previewImage(this, 'box${i}')">
+							        
+							        <c:if test="${mode=='update' && not empty listImg && listImg.size() >= i}">
+							            <c:set var="imgDTO" value="${listImg[i-1]}" />
+							            
+							            <img src="${pageContext.request.contextPath}/uploads/product/${imgDTO.fileName}" class="existing-img">
+							            
+							            <button type="button" class="btn-img-delete" 
+							                    onclick="deleteExistingFile('${imgDTO.fileId}', 'box${i}', event)">X</button>
+							                    
+							            <input type="hidden" name="prevImgIds" value="${imgDTO.fileId}">
+							        </c:if>
+							    </div>
+							</c:forEach>
                         </div>
                         
                         <div class="mt-2">
@@ -141,27 +156,25 @@
                                 </tr>
                             </thead>
                             <tbody id="optionTbody">
-                                <c:if test="${mode=='update' && not empty dto.sizes}">
-                                    <c:forEach var="i" begin="0" end="${dto.sizes.size()-1}">
-                                        <tr>
-                                            <td style="font-weight:800; vertical-align:middle;">${dto.colorCode}</td>
-                                            <td style="font-weight:700; color:#666; vertical-align:middle;">
-                                                ${dto.sizes[i]} mm
-                                                <input type="hidden" name="sizes" value="${dto.sizes[i]}">
-                                                <input type="hidden" name="pdSize" value="${dto.sizes[i]}">
-                                            </td>
-                                            <td style="vertical-align:middle;">
-                                                <input type="number" class="form-control input-stock" name="stocks" 
-                                                       value="${dto.stocks[i]}" min="0" style="width:100px; margin:0 auto;">
-                                            </td>
-                                            <td style="vertical-align:middle;">
-                                                <button type="button" style="border:none; background:none; font-weight:bold; cursor:pointer;" 
-                                                        onclick="removeOptionRow(this)">X</button>
-                                            </td>
-                                        </tr>
-                                    </c:forEach>
-                                </c:if>
-                            </tbody>
+							    <c:if test="${mode=='update' && not empty dto.sizes}">
+							        <c:forEach var="i" begin="0" end="${dto.sizes.size()-1}">
+							            <tr>
+							                <td style="font-weight:800; vertical-align:middle;">${dto.colorCode}</td>
+							                <td style="font-weight:700; color:#666; vertical-align:middle;">
+							                    ${dto.sizes[i]} mm
+							                    <input type="hidden" name="sizes" value="${dto.sizes[i]}">
+							                    </td>
+							                <td style="vertical-align:middle;">
+							                    <input type="number" class="form-control input-stock" name="stocks" 
+							                           value="${dto.stocks[i]}" min="0" style="width:100px; margin:0 auto;">
+							                </td>
+							                <td style="vertical-align:middle;">
+							                    <button type="button" style="border:none; background:none; font-weight:bold; cursor:pointer;" onclick="removeOptionRow(this)">X</button>
+							                </td>
+							            </tr>
+							        </c:forEach>
+							    </c:if>
+							</tbody>
                         </table>
                     </div>
 

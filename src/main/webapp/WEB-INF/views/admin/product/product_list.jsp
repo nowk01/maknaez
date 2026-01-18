@@ -63,7 +63,7 @@
                                 <c:forEach var="dto" items="${list}" varStatus="status">
 					                <tr>
 					                    <td><input type="checkbox" name="prodIds" value="${dto.prodId}"></td>
-					                    <td>${dataCount - (page-1)*10 - status.index}</td>
+					                    <td>${dto.prodId}</td>
 					                    
 					                    <td>
 					                        <c:if test="${not empty dto.thumbnail}">
