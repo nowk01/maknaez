@@ -510,7 +510,7 @@
     
     <insert id="insertStockUpdateLog" parameterType="map">
         INSERT INTO stock_logs (
-            log_id, prod_id, opt_id, qty, prod_stock, status, reg_date
+            log_id, prod_id, opt_id, CHANGE_QTY, prod_stock, CHANGE_TYPE, reg_date
         ) VALUES (
             stock_seq.NEXTVAL,
             (SELECT prod_id FROM pd_size WHERE opt_id = #{optId}), -- optId로 prodId 찾기
