@@ -21,7 +21,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 @Controller
 @RequestMapping("/admin/order/*")
-public class orderManageController {
+public class OrderManageController {
 
 	@GetMapping("order_list")
 	public ModelAndView orderList(HttpServletRequest req, HttpServletResponse resp)
