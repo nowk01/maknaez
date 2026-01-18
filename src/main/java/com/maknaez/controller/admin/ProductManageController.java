@@ -109,11 +109,96 @@ public class ProductManageController {
     }
 	
 	@GetMapping("stock_list")
-	public ModelAndView stockList(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		ModelAndView mav = new ModelAndView("admin/product/stock_list");
-		
-		return mav;
-	}
+    public String stockList(HttpServletRequest req, HttpServletResponse resp) throws Exception {
+		MyUtil myUtil = new MyUtil();
+        try {
+            String page = req.getParameter("page");
+            int current_page = 1;
+            if (page != null) current_page = Integer.parseInt(page);
+
+            String cateCode = req.getParameter("cateCode");
+            String keyword = req.getParameter("keyword");
+            if (cateCode == null) cateCode = "";
+            if (keyword == null) keyword = "";
+
+            // 검색 조건 Map
+            Map<String, Object> map = new HashMap<>();
+            map.put("cateCode", cateCode);
+            map.put("keyword", keyword);
+
+            // 페이징 처리
+            int size = 10;
+            int dataCount = service.dataCountStock(map);
+            int total_page = myUtil.pageCount(dataCount, size);
+            if (current_page > total_page) current_page = total_page;
+
+            int offset = (current_page - 1) * size;
+            if(offset < 0) offset = 0;
+
+            map.put("offset", offset);
+            map.put("size", size);
+
+            // 데이터 조회
+            List<ProductDTO> list = service.listStock(map); 
+            List<CategoryDTO> categoryList = service.listCategory(); // 카테고리 목록
+
+            // 페이징 URL
+            String cp = req.getContextPath();
+            String listUrl = cp + "/admin/product/stock_list";
+            String articleUrl = listUrl + "?page=" + current_page;
+            
+            if (keyword.length() != 0 || cateCode.length() != 0) {
+            	String qs = "cateCode=" + cateCode + "&keyword=" + URLEncoder.encode(keyword, "utf-8");
+                listUrl += "?" + qs;
+                articleUrl += "&" + qs;
+            }
+            
+            String paging = myUtil.paging(current_page, total_page, listUrl);
+
+            req.setAttribute("list", list);
+            req.setAttribute("categoryList", categoryList); // 검색바 카테고리 연동
+            req.setAttribute("page", current_page);
+            req.setAttribute("dataCount", dataCount);
+            req.setAttribute("total_page", total_page);
+            req.setAttribute("paging", paging);
+            req.setAttribute("cateCode", cateCode);
+            req.setAttribute("keyword", keyword);
+
+            return "admin/product/stock_list";
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "redirect:/admin/home/main";
+        }
+    }
+	
+	@PostMapping("updateStock")
+    public void updateStock(HttpServletRequest req, HttpServletResponse resp) throws Exception {
+        try {
+            // 파라미터 받기 (단일/일괄 모두 처리 가능하도록 배열로 받음)
+            String[] sOptIds = req.getParameterValues("optIds");
+            String sQty = req.getParameter("qty"); // 변동 수량 (+/-)
+            String reason = req.getParameter("reason"); // 변동 사유
+            
+            int qty = Integer.parseInt(sQty);
+            
+            if(sOptIds != null && sOptIds.length > 0) {
+                long[] optIds = new long[sOptIds.length];
+                for(int i=0; i<sOptIds.length; i++) {
+                    optIds[i] = Long.parseLong(sOptIds[i]);
+                }
+                
+                // 서비스 호출
+                service.updateStock(optIds, qty, reason);
+            }
+            
+            resp.setContentType("application/json; charset=utf-8");
+            resp.getWriter().print("{\"state\": \"true\"}");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            resp.sendError(500);
+        }
+    }
 	
 	@GetMapping("product_list")
 	public String list(HttpServletRequest req, HttpServletResponse resp) throws Exception {

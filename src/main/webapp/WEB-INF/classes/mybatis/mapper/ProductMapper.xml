@@ -407,4 +407,81 @@
    	 	DELETE FROM product_img WHERE img_id = #{imgId}
 	</delete>
     
+    
+    <!-- 재고 관리(관리자) -->
+    
+    <select id="listStock" parameterType="map" resultType="com.maknaez.model.ProductDTO">
+        SELECT 
+            p.prod_id AS prodId,
+            p.prod_name AS prodName,
+            p.thumb_nail AS thumbnail,
+            c.cate_name AS cateName,
+            ps.opt_id,
+            ps.pd_size AS prodSize,
+            NVL((
+                SELECT prod_stock 
+                FROM stock_logs 
+                WHERE opt_id = ps.opt_id 
+                ORDER BY log_id DESC 
+                OFFSET 0 ROWS FETCH NEXT 1 ROWS ONLY
+            ), 0) AS stockQty,
+            (
+                SELECT reg_date 
+                FROM stock_logs 
+                WHERE opt_id = ps.opt_id 
+                ORDER BY log_id DESC 
+                OFFSET 0 ROWS FETCH NEXT 1 ROWS ONLY
+            ) AS regDate
+
+        FROM products p
+        JOIN pd_size ps ON p.prod_id = ps.prod_id
+        JOIN category c ON p.cate_code = c.cate_code
+        <where>
+            p.status != 0  <if test="cateCode != null and cateCode != ''">
+                AND p.cate_code = #{cateCode}
+            </if>
+            <if test="keyword != null and keyword != ''">
+                AND (p.prod_name LIKE '%' || #{keyword} || '%')
+            </if>
+        </where>
+        ORDER BY p.prod_id DESC, ps.pd_size ASC
+        OFFSET #{offset} ROWS FETCH NEXT #{size} ROWS ONLY
+    </select>
+    
+    <select id="dataCountStock" parameterType="map" resultType="Integer">
+        SELECT COUNT(*)
+        FROM products p
+        JOIN pd_size ps ON p.prod_id = ps.prod_id
+        <where>
+            p.status != 0
+            <if test="cateCode != null and cateCode != ''">
+                AND p.cate_code = #{cateCode}
+            </if>
+            <if test="keyword != null and keyword != ''">
+                AND (p.prod_name LIKE '%' || #{keyword} || '%')
+            </if>
+        </where>
+    </select>
+    
+    <select id="getLastStock" parameterType="long" resultType="Integer">
+        SELECT prod_stock 
+        FROM stock_logs 
+        WHERE opt_id = #{optId} 
+        ORDER BY log_id DESC 
+        OFFSET 0 ROWS FETCH NEXT 1 ROWS ONLY
+    </select>
+    
+    <insert id="insertStockUpdateLog" parameterType="map">
+        INSERT INTO stock_logs (
+            log_id, prod_id, opt_id, qty, prod_stock, status, reg_date
+        ) VALUES (
+            stock_seq.NEXTVAL,
+            (SELECT prod_id FROM pd_size WHERE opt_id = #{optId}), -- optId로 prodId 찾기
+            #{optId},
+            #{qty},         -- 이번 변동 수량 (+5)
+            #{finalStock},  -- [핵심] 계산된 최종 재고 (15)
+            #{reason},
+            SYSDATE
+        )
+    </insert>
 </mapper>

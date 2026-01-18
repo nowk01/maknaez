@@ -43,4 +43,8 @@ public interface ProductService {
     public ProductDTO findById(long prod_id);
     
     public List<ProductDTO> listProductByIds(List<String> ids);
+    
+    public List<ProductDTO> listStock(Map<String, Object> map) throws Exception;
+    public int dataCountStock(Map<String, Object> map) throws Exception;
+    public void updateStock(long[] optIds, int qty, String reason) throws Exception;
 }
