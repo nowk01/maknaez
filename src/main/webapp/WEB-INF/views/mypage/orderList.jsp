@@ -5,11 +5,354 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<title>주문/배송조회 | 쇼핑몰</title>
-<link rel="icon" href="data:;base64,iVBORw0KGgo=">
+<title>주문/배송조회 | MAKNAEZ</title>
 <jsp:include page="/WEB-INF/views/layout/headerResources.jsp" />
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath}/dist/css/mypage.css">
+
+<style>
+@import
+	url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap')
+	;
+
+body {
+	font-family: 'Montserrat', 'Noto Sans KR', sans-serif;
+	letter-spacing: -0.5px;
+	color: #000;
+}
+
+/* 1. 상단 상태 대시보드 */
+.status-dashboard-container {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	border: 1px solid #e5e5e5;
+	padding: 40px 0;
+	margin-bottom: 50px;
+	background: #fff;
+	border-radius: 10px;
+}
+
+.status-item {
+	flex: 1;
+	text-align: center;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.status-item .title {
+	font-size: 14px;
+	color: #888;
+	margin-bottom: 12px;
+	font-weight: 500;
+}
+
+.status-item .count {
+	font-size: 32px;
+	font-weight: 700;
+	color: #000;
+	font-family: 'Montserrat', sans-serif;
+}
+
+.status-item .count.point-red {
+	color: #ff4e00;
+}
+
+.status-item-divider {
+	width: 1px;
+	height: 50px;
+	background-color: #eee;
+}
+
+/* 2. 필터 영역 */
+.filter-section-row {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 25px;
+}
+
+.pill-button-group {
+	display: flex;
+	gap: 10px;
+}
+
+/* 기간 버튼 애니메이션 */
+.custom-pill-btn {
+	border: 1px solid #e0e0e0;
+	background: #fff;
+	color: #888;
+	font-weight: 600;
+	padding: 0 24px;
+	height: 42px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 14px;
+	cursor: pointer;
+	transition: all 0.3s ease;
+	border-radius: 21px !important;
+}
+
+.custom-pill-btn:hover {
+	border-color: #000;
+	color: #000;
+}
+
+/* ★ 기간 버튼 '선택됨' 상태: 검정 배경 ★ */
+.custom-pill-btn[data-selected], .custom-pill-btn.active {
+	background: #000 !important;
+	color: #fff !important;
+	border-color: #000 !important;
+}
+
+.ipt-cal-field {
+	height: 42px;
+	border: 1px solid #e0e0e0;
+	padding: 0 15px;
+	font-size: 14px;
+	color: #333;
+	width: 140px;
+	border-radius: 5px;
+}
+
+.btn-submit-search {
+	height: 42px;
+	padding: 0 35px;
+	background: #000;
+	color: #fff;
+	border: none;
+	font-size: 14px;
+	font-weight: 700;
+	cursor: pointer;
+	border-radius: 5px;
+	transition: opacity 0.2s;
+}
+
+/* 3. 게시판 UI */
+.order-list-board {
+	border-top: 2.5px solid #000;
+	margin-top: 10px;
+}
+
+.board-thead {
+	display: flex;
+	padding: 18px 0;
+	text-align: center;
+	border-bottom: 2.5px solid #000;
+}
+
+.board-thead>div {
+	font-weight: 700;
+	font-size: 15px;
+	color: #000;
+}
+
+.th-info {
+	flex: 5.5;
+}
+
+.th-stat {
+	flex: 2;
+}
+
+.th-price {
+	flex: 2.5;
+}
+
+.order-item-group {
+	border-bottom: 1px solid #ddd;
+}
+
+.order-meta-line {
+	background-color: #fff;
+	border-bottom: 1px solid #f0f0f0;
+	padding: 15px 0 15px 10px;
+	display: flex;
+	align-items: center;
+	font-size: 14px;
+	font-weight: 700;
+	color: #000;
+	position: relative;
+}
+
+.order-meta-line::after {
+	content: '>';
+	position: absolute;
+	right: 20px;
+	color: #ccc;
+	font-size: 16px;
+}
+
+.order-meta-line .ord-no {
+	font-weight: 400;
+	color: #999;
+	margin-left: 12px;
+	font-family: 'Montserrat', sans-serif;
+}
+
+.board-tbody-row {
+	display: flex;
+	align-items: center;
+	padding: 30px 0;
+	text-align: center;
+}
+
+.td-item-info {
+	flex: 5.5;
+	display: flex;
+	align-items: flex-start;
+	text-align: left;
+	padding-left: 20px;
+}
+
+.td-item-info .thumb {
+	width: 110px;
+	height: 110px;
+	border: 1px solid #f0f0f0;
+	margin-right: 25px;
+	flex-shrink: 0;
+}
+
+.td-item-info .thumb img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+.td-item-info .details {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	min-height: 110px;
+}
+
+.td-item-info .name {
+	font-size: 17px;
+	font-weight: 700;
+	color: #000;
+	margin-bottom: 8px;
+	line-height: 1.4;
+}
+
+.td-item-info .option-qty {
+	font-size: 14px;
+	color: #777;
+	line-height: 1.8;
+	font-weight: 400;
+}
+
+.td-item-stat {
+	flex: 2;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+}
+
+.td-item-stat .status-badge {
+	font-size: 15px;
+	font-weight: 400;
+	color: #333;
+}
+
+.btn-action-mini {
+	display: inline-block;
+	padding: 6px 14px;
+	font-size: 12px;
+	font-weight: 600;
+	border: 1px solid #ddd;
+	background: #fff;
+	color: #666;
+	cursor: pointer;
+}
+
+.td-item-price {
+	flex: 2.5;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.td-item-price .price-val {
+	font-size: 18px;
+	font-weight: 700;
+	color: #000;
+	font-family: 'Montserrat', sans-serif;
+}
+
+.order-summary-footer {
+	padding: 15px 25px;
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+	border-top: 1px solid #f0f0f0;
+	gap: 20px;
+}
+
+.order-summary-footer .summary-label {
+	font-size: 13px;
+	color: #888;
+	font-weight: 500;
+	font-family: 'Montserrat', sans-serif;
+}
+
+.order-summary-footer .summary-content {
+	font-size: 15px;
+	color: #000;
+	font-weight: 600;
+	font-family: 'Montserrat', sans-serif;
+}
+
+.order-summary-footer .summary-content strong {
+	font-weight: 700;
+	color: #000;
+	font-family: 'Montserrat', sans-serif;
+	margin-left: 5px;
+}
+
+/* ★ 페이징 디자인 (호버 시 테두리, 선택 시 검정 배경) ★ */
+.page-navigation-wrap {
+	margin: 60px 0;
+	text-align: center;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 8px;
+}
+
+.page-navigation-wrap a, .page-navigation-wrap span,
+	.page-navigation-wrap b {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 36px;
+	height: 36px;
+	font-size: 14px;
+	font-family: 'Montserrat', sans-serif;
+	color: #888;
+	text-decoration: none;
+	border: 1px solid transparent;
+	transition: all 0.2s;
+	cursor: pointer;
+	border-radius: 50%;
+}
+
+.page-navigation-wrap a:hover {
+	color: #000;
+	border: 1px solid #000 !important;
+}
+
+/* ★ 페이징 '현재 페이지' 강조: 검정 배경 + 흰색 글씨 ★ */
+.page-navigation-wrap span.current, .page-navigation-wrap b {
+	background-color: #000 !important;
+	color: #fff !important;
+	font-weight: 700 !important;
+	border: 1px solid #000 !important;
+}
+</style>
 </head>
 <body>
 	<form name="searchForm"
@@ -19,6 +362,7 @@
 			type="hidden" name="historyStartDate" value="${historyStartDate}">
 		<input type="hidden" name="historyEndDate" value="${historyEndDate}">
 	</form>
+
 	<jsp:include page="/WEB-INF/views/layout/header.jsp" />
 
 	<div class="mypage-container">
@@ -71,229 +415,169 @@
 			</div>
 		</aside>
 
+
 		<main class="main-content">
 			<h1 class="page-title">주문/배송조회</h1>
-
 			<div class="notice-box">
-				<p>같은 제품의 동일 사이즈는 2개 이상 구매하신 경우, 주문 취소 시 해당 제품의 전체 수량이 취소됩니다.</p>
-				<p>전체 취소 후 재구매 부탁드립니다.</p>
+				<p>· 같은 제품의 동일 사이즈는 2개 이상 구매하신 경우, 주문 취소 시 해당 제품의 전체 수량이 취소됩니다.</p>
 			</div>
 
-
-			<div class="sm-salomon__statusBar">
-
-				<div class="sm-salomon__statusBarItem" data-status-bar-item="">
-					<span class="sm-salomon__statusBarItemTitle">전체</span> <span
-						class="sm-salomon__statusBarItemValue" data-status-total="">
-						<c:out value="${dataCount}" default="0" />
-					</span>
+			<div class="status-dashboard-container">
+				<div class="status-item">
+					<span class="title">전체</span><span class="count point-red"><c:out
+							value="${dataCount}" default="0" /></span>
 				</div>
-
-				<div class="sm-salomon__statusBarBorder">
-					<svg xmlns="http://www.w3.org/2000/svg" width="1" height="76"
-						viewBox="0 0 1 76" fill="none">
-            			<line x1="0.5" y1="0" x2="0.5" y2="76" stroke="#E7E7E7"></line>
-        			</svg>
+				<div class="status-item-divider"></div>
+				<div class="status-item">
+					<span class="title">결제완료</span><span class="count"><c:out
+							value="${paymentCount}" default="0" /></span>
 				</div>
-
-				<div class="sm-salomon__statusBarItem" data-status-bar-item="">
-					<span class="sm-salomon__statusBarItemTitle">결제완료</span> <span
-						class="sm-salomon__statusBarItemValue" data-status-paid="">
-						<c:out value="${paymentCount}" default="0" />
-					</span>
+				<div class="status-item-divider"></div>
+				<div class="status-item">
+					<span class="title">배송중</span><span class="count"><c:out
+							value="${shippingCount}" default="0" /></span>
 				</div>
-
-				<div class="sm-salomon__statusBarBorder">
-					<svg xmlns="http://www.w3.org/2000/svg" width="1" height="76"
-						viewBox="0 0 1 76" fill="none">
-            			<line x1="0.5" y1="0" x2="0.5" y2="76" stroke="#E7E7E7"></line>
-        			</svg>
-				</div>
-
-				<div class="sm-salomon__statusBarItem" data-status-bar-item="">
-					<span class="sm-salomon__statusBarItemTitle">배송중</span> <span
-						class="sm-salomon__statusBarItemValue" data-status-in-transit="">
-						<c:out value="${shippingCount}" default="0" />
-					</span>
-				</div>
-
-				<div class="sm-salomon__statusBarBorder">
-					<svg xmlns="http://www.w3.org/2000/svg" width="1" height="76"
-						viewBox="0 0 1 76" fill="none">
-            			<line x1="0.5" y1="0" x2="0.5" y2="76" stroke="#E7E7E7"></line>
-        			</svg>
-				</div>
-
-				<div class="sm-salomon__statusBarItem" data-status-bar-item="">
-					<span class="sm-salomon__statusBarItemTitle">배송완료</span> <span
-						class="sm-salomon__statusBarItemValue" data-status-delivered="">
-						<c:out value="${completeCount}" default="0" />
-					</span>
-				</div>
-			</div>
-			<div class="filter-wrapper">
-				<div class="period-buttons">
-					<div class="sm-salomon__filterPill" data-period="1" data-selected>1개월</div>
-					<div class="sm-salomon__filterPill" data-period="3">3개월</div>
-					<div class="sm-salomon__filterPill" data-period="6">6개월</div>
-					<div class="sm-salomon__filterPill" data-period="12">1년</div>
-				</div>
-
-				<div class="date-inputs">
-					<input type="date" class="input-date"> <span class="tilde">~</span>
-					<input type="date" class="input-date">
-					<button type="button" class="btn-search">조회</button>
+				<div class="status-item-divider"></div>
+				<div class="status-item">
+					<span class="title">배송완료</span><span class="count"><c:out
+							value="${completeCount}" default="0" /></span>
 				</div>
 			</div>
 
-			<div class="order-list-area">
+			<div class="filter-section-row">
+				<div class="pill-button-group">
+					<div
+						class="custom-pill-btn ${empty param.historyStartDate ? 'active' : ''}"
+						data-period="1">1개월</div>
+					<div class="custom-pill-btn" data-period="3">3개월</div>
+					<div class="custom-pill-btn" data-period="6">6개월</div>
+					<div class="custom-pill-btn" data-period="12">1년</div>
+				</div>
+				<div class="date-search-group">
+					<input type="date" class="ipt-cal-field" id="sDate"
+						value="${historyStartDate}"> <span>~</span> <input
+						type="date" class="ipt-cal-field" id="eDate"
+						value="${historyEndDate}">
+					<button type="button" class="btn-submit-search"
+						onclick="searchList()">조회</button>
+				</div>
+			</div>
+
+			<div class="order-list-board">
+				<div class="board-thead">
+					<div class="th-info">상품 정보</div>
+					<div class="th-stat">주문상태</div>
+					<div class="th-price">주문금액</div>
+				</div>
+
 				<c:choose>
 					<c:when test="${not empty list}">
 						<c:forEach var="dto" items="${list}">
-							<div class="order-item-card">
-								<div class="card-head">
-									<strong class="date">${dto.orderDate}</strong> <span
-										class="order-no">주문번호 ${dto.orderNum}</span>
+							<div class="order-item-group">
+								<div class="order-meta-line"
+									onclick="location.href='${pageContext.request.contextPath}/member/mypage/orderDetail?orderNum=${dto.orderNum}'"
+									style="cursor: pointer;">
+									${dto.orderDate} <span class="ord-no">| ${dto.orderNum}</span>
 								</div>
-
-								<div class="card-content">
-									<div class="thumb">
-										<img
-											src="${pageContext.request.contextPath}/uploads/product/${dto.thumbNail}"
-											onerror="this.src='${pageContext.request.contextPath}/dist/images/no-image.png'">
-									</div>
-
-									<div class="info">
-										<div class="state-text">${dto.orderState}</div>
-										<div class="prod-name">${dto.productName}</div>
-										<div class="options">[옵션] ${not empty dto.pdSize ? dto.pdSize : '-'}</div>
-										<div class="price-qty">
-											<strong> <fmt:formatNumber
-													value="${dto.totalAmount}" pattern="#,###" />원
-											</strong> <span>· ${dto.qty}개</span>
+								<div class="board-tbody-row">
+									<div class="td-item-info">
+										<div class="thumb">
+											<img
+												src="${pageContext.request.contextPath}/uploads/product/${dto.thumbNail}"
+												onerror="this.src='${pageContext.request.contextPath}/dist/images/no-image.png'">
+										</div>
+										<div class="details">
+											<div class="name">${dto.productName}</div>
+											<div class="option-qty">사이즈: ${not empty dto.pdSize ? dto.pdSize : '-'}
+												/ 수량: ${dto.qty}개</div>
 										</div>
 									</div>
-
-
-									<div class="buttons">
+									<div class="td-item-stat">
+										<span class="status-badge">${dto.orderState}</span>
 										<c:choose>
-											<%-- 1. 결제완료 상태: 주문취소 --%>
 											<c:when test="${dto.orderState == '결제완료'}">
-												<button type="button" class="btn-sm btn-outline btn-cancel"
-													onclick="location.href='${pageContext.request.contextPath}/member/mypage/claimForm?order_id=${dto.orderNum}&type=CANCEL'">
-													주문취소</button>
+												<button type="button" class="btn-action-mini"
+													onclick="openCancelModal('${dto.orderNum}')">주문취소</button>
 											</c:when>
-
-											<%-- 2. 배송중 상태: 배송조회 --%>
-											<c:when test="${dto.orderState == '배송중'}">
-												<button type="button" class="btn-sm btn-black"
-													onclick="openDeliveryTracking('${dto.orderNum}')">배송조회</button>
-											</c:when>
-
-											<%-- 3. 배송완료 상태: 구매확정 + 반품신청 --%>
 											<c:when test="${dto.orderState == '배송완료'}">
-												<button type="button" class="btn-sm btn-black"
+												<button type="button" class="btn-action-mini"
 													onclick="confirmOrder('${dto.orderNum}')">구매확정</button>
-												<button type="button" class="btn-sm btn-outline btn-return"
-													onclick="location.href='${pageContext.request.contextPath}/member/mypage/claimForm?order_id=${dto.orderNum}&type=RETURN'">
-													반품신청</button>
 											</c:when>
-
-											<%-- 4. 기타 상태: 주문상세 --%>
-											<c:otherwise>
-												<button type="button" class="btn-sm btn-outline"
-													onclick="location.href='${pageContext.request.contextPath}/member/mypage/orderDetail?orderNum=${dto.orderNum}'">
-													주문상세</button>
-											</c:otherwise>
 										</c:choose>
 									</div>
+									<div class="td-item-price">
+										<span class="price-val"><fmt:formatNumber
+												value="${dto.totalAmount}" pattern="#,###" />원</span>
+									</div>
+								</div>
+								<div class="order-summary-footer">
+									<span class="summary-label">결제 요약</span> <span
+										class="summary-content">총 수량 ${dto.qty}개 / 총 결제금액 <strong><fmt:formatNumber
+												value="${dto.totalAmount}" pattern="#,###" />원</strong></span>
 								</div>
 							</div>
 						</c:forEach>
 					</c:when>
 					<c:otherwise>
-						<div class="no-data-msg">아직 주문한 내역이 없습니다.</div>
+						<div style="text-align: center; padding: 100px 0; color: #888;">주문
+							내역이 없습니다.</div>
 					</c:otherwise>
 				</c:choose>
-
-				<div class="page-navigation">${paging}</div>
+				<div class="page-navigation-wrap">${paging}</div>
 			</div>
 		</main>
 	</div>
 
 	<jsp:include page="/WEB-INF/views/layout/footer.jsp" />
-	<jsp:include page="/WEB-INF/views/layout/footerResources.jsp" />
 
 	<script>
-		document.addEventListener("DOMContentLoaded", function() {
-		    const pills = document.querySelectorAll('.sm-salomon__filterPill');
-		    pills.forEach(pill => {
-		        pill.addEventListener('click', function() {
-		            pills.forEach(p => p.removeAttribute('data-selected'));
-		            this.setAttribute('data-selected', '');
-	
-		            let period = this.getAttribute("data-period");
-		            setPeriod(period);
-		        });
-		    });
-		});
-			
-		function setPeriod(months) {
-		    let now = new Date();
-		    let past = new Date();
-		    past.setMonth(now.getMonth() - parseInt(months));
-	
-		    let endDate = now.toISOString().split('T')[0];
-		    let startDate = past.toISOString().split('T')[0];
-	
-		    const f = document.searchForm;
-		    f.historyStartDate.value = startDate;
-		    f.historyEndDate.value = endDate;
-		    f.page.value = "1";
-		    f.submit();
-		}
-		
-		function listPage(page) {
-		    const f = document.searchForm;
-		    f.page.value = page;
-		    f.submit();
-		}
-		
-		function searchList() {
-		    const f = document.searchForm;
-		    if(!f.historyStartDate.value || !f.historyEndDate.value) {
-		        let startInput = document.querySelector(".input-date:nth-of-type(1)").value;
-		        let endInput = document.querySelector(".input-date:nth-of-type(2)").value;
-		        
-		        if(startInput && endInput) {
-		            f.historyStartDate.value = startInput;
-		            f.historyEndDate.value = endInput;
-		        } else {
-		            alert("시작일과 종료일을 모두 선택해주세요.");
-		            return; 
-		        }
-		    }
-		    f.page.value = "1";
-		    f.submit();
-		}
-	
-		function openCancelModal(orderId) {
-			if(confirm("주문을 취소하시겠습니까?")) {
-				location.href = "${pageContext.request.contextPath}/member/mypage/claimForm?order_id=" + orderId + "&type=CANCEL";
-			}
-		}
-		function openDeliveryTracking(orderNum) {
-		    window.open("${pageContext.request.contextPath}/member/mypage/deliveryInfo?orderNum=" + orderNum, 
-		                "deliveryPop", "width=550,height=700");
-		}
-		
-		function confirmOrder(orderNum) {
-		    if(confirm("상품을 잘 받으셨나요? 구매확정 시 포인트가 적립되며 반품이 불가능합니다.")) {
-		        // 컨트롤러의 구매확정 처리 주소로 이동
-		        location.href = "${pageContext.request.contextPath}/member/mypage/confirmOrder?orderNum=" + orderNum;
-		    }
-		}
-	</script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const pills = document.querySelectorAll('.custom-pill-btn');
+            pills.forEach(pill => {
+                pill.addEventListener('click', function(e) {
+                    pills.forEach(p => {
+                        p.removeAttribute('data-selected');
+                        p.classList.remove('active');
+                    });
+                    this.setAttribute('data-selected', '');
+                    setPeriod(this.getAttribute("data-period"));
+                });
+            });
+            const f = document.searchForm;
+            if(f.historyStartDate.value) document.getElementById("sDate").value = f.historyStartDate.value;
+            if(f.historyEndDate.value) document.getElementById("eDate").value = f.historyEndDate.value;
+        });
 
+        function setPeriod(months) {
+            let now = new Date();
+            let past = new Date();
+            past.setMonth(now.getMonth() - parseInt(months));
+            const formatDate = (d) => d.toISOString().split('T')[0];
+            const f = document.searchForm;
+            f.historyStartDate.value = formatDate(past);
+            f.historyEndDate.value = formatDate(now);
+            f.page.value = "1";
+            f.submit();
+        }
+
+        function searchList() {
+            const f = document.searchForm;
+            let start = document.getElementById("sDate").value;
+            let end = document.getElementById("eDate").value;
+            if(!start || !end) { alert("날짜를 모두 선택해주세요."); return; }
+            f.historyStartDate.value = start; f.historyEndDate.value = end;
+            f.page.value = "1";
+            f.submit();
+        }
+
+        function listPage(page) {
+            const f = document.searchForm;
+            f.page.value = page;
+            f.submit();
+        }
+
+        function openCancelModal(orderNum) { if(confirm("주문을 취소하시겠습니까?")) location.href = "${pageContext.request.contextPath}/member/mypage/claimForm?order_id=" + orderNum + "&type=CANCEL"; }
+        function confirmOrder(orderNum) { if(confirm("상품을 잘 받으셨나요? 구매확정 시 포인트가 적립되며 반품이 불가능합니다.")) { location.href = "${pageContext.request.contextPath}/member/mypage/confirmOrder?orderNum=" + orderNum; } }
+    </script>
 </body>
 </html>

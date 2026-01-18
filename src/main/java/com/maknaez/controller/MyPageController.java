@@ -540,7 +540,7 @@ public class MyPageController {
 		try {
 			// 파라미터 수집
 			String orderId = req.getParameter("order_id");
-			String type = req.getParameter("type"); // CANCEL 또는 EXCH
+			String type = req.getParameter("type");
 			String reasonCategory = req.getParameter("reason_category");
 			String reasonDetail = req.getParameter("reason");
 			String fullReason = "[" + reasonCategory + "] " + reasonDetail;
@@ -551,22 +551,18 @@ public class MyPageController {
 			System.out.println("유형: " + type);
 			System.out.println("사유: " + fullReason);
 
-			/*
-			 * [추후 DB 연동 시] OrderMapper mapper = MapperContainer.get(OrderMapper.class);
-			 * Map<String, Object> map = new HashMap<>(); map.put("orderId", orderId);
-			 * map.put("type", type); map.put("reason", fullReason); //
-			 * mapper.insertClaim(map); <-- 클레임 테이블 INSERT // mapper.updateOrderState(map);
-			 * <-- 주문 상태 UPDATE
-			 */
+			OrderMapper mapper = MapperContainer.get(OrderMapper.class);
+			Map<String, Object> map = new HashMap<>(); map.put("orderId", orderId);
+			 map.put("type", type); map.put("reason", fullReason); //
+			 mapper.insertClaim(map);
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		return new ModelAndView("redirect:/member/mypage/orderList");
+		return new ModelAndView("redirect:/member/mypage/cancelList");
 	}
 
-	// [수정 포인트] MyPageController.java의 recentList 메소드
 
     @GetMapping("recent")
     public ModelAndView recentList(HttpServletRequest req, HttpServletResponse resp)
@@ -589,7 +585,6 @@ public class MyPageController {
 
         List<ProductDTO> list = new java.util.ArrayList<>();
         
-        // idList를 final로 선언하여 람다식에서 참조 가능하게 함
         final List<String> idList = new java.util.ArrayList<>();
         
         if (!recentProducts.isEmpty()) {
@@ -601,11 +596,8 @@ public class MyPageController {
             }
 
             if (!idList.isEmpty()) {
-                // 1. DB에서 상품 정보 가져오기 (순서 보장 X)
                 list = productService.listProductByIds(idList);
                 
-                // 2. [핵심 수정] 쿠키에 저장된 ID 순서(최신순)대로 리스트 재정렬
-                // list의 각 상품(dto)에 대해, idList에서의 위치(index)를 찾아 그 순서대로 정렬합니다.
                 list.sort((p1, p2) -> {
                     String id1 = String.valueOf(p1.getProdId());
                     String id2 = String.valueOf(p2.getProdId());
