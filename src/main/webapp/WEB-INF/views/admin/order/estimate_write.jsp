@@ -44,8 +44,8 @@
                         <div class="info-box">
                             <h4>발신 (공급자 정보)</h4>
                             <table class="info-table">
-                                <tr><th>상호명</th><td>(주) MAKNAEZ 슈즈</td></tr>
-                                <tr><th>대표자</th><td>지영 (Jiyoung)</td></tr>
+                                <tr><th>상호명</th><td>MAKNAEZ</td></tr>
+                                <tr><th>대표자</th><td>MAKNAEZ</td></tr>
                                 <tr><th>사업자번호</th><td>123-45-67890</td></tr>
                                 <tr><th>주소</th><td>서울특별시 강남구 테헤란로 123</td></tr>
                             </table>

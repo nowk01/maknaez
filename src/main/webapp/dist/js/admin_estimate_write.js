@@ -9,7 +9,7 @@ function goBackList() {
     if (document.referrer.indexOf('/admin/order/estimate_list') !== -1) {
         history.back();
     } else {
-        location.href = contextPath + '/admin/order/estimate_list';
+        location.href = "/admin/order/estimate_write?orderNum=" + orderNum;
     }
 }
 
