@@ -135,6 +135,21 @@
     .star-rating-header i { font-size: 0.75rem; color: #ddd; margin-right: 1px; }
     .star-rating-header i.filled { color: #333; }
     .star-text-header { font-size: 0.75rem; color: #888; margin-left: 4px; font-weight: 400; vertical-align: middle; position: relative; top: 1px; }
+    
+    #recommendSection .card-img-top {
+        height: 250px;       
+        object-fit: cover;   
+        object-position: center; 
+        width: 100%;
+    }
+    #recommendSection .card {
+        transition: transform 0.2s;
+    }
+    #recommendSection .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    
 </style>
 </head>
 <body>
@@ -398,30 +413,61 @@
 		</div>
 
 		<div id="recommendSection" class="recommend-section mt-5 pt-5 border-top">
-			<h3>추천 상품</h3>
-			<div class="recommend-carousel mt-4">
-				<div class="row">
-					<div class="col-3">
-						<div class="card border-0">
-							<img src="https://placehold.co/300x300" class="card-img-top" alt="Rec 1">
-							<div class="card-body px-0">
-								<h6 class="card-title">SPEEDCROSS 6</h6>
-								<p class="card-text text-muted">198,000 원</p>
-							</div>
-						</div>
-					</div>
-                    <div class="col-3">
-						<div class="card border-0">
-							<img src="https://placehold.co/300x300" class="card-img-top" alt="Rec 2">
-							<div class="card-body px-0">
-								<h6 class="card-title">XT-WINGS 2</h6>
-								<p class="card-text text-muted">210,000 원</p>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
+    <h3>추천 상품</h3>
+    <div class="recommend-carousel mt-4">
+        <div class="row">
+            <c:choose>
+                <%-- 추천 상품이 있는 경우 --%>
+                <c:when test="${not empty relatedProducts}">
+                    <c:forEach var="item" items="${relatedProducts}">
+                        <div class="col-6 col-md-3">
+                            <div class="card border-0 h-100" style="cursor: pointer;" 
+                                 onclick="location.href='${pageContext.request.contextPath}/product/detail?prod_id=${item.prodId}'">
+                                
+                                <%-- 썸네일 이미지 --%>
+                                <img src="${uploadPath}/${item.thumbnail}" class="card-img-top" 
+                                     alt="${item.prodName}" 
+                                     onerror="this.src='https://placehold.co/300x300?text=No+Image'">
+                                
+                                <div class="card-body px-0">
+                                    <h6 class="card-title text-truncate">${item.prodName}</h6>
+                                    
+                                    <p class="card-text">
+                                        <%-- 할인 상품인 경우 --%>
+                                        <c:if test="${item.discountRate > 0}">
+                                            <span class="text-danger fw-bold" style="margin-right:5px;">${item.discountRate}%</span>
+                                            <span class="text-muted text-decoration-line-through" style="font-size:0.9rem;">
+                                                <fmt:formatNumber value="${item.price}" pattern="#,###"/>
+                                            </span>
+                                            <br>
+                                            <span class="fw-bold">
+                                                <fmt:formatNumber value="${item.price * (100 - item.discountRate) / 100}" pattern="#,###"/> 원
+                                            </span>
+                                        </c:if>
+                                        
+                                        <%-- 일반 상품인 경우 --%>
+                                        <c:if test="${item.discountRate == 0}">
+                                            <span class="text-muted">
+                                                <fmt:formatNumber value="${item.price}" pattern="#,###"/> 원
+                                            </span>
+                                        </c:if>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </c:forEach>
+                </c:when>
+                
+                <%-- 추천 상품이 없는 경우 --%>
+                <c:otherwise>
+                    <div class="col-12 text-center py-5">
+                        <p class="text-muted">추천 상품이 없습니다.</p>
+                    </div>
+                </c:otherwise>
+            </c:choose>
+        </div>
+    </div>
+</div>
 
 	</div>
 </main>

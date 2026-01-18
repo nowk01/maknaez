@@ -516,9 +516,28 @@ public class ProductServiceImpl implements ProductService {
 
         } catch (Exception e) {
             e.printStackTrace();
-            // 메일 발송 실패가 전체 트랜잭션을 롤백시키지 않도록 예외를 로그만 남기고 넘길 수도 있음
             System.out.println("메일 발송 중 오류 발생: " + e.getMessage());
         }
     }
+    
+    @Override
+	public List<ProductDTO> listRelatedProducts(long prodId, String cateCode) {
+		List<ProductDTO> list = null;
+		try {
+			Map<String, Object> map = new HashMap<>();
+			map.put("prodId", prodId);
+			map.put("cateCode", cateCode);
+			
+			list = mapper.listRelatedProducts(map);
+			if(list != null) {
+				for(ProductDTO dto : list) {
+					dto.setOriginalPrice(dto.getPrice());
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
 	
 }
