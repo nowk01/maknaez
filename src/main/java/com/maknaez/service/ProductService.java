@@ -20,6 +20,7 @@ public interface ProductService {
     
     public List<ProductDTO> listProductColors(String prodName); // 연관 색상 제품 가져오기
     public void sendRestockAlarm(long optId) throws Exception; // 입고알람 메일
+    public List<ProductDTO> listRelatedProducts(long prodId, String cateCode); // 추천상품
 
     
     // (기존 관리자용 메소드 유지)

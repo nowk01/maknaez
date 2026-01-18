@@ -244,7 +244,24 @@
           AND m2.EMAIL IS NOT NULL
     </select>
 
+	<!-- 추천상품 -->
+    <select id="listRelatedProducts" parameterType="map" resultType="com.maknaez.model.ProductDTO">
+    SELECT * FROM (
+        SELECT 
+            p.prod_id       AS prodId,
+            p.prod_name     AS prodName,
+            p.base_price    AS price,      p.thumb_nail    AS thumbnail,  
+    <include refid="discount-subquery"/> AS discountRate
+        FROM products p
+        WHERE p.cate_code = #{cateCode}
+          AND p.prod_id != #{prodId}
+          AND p.is_displayed = 1
+          AND p.status = 1
+        ORDER BY DBMS_RANDOM.VALUE
+    ) WHERE ROWNUM &lt;= 4
+</select>
     
+    <!--  관리자관리자관리자관리자관리자관리자관리자관리자관리자관리자관리자관리자관리자관리자관리자관리자관리자관리자관리자 -->
 	
 	<!-- 카테고리 관리(관리자용) -->
 	<select id="listCategory" resultType="com.maknaez.model.CategoryDTO">

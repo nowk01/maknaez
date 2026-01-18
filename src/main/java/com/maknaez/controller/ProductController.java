@@ -100,14 +100,14 @@ public class ProductController {
             resp.addCookie(newCookie);
         } catch (Exception e) {
         }
-
+        List<ProductDTO> relatedProducts = productService.listRelatedProducts(prodId, dto.getCateCode());
         List<ProductDTO> sizeList = productService.listProductSizes(prodId);
 
         ModelAndView mav = new ModelAndView("product/detail");
         mav.addObject("dto", dto); 
         mav.addObject("sizeList", sizeList); 
-        
         mav.addObject("recentProductIds", idList);
+        mav.addObject("relatedProducts", relatedProducts);
 
         HttpSession session = req.getSession();
         SessionInfo info = (SessionInfo) session.getAttribute("member");

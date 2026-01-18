@@ -15,6 +15,7 @@ public interface ProductMapper {
     public List<String> listSaleCategoryNames(); // 세일 카태고리
     public ProductDTO readProduct(long prodId); // 제품 조회 detail
     public List<ProductDTO> listProductColors(String baseName) throws SQLException; // 색상 변형 상품 리스트 조회
+    public List<ProductDTO> listRelatedProducts(Map<String, Object> map); // 추천상품
 
     // (기존 관리자용 메소드 유지)
     public List<CategoryDTO> listCategory();
