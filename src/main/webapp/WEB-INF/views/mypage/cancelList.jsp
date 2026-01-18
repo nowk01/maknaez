@@ -373,7 +373,7 @@ body {
 				</div>
 			</div>
 
-			<div class="order-list-board">
+			<div class="order-list-board" id="ajax-list-container">
 				<div class="board-thead">
 					<div class="col-date-no">신청일자/번호</div>
 					<div class="col-product-info">상품정보</div>
@@ -423,52 +423,92 @@ body {
 	<jsp:include page="/WEB-INF/views/layout/footer.jsp" />
 
 	<script>
-        document.addEventListener("DOMContentLoaded", function() {
-            // 기간 알약 버튼 이벤트 연결
-            document.querySelectorAll('.custom-pill-btn').forEach(pill => {
-                pill.addEventListener('click', function() {
-                    setPeriod(this.getAttribute("data-period"));
-                });
+    document.addEventListener("DOMContentLoaded", function() {
+        // 1. 기간 선택 버튼 이벤트 (디자인 active 유지 포함)
+        document.querySelectorAll('.custom-pill-btn').forEach(pill => {
+            pill.addEventListener('click', function() {
+                document.querySelectorAll('.custom-pill-btn').forEach(btn => btn.classList.remove('active'));
+                this.classList.add('active');
+                
+                const period = this.getAttribute("data-period");
+                if(period) {
+                    setPeriod(period);
+                }
             });
-            // 달력 초기값 세팅
-            const f = document.searchForm;
-            if(f.historyStartDate.value) document.getElementById("sDate").value = f.historyStartDate.value;
-            if(f.historyEndDate.value) document.getElementById("eDate").value = f.historyEndDate.value;
         });
-            
-        function setPeriod(months) {
-            const now = new Date();
-            const past = new Date();
-            past.setMonth(now.getMonth() - parseInt(months));
-            const formatDate = (d) => {
-                let y = d.getFullYear();
-                let m = ('0' + (d.getMonth() + 1)).slice(-2);
-                let day = ('0' + d.getDate()).slice(-2);
-                return y + '-' + m + '-' + day;
-            };
-            const f = document.searchForm;
-            f.historyStartDate.value = formatDate(past);
-            f.historyEndDate.value = formatDate(now);
-            f.page.value = "1";
+
+        // 2. 달력 초기값 세팅
+        const f = document.searchForm;
+        if(f.historyStartDate.value) document.getElementById("sDate").value = f.historyStartDate.value;
+        if(f.historyEndDate.value) document.getElementById("eDate").value = f.historyEndDate.value;
+    });
+
+    // AJAX 전송 공통 함수
+    function ajaxSubmit() {
+        const f = document.searchForm;
+        const formData = new FormData(f);
+        const params = new URLSearchParams(formData);
+        const url = f.action + "?" + params.toString();
+
+        fetch(url, {
+            headers: { "X-Requested-With": "XMLHttpRequest" }
+        })
+        .then(response => response.text())
+        .then(html => {
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, "text/html");
+            const newList = doc.getElementById("ajax-list-container").innerHTML;
+            document.getElementById("ajax-list-container").innerHTML = newList;
+        })
+        .catch(err => {
+            console.error(err);
+            // 에러 시 일반 리로드 시도
             f.submit();
+        });
+    }
+
+    function setPeriod(months) {
+        const now = new Date();
+        const past = new Date();
+        past.setMonth(now.getMonth() - parseInt(months));
+        
+        const formatDate = (d) => {
+            let y = d.getFullYear();
+            let m = ('0' + (d.getMonth() + 1)).slice(-2);
+            let day = ('0' + d.getDate()).slice(-2);
+            return y + '-' + m + '-' + day;
+        };
+
+        const f = document.searchForm;
+        f.historyStartDate.value = formatDate(past);
+        f.historyEndDate.value = formatDate(now);
+        f.page.value = "1";
+        
+        ajaxSubmit(); // AJAX 방식으로 호출
+    }
+
+    function searchList() {
+        const f = document.searchForm;
+        const start = document.getElementById("sDate").value;
+        const end = document.getElementById("eDate").value;
+        
+        if(!start || !end) { 
+            alert("날짜를 모두 선택해주세요."); 
+            return; 
         }
         
-        function searchList() {
-            const f = document.searchForm;
-            const start = document.getElementById("sDate").value;
-            const end = document.getElementById("eDate").value;
-            if(!start || !end) { alert("날짜를 모두 선택해주세요."); return; }
-            f.historyStartDate.value = start; 
-            f.historyEndDate.value = end;
-            f.page.value = "1"; 
-            f.submit();
-        }
+        f.historyStartDate.value = start; 
+        f.historyEndDate.value = end;
+        f.page.value = "1"; 
+        
+        ajaxSubmit(); // AJAX 방식으로 호출
+    }
 
-        function listPage(page) {
-            const f = document.searchForm;
-            f.page.value = page;
-            f.submit();
-        }
+    function listPage(page) {
+        const f = document.searchForm;
+        f.page.value = page;
+        ajaxSubmit(); // 페이징도 AJAX로 처리
+    }
     </script>
 </body>
 </html>
