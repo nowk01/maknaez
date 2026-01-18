@@ -22,5 +22,9 @@ public interface OrderMapper {
     public Map<String, Object> findByIdClaim(String orderId) throws SQLException;
     public void updateStockIncrease(Map<String, Object> map) throws SQLException;
     public void updateClaimApprove(Map<String, Object> map) throws SQLException;
+    public int estimateCount(Map<String, Object> map);
+    public List<Map<String, Object>> listEstimate(Map<String, Object> map);
+    public int waitingEstimateCount();
+	public List<Map<String, Object>> getOrderDetailsForEstimate(String orderNum);
 
 }

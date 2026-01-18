@@ -93,14 +93,6 @@ public class OrderManageController {
 		return mav;
 	}
 
-	@GetMapping("estimate_list")
-	public ModelAndView estimateList(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
-		ModelAndView mav = new ModelAndView("admin/order/estimate_list");
-
-		return mav;
-	}
-
 	@GetMapping("approve")
 	public ModelAndView approve(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
@@ -136,4 +128,72 @@ public class OrderManageController {
 
 		return new ModelAndView("redirect:/admin/order/claim_list");
 	}
+	
+	@GetMapping("estimate_write")
+	public ModelAndView estimateWrite(HttpServletRequest req, HttpServletResponse resp)
+	        throws ServletException, IOException {
+	    ModelAndView mav = new ModelAndView("admin/order/estimate_write");
+	    OrderMapper mapper = MapperContainer.get(OrderMapper.class);
+	    
+	    String orderNum = req.getParameter("orderNum");
+	    
+	    try {
+	        if (orderNum != null && !orderNum.isEmpty()) {
+	            List<Map<String, Object>> list = mapper.getOrderDetailsForEstimate(orderNum);
+	            
+	            if (list != null && !list.isEmpty()) {
+	                mav.addObject("list", list);          
+	                mav.addObject("orderInfo", list.get(0));
+	            } else {
+	                mav.addObject("errorMsg", "해당 주문번호의 정보를 찾을 수 없습니다.");
+	            }
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+
+	    return mav;
+	}
+	
+	// 견적서
+	@GetMapping("estimate_list")
+	public ModelAndView estimateList(HttpServletRequest req, HttpServletResponse resp)  throws ServletException, IOException {
+	    ModelAndView mav = new ModelAndView("admin/order/estimate_list");
+	    OrderMapper mapper = MapperContainer.get(OrderMapper.class);
+	    MyUtil util = new MyUtil();
+
+	    try {
+	        String page = req.getParameter("page");
+	        int current_page = (page != null) ? Integer.parseInt(page) : 1;
+
+	        Map<String, Object> map = new HashMap<String, Object>();
+	        
+	        int dataCount = mapper.estimateCount(map); // 견적서 전용 카운트 쿼리 필요
+	        int size = 10;
+	        int total_page = util.pageCount(dataCount, size);
+	        if (current_page > total_page) current_page = total_page;
+
+	        int start = (current_page - 1) * size + 1;
+	        int end = current_page * size;
+	        map.put("start", start);
+	        map.put("end", end);
+
+	        // 견적 요청 리스트 가져오기 (1:1문의 중 견적요청 카테고리만)
+	        List<Map<String, Object>> list = mapper.listEstimate(map); 
+
+	        String cp = req.getContextPath();
+	        String listUrl = cp + "/admin/order/estimate_list";
+	        String paging = util.paging(current_page, total_page, listUrl);
+
+	        mav.addObject("list", list);
+	        mav.addObject("page", current_page);
+	        mav.addObject("dataCount", dataCount);
+	        mav.addObject("paging", paging);
+	        mav.addObject("waitingCount", mapper.waitingEstimateCount()); // 미처리 건수
+
+	    } catch (Exception e) { e.printStackTrace(); }
+
+	    return mav;
+	}
+	
 }
