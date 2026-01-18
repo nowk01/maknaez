@@ -415,5 +415,51 @@ public class ProductServiceImpl implements ProductService {
 	    return list;
 	}
 	
+	@Override
+    public List<ProductDTO> listStock(Map<String, Object> map) {
+		List<ProductDTO> dto = null;
+        try {
+			dto = mapper.listStock(map);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+        return dto;
+    }
+	
+	@Override
+    public int dataCountStock(Map<String, Object> map) {
+        try {
+        	return mapper.dataCountStock(map);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+        
+        return 0;
+    }
+	
+	public void updateStock(long[] optIds, int qty, String reason) throws Exception {
+	    try {
+	        for (long optId : optIds) {
+	            // 1. 현재 재고 조회
+	            Integer currentStock = mapper.getLastStock(optId);
+	            if (currentStock == null) currentStock = 0;
 
+	            // 2. 최종 재고 계산
+	            int finalStock = currentStock + qty;
+	            if (finalStock < 0) finalStock = 0;
+
+	            // 3. 로그 기록 (신규 메서드 호출!)
+	            Map<String, Object> map = new HashMap<>();
+	            map.put("optId", optId);
+	            map.put("qty", qty);
+	            map.put("finalStock", finalStock); // 계산된 잔고
+	            map.put("reason", reason);
+
+	            mapper.insertStockUpdateLog(map); // <-- 이걸 호출합니다
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        throw e;
+	    }
+	}
 }
