@@ -15,6 +15,13 @@ function deleteEstimate() {
     if(confirm(`${selected.length}건의 요청을 삭제하시겠습니까?`)) alert("성공적으로 삭제되었습니다.");
 }
 
+function openEstimateWrite() {
+    let orderNum = prompt("조회할 주문번호를 입력하세요.");
+    if(orderNum) {
+        location.href = "${pageContext.request.contextPath}/admin/order/estimate_write?orderNum=" + orderNum;
+    }
+}
+
 function downloadExcel() {
     alert("견적서 목록을 엑셀로 추출합니다.");
 }
