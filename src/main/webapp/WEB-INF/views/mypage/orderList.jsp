@@ -78,7 +78,6 @@ body {
 	gap: 10px;
 }
 
-/* 기간 버튼 애니메이션 */
 .custom-pill-btn {
 	border: 1px solid #e0e0e0;
 	background: #fff;
@@ -100,7 +99,6 @@ body {
 	color: #000;
 }
 
-/* ★ 기간 버튼 '선택됨' 상태: 검정 배경 ★ */
 .custom-pill-btn[data-selected], .custom-pill-btn.active {
 	background: #000 !important;
 	color: #fff !important;
@@ -313,7 +311,6 @@ body {
 	margin-left: 5px;
 }
 
-/* ★ 페이징 디자인 (호버 시 테두리, 선택 시 검정 배경) ★ */
 .page-navigation-wrap {
 	margin: 60px 0;
 	text-align: center;
@@ -345,7 +342,6 @@ body {
 	border: 1px solid #000 !important;
 }
 
-/* ★ 페이징 '현재 페이지' 강조: 검정 배경 + 흰색 글씨 ★ */
 .page-navigation-wrap span.current, .page-navigation-wrap b {
 	background-color: #000 !important;
 	color: #fff !important;
@@ -355,7 +351,7 @@ body {
 </style>
 </head>
 <body>
-	<form name="searchForm"
+	<form name="searchForm" id="searchForm"
 		action="${pageContext.request.contextPath}/member/mypage/orderList"
 		method="get">
 		<input type="hidden" name="page" value="${page}"> <input
@@ -463,7 +459,7 @@ body {
 				</div>
 			</div>
 
-			<div class="order-list-board">
+			<div class="order-list-board" id="ajax-list-container">
 				<div class="board-thead">
 					<div class="th-info">상품 정보</div>
 					<div class="th-stat">주문상태</div>
@@ -532,48 +528,77 @@ body {
 
 	<script>
         document.addEventListener("DOMContentLoaded", function() {
+            // 1. 기간 선택 버튼 이벤트 (active 클래스 유지하며 AJAX 호출)
             const pills = document.querySelectorAll('.custom-pill-btn');
             pills.forEach(pill => {
-                pill.addEventListener('click', function(e) {
-                    pills.forEach(p => {
-                        p.removeAttribute('data-selected');
-                        p.classList.remove('active');
-                    });
-                    this.setAttribute('data-selected', '');
+                pill.addEventListener('click', function() {
+                    pills.forEach(p => p.classList.remove('active'));
+                    this.classList.add('active');
                     setPeriod(this.getAttribute("data-period"));
                 });
             });
+
+            // 2. 달력 초기값 세팅
             const f = document.searchForm;
             if(f.historyStartDate.value) document.getElementById("sDate").value = f.historyStartDate.value;
             if(f.historyEndDate.value) document.getElementById("eDate").value = f.historyEndDate.value;
         });
 
+        // AJAX 리스트 갱신 함수
+        function ajaxLoadList() {
+            const f = document.searchForm;
+            const formData = new FormData(f);
+            const params = new URLSearchParams(formData).toString();
+            const url = f.action + "?" + params;
+
+            fetch(url, {
+                headers: { "X-Requested-With": "XMLHttpRequest" }
+            })
+            .then(response => response.text())
+            .then(html => {
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, "text/html");
+                const newList = doc.getElementById("ajax-list-container").innerHTML;
+                document.getElementById("ajax-list-container").innerHTML = newList;
+            })
+            .catch(error => {
+                console.error("AJAX Error:", error);
+                f.submit(); // 실패 시 일반 폼 전송
+            });
+        }
+
         function setPeriod(months) {
-            let now = new Date();
-            let past = new Date();
+            const now = new Date();
+            const past = new Date();
             past.setMonth(now.getMonth() - parseInt(months));
-            const formatDate = (d) => d.toISOString().split('T')[0];
+            const formatDate = (d) => {
+                let y = d.getFullYear();
+                let m = ('0' + (d.getMonth() + 1)).slice(-2);
+                let day = ('0' + d.getDate()).slice(-2);
+                return y + '-' + m + '-' + day;
+            };
             const f = document.searchForm;
             f.historyStartDate.value = formatDate(past);
             f.historyEndDate.value = formatDate(now);
             f.page.value = "1";
-            f.submit();
+            ajaxLoadList();
         }
 
         function searchList() {
             const f = document.searchForm;
-            let start = document.getElementById("sDate").value;
-            let end = document.getElementById("eDate").value;
+            const start = document.getElementById("sDate").value;
+            const end = document.getElementById("eDate").value;
             if(!start || !end) { alert("날짜를 모두 선택해주세요."); return; }
-            f.historyStartDate.value = start; f.historyEndDate.value = end;
+            f.historyStartDate.value = start; 
+            f.historyEndDate.value = end;
             f.page.value = "1";
-            f.submit();
+            ajaxLoadList();
         }
 
         function listPage(page) {
             const f = document.searchForm;
             f.page.value = page;
-            f.submit();
+            ajaxLoadList();
         }
 
         function openCancelModal(orderNum) { if(confirm("주문을 취소하시겠습니까?")) location.href = "${pageContext.request.contextPath}/member/mypage/claimForm?order_id=" + orderNum + "&type=CANCEL"; }
