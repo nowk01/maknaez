@@ -2,7 +2,6 @@
 <%@ taglib prefix="c" uri="jakarta.tags.core"%>
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt"%>
 
-<!-- 이미지 경로 변수 설정 -->
 <jsp:include page="/WEB-INF/views/common/image_config.jsp" />
 
 <!DOCTYPE html>
@@ -23,7 +22,6 @@
 <script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
 
 <style>
-    /* 기존 스타일 유지 */
     .share-container { position: relative; display: inline-block; width: 30px; height: 30px; vertical-align: middle; }
     .share-trigger { font-size: 1.2rem; color: #333; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); transition: all 0.3s ease; cursor: pointer; z-index: 2; }
     .share-options { position: absolute; top: 50%; right: 3px; transform: translateY(-50%); background-color: #fff; border: 1px solid #ddd; border-radius: 25px; height: 44px; display: flex; align-items: center; justify-content: center; gap: 0; width: 0; padding: 0; opacity: 0; visibility: hidden; overflow: hidden; transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94); z-index: 10; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
@@ -41,14 +39,12 @@
     .btn-cart-custom:hover { background-color: #fff; border-color: #000 !important; color: #000; }
     .btn-buy-custom { border-radius: 30px; border: 1px solid #111; background-color: #111; color: #fff; transition: all 0.2s; margin-top: 10px; width: 100%; }
     .btn-buy-custom:hover { background-color: #333; border-color: #111 !important; color: #fff; }
-    
-    /* [안전 장치 추가] 에디터로 등록된 이미지가 영역을 벗어나지 않도록 제어 */
+
     .product-info-content img {
         max-width: 100%;
         height: auto;
     }
 
-    /* 품절(비활성) 상태의 사이즈 버튼 스타일 추가 */
     input[type="radio"]:disabled + .size-btn {
         color: #ddd !important;
         border-color: #f0f0f0 !important;
@@ -57,9 +53,6 @@
         text-decoration: line-through; /* 취소선 효과 */
     }
 
-    /* ==========================================================================
-       [NEW] Review CSS Style (사진 2배 확대, 레이아웃 밀림 적용, 간격 최소화)
-       ========================================================================== */
     .review-wrapper { padding: 40px 0; background-color: #fff; }
     
     /* 헤더 */
@@ -77,31 +70,27 @@
     .review-search-box input { width: 100%; padding: 5px 25px 5px 0; border: none; border-bottom: 1px solid #ddd; font-size: 0.85rem; outline: none; background: transparent; }
     .review-search-box i { position: absolute; right: 0; top: 50%; transform: translateY(-50%); color: #333; cursor: pointer; }
 
-    /* 리스트 아이템 */
     .review-item { 
-        padding: 15px 2px; /* 좌우 패딩 줄이고 상하 패딩 유지 */
+        padding: 15px 2px; 
         border-bottom: 1px solid #eee; 
         display: flex; 
         flex-direction: column; 
     }
     .review-item:last-child { border-bottom: 1px solid #111; }
-    
-    /* 상단 정보 (간격 좁힘) */
+
     .review-meta-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
     .review-badge { background-color: #222; color: #fff; font-size: 0.65rem; padding: 2px 6px; font-weight: 600; margin-right: 6px; vertical-align: middle; }
     .review-option { font-size: 0.8rem; color: #777; }
     .review-writer { font-weight: 600; font-size: 0.85rem; color: #333; }
-    
-    /* 별점 (간격 좁힘) */
+
     .star-rating-custom { color: #ddd; font-size: 0.8rem; letter-spacing: -1px; margin-bottom: 5px; line-height: 1; }
     .star-rating-custom .filled { color: #111; } 
-    
-    /* 이미지 스타일 (공백 제거 및 2배 확대, 레이아웃 밀기) */
+
     .review-img-wrapper {
-        margin: 0; /* 불필요한 마진 제거 */
-        font-size: 0; /* 이미지 하단 미세 공백 제거 */
+        margin: 0; 
+        font-size: 0; 
         line-height: 0;
-        display: block; /* 블록 요소로 변경 */
+        display: block; 
     }
     .review-img-thumb { 
         width: 120px; 
@@ -112,23 +101,20 @@
         display: inline-block; 
         margin-top: 5px;
         margin-bottom: 5px;
-        /* 크기 변화에 애니메이션을 주어 자연스럽게 밀리도록 함 */
         transition: width 0.3s ease, height 0.3s ease; 
     }
     
-    /* [확대 클래스] transform이 아닌 width/height를 변경하여 컨텐츠를 밀어냄 */
     .review-img-thumb.zoomed {
-        width: 360px; /* 2배 크기 (120px * 2) */
+        width: 360px; 
         height: 240px;
         cursor: zoom-out;
-        margin-bottom: 10px; /* 확대 시 텍스트와 간격 확보 */
+        margin-bottom: 10px; 
     }
 
-    /* 내용 텍스트 & 더보기 (간격 좁힘) */
     .review-content { 
         font-size: 0.9rem; 
         color: #333; 
-        line-height: 1.3; /* 줄 간격 좁힘 */
+        line-height: 1.3; 
         white-space: pre-wrap; 
         margin-top: 2px;
     }
@@ -139,7 +125,6 @@
 
     .review-date { margin-top: 5px; font-size: 0.75rem; color: #bbb; text-align: left; }
 
-    /* 페이징 */
     .pagination-container { display: flex; justify-content: center; margin-top: 30px; }
     .pagination-custom { display: flex; gap: 4px; list-style: none; padding: 0; margin: 0; }
     .page-item-custom { cursor: pointer; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; border: 1px solid #eee; background-color: #fff; font-size: 0.8rem; color: #555; transition: all 0.2s; }
@@ -147,7 +132,6 @@
     .page-item-custom.active { background-color: #333; color: #fff; border-color: #333; }
     .page-item-custom.disabled { color: #ddd; border-color: #fafafa; cursor: default; }
 
-    /* 상단 별점 (기존 유지용) */
     .star-rating-header i { font-size: 0.75rem; color: #ddd; margin-right: 1px; }
     .star-rating-header i.filled { color: #333; }
     .star-text-header { font-size: 0.75rem; color: #888; margin-left: 4px; font-weight: 400; vertical-align: middle; position: relative; top: 1px; }
@@ -291,9 +275,8 @@
 						</div>
 					</div>
 
-					<!-- ★★★ 컬러 옵션 영역 (DB 연동 적용) ★★★ -->
+				<!-- 컬러 옵션 영역 -->
                 <div class="color-options mb-4">
-                    <!-- 현재 상품의 컬러 코드 표시 (Service에서 세팅됨) -->
                     <div class="color-label mb-2 fw-bold">
                         컬러 : <span class="text-primary">${dto.colorCode}</span>
                     </div>
@@ -305,27 +288,30 @@
                                     <div class="color-thumb ${colorItem.prodId == dto.prodId ? 'active' : ''}" 
                                          onclick="location.href='${pageContext.request.contextPath}/product/detail?prod_id=${colorItem.prodId}'"
                                          title="${colorItem.prodName}">
-                                        <img src="${productUrl}/${colorItem.thumbnail}" alt="${colorItem.colorCode}" onerror="this.src='https://placehold.co/60x60?text=IMG'">
+                                        <img src="${uploadPath}/${colorItem.thumbnail}" alt="${colorItem.colorCode}" onerror="this.src='https://placehold.co/60x60?text=IMG'">
                                     </div>
                                 </c:forEach>
                             </c:when>
                             <c:otherwise>
-                                <!-- 연관 컬러 상품이 없을 경우 현재 상품만 표시 -->
                                 <div class="color-thumb active">
-                                    <img src="${productUrl}/${dto.thumbnail}" alt="${dto.colorCode}" onerror="this.src='https://placehold.co/60x60?text=IMG'">
+                                    <img src="${uploadPath}/${dto.thumbnail}" alt="${dto.colorCode}" onerror="this.src='https://placehold.co/60x60?text=IMG'">
                                 </div>
                             </c:otherwise>
                         </c:choose>
                     </div>
                 </div>
 
+
 					<div class="size-options">
 						<div class="d-flex justify-content-between mb-2">
 							<span class="fw-bold">사이즈</span>
-							<a href="#" class="text-decoration-underline text-muted" style="font-size:0.8rem;">사이즈 가이드</a>
+							<!--  구현 할지 말지 논의
+							 
+					<a href="#" class="text-decoration-underline text-muted" style="font-size:0.8rem;">사이즈 가이드</a>  
+					
+					-->	
 						</div>
 						<div class="size-grid">
-                            <!-- [수정됨] 220~320 전체 사이즈 루프 및 재고 매칭 -->
 							<c:set var="stdSizes" value="220,225,230,235,240,245,250,255,260,265,270,275,280,285,290,295,300,305,310,315,320"/>
 							<c:forTokens items="${stdSizes}" delims="," var="stdSize">
                                 <c:set var="targetOptId" value=""/>
@@ -389,12 +375,10 @@
 
 		<div id="sentinelNode" class="sentinel-point"></div>
 
-		<!-- ==========================================================================
-		     [REVIEW SECTION] 리뉴얼 완료
-		     ========================================================================== -->
+		<!-- REVIEW SECTION -->
 		<div id="reviewSection" class="review-wrapper mt-5">
              <div class="review-header-container">
-                <h3 class="review-header-title">PRODUCT REVIEWS <span id="reviewTotalCount">(0)</span></h3>
+                <h3 class="review-header-title">리뷰<span id="reviewTotalCount">(0)</span></h3>
                 
                 <div class="review-search-box">
                     <input type="text" id="reviewKeyword" placeholder="리뷰 검색" onkeyup="if(window.event.keyCode==13){searchReview()}">
@@ -410,7 +394,6 @@
                 </div>
             </div>
             
-            <!-- 페이지네이션 -->
             <div id="reviewPagination" class="pagination-container"></div>
 		</div>
 
@@ -770,6 +753,39 @@ function showToast(message) {
 function searchReview() {
     alert("검색 기능은 준비중입니다.");
 }
+
+function requestRestockAlarm() {
+    const prodId = "${dto.prodId}"; 
+    $.ajax({
+        type: "POST",
+        url: "${pageContext.request.contextPath}/product/restockSubmit",
+        data: { prodId: prodId },
+        dataType: "json",
+        success: function(data) {
+            // 1. 로그인 필요 시
+            if (data.state === "login_required") {
+                if(confirm("로그인이 필요한 서비스입니다. 로그인 페이지로 이동하시겠습니까?")) {
+                    location.href = "${pageContext.request.contextPath}/member/login";
+                }
+            
+            } else if (data.state === "true") {
+                $('#restockModal .btn-close').click();
+                
+                showToast(data.message);
+                
+                $('#wishBtn').removeClass('bi-heart').addClass('bi-heart-fill text-danger');
+                
+            } else {
+                $('#restockModal .btn-close').click();
+                showToast(data.message);
+            }
+        },
+        error: function(e) {
+            console.log(e);
+            alert("서버 통신 중 오류가 발생했습니다.");
+        }
+    });
+}
 </script>
 
 <div class="modal fade" id="restockModal" tabindex="-1" aria-hidden="true">
@@ -779,11 +795,15 @@ function searchReview() {
         <h5 class="modal-title">입고 알림 신청</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <div class="modal-body">
-        <p>원하시는 사이즈가 품절인가요?<br>입고 시 알림톡을 보내드립니다.</p>
+      <div class="modal-body text-center">
+        <p class="my-3">
+            원하시는 사이즈가 품절인가요?<br><br>
+            입고 알림 신청 시 <strong>[관심 상품]</strong>에 자동 추가되며,<br>
+            상품 재입고 시 등록된 이메일로 알림을 보내드립니다.
+        </p>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-dark w-100">신청하기</button>
+        <button type="button" class="btn btn-dark w-100" onclick="requestRestockAlarm()">신청하기</button>
       </div>
     </div>
   </div>	

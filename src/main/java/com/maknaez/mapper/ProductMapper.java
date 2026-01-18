@@ -49,7 +49,9 @@ public interface ProductMapper {
     public void updateProduct(ProductDTO dto) throws Exception;
     
     public List<ProductDTO> listProductByIds(List<String> ids);
-
+    
+    public ProductDTO getOptionInfoForAlarm(long optId); // 입고알람용
+    public List<String> listWishListUserEmails(long prodId); // 입고알람용
     
     
     
