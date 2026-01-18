@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.maknaez.mail.Mail;
+import com.maknaez.mail.MailSender;
 import com.maknaez.mapper.ProductMapper;
 import com.maknaez.model.CategoryDTO;
 import com.maknaez.model.ProductDTO;
@@ -462,4 +464,61 @@ public class ProductServiceImpl implements ProductService {
 	        throw e;
 	    }
 	}
+	
+	
+	// [추가 구현] 재고 입고 알림 메일 발송
+    @Override
+    public void sendRestockAlarm(long optId) throws Exception {
+        try {
+            // 1. 옵션 ID로 상품명과 사이즈 정보 조회
+            ProductDTO productInfo = mapper.getOptionInfoForAlarm(optId);
+            if (productInfo == null) return;
+
+            long prodId = productInfo.getProdId();
+            String prodName = productInfo.getProdName();
+            String sizeName = productInfo.getProdSize();
+
+            // 2. 해당 상품(prodId)을 위시리스트에 담은 회원들의 이메일 리스트 조회
+            // (SQL에서 DISTINCT 처리됨)
+            List<String> emailList = mapper.listWishListUserEmails(prodId);
+            
+            if (emailList == null || emailList.isEmpty()) {
+                return; // 발송 대상 없음
+            }
+
+            // 3. 메일 발송 준비
+            MailSender sender = new MailSender();
+            Mail mail = new Mail();
+            mail.setSenderEmail("admin@maknaez.com");
+            mail.setSenderName("Maknaez 관리자");
+            mail.setSubject("[Maknaez] 재입고 알림 : " + prodName + " (" + sizeName + ")");
+
+            // 4. 메일 내용 (HTML)
+            StringBuilder sb = new StringBuilder();
+            sb.append("<div style='border:1px solid #ddd; padding:20px; max-width:600px;'>");
+            sb.append("<h2 style='color:#111;'>재입고 알림</h2>");
+            sb.append("<p>고객님께서 기다리시던 상품의 재고가 추가되었습니다.</p>");
+            sb.append("<hr style='border:0; border-top:1px solid #eee; margin:20px 0;'>");
+            sb.append("<p><strong>상품명 : </strong> " + prodName + "</p>");
+            sb.append("<p><strong>입고 사이즈 : </strong> <span style='color:#e74c3c; font-weight:bold;'>" + sizeName + "</span></p>");
+            sb.append("<p style='margin-top:20px; color:#888; font-size:12px;'>본 메일은 발신 전용입니다.</p>");
+            sb.append("</div>");
+            
+            mail.setContent(sb.toString());
+
+            for (String email : emailList) {
+                if(email.contains("@")) {
+                    mail.setReceiverEmail(email);
+                    sender.mailSend(mail);
+                    try { Thread.sleep(100); } catch(Exception e) {}
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            // 메일 발송 실패가 전체 트랜잭션을 롤백시키지 않도록 예외를 로그만 남기고 넘길 수도 있음
+            System.out.println("메일 발송 중 오류 발생: " + e.getMessage());
+        }
+    }
+	
 }

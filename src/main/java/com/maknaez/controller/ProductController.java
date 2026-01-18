@@ -5,12 +5,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.json.JSONObject;
+
 import com.maknaez.model.ProductDTO;
 import com.maknaez.model.SessionInfo;
 import com.maknaez.model.WishlistDTO;
 import com.maknaez.mvc.annotation.Controller;
 import com.maknaez.mvc.annotation.GetMapping;
 import com.maknaez.mvc.annotation.PostMapping;
+import com.maknaez.mvc.annotation.RequestMapping;
+import com.maknaez.mvc.annotation.RequestMethod;
 import com.maknaez.mvc.annotation.ResponseBody;
 import com.maknaez.mvc.view.ModelAndView;
 import com.maknaez.service.ProductService;
@@ -18,6 +22,7 @@ import com.maknaez.service.ProductServiceImpl;
 import com.maknaez.service.WishlistService;
 import com.maknaez.service.WishlistServiceImpl;
 
+import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -153,6 +158,45 @@ public class ProductController {
             e.printStackTrace();
         }
         
+        return model;
+    }
+    
+    @PostMapping("/product/restockSubmit")
+    @ResponseBody
+    public Map<String, Object> restockSubmit(HttpServletRequest req, HttpServletResponse resp) {
+        
+        Map<String, Object> model = new HashMap<>();
+        HttpSession session = req.getSession();
+        SessionInfo info = (SessionInfo) session.getAttribute("member");
+
+        if (info == null) {
+            model.put("state", "login_required");
+            return model;
+        }
+
+        try {
+            long prodId = Long.parseLong(req.getParameter("prodId"));
+            
+            WishlistDTO dto = new WishlistDTO();
+            dto.setMemberIdx(info.getMemberIdx());
+            dto.setProdId(prodId);
+            
+            boolean isLiked = wishlistService.isLiked(info.getMemberIdx(), prodId);
+            if (!isLiked) {
+                wishlistService.insertWish(dto);
+                model.put("state", "true");
+                model.put("message", "입고 알림 신청이 완료되었습니다.\n(관심 상품 목록에 추가되었으며, 재입고 시 메일로 알려드립니다.)");
+            } else {
+                model.put("state", "true"); 
+                model.put("message", "이미 입고 알림(관심 상품)에 등록된 상품입니다.");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            model.put("state", "false");
+            model.put("message", "신청 중 오류가 발생했습니다.");
+        }
+
         return model;
     }
         

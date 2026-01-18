@@ -121,7 +121,7 @@
         <include refid="where-list"/>
     </select>
     
-    <!-- 상품 상세 정보 조회 (통합됨) -->
+    <!-- 상품 상세 정보 조회 -->
     <select id="readProduct" parameterType="long" resultType="com.maknaez.model.ProductDTO">
         SELECT 
             p.prod_id       AS prodId,
@@ -222,6 +222,26 @@
           AND is_displayed = 1
           AND status = 1
         ORDER BY prod_name
+    </select>
+    
+    <!-- 입고알람 메일용 -->
+    <select id="getOptionInfoForAlarm" parameterType="Long" resultType="com.maknaez.model.ProductDTO">
+        SELECT 
+            p.prod_id AS prodId, 
+            p.prod_name AS prodName, 
+            ps.pd_size AS prodSize
+        FROM products p
+        JOIN pd_size ps ON p.prod_id = ps.prod_id
+        WHERE ps.opt_id = #{optId}
+    </select>
+
+    <!-- 입고알람 메일용 -->
+    <select id="listWishListUserEmails" parameterType="Long" resultType="String">
+        SELECT DISTINCT m2.EMAIL
+        FROM MEMBER2 m2
+        JOIN WISHLIST w ON m2.MEMBERIDX = w.MEMBERIDX
+        WHERE w.PROD_ID = #{prodId}
+          AND m2.EMAIL IS NOT NULL
     </select>
 
     
