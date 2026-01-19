@@ -27,12 +27,17 @@ import com.maknaez.service.ProductService;
 import com.maknaez.service.ProductServiceImpl;
 import com.maknaez.service.WishlistService;
 import com.maknaez.service.WishlistServiceImpl;
+import com.maknaez.service.ReviewService;      // 추가
+import com.maknaez.service.ReviewServiceImpl;
 import com.maknaez.util.MyUtil;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.Part;
+
+import com.maknaez.util.FileManager;
 
 @Controller
 @RequestMapping("/member/mypage")
@@ -42,12 +47,14 @@ public class MyPageController {
 	private PointService pointService;
 	private WishlistService wishlistService;
 	private ProductService productService;
+	private ReviewService reviewService; 
 
 	public MyPageController() {
 		this.service = new MemberServiceImpl();
 		this.pointService = new PointServiceImpl();
 		this.wishlistService = new WishlistServiceImpl();
 		this.productService = new ProductServiceImpl();
+		this.reviewService = new ReviewServiceImpl();
 	}
 
 	@GetMapping("main.do")
@@ -77,7 +84,7 @@ public class MyPageController {
 			map.put("memberIdx", info.getMemberIdx());
 
 			int dataCount = mapper.dataCount(map);
-
+			
 			map.put("orderState", "결제완료");
 			int paymentCount = mapper.dataCount(map);
 			map.put("orderState", "배송중");
@@ -671,4 +678,50 @@ public class MyPageController {
 	public ModelAndView deliveryInfo(HttpServletRequest req, HttpServletResponse resp) {
 		return new ModelAndView("mypage/deliveryInfo");
 	}
+	
+	@PostMapping("review/write")
+    public String reviewWrite(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        HttpSession session = req.getSession();
+        SessionInfo info = (SessionInfo) session.getAttribute("member");
+        if (info == null) {
+            return "redirect:/member/login";
+        }
+
+        FileManager fileManager = new FileManager();
+        
+        // 파일 저장 경로 설정
+        String root = session.getServletContext().getRealPath("/");
+        String pathname = root + "uploads" + java.io.File.separator + "review";
+
+        try {
+            // 파일 업로드 처리
+            Part part = req.getPart("selectFile");
+            String saveFilename = null;
+            if(part != null && part.getSize() > 0) {
+                com.maknaez.util.MyMultipartFile myFile = fileManager.doFileUpload(part, pathname);
+                if(myFile != null) {
+                    saveFilename = myFile.getSaveFilename();
+                }
+            }
+
+            // DTO 생성 및 데이터 바인딩
+            com.maknaez.model.ReviewDTO dto = new com.maknaez.model.ReviewDTO();
+            dto.setMemberIdx(info.getMemberIdx());
+            dto.setOrderNum(req.getParameter("orderNum"));
+            dto.setProdId(Long.parseLong(req.getParameter("productNum")));
+            dto.setContent(req.getParameter("content"));
+            dto.setStarRating(Integer.parseInt(req.getParameter("rating")));
+            dto.setReviewImg(saveFilename);
+
+            // 서비스 호출
+            reviewService.insertReview(dto, pathname);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return "redirect:/member/mypage/review";
+    }
+	
+	
 }
