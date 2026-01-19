@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.Element;
 import com.itextpdf.text.PageSize;
@@ -215,28 +216,34 @@ public class OrderManageController {
 	    
 	    document.open();
 
+	 // 폰트는 에러 안 나는 기본 폰트로 유지
 	    Font fontTitle = new Font(Font.FontFamily.HELVETICA, 20, Font.BOLD);
 	    Font fontNormal = new Font(Font.FontFamily.HELVETICA, 10);
 
-	    Paragraph title = new Paragraph("거 래 명 세 서", fontTitle);
+	    // 1. 제목을 영어로 (영문 폰트에서 한글은 깨지기 때문)
+	    Paragraph title = new Paragraph("TRANSACTION STATEMENT", fontTitle);
 	    title.setAlignment(Element.ALIGN_CENTER);
 	    title.setSpacingAfter(30);
 	    document.add(title);
 
-	    document.add(new Paragraph("주문번호 : " + orderNum, fontNormal));
-	    document.add(new Paragraph("고객명 : " + orderInfo.get("userName"), fontNormal)); // 맵 키 확인
-	    document.add(new Paragraph("일자 : " + orderInfo.get("orderDate"), fontNormal));
+	    // 2. 기본 정보 영문 표기
+	    document.add(new Paragraph("Order No : " + orderNum, fontNormal));
+	    document.add(new Paragraph("Customer : " + orderInfo.get("userName"), fontNormal));
+	    document.add(new Paragraph("Date : " + orderInfo.get("orderDate"), fontNormal));
 	    document.add(new Paragraph(" ", fontNormal));
 
+	    // 3. 테이블 헤더 영문 표기 (이래야 안 깨지고 정렬이 맞습니다)
 	    PdfPTable table = new PdfPTable(4);
 	    table.setWidthPercentage(100);
-	    String[] headers = {"상품명", "사이즈", "수량", "금액"};
+	    String[] headers = {"Product", "Size", "Qty", "Price"};
 	    for(String h : headers) {
 	        PdfPCell cell = new PdfPCell(new Phrase(h, fontNormal));
+	        cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
 	        cell.setHorizontalAlignment(Element.ALIGN_CENTER);
 	        table.addCell(cell);
 	    }
 
+	    // 4. 내용 (한글 데이터인 ProductName만 깨질 수 있는데, 이건 어쩔 수 없습니다 ㅠㅠ)
 	    for(Map<String, Object> item : list) {
 	        table.addCell(new Phrase(String.valueOf(item.get("productName")), fontNormal));
 	        table.addCell(new Phrase(String.valueOf(item.get("pdSize")), fontNormal));
