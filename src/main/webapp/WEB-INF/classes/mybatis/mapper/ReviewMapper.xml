@@ -2,7 +2,30 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.maknaez.mapper.ReviewMapper">
 
-	<!-- 상품별 리뷰 목록 조회 -->
+    <select id="dataCount" parameterType="long" resultType="int">
+		SELECT COUNT(*)
+		FROM reviews r
+		JOIN order_items oi ON r.item_id = oi.item_id
+		JOIN pd_size sz ON oi.opt_id = sz.opt_id
+		WHERE sz.prod_id = #{prodId}
+	</select>
+    
+    <select id="dataCountAdmin" parameterType="map" resultType="int">
+        SELECT COUNT(*)
+        FROM reviews r
+        JOIN order_items oi ON r.item_id = oi.item_id
+        JOIN pd_size sz ON oi.opt_id = sz.opt_id
+        JOIN products p ON sz.prod_id = p.prod_id
+        <where>
+            <if test="keyword != null and keyword != ''">
+                AND INSTR(p.prod_name, #{keyword}) &gt; 0
+            </if>
+            <if test="score != 0">
+                AND r.rating = #{score}
+            </if>
+        </where>
+    </select>
+
 	<select id="selectReviewsByProdId" parameterType="map" resultType="com.maknaez.model.ReviewDTO">
 		SELECT * FROM (
 			SELECT ROWNUM rnum, tb.* FROM (
@@ -24,45 +47,91 @@
 					m.userid AS writerId
 				FROM reviews r
 				JOIN order_items oi ON r.item_id = oi.item_id
-				JOIN pd_size sz ON oi.opt_id = sz.opt_id        /* 상품 ID 확인을 위해 사이즈 테이블 조인 */
-				JOIN orders o ON oi.order_id = o.items_id       /* ORDERS 테이블 PK는 ITEMS_ID */
+				JOIN pd_size sz ON oi.opt_id = sz.opt_id
+				JOIN orders o ON oi.order_id = o.items_id
 				JOIN member1 m ON o.memberidx = m.memberidx
 				WHERE sz.prod_id = #{prodId}
 				ORDER BY r.reg_date DESC
 			) tb WHERE ROWNUM &lt;= #{end}
 		) WHERE rnum &gt;= #{start}
 	</select>
-	
-	<!-- 상품별 평균 별점 및 리뷰 통계 조회 -->
-	<select id="selectProductReviewStats" parameterType="long" resultType="map">
-		SELECT 
-			NVL(ROUND(AVG(r.rating), 1), 0) AS avgRating,
-			COUNT(r.item_id) AS totalCount
-		FROM reviews r
-		JOIN order_items oi ON r.item_id = oi.item_id
-		JOIN pd_size sz ON oi.opt_id = sz.opt_id
-		WHERE sz.prod_id = #{prodId}
-	</select>
-	
-	<!-- 데이터 개수 -->
-	<select id="dataCount" parameterType="long" resultType="int">
-		SELECT COUNT(*)
-		FROM reviews r
-		JOIN order_items oi ON r.item_id = oi.item_id
-		JOIN pd_size sz ON oi.opt_id = sz.opt_id
-		WHERE sz.prod_id = #{prodId}
-	</select>
-	
+
+    <select id="listReviewAdmin" parameterType="map" resultType="com.maknaez.model.ReviewDTO">
+        SELECT * FROM (
+            SELECT ROWNUM rnum, tb.* FROM (
+                SELECT
+                    r.item_id AS reviewId,
+                    p.prod_id AS prodId,
+                    p.prod_name AS productName,
+                    m.memberidx AS memberIdx,
+                    m.userid AS writerId,
+                    m.nickname AS writerName,
+                    r.content AS content,
+                    r.rating AS starRating,
+                    NVL(r.img_url, '') AS reviewImg,
+                    TO_CHAR(r.reg_date, 'YYYY-MM-DD HH24:MI') AS regDate,
+                    sz.pd_size AS optionValue
+                    FROM reviews r
+                JOIN order_items oi ON r.item_id = oi.item_id
+                JOIN pd_size sz ON oi.opt_id = sz.opt_id
+                JOIN products p ON sz.prod_id = p.prod_id
+                JOIN orders o ON oi.order_id = o.items_id
+                JOIN member1 m ON o.memberidx = m.memberidx
+                <where>
+                    <if test="keyword != null and keyword != ''">
+                        AND INSTR(p.prod_name, #{keyword}) &gt; 0
+                    </if>
+                    <if test="score != 0">
+                        AND r.rating = #{score}
+                    </if>
+                </where>
+                ORDER BY
+                <choose>
+                    <when test="sort == 'score'"> r.rating DESC, r.reg_date DESC </when>
+                    <otherwise> r.reg_date DESC </otherwise>
+                </choose>
+            ) tb WHERE ROWNUM &lt;= #{end}
+        ) WHERE rnum &gt;= #{start}
+    </select>
+    
+    <select id="findById" parameterType="long" resultType="com.maknaez.model.ReviewDTO">
+        SELECT
+            r.item_id AS reviewId,
+            p.prod_id AS prodId,
+            p.prod_name AS productName,
+            m.memberidx AS memberIdx,
+            m.userid AS writerId,
+            m.nickname AS writerName,
+            r.content AS content,
+            r.rating AS starRating,
+            NVL(r.img_url, '') AS reviewImg,
+            TO_CHAR(r.reg_date, 'YYYY-MM-DD HH24:MI:SS') AS regDate,
+            sz.pd_size AS optionValue
+        FROM reviews r
+        JOIN order_items oi ON r.item_id = oi.item_id
+        JOIN pd_size sz ON oi.opt_id = sz.opt_id
+        JOIN products p ON sz.prod_id = p.prod_id
+        JOIN orders o ON oi.order_id = o.items_id
+        JOIN member1 m ON o.memberidx = m.memberidx
+        WHERE r.item_id = #{reviewId}
+    </select>
 
     <insert id="insertReview" parameterType="com.maknaez.model.ReviewDTO">
         INSERT INTO reviews (
             item_id, rating, content, img_url, reg_date
         ) VALUES (
-            -- REVIEWS 테이블 PK가 ITEM_ID(ORDER_ITEMS의 PK)이므로 이를 맞춰야 함
             (SELECT item_id FROM order_items WHERE order_id = #{orderNum} AND ROWNUM = 1), 
             #{starRating}, #{content}, #{reviewImg, jdbcType=VARCHAR}, SYSDATE
         )
     </insert>
+    
+    <update id="updateReviewStatus" parameterType="map">
+        SELECT 1 FROM DUAL -- 더미 쿼리 (컬럼 추가 후 위 주석 해제 및 이 라인 삭제)
+    </update>
+
+    <delete id="deleteReview" parameterType="long">
+        DELETE FROM reviews WHERE item_id = #{reviewId}
+    </delete>
     
     <select id="findByOrderNum" parameterType="String" resultType="Integer">
         SELECT COUNT(*)

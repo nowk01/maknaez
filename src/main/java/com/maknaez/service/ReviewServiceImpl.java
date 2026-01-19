@@ -9,60 +9,48 @@ import com.maknaez.model.ReviewDTO;
 import com.maknaez.model.PointDTO;
 import com.maknaez.mybatis.support.SqlSessionManager;
 
-
 public class ReviewServiceImpl implements ReviewService {
 
-	ReviewMapper mapper = SqlSessionManager.getSession().getMapper(ReviewMapper.class);
-	private PointService pointService = new PointServiceImpl();
+    ReviewMapper mapper = SqlSessionManager.getSession().getMapper(ReviewMapper.class);
+    private PointService pointService = new PointServiceImpl();
 
-	@Override
-	public int dataCount(long prodId) {
-		return mapper.dataCount(prodId);
-	}
+    @Override
+    public int dataCount(long prodId) {
+        return mapper.dataCount(prodId);
+    }
 
-	@Override
-	public List<ReviewDTO> listReviews(long prodId, int start, int end) {
+    @Override
+    public List<ReviewDTO> listReviews(long prodId, int start, int end) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("prodId", prodId);
+        map.put("start", start);
+        map.put("end", end);
+        return mapper.selectReviewsByProdId(map);
+    }
 
-		Map<String, Object> map = new HashMap<>();
-		map.put("prodId", prodId);
-		map.put("start", start);
-		map.put("end", end);
+    @Override
+    public void insertReview(ReviewDTO dto, String pathname) throws Exception {
+        try {
+            int count = mapper.findByOrderNum(dto.getOrderNum());
+            if (count > 0) {
+                throw new Exception("이미 리뷰를 작성한 주문입니다.");
+            }
+            mapper.insertReview(dto);
 
-		return mapper.selectReviewsByProdId(map);
-	}
+            int point = (dto.getReviewImg() != null && !dto.getReviewImg().isEmpty()) ? 3000 : 1000;
+            PointDTO pointDTO = new PointDTO();
+            pointDTO.setMemberIdx(dto.getMemberIdx());
+            pointDTO.setOrder_id(dto.getOrderNum());
+            pointDTO.setReason("구매후기 작성 (" + (point == 3000 ? "포토" : "텍스트") + ")");
+            pointDTO.setPoint_amount(point);
+            pointService.insertPoint(pointDTO);
 
-	@Override
-	public void insertReview(ReviewDTO dto, String pathname) throws Exception {
-		try {
-			// 1. 이미 작성된 리뷰인지 확인
-			int count = mapper.findByOrderNum(dto.getOrderNum());
-			if (count > 0) {
-				throw new Exception("이미 리뷰를 작성한 주문입니다.");
-			}
-
-			// 2. 리뷰 이미지 처리 (이미지 있으면 저장 경로 설정)
-			// 컨트롤러에서 파일 업로드 후 파일명을 dto에 담아 보냄
-
-			// 3. 리뷰 DB 저장
-			mapper.insertReview(dto);
-
-			// 4. 포인트 적립 (텍스트: 1000, 포토: 3000)
-			int point = (dto.getReviewImg() != null && !dto.getReviewImg().isEmpty()) ? 3000 : 1000;
-
-			PointDTO pointDTO = new PointDTO();
-			pointDTO.setMemberIdx(dto.getMemberIdx());
-			pointDTO.setOrder_id(dto.getOrderNum());
-			pointDTO.setReason("구매후기 작성 (" + (point == 3000 ? "포토" : "텍스트") + ")");
-			pointDTO.setPoint_amount(point);
-
-			pointService.insertPoint(pointDTO);
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw e;
-		}
-	}
-	
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e;
+        }
+    }
+    
     @Override
     public int dataCountMyReviews(long memberIdx) {
         return mapper.countMyReviews(memberIdx);
@@ -72,20 +60,47 @@ public class ReviewServiceImpl implements ReviewService {
     public List<ReviewDTO> listMyReviews(Map<String, Object> map) {
         return mapper.selectMyReviews(map);
     }
+
+    @Override
+    public int dataCountAdmin(Map<String, Object> map) {
+        return mapper.dataCountAdmin(map);
+    }
+
+    @Override
+    public List<ReviewDTO> listReviewAdmin(Map<String, Object> map) {
+        return mapper.listReviewAdmin(map);
+    }
+
+    @Override
+    public ReviewDTO findById(long reviewId) {
+        return mapper.findById(reviewId);
+    }
+
+    @Override
+    public void deleteReview(long reviewId) throws Exception {
+        try {
+            mapper.deleteReview(reviewId);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e;
+        }
+    }
     
     @Override
-	public Map<String, Object> readReviewStats(long prodId) {
-		Map<String, Object> map = null;
-		try {
-			map = mapper.selectProductReviewStats(prodId);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return map;
-	}
+    public Map<String, Object> readReviewStats(long prodId) {
+        return mapper.selectProductReviewStats(prodId);
+    }
     
-    
-	
-	
-	
+    @Override
+    public void updateReviewStatus(long reviewId, String status) throws Exception {
+        try {
+            Map<String, Object> map = new HashMap<>();
+            map.put("reviewId", reviewId);
+            map.put("status", status);
+            mapper.updateReviewStatus(map);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e;
+        }
+    }
 }

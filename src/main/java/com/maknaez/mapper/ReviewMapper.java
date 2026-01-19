@@ -16,6 +16,12 @@ public interface ReviewMapper {
 	int countMyReviews(long memberIdx);
 	List<ReviewDTO> selectMyReviews(Map<String, Object> map);
 
-	
 	public Map<String, Object> selectProductReviewStats(long prodId); // 상품별 평균 별점 및 리뷰 통계 조회
+	
+	// [추가] 관리자 기능
+    int dataCountAdmin(Map<String, Object> map); // 관리자용 검색 포함 개수
+    List<ReviewDTO> listReviewAdmin(Map<String, Object> map); // 관리자용 리스트
+    ReviewDTO findById(long reviewId); // 상세 조회
+    void deleteReview(long reviewId); // 삭제
+    void updateReviewStatus(Map<String, Object> map); // 상태 변경
 }

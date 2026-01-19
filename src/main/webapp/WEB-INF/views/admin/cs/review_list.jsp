@@ -39,14 +39,14 @@
                         </div>
                         <div class="inquiry-list-wrapper">
                             <c:forEach var="dto" items="${list}">
-                                <div class="inquiry-item" onclick="openReview('${dto.num}')">
+                                <div class="inquiry-item" onclick="openReview('${dto.reviewId}')">
                                     <div class="inquiry-info">
-                                        <span>${dto.userName}</span>
-                                        <span>${dto.reg_date}</span>
+                                        <span>${dto.writerName}</span>
+                                        <span>${dto.regDate}</span>
                                     </div>
                                     <div class="inquiry-subject">[${dto.productName}]</div>
                                     <div class="star-row" style="color: #ff4e00; font-size: 11px; margin-top: 5px;">
-                                        <c:forEach begin="1" end="${dto.score}">★</c:forEach>
+                                        <c:forEach begin="1" end="${dto.starRating}">★</c:forEach>
                                     </div>
                                 </div>
                             </c:forEach>

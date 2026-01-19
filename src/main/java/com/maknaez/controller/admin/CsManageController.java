@@ -12,6 +12,7 @@ import java.util.Map;
 import org.json.JSONObject;
 
 import com.maknaez.model.BoardDTO;
+import com.maknaez.model.ReviewDTO; // 추가
 import com.maknaez.model.SessionInfo;
 import com.maknaez.mvc.annotation.Controller;
 import com.maknaez.mvc.annotation.GetMapping;
@@ -21,6 +22,8 @@ import com.maknaez.mvc.annotation.ResponseBody;
 import com.maknaez.mvc.view.ModelAndView;
 import com.maknaez.service.BoardService;
 import com.maknaez.service.BoardServiceImpl;
+import com.maknaez.service.ReviewService; // 추가
+import com.maknaez.service.ReviewServiceImpl; // 추가
 import com.maknaez.util.FileManager;
 import com.maknaez.util.MyMultipartFile;
 
@@ -37,6 +40,7 @@ import jakarta.servlet.http.Part;
 public class CsManageController {
 	private BoardService service = new BoardServiceImpl();
 	private FileManager fileManager = new FileManager();
+	private ReviewService reviewService = new ReviewServiceImpl();
 
 	// 1:1 문의 리스트 (관리자용)
 	@GetMapping("inquiry_list")
@@ -325,22 +329,61 @@ public class CsManageController {
 		return new ModelAndView("redirect:/admin/cs/notice_list");
 	}
 
-	// 리뷰 관리 리스트 페이지
 	@GetMapping("review_list")
 	public ModelAndView reviewList(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		ModelAndView mav = new ModelAndView("admin/cs/review_list");
 
 		try {
-			String score = req.getParameter("score");
-			String keyword = req.getParameter("keyword");
-			if (score == null)
-				score = "0";
-			if (keyword == null)
-				keyword = "";
+			String page = req.getParameter("page");
+			int current_page = 1;
+			if (page != null) {
+				current_page = Integer.parseInt(page);
+			}
 
-			mav.addObject("score", score);
+			String sort = req.getParameter("sort"); // latest(기본), score
+			String keyword = req.getParameter("keyword");
+			int score = 0;
+            
+            // 별점 필터링 (파라미터가 1~5인 경우)
+            if (req.getParameter("score") != null && !req.getParameter("score").equals("0")) {
+                try {
+                    score = Integer.parseInt(req.getParameter("score"));
+                } catch (NumberFormatException e) { }
+            }
+
+			if (sort == null) sort = "latest";
+			if (keyword == null) keyword = "";
+
+			if (req.getMethod().equalsIgnoreCase("GET") && !keyword.isEmpty()) {
+				keyword = URLDecoder.decode(keyword, "utf-8");
+			}
+
+			Map<String, Object> map = new HashMap<>();
+			map.put("sort", sort);
+			map.put("keyword", keyword);
+			map.put("score", score);
+
+			int dataCount = reviewService.dataCountAdmin(map);
+			int size = 10;
+			int total_page = dataCount / size + (dataCount % size > 0 ? 1 : 0);
+			if (current_page > total_page) current_page = total_page;
+
+			int offset = (current_page - 1) * size;
+			if (offset < 0) offset = 0;
+
+			map.put("start", offset + 1);
+			map.put("end", offset + size);
+
+			List<ReviewDTO> list = reviewService.listReviewAdmin(map);
+
+			mav.addObject("list", list);
+			mav.addObject("dataCount", dataCount);
+			mav.addObject("page", current_page);
+			mav.addObject("total_page", total_page);
+			mav.addObject("sort", sort);
 			mav.addObject("keyword", keyword);
+			mav.addObject("score", score);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -348,22 +391,93 @@ public class CsManageController {
 		return mav;
 	}
 
-	// 리뷰 상세 데이터 가져오기 (AJAX)
+	// [수정] 리뷰 상세 데이터 가져오기 (AJAX)
 	@ResponseBody
 	@GetMapping("review_detail")
 	public void reviewDetail(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		resp.setContentType("application/json; charset=utf-8");
 		JSONObject jobj = new JSONObject();
+		
 		try {
-			jobj.put("status", "success");
-			jobj.put("productName", "상품명 예시");
-			jobj.put("userName", "홍길동");
-			jobj.put("score", 5);
-			jobj.put("content", "리뷰 내용 예시");
-			jobj.put("reg_date", "2026-01-11");
+            // 권한 체크
+            HttpSession session = req.getSession();
+            SessionInfo info = (SessionInfo) session.getAttribute("member");
+            if (info == null || info.getUserLevel() < 51) {
+                jobj.put("status", "permission_denied");
+                resp.getWriter().print(jobj.toString());
+                return;
+            }
+
+			long reviewId = Long.parseLong(req.getParameter("reviewId"));
+			ReviewDTO dto = reviewService.findById(reviewId);
+
+			if (dto != null) {
+				jobj.put("status", "success");
+				jobj.put("reviewId", dto.getReviewId());
+				jobj.put("productName", dto.getProductName());
+				jobj.put("userName", dto.getWriterName()); // 작성자명
+				jobj.put("userId", dto.getWriterId());
+				jobj.put("score", dto.getStarRating());
+				jobj.put("content", dto.getContent());
+				jobj.put("reg_date", dto.getRegDate());
+				jobj.put("reviewImg", dto.getReviewImg() != null ? dto.getReviewImg() : "");
+                jobj.put("optionValue", dto.getOptionValue());
+			} else {
+				jobj.put("status", "fail");
+			}
 		} catch (Exception e) {
+            e.printStackTrace();
 			jobj.put("status", "error");
 		}
 		resp.getWriter().print(jobj.toString());
 	}
+    
+    // [추가] 리뷰 삭제 (AJAX or Redirect)
+    @GetMapping("review_delete")
+    public ModelAndView reviewDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        try {
+            HttpSession session = req.getSession();
+            SessionInfo info = (SessionInfo) session.getAttribute("member");
+            
+            if (info == null || info.getUserLevel() < 51) {
+                return new ModelAndView("redirect:/admin/login");
+            }
+            
+            long reviewId = Long.parseLong(req.getParameter("reviewId"));
+            reviewService.deleteReview(reviewId);
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ModelAndView("redirect:/admin/cs/review_list");
+    }
+    
+    // [추가] 리뷰 상태 변경 (AJAX) - 예: 블라인드 처리
+    @ResponseBody
+    @PostMapping("review_status")
+    public void reviewStatus(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        resp.setContentType("application/json; charset=utf-8");
+        JSONObject jobj = new JSONObject();
+        
+        try {
+            HttpSession session = req.getSession();
+            SessionInfo info = (SessionInfo) session.getAttribute("member");
+            if (info == null || info.getUserLevel() < 51) {
+                jobj.put("status", "permission_denied");
+                resp.getWriter().print(jobj.toString());
+                return;
+            }
+
+            long reviewId = Long.parseLong(req.getParameter("reviewId"));
+            String status = req.getParameter("status"); // blind, normal 등
+            
+            reviewService.updateReviewStatus(reviewId, status);
+            
+            jobj.put("status", "success");
+        } catch (Exception e) {
+            e.printStackTrace();
+            jobj.put("status", "error");
+        }
+        resp.getWriter().print(jobj.toString());
+    }
 }
