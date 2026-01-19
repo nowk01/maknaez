@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.maknaez.mapper.StatsMapper">
-
+	
+	<!-- 매출 통계 -->
     <select id="getTodaySales" resultType="long">
         SELECT NVL(SUM(p.pay_amount), 0)
         FROM payments p
@@ -61,5 +62,207 @@
         )
         WHERE ROWNUM &lt;= 5
     </select>
+	
+	<!--                              상품 통계                             -->
+    
+    <select id="getOrderStatusDistribution" resultType="map">
+        SELECT 
+            status AS "status",
+            COUNT(*) AS "count"
+        FROM orders
+        GROUP BY status
+        ORDER BY COUNT(*) DESC
+    </select>
 
+    <select id="getPendingClaimCount" resultType="int">
+        SELECT COUNT(*)
+        FROM claims
+        WHERE status IN ('WAITING', 'REQUESTED', '접수')
+    </select>
+
+	<select id="getSoldOutCount" resultType="int">
+        SELECT COUNT(*)
+        FROM pd_size ps
+        LEFT JOIN (
+            SELECT opt_id, prod_stock
+            FROM (
+                SELECT 
+                    opt_id, 
+                    prod_stock, 
+                    ROW_NUMBER() OVER(PARTITION BY opt_id ORDER BY log_id DESC) as rn
+                FROM stock_logs
+            )
+            WHERE rn = 1
+        ) sl ON ps.opt_id = sl.opt_id
+        WHERE NVL(sl.prod_stock, 0) = 0
+    </select>
+
+    <select id="getLowStockCount" resultType="int">
+        SELECT COUNT(*)
+        FROM (
+            SELECT 
+                opt_id, 
+                prod_stock, 
+                ROW_NUMBER() OVER(PARTITION BY opt_id ORDER BY log_id DESC) as rn
+            FROM stock_logs
+        )
+        WHERE rn = 1
+          AND prod_stock &gt; 0 
+          AND prod_stock &lt; 10
+    </select>
+
+    <select id="getCategoryShare" resultType="map">
+        SELECT 
+            CASE 
+                WHEN parent.cate_name IS NOT NULL 
+                THEN parent.cate_name || ' - ' || child.cate_name
+                ELSE child.cate_name 
+            END AS "categoryName",
+            SUM(oi.price * oi.count) AS "totalRevenue"
+        FROM order_items oi
+        JOIN pd_size ps ON oi.opt_id = ps.opt_id
+        JOIN products p ON ps.prod_id = p.prod_id
+        JOIN category child ON p.cate_code = child.cate_code
+        LEFT JOIN category parent ON child.cate_parent = parent.cate_code
+        JOIN orders o ON oi.order_id = o.items_id
+        WHERE o.status NOT IN ('CANCEL', 'RETURN')
+        GROUP BY 
+            CASE 
+                WHEN parent.cate_name IS NOT NULL 
+                THEN parent.cate_name || ' - ' || child.cate_name
+                ELSE child.cate_name 
+            END
+        ORDER BY "totalRevenue" DESC
+    </select>
+
+    <select id="getBestSellers" resultType="map">
+        SELECT * FROM (
+            SELECT 
+                p.prod_name AS "productName",
+                SUM(oi.count) AS "totalQty"
+            FROM order_items oi
+            JOIN pd_size ps ON oi.opt_id = ps.opt_id
+            JOIN products p ON ps.prod_id = p.prod_id
+            JOIN orders o ON oi.order_id = o.items_id
+            WHERE o.status NOT IN ('CANCEL', 'RETURN')
+            GROUP BY p.prod_id, p.prod_name
+            ORDER BY SUM(oi.count) DESC
+        ) WHERE ROWNUM &lt;= 10
+    </select>
+
+    <select id="getTopWishlist" resultType="map">
+        SELECT * FROM (
+            SELECT 
+                p.prod_name AS "productName",
+                COUNT(*) AS "cnt"
+            FROM wishlist w
+            JOIN products p ON w.prod_id = p.prod_id
+            GROUP BY p.prod_id, p.prod_name
+            ORDER BY COUNT(*) DESC
+        ) WHERE ROWNUM &lt;= 10
+    </select>
+
+    <select id="getTopCart" resultType="map">
+        SELECT * FROM (
+            SELECT 
+                p.prod_name AS "productName",
+                COUNT(*) AS "cnt"
+            FROM cart c
+            JOIN products p ON c.prod_id = p.prod_id
+            GROUP BY p.prod_id, p.prod_name
+            ORDER BY COUNT(*) DESC
+        ) WHERE ROWNUM &lt;= 10
+    </select>
+    
+    <!--                              회원 통계                             -->
+    <select id="getTotalMemberCount" resultType="int">
+        SELECT COUNT(*) 
+        FROM member1 
+        WHERE userlevel &lt; 51
+    </select>
+    
+    <select id="getVipRatio" resultType="double">
+        SELECT 
+            CASE WHEN total = 0 THEN 0 
+            ELSE ROUND((vip / total) * 100, 1) 
+            END
+        FROM (
+            SELECT 
+                (SELECT COUNT(*) FROM member1 WHERE userlevel &lt; 51) AS total,
+                (SELECT COUNT(*) FROM member1 WHERE userlevel > 40 AND userlevel &lt; 51) AS vip
+            FROM dual
+        )
+    </select>
+
+    <select id="getNewMemberTrend" resultType="map">
+        SELECT 
+            TO_CHAR(d.dt, 'MM-DD') AS "joinDate",
+            COUNT(m1.memberIdx) AS "count"  FROM (
+            SELECT TRUNC(SYSDATE) - LEVEL + 1 AS dt
+            FROM dual
+            CONNECT BY LEVEL &lt;= 7
+        ) d
+        LEFT JOIN member3 m3 ON TRUNC(m3.register_date) = d.dt
+        LEFT JOIN member1 m1 ON m3.memberIdx = m1.memberIdx AND m1.userlevel &lt; 51
+        GROUP BY d.dt
+        ORDER BY d.dt
+    </select>
+
+    <select id="getGradeDistribution" resultType="map">
+        SELECT 
+            userlevel AS "grade",
+            COUNT(*) AS "count"
+        FROM member1
+        WHERE userlevel &lt; 51
+        GROUP BY userlevel
+        ORDER BY "grade" ASC
+    </select>
+
+    <select id="getGenderDistribution" resultType="map">
+        SELECT 
+            DECODE(gender, '0', '남성', '1', '여성', '기타') AS "gender",
+            COUNT(*) AS "count"
+        FROM member1
+        WHERE userlevel &lt; 51
+        GROUP BY gender
+    </select>
+
+    <select id="getAgeDistribution" resultType="map">
+        SELECT 
+            TRUNC((TO_NUMBER(TO_CHAR(SYSDATE, 'YYYY')) - TO_NUMBER(TO_CHAR(birth, 'YYYY'))) / 10) * 10 || '대' AS "ageGroup",
+            COUNT(*) AS "count"
+        FROM member1
+        WHERE birth IS NOT NULL 
+          AND userlevel &lt; 51
+        GROUP BY TRUNC((TO_NUMBER(TO_CHAR(SYSDATE, 'YYYY')) - TO_NUMBER(TO_CHAR(birth, 'YYYY'))) / 10) * 10
+        ORDER BY "ageGroup"
+    </select>
+
+    <select id="getVipRanking" resultType="map">
+        SELECT * FROM (
+            SELECT 
+                m1.userId AS "userId",
+                m2.username AS "userName",
+                m1.userlevel AS "grade",
+                NVL(stats.orderCnt, 0) AS "orderCount",
+                NVL(stats.totalPay, 0) AS "totalPayment",
+                m3.register_date AS "regDate"
+            FROM member1 m1
+            JOIN member2 m2 ON m1.memberIdx = m2.memberIdx
+            JOIN member3 m3 ON m1.memberIdx = m3.memberIdx
+            LEFT JOIN (
+                SELECT 
+                    o.memberIdx, 
+                    COUNT(o.items_id) AS orderCnt, 
+                    SUM(p.pay_amount) AS totalPay
+                FROM orders o
+                JOIN payments p ON o.items_id = p.order_id
+                WHERE p.pay_status = 'PAID'
+                  AND o.status NOT IN ('CANCEL', 'RETURN')
+                GROUP BY o.memberIdx
+            ) stats ON m1.memberIdx = stats.memberIdx
+            WHERE m1.userlevel &lt; 51  ORDER BY stats.totalPay DESC NULLS LAST
+        )
+        WHERE ROWNUM &lt;= 20
+    </select>
 </mapper>

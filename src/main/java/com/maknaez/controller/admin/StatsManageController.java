@@ -51,12 +51,43 @@ public class StatsManageController {
 		return mav;
 	}
 	
+	@GetMapping("product_stats_api")
+    @ResponseBody
+    public void productStatsApi(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        try {
+            Map<String, Object> data = service.getProductStats();
+            
+            JSONObject json = new JSONObject(data);
+            
+            resp.setContentType("application/json; charset=UTF-8");
+            resp.getWriter().write(json.toString());
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+	
 	@GetMapping("customer_stats")
 	public ModelAndView customerStats(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		ModelAndView mav = new ModelAndView("admin/stats/customer_stats");
 		
 		return mav;
 	}
+	
+	@GetMapping("customer_stats_api")
+    @ResponseBody
+    public void customerStatsApi(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        try {
+            Map<String, Object> data = service.getCustomerStats();
+            JSONObject json = new JSONObject(data);
+            
+            resp.setContentType("application/json; charset=UTF-8");
+            resp.getWriter().write(json.toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+            resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        }
+    }
 	
 	@GetMapping("visitor_stats")
 	public ModelAndView visitorStats(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

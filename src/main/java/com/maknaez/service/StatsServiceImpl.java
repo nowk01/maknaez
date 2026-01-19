@@ -33,4 +33,42 @@ public class StatsServiceImpl implements StatsService{
 
         return resultMap;
     }
+	
+	@Override
+    public Map<String, Object> getProductStats() throws Exception {
+        StatsMapper mapper = SqlSessionManager.getSession().getMapper(StatsMapper.class);
+        Map<String, Object> map = new HashMap<>();
+
+        map.put("pendingClaimCount", mapper.getPendingClaimCount());
+        map.put("soldOutCount", mapper.getSoldOutCount());
+        map.put("lowStockCount", mapper.getLowStockCount());
+
+        // 2. 차트 데이터
+        map.put("orderStatus", mapper.getOrderStatusDistribution()); // 주문 상태
+        map.put("categoryShare", mapper.getCategoryShare());         // 카테고리 비중
+        map.put("bestSellers", mapper.getBestSellers());             // 베스트 셀러
+        map.put("topWishlist", mapper.getTopWishlist());             // 찜 순위
+        map.put("topCart", mapper.getTopCart());                     // 장바구니 순위
+
+        return map;
+    }
+	
+	@Override
+    public Map<String, Object> getCustomerStats() throws Exception {
+        StatsMapper mapper = SqlSessionManager.getSession().getMapper(StatsMapper.class);
+        Map<String, Object> map = new HashMap<>();
+
+        // 1. 요약 및 차트 데이터
+        map.put("totalMemberCount", mapper.getTotalMemberCount());
+        map.put("vipRatio", mapper.getVipRatio());
+        map.put("newMemberTrend", mapper.getNewMemberTrend());
+        map.put("gradeDist", mapper.getGradeDistribution());
+        map.put("genderDist", mapper.getGenderDistribution());
+        map.put("ageDist", mapper.getAgeDistribution());
+        
+        // 2. VIP 리스트 (전체 데이터를 가져와서 JS에서 정렬)
+        map.put("vipList", mapper.getVipRanking());
+
+        return map;
+    }
 }
