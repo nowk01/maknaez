@@ -33,48 +33,71 @@ import jakarta.servlet.http.HttpServletResponse;
 @Controller
 @RequestMapping("/admin/order/*")
 public class OrderManageController {
-
+	
 	@GetMapping("order_list")
-	public ModelAndView orderList(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
-		ModelAndView mav = new ModelAndView("admin/order/order_list");
-		OrderMapper mapper = MapperContainer.get(OrderMapper.class);
-		MyUtil util = new MyUtil();
+	public ModelAndView orderList(HttpServletRequest req, HttpServletResponse resp) throws Exception {
+	    OrderMapper mapper = MapperContainer.get(OrderMapper.class);
+	    MyUtil util = new MyUtil();
 
-		try {
-			String page = req.getParameter("page");
-			int current_page = (page != null && !page.isEmpty()) ? Integer.parseInt(page) : 1;
+	    String page = req.getParameter("page");
+	    int current_page = (page != null && !page.isEmpty()) ? Integer.parseInt(page) : 1;
 
-			Map<String, Object> map = new HashMap<>();
-			// 검색 로직이 필요하다면 여기에 추가 (claim_list 참고)
+	    String startDate = req.getParameter("startDate");
+	    String endDate = req.getParameter("endDate");
+	    String status = req.getParameter("status");
+	    String sortKey = req.getParameter("sortKey");
+	    String searchValue = req.getParameter("searchValue");
 
-			int dataCount = mapper.dataCount(map);
-			int size = 10;
-			int total_page = util.pageCount(dataCount, size);
-			if (current_page > total_page)
-				current_page = total_page;
+	    if (status == null) status = "";
+	    if (sortKey == null) sortKey = "orderDate";
+	    if (searchValue == null) searchValue = "";
 
-			int start = (current_page - 1) * size + 1;
-			int end = current_page * size;
-			map.put("start", start);
-			map.put("end", end);
+	    Map<String, Object> map = new HashMap<>();
+	    map.put("startDate", startDate);
+	    map.put("endDate", endDate);
+	    map.put("status", status);
+	    map.put("sortKey", sortKey);
+	    map.put("searchValue", searchValue);
 
-			// 실제 주문 데이터 리스트 가져오기
-			List<OrderDTO> list = mapper.listOrder(map);
+	    int dataCount = mapper.dataCount(map);
+	    int size = 10;
+	    int total_page = util.pageCount(dataCount, size);
+	    if (current_page > total_page) current_page = total_page;
 
-			String cp = req.getContextPath();
-			String listUrl = cp + "/admin/order/order_list";
-			String paging = util.paging(current_page, total_page, listUrl);
+	    int start = (current_page - 1) * size + 1;
+	    int end = current_page * size;
+	    map.put("start", start);
+	    map.put("end", end);
 
-			mav.addObject("list", list);
-			mav.addObject("dataCount", dataCount);
-			mav.addObject("paging", paging);
-			mav.addObject("page", current_page);
+	    List<OrderDTO> list = mapper.listOrder(map);
 
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return mav;
+	    String query = "";
+	    if (startDate != null && !startDate.isEmpty()) {
+	        query = "startDate=" + startDate + "&endDate=" + endDate;
+	    }
+	    if (!status.isEmpty()) {
+	        if (!query.isEmpty()) query += "&";
+	        query += "status=" + java.net.URLEncoder.encode(status, "UTF-8");
+	    }
+	    if (!searchValue.isEmpty()) {
+	        if (!query.isEmpty()) query += "&";
+	        query += "searchValue=" + java.net.URLEncoder.encode(searchValue, "UTF-8");
+	    }
+
+	    String listUrl = req.getContextPath() + "/admin/order/order_list";
+	    if (!query.isEmpty()) listUrl += "?" + query;
+
+	    String paging = util.paging(current_page, total_page, listUrl);
+
+	    ModelAndView mav = new ModelAndView("admin/order/order_list");
+	    mav.addObject("list", list);
+	    mav.addObject("paging", paging);
+	    mav.addObject("startDate", startDate);
+	    mav.addObject("endDate", endDate);
+	    mav.addObject("status", status);
+	    mav.addObject("searchValue", searchValue);
+
+	    return mav;
 	}
 
 	@GetMapping("claim_list")
@@ -222,23 +245,19 @@ public class OrderManageController {
 
 		document.open();
 
-		// 폰트는 에러 안 나는 기본 폰트로 유지
 		Font fontTitle = new Font(Font.FontFamily.HELVETICA, 20, Font.BOLD);
 		Font fontNormal = new Font(Font.FontFamily.HELVETICA, 10);
 
-		// 1. 제목을 영어로 (영문 폰트에서 한글은 깨지기 때문)
 		Paragraph title = new Paragraph("TRANSACTION STATEMENT", fontTitle);
 		title.setAlignment(Element.ALIGN_CENTER);
 		title.setSpacingAfter(30);
 		document.add(title);
 
-		// 2. 기본 정보 영문 표기
 		document.add(new Paragraph("Order No : " + orderNum, fontNormal));
 		document.add(new Paragraph("Customer : " + orderInfo.get("userName"), fontNormal));
 		document.add(new Paragraph("Date : " + orderInfo.get("orderDate"), fontNormal));
 		document.add(new Paragraph(" ", fontNormal));
 
-		// 3. 테이블 헤더 영문 표기 (이래야 안 깨지고 정렬이 맞습니다)
 		PdfPTable table = new PdfPTable(4);
 		table.setWidthPercentage(100);
 		String[] headers = { "Product", "Size", "Qty", "Price" };
@@ -249,7 +268,6 @@ public class OrderManageController {
 			table.addCell(cell);
 		}
 
-		// 4. 내용 (한글 데이터인 ProductName만 깨질 수 있는데, 이건 어쩔 수 없습니다 ㅠㅠ)
 		for (Map<String, Object> item : list) {
 			table.addCell(new Phrase(String.valueOf(item.get("productName")), fontNormal));
 			table.addCell(new Phrase(String.valueOf(item.get("pdSize")), fontNormal));
@@ -262,7 +280,7 @@ public class OrderManageController {
 		out.flush();
 		out.close();
 	}
-	
+
 	@GetMapping("approve")
 	public ModelAndView approve(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		try {

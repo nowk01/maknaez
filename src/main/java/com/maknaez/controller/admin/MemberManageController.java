@@ -137,12 +137,6 @@ public class MemberManageController {
             
             if (dto != null) {
                 model.put("state", "true");
-                
-                // [핵심 수정] DTO를 JSONObject로 감싸서 넣어야 필드(getter)들이 JSON으로 풀립니다.
-                // new JSONObject(dto)는 dto의 Getter들을 읽어서 JSON으로 만들어줍니다.
-                // toString()으로 변환되어, 맵에 저장되는 것을 방지하기 위해 .toMap()을 사용하는 것이 가장 안전합니다.
-                // 라이브러리 버전에 따라 .toMap()이 없다면 new JSONObject(dto) 자체를 넣으셔도 됩니다.
-                
                 model.put("dto", new JSONObject(dto).toMap());
                 
             } else {

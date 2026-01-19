@@ -122,6 +122,8 @@
 		src="${pageContext.request.contextPath}/dist/js/admin_estimate_list.js"></script>
 
 	<script>
+	 	const contextPath = "${pageContext.request.contextPath}";
+	 	
 		function openEstimateWrite(orderNum) {
 			if (!orderNum || orderNum === 'null' || orderNum === '') {
 				alert("유효한 주문 번호가 없습니다.");

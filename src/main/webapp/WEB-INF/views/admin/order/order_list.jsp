@@ -26,19 +26,21 @@
 				</div>
 
 				<div class="card-box">
-					<form name="searchForm" class="search-grid">
+					<form name="searchForm" class="search-grid"
+						onsubmit="return false;">
 						<div>
-							<label class="form-label">주문 기간 (Order Period)</label>
+							<label class="form-label">주문 기간</label>
 							<div class="d-flex align-items-center">
-								<input type="date" name="startDate" class="form-control"
-									value="${startDate}"> <span class="mx-2 text-muted">~</span>
-								<input type="date" name="endDate" class="form-control"
+								<input type="date" name="startDate" id="startDate"
+									class="form-control" value="${startDate}"> <span
+									class="mx-2 text-muted">~</span> <input type="date"
+									name="endDate" id="endDate" class="form-control"
 									value="${endDate}">
 							</div>
 						</div>
 						<div>
 							<label class="form-label">주문 상태</label> <select name="status"
-								class="form-select">
+								id="status" class="form-select">
 								<option value="">전체 상태</option>
 								<option value="결제완료" ${status=='결제완료'?'selected':''}>결제완료</option>
 								<option value="배송중" ${status=='배송중'?'selected':''}>배송중</option>
@@ -48,15 +50,15 @@
 						</div>
 						<div>
 							<label class="form-label">정렬 기준</label> <select name="sortKey"
-								class="form-select">
+								id="sortKey" class="form-select">
 								<option value="orderDate" ${sortKey=='orderDate'?'selected':''}>최신순</option>
 								<option value="totalAmount"
 									${sortKey=='totalAmount'?'selected':''}>금액순</option>
 							</select>
 						</div>
 						<div>
-							<label class="form-label">통합 검색 (Search)</label> <input
-								type="text" name="searchValue" class="form-control"
+							<label class="form-label">통합 검색</label> <input type="text"
+								name="searchValue" id="searchValue" class="form-control"
 								placeholder="주문번호, 이름, 상품명" value="${searchValue}">
 						</div>
 						<div>
@@ -157,9 +159,13 @@
 
 	<jsp:include page="/WEB-INF/views/admin/layout/footerResources.jsp" />
 	<script type="text/javascript">
-    var orderDataCount = "${dataCount}";
+		var orderDataCount = "${dataCount}";
+	</script>
+	<script>
+    const contextPath = "${pageContext.request.contextPath}";
 	</script>
 	<script
 		src="${pageContext.request.contextPath}/dist/js/admin_order_list.js"></script>
+		
 </body>
 </html>
