@@ -224,18 +224,18 @@
         ORDER BY prod_name
     </select>
     
-    <!-- 입고알람 메일용 -->
+    <!-- 입고알람 메일용: 옵션 ID로 상품 정보 조회 -->
     <select id="getOptionInfoForAlarm" parameterType="Long" resultType="com.maknaez.model.ProductDTO">
         SELECT 
-            p.prod_id AS prodId, 
-            p.prod_name AS prodName, 
-            ps.pd_size AS prodSize
-        FROM products p
-        JOIN pd_size ps ON p.prod_id = ps.prod_id
-        WHERE ps.opt_id = #{optId}
+            p.PROD_ID AS prodId, 
+            p.PROD_NAME AS prodName, 
+            ps.PD_SIZE AS prodSize
+        FROM PRODUCTS p
+        JOIN PD_SIZE ps ON p.PROD_ID = ps.PROD_ID
+        WHERE ps.OPT_ID = #{optId}
     </select>
 
-    <!-- 입고알람 메일용 -->
+    <!-- 입고알람 메일용: 상품 ID로 위시리스트에 담은 회원 이메일 조회 -->
     <select id="listWishListUserEmails" parameterType="Long" resultType="String">
         SELECT DISTINCT m2.EMAIL
         FROM MEMBER2 m2
