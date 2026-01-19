@@ -132,8 +132,6 @@
 
 	<jsp:include page="/WEB-INF/views/admin/layout/footerResources.jsp" />
 	<script type="text/javascript">
-    // JSP 문법은 오직 이 'JSP 파일 안'에서만 작동합니다.
-    // 여기서 자바스크립트 변수로 옮겨 담아야 외부 JS 파일이 가져다 쓸 수 있어요.
     var currentOrderNum = "${orderInfo.orderNum}"; 
     var contextPath = "${pageContext.request.contextPath}";
 </script>

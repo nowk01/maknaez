@@ -12,15 +12,21 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 });
 
-// 주문 상태 업데이트
+function viewOrderDetail(orderCode) {
+    const url = window.location.origin + "/maknaez/admin/order/order_detail?orderCode=" + orderCode;
+    const opt = "width=900, height=800, scrollbars=yes, resizable=yes";
+    window.open(url, "OrderDetail", opt);
+}
+
 function updateOrderStatus() {
-    const selectedCount = document.querySelectorAll('tbody input[type="checkbox"]:checked').length;
-    if(selectedCount === 0) {
-        alert("처리를 진행할 주문을 선택해주세요.");
+    const selected = document.querySelectorAll('input[name="orderNums"]:checked');
+    if(selected.length === 0) {
+        alert("처리할 주문을 선택해주세요.");
         return;
     }
-    if(confirm(`${selectedCount}건의 주문을 '발주 확인' 상태로 변경하시겠습니까?`)) {
-        alert("정상적으로 처리되었습니다. (SUCCESS)");
+
+    if(confirm("선택한 주문을 발주 확인 처리하시겠습니까?")) {
+        alert("발주 처리가 완료되었습니다.");
     }
 }
 

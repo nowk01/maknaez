@@ -4,7 +4,8 @@ public class OrderDTO {
     // DB 컬럼 매핑
     private String orderNum;      // 주문번호 (order_id)
     private long memberIdx;       // 회원번호
-    private String orderDate;     // 주문일자
+    private String userId;  	  // 회원 아이디
+	private String orderDate;     // 주문일자
     private String orderState;    // 주문상태 (status)
     private String productName;   // 상품명 (prod_name)
     private String thumbNail;     // 썸네일
@@ -31,6 +32,12 @@ public class OrderDTO {
 	}
 	public void setUserName(String userName) {
 		this.userName = userName;
+	}
+    public String getUserId() {
+		return userId;
+	}
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
 	public String getTel() {
 		return tel;
