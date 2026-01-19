@@ -98,21 +98,29 @@ public class CartController {
         return mav;
     }
     
-    // 3. 장바구니 삭제 (Ajax)
+ // 3. 장바구니 삭제 (Ajax)
     @ResponseBody
     @RequestMapping(value = "/cart/delete", method = RequestMethod.POST)
     public Map<String, Object> delete(HttpServletRequest req, HttpServletResponse resp) {
         Map<String, Object> model = new HashMap<>();
+        
         HttpSession session = req.getSession();
         SessionInfo info = (SessionInfo) session.getAttribute("member");
-        
         if (info == null) {
             model.put("status", "login_required");
             return model;
         }
         
         try {
-            String[] ids = req.getParameterValues("cartIds[]"); // 배열 형태
+            // [수정] JS에서 traditional: true로 보낼 경우 "cartIds"로 받음
+            String[] ids = req.getParameterValues("cartIds");
+            
+            // 만약 JS에서 traditional 옵션 없이 보냈다면 "cartIds[]"로 받아야 함 (호환성 유지)
+            if (ids == null) {
+                ids = req.getParameterValues("cartIds[]");
+            }
+            
+            // 단일 삭제의 경우 (deleteItem 함수는 cartId 파라미터를 보냄)
             if(ids == null) {
                 String id = req.getParameter("cartId"); // 단일 값
                 if(id != null) ids = new String[]{id};

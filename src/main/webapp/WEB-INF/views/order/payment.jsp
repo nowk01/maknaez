@@ -13,7 +13,6 @@
 <!-- 공통 리소스 & Bootstrap 5 -->
 <jsp:include page="/WEB-INF/views/layout/headerResources.jsp"/>
 
-<!-- 다음 주소 API -->
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 
 <style>
@@ -99,7 +98,7 @@
     /* 결제 정보 (Sticky) */
     .sticky-summary {
         position: sticky;
-        top: 80px; /* [수정] 30px -> 80px (헤더 높이 고려 등 더 보기 좋게 변경) */
+        top: 80px; 
         background: #fdfdfd;
         border: 1px solid #000;
         padding: 30px;
