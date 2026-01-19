@@ -171,5 +171,15 @@
             ) tb WHERE ROWNUM &lt;= #{end}
         ) WHERE rnum &gt;= #{start}
     </select>
+    
+    <select id="selectProductReviewStats" parameterType="long" resultType="map">
+		SELECT 
+			NVL(ROUND(AVG(r.rating), 1), 0) AS avgRating,
+			COUNT(r.item_id) AS totalCount
+		FROM reviews r
+		JOIN order_items oi ON r.item_id = oi.item_id
+		JOIN pd_size sz ON oi.opt_id = sz.opt_id
+		WHERE sz.prod_id = #{prodId}
+	</select>
 
 </mapper>
