@@ -11,6 +11,7 @@ public class ReviewDTO {
     private String regDate;
     private String writerId;
     private String writerName;
+    private String orderNum;
 
     public ReviewDTO() {}
 
@@ -31,7 +32,7 @@ public class ReviewDTO {
 
     public String getReviewImg() { return reviewImg; }
     public void setReviewImg(String reviewImg) { this.reviewImg = reviewImg; }
-    
+   
     public String getOptionValue() { return optionValue; }
     public void setOptionValue(String optionValue) { this.optionValue = optionValue; }
 
@@ -43,4 +44,7 @@ public class ReviewDTO {
 
     public String getWriterName() { return writerName; }
     public void setWriterName(String writerName) { this.writerName = writerName; }
+    
+    public String getOrderNum() { return orderNum; }
+    public void setOrderNum(String orderNum) { this.orderNum = orderNum; }
 }

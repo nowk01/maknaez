@@ -8,8 +8,94 @@
 <title>상품 리뷰 | 쇼핑몰</title>
 <link rel="icon" href="data:;base64,iVBORw0KGgo=">
 <jsp:include page="/WEB-INF/views/layout/headerResources.jsp" />
-<link rel="stylesheet"
-    href="${pageContext.request.contextPath}/dist/css/mypage.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/mypage.css">
+
+<style>
+    /* 모달 배경 */
+    .modal-overlay {
+        display: none; /* 기본적으로 숨김 */
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 9999;
+        justify-content: center;
+        align-items: center;
+    }
+
+    /* 모달 본문 */
+    .modal-content {
+        background: #fff;
+        width: 500px;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        position: relative;
+    }
+
+    .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 15px;
+    }
+
+    .modal-header h3 { margin: 0; font-size: 20px; font-weight: 700; }
+    .close-btn { background: none; border: none; font-size: 28px; cursor: pointer; line-height: 1; }
+
+    /* 모달 내부 상품 정보 */
+    .modal-product-info {
+        display: flex;
+        gap: 15px;
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        align-items: center;
+    }
+    .modal-product-info img {
+        width: 60px; height: 60px; object-fit: cover; border-radius: 4px; border: 1px solid #ddd;
+    }
+    .modal-prod-name { font-weight: 600; font-size: 15px; color: #333; }
+
+    /* 폼 요소 스타일 */
+    .form-group { margin-bottom: 20px; }
+    .form-group label { display: block; margin-bottom: 8px; font-weight: 600; font-size: 14px; }
+    
+    .form-select {
+        width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px;
+    }
+    
+    .form-textarea {
+        width: 100%; height: 150px; padding: 12px; border: 1px solid #ddd; border-radius: 4px; resize: none; font-size: 14px; line-height: 1.5;
+    }
+    
+    .form-file { width: 100%; font-size: 14px; }
+    
+    .point-guide { color: #ff4e00; font-size: 13px; margin-top: 5px; }
+
+    /* 버튼 영역 */
+    .modal-footer {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+        margin-top: 30px;
+        border-top: 1px solid #eee;
+        padding-top: 20px;
+    }
+    
+    .btn-submit {
+        background: #000; color: #fff; border: none; padding: 12px 25px; border-radius: 4px; cursor: pointer; font-weight: 600;
+    }
+    .btn-cancel {
+        background: #fff; color: #333; border: 1px solid #ddd; padding: 12px 25px; border-radius: 4px; cursor: pointer;
+    }
+    .btn-submit:hover { background: #333; }
+    .btn-cancel:hover { background: #f9f9f9; }
+</style>
+
 </head>
 <body>
 
@@ -118,7 +204,7 @@
                                 <div class="review-target-body">
                                     <div class="review-prod-img">
                                         <img
-                                            src="${pageContext.request.contextPath}/uploads/product/${dto.imageFilename}"
+                                            src="${pageContext.request.contextPath}/uploads/product/${dto.thumbNail}"
                                             onerror="this.src='${pageContext.request.contextPath}/dist/images/no-image.png'"
                                             alt="상품이미지">
                                     </div>
@@ -136,12 +222,14 @@
                                 <div class="review-action-bar">
                                     <div class="action-label">선택 &gt;</div>
                                     <div class="action-btn-group">
-                                        <a
-                                            href="${pageContext.request.contextPath}/product/detail?productNum=${dto.productNum}"
-                                            class="action-btn"> 상품상세 </a> <a href="#"
-                                            onclick="alert('리뷰 작성 폼을 연결해주세요.'); return false;"
-                                            class="action-btn write-btn"> 리뷰쓰기 </a> <a href="#"
-                                            class="action-btn"> 스타일올리기 </a>
+                                        <a href="${pageContext.request.contextPath}/product/detail?productNum=${dto.productNum}"
+                                            class="action-btn"> 상품상세 </a>
+                                            
+                                        <a href="#"
+                                           onclick="openReviewModal('${dto.orderNum}', '${dto.productNum}', '${dto.productName}', '${dto.thumbNail}'); return false;"
+                                           class="action-btn write-btn"> 리뷰쓰기 </a>
+                                           
+                                        <a href="#" class="action-btn"> 스타일올리기 </a>
                                     </div>
                                 </div>
                             </div>
@@ -156,7 +244,7 @@
 
             <div id="tab-written" class="review-tab-content">
                 <div class="PendingReviews__header">
-                    <div class="PendingReviews__order_dropdown">
+                     <div class="PendingReviews__order_dropdown">
                         <button type="button"
                             class="AppButton__button AppButton__button--style-plain"
                             onclick="toggleSortMenu(this)">
@@ -180,9 +268,7 @@
                         </div>
                     </div>
                 </div>
-
-                <div class="no-data-msg" style="padding: 60px 0;">작성한 리뷰 내역이
-                    없습니다.</div>
+                <div class="no-data-msg" style="padding: 60px 0;">작성한 리뷰 내역이 없습니다.</div>
             </div>
 
             <div class="notice-container">
@@ -194,13 +280,60 @@
                     <li>적립된 포인트는 작성일로부터 1년간 유효합니다.</li>
                     <li>배송 완료일 기준 90일 이내 작성 가능하며, 중복 작성은 불가합니다.</li>
                     <li>리뷰 등록 후에는 수정·삭제가 불가합니다.</li>
-                    <li>상품과 무관한 내용, 악의적 비방, 개인정보 노출 등은 사전 안내 없이 삭제되거나 등록이 제한될 수
-                        있고, 포인트는 지급되지 않거나 회수될 수 있습니다.</li>
+                    <li>상품과 무관한 내용, 악의적 비방, 개인정보 노출 등은 사전 안내 없이 삭제되거나 등록이 제한될 수 있고, 포인트는 지급되지 않거나 회수될 수 있습니다.</li>
                     <li>리뷰 정책은 당사 사정에 따라 변경되거나 종료될 수 있습니다.</li>
                 </ul>
             </div>
 
         </main>
+    </div>
+
+    <div id="reviewModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>리뷰 작성</h3>
+                <button type="button" class="close-btn" onclick="closeReviewModal()">×</button>
+            </div>
+            
+            <form name="reviewForm" action="${pageContext.request.contextPath}/member/mypage/review/write" method="post" enctype="multipart/form-data" onsubmit="return validateReviewForm();">
+                <input type="hidden" name="orderNum" id="modalOrderNum">
+                <input type="hidden" name="productNum" id="modalProductNum">
+                
+                <div class="modal-body">
+                    <div class="modal-product-info">
+                        <img id="modalImg" src="" alt="상품이미지">
+                        <span id="modalProdName" class="modal-prod-name"></span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>별점 선택</label>
+                        <select name="rating" class="form-select">
+                            <option value="5">★★★★★ (아주 좋아요)</option>
+                            <option value="4">★★★★☆ (맘에 들어요)</option>
+                            <option value="3">★★★☆☆ (보통이에요)</option>
+                            <option value="2">★★☆☆☆ (그저 그래요)</option>
+                            <option value="1">★☆☆☆☆ (별로예요)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>리뷰 내용</label>
+                        <textarea name="content" class="form-textarea" placeholder="최소 20자 이상 작성해 주세요. 자세한 후기는 다른 고객에게 큰 도움이 됩니다."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>사진 첨부 (선택)</label>
+                        <input type="file" name="selectFile" accept="image/*" class="form-file">
+                        <p class="point-guide">* 포토 리뷰 작성 시 3,000P 추가 지급!</p>
+                    </div>
+                </div>
+                
+                <div class="modal-footer">
+                    <button type="button" class="btn-cancel" onclick="closeReviewModal()">취소</button>
+                    <button type="submit" class="btn-submit">등록하기</button>
+                </div>
+            </form>
+        </div>
     </div>
 
     <jsp:include page="/WEB-INF/views/layout/footer.jsp" />
@@ -221,7 +354,7 @@
         }
     }
 
-    // 2. 드롭다운 메뉴 열기/닫기 (토글)
+    // 2. 드롭다운 메뉴 열기/닫기
     function toggleSortMenu(btn) {
         const dropdown = btn.closest('.PendingReviews__order_dropdown');
         const menu = dropdown.querySelector('.sm-salomon__dropdown-menu');
@@ -238,7 +371,7 @@
         dropdown.classList.toggle('open'); 
     }
 
-    // 3. 정렬 옵션 로직 (이전 코드 버그 수정됨)
+    // 3. 정렬 옵션 로직
     function selectSort(item, sortName, sortCodeParam) {
         const dropdown = item.closest('.PendingReviews__order_dropdown');
         const label = dropdown.querySelector('.AppDropdown__label');
@@ -248,9 +381,8 @@
         menu.classList.remove('active');
         dropdown.classList.remove('open');
         
-        let sortCode = sortCodeParam; // 파라미터가 있으면 우선 사용
+        let sortCode = sortCodeParam; 
 
-        // 파라미터가 없을 경우 (한글 이름으로 매핑)
         if (!sortCode) {
             if(sortName === '과거 구매순') sortCode = 'oldest';
             else if(sortName === '최근 구매순' || sortName === '최신순') sortCode = 'newest';
@@ -259,9 +391,6 @@
             else if(sortName === '평점 낮은순') sortCode = 'rating_low';
         }
 
-        console.log("선택된 정렬:", sortName, " -> 코드:", sortCode);
-        
-        // 페이지 이동 (새로고침)
         location.href = '${pageContext.request.contextPath}/member/mypage/review?sort=' + sortCode;
     }
 
@@ -275,7 +404,43 @@
             }
         });
     });
-</script>
+
+    // 5. 리뷰 모달 열기
+    function openReviewModal(orderNum, productNum, prodName, thumbNail) {
+        document.getElementById('modalOrderNum').value = orderNum;
+        document.getElementById('modalProductNum').value = productNum;
+        document.getElementById('modalProdName').innerText = prodName;
+        
+        // 이미지 경로 설정
+        var contextPath = "${pageContext.request.contextPath}";
+        var imgPath = contextPath + "/uploads/product/" + thumbNail;
+        
+        // 이미지가 없을 경우 기본 이미지 처리 (옵션)
+        if(!thumbNail || thumbNail === 'null') {
+            imgPath = contextPath + "/dist/images/no-image.png";
+        }
+        
+        document.getElementById('modalImg').src = imgPath;
+        document.getElementById('reviewModal').style.display = 'flex';
+    }
+
+    // 6. 리뷰 모달 닫기
+    function closeReviewModal() {
+        document.getElementById('reviewModal').style.display = 'none';
+        document.forms['reviewForm'].reset();
+    }
+
+    // 7. 리뷰 폼 유효성 검사
+    function validateReviewForm() {
+        const form = document.reviewForm;
+        if(form.content.value.trim().length < 20) {
+            alert("리뷰 내용은 최소 20자 이상 입력하셔야 합니다.");
+            form.content.focus();
+            return false;
+        }
+        return true;
+    }
+    </script>
 
 </body>
 </html>
