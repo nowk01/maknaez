@@ -8,6 +8,7 @@
     <title>리뷰 관리 | MAKNAEZ ADMIN</title>
     <jsp:include page="/WEB-INF/views/admin/layout/headerResources.jsp" />
     <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/admin_review.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
     <div id="wrapper">
@@ -44,7 +45,10 @@
                                         <span>${dto.writerName}</span>
                                         <span>${dto.regDate}</span>
                                     </div>
-                                    <div class="inquiry-subject">[${dto.productName}]</div>
+                                    <div class="inquiry-subject">
+                                        <c:if test="${dto.enabled == 0}"><i class="fa fa-eye-slash" style="color:red; margin-right:3px;"></i></c:if>
+                                        [${dto.productName}]
+                                    </div>
                                     <div class="star-row" style="color: #ff4e00; font-size: 11px; margin-top: 5px;">
                                         <c:forEach begin="1" end="${dto.starRating}">★</c:forEach>
                                     </div>
@@ -58,12 +62,25 @@
                             <i class="far fa-star" style="font-size: 50px; margin-bottom: 20px;"></i>
                             <p>상세 확인 할 리뷰를 선택해 주세요.</p>
                         </div>
+                        
                         <div class="d-none flex-column h-100" id="reviewView">
                             <div class="chat-header">
-                                <h5 id="reviewTitle">상품명</h5>
-                                <small id="reviewUser" class="text-muted">작성자 정보</small>
+                                <div class="header-info">
+                                    <h5 id="reviewTitle">상품명</h5>
+                                    <small id="reviewUser" class="text-muted">작성자 정보</small>
+                                </div>
+                                <div class="action-btn-group">
+                                    <button type="button" class="btn-action btn-blind" id="btnBlind" onclick="toggleBlind()">
+                                        <i class="far fa-eye-slash"></i> <span>숨김</span>
+                                    </button>
+                                    <button type="button" class="btn-action btn-delete" onclick="deleteReview()">
+                                        <i class="far fa-trash-alt"></i> 삭제
+                                    </button>
+                                </div>
                             </div>
+                            
                             <div class="chat-body" id="reviewBody"></div>
+                            
                             <div class="chat-footer">
                                 <div class="reply-input-wrap">
                                     <textarea id="replyContent" placeholder="이 리뷰에 답글을 남겨보세요..."></textarea>

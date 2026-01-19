@@ -3,13 +3,13 @@
 <mapper namespace="com.maknaez.mapper.ReviewMapper">
 
     <select id="dataCount" parameterType="long" resultType="int">
-		SELECT COUNT(*)
-		FROM reviews r
-		JOIN order_items oi ON r.item_id = oi.item_id
-		JOIN pd_size sz ON oi.opt_id = sz.opt_id
-		WHERE sz.prod_id = #{prodId}
-	</select>
-    
+        SELECT COUNT(*)
+        FROM reviews r
+        JOIN order_items oi ON r.item_id = oi.item_id
+        JOIN pd_size sz ON oi.opt_id = sz.opt_id
+        WHERE sz.prod_id = #{prodId}
+    </select>
+
     <select id="dataCountAdmin" parameterType="map" resultType="int">
         SELECT COUNT(*)
         FROM reviews r
@@ -26,35 +26,35 @@
         </where>
     </select>
 
-	<select id="selectReviewsByProdId" parameterType="map" resultType="com.maknaez.model.ReviewDTO">
-		SELECT * FROM (
-			SELECT ROWNUM rnum, tb.* FROM (
-				SELECT
-					r.item_id AS reviewId,
-					sz.prod_id AS prodId,
-					m.memberidx AS memberIdx,
-					r.content AS content,
-					r.rating AS starRating,
-					NVL(r.img_url, '') AS reviewImg,
-					TO_CHAR(r.reg_date, 'YYYY-MM-DD') AS regDate,
-					sz.pd_size AS optionValue,
-					CASE
-						WHEN m.nickname IS NULL THEN '익명'
-						WHEN LENGTH(m.nickname) &lt;= 1 THEN '*'
-						WHEN LENGTH(m.nickname) = 2 THEN SUBSTR(m.nickname, 1, 1) || '*'
-						ELSE SUBSTR(m.nickname, 1, 1) || LPAD('*', LENGTH(m.nickname) - 2, '*') || SUBSTR(m.nickname, -1, 1)
-					END AS writerName,
-					m.userid AS writerId
-				FROM reviews r
-				JOIN order_items oi ON r.item_id = oi.item_id
-				JOIN pd_size sz ON oi.opt_id = sz.opt_id
-				JOIN orders o ON oi.order_id = o.items_id
-				JOIN member1 m ON o.memberidx = m.memberidx
-				WHERE sz.prod_id = #{prodId}
-				ORDER BY r.reg_date DESC
-			) tb WHERE ROWNUM &lt;= #{end}
-		) WHERE rnum &gt;= #{start}
-	</select>
+    <select id="selectReviewsByProdId" parameterType="map" resultType="com.maknaez.model.ReviewDTO">
+        SELECT * FROM (
+            SELECT ROWNUM rnum, tb.* FROM (
+                SELECT
+                    r.item_id AS reviewId,
+                    sz.prod_id AS prodId,
+                    m.memberidx AS memberIdx,
+                    r.content AS content,
+                    r.rating AS starRating,
+                    NVL(r.img_url, '') AS reviewImg,
+                    TO_CHAR(r.reg_date, 'YYYY-MM-DD') AS regDate,
+                    sz.pd_size AS optionValue,
+                    CASE
+                        WHEN m.nickname IS NULL THEN '익명'
+                        WHEN LENGTH(m.nickname) &lt;= 1 THEN '*'
+                        WHEN LENGTH(m.nickname) = 2 THEN SUBSTR(m.nickname, 1, 1) || '*'
+                        ELSE SUBSTR(m.nickname, 1, 1) || LPAD('*', LENGTH(m.nickname) - 2, '*') || SUBSTR(m.nickname, -1, 1)
+                    END AS writerName,
+                    m.userid AS writerId
+                FROM reviews r
+                JOIN order_items oi ON r.item_id = oi.item_id
+                JOIN pd_size sz ON oi.opt_id = sz.opt_id
+                JOIN orders o ON oi.order_id = o.items_id
+                JOIN member1 m ON o.memberidx = m.memberidx
+                WHERE sz.prod_id = #{prodId}
+                ORDER BY r.reg_date DESC
+            ) tb WHERE ROWNUM &lt;= #{end}
+        ) WHERE rnum &gt;= #{start}
+    </select>
 
     <select id="listReviewAdmin" parameterType="map" resultType="com.maknaez.model.ReviewDTO">
         SELECT * FROM (
@@ -70,8 +70,9 @@
                     r.rating AS starRating,
                     NVL(r.img_url, '') AS reviewImg,
                     TO_CHAR(r.reg_date, 'YYYY-MM-DD HH24:MI') AS regDate,
-                    sz.pd_size AS optionValue
-                    FROM reviews r
+                    sz.pd_size AS optionValue,
+                    NVL(r.enabled, 1) AS enabled
+                FROM reviews r
                 JOIN order_items oi ON r.item_id = oi.item_id
                 JOIN pd_size sz ON oi.opt_id = sz.opt_id
                 JOIN products p ON sz.prod_id = p.prod_id
@@ -93,7 +94,7 @@
             ) tb WHERE ROWNUM &lt;= #{end}
         ) WHERE rnum &gt;= #{start}
     </select>
-    
+
     <select id="findById" parameterType="long" resultType="com.maknaez.model.ReviewDTO">
         SELECT
             r.item_id AS reviewId,
@@ -106,7 +107,8 @@
             r.rating AS starRating,
             NVL(r.img_url, '') AS reviewImg,
             TO_CHAR(r.reg_date, 'YYYY-MM-DD HH24:MI:SS') AS regDate,
-            sz.pd_size AS optionValue
+            sz.pd_size AS optionValue,
+            NVL(r.enabled, 1) AS enabled
         FROM reviews r
         JOIN order_items oi ON r.item_id = oi.item_id
         JOIN pd_size sz ON oi.opt_id = sz.opt_id
@@ -120,19 +122,19 @@
         INSERT INTO reviews (
             item_id, rating, content, img_url, reg_date
         ) VALUES (
-            (SELECT item_id FROM order_items WHERE order_id = #{orderNum} AND ROWNUM = 1), 
+            (SELECT item_id FROM order_items WHERE order_id = #{orderNum} AND ROWNUM = 1),
             #{starRating}, #{content}, #{reviewImg, jdbcType=VARCHAR}, SYSDATE
         )
     </insert>
-    
+
     <update id="updateReviewStatus" parameterType="map">
-        SELECT 1 FROM DUAL -- 더미 쿼리 (컬럼 추가 후 위 주석 해제 및 이 라인 삭제)
+        UPDATE reviews SET enabled = #{enabled} WHERE item_id = #{reviewId}
     </update>
 
     <delete id="deleteReview" parameterType="long">
         DELETE FROM reviews WHERE item_id = #{reviewId}
     </delete>
-    
+
     <select id="findByOrderNum" parameterType="String" resultType="Integer">
         SELECT COUNT(*)
         FROM reviews r
@@ -171,15 +173,5 @@
             ) tb WHERE ROWNUM &lt;= #{end}
         ) WHERE rnum &gt;= #{start}
     </select>
-    
-    <select id="selectProductReviewStats" parameterType="long" resultType="map">
-		SELECT 
-			NVL(ROUND(AVG(r.rating), 1), 0) AS avgRating,
-			COUNT(r.item_id) AS totalCount
-		FROM reviews r
-		JOIN order_items oi ON r.item_id = oi.item_id
-		JOIN pd_size sz ON oi.opt_id = sz.opt_id
-		WHERE sz.prod_id = #{prodId}
-	</select>
 
 </mapper>

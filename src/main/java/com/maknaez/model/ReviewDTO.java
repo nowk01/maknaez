@@ -56,4 +56,8 @@ public class ReviewDTO {
 
     public String getThumbNail() { return thumbNail; }
     public void setThumbNail(String thumbNail) { this.thumbNail = thumbNail; }
+    
+    private int enabled;
+    public int getEnabled() { return enabled; }
+    public void setEnabled(int enabled) { this.enabled = enabled; }
 }

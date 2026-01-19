@@ -68,7 +68,7 @@ public class CsManageController {
 			map.put("size", 1000); // 관리자용이므로 넉넉하게 설정
 
 			map.put("userId", "");
-			
+
 			List<BoardDTO> list = service.listBoard(map);
 
 			mav.addObject("list", list);
@@ -217,106 +217,106 @@ public class CsManageController {
 
 	@GetMapping("notice_write")
 	public ModelAndView noticeWriteForm(HttpServletRequest req, HttpServletResponse resp) {
-	    return new ModelAndView("admin/cs/notice_write");
+		return new ModelAndView("admin/cs/notice_write");
 	}
 
 	@PostMapping("notice_write")
 	public ModelAndView noticeWriteSubmit(HttpServletRequest req, HttpServletResponse resp)
-	        throws ServletException, IOException {
-	    HttpSession session = req.getSession();
-	    SessionInfo info = (SessionInfo) session.getAttribute("member");
+			throws ServletException, IOException {
+		HttpSession session = req.getSession();
+		SessionInfo info = (SessionInfo) session.getAttribute("member");
 
-	    // 1. 세션 체크 (관리자 확인)
-	    if (info == null) {
-	        return new ModelAndView("redirect:/admin/login");
-	    }
+		// 1. 세션 체크 (관리자 확인)
+		if (info == null) {
+			return new ModelAndView("redirect:/admin/login");
+		}
 
-	    // 2. 경로 설정 (서버 내 uploads/notice 폴더)
-	    String root = session.getServletContext().getRealPath("/");
-	    String pathname = root + "uploads" + File.separator + "notice";
-	    
-	    try {
-	        File f = new File(pathname);
-	        if (!f.exists()) {
-	            f.mkdirs(); // 폴더 생성 시도
-	        }
+		// 2. 경로 설정 (서버 내 uploads/notice 폴더)
+		String root = session.getServletContext().getRealPath("/");
+		String pathname = root + "uploads" + File.separator + "notice";
 
-	        BoardDTO dto = new BoardDTO();
-	        dto.setUserName(info.getUserName());
-	        dto.setSubject(req.getParameter("subject"));
-	        dto.setContent(req.getParameter("content"));
-	        dto.setIsNotice(req.getParameter("isNotice") != null ? 1 : 0);
-	        dto.setIsShow(req.getParameter("isShow") != null ? 1 : 0);
+		try {
+			File f = new File(pathname);
+			if (!f.exists()) {
+				f.mkdirs(); // 폴더 생성 시도
+			}
 
-	        // 3. 파일 업로드 처리 (파일이 없거나 에러나도 중단되지 않음)
-	        try {
-	            Part p = req.getPart("selectFile");
-	            if (p != null && p.getSize() > 0) {
-	                MyMultipartFile mp = fileManager.doFileUpload(p, pathname);
-	                if (mp != null) {
-	                    dto.setSaveFilename(mp.getSaveFilename());
-	                    dto.setOriginalFilename(mp.getOriginalFilename());
-	                }
-	            }
-	        } catch (Exception fe) {
-	            System.out.println("파일 업로드 중 오류 발생 (무시하고 진행): " + fe.getMessage());
-	        }
+			BoardDTO dto = new BoardDTO();
+			dto.setUserName(info.getUserName());
+			dto.setSubject(req.getParameter("subject"));
+			dto.setContent(req.getParameter("content"));
+			dto.setIsNotice(req.getParameter("isNotice") != null ? 1 : 0);
+			dto.setIsShow(req.getParameter("isShow") != null ? 1 : 0);
 
-	        // 4. DB 저장 실행
-	        service.insertNotice(dto);
-	        
-	    } catch (Exception e) {
-	        System.out.println("공지사항 등록에 오류가 발생하였습니다.");
-	        e.printStackTrace();
-	    }
+			// 3. 파일 업로드 처리 (파일이 없거나 에러나도 중단되지 않음)
+			try {
+				Part p = req.getPart("selectFile");
+				if (p != null && p.getSize() > 0) {
+					MyMultipartFile mp = fileManager.doFileUpload(p, pathname);
+					if (mp != null) {
+						dto.setSaveFilename(mp.getSaveFilename());
+						dto.setOriginalFilename(mp.getOriginalFilename());
+					}
+				}
+			} catch (Exception fe) {
+				System.out.println("파일 업로드 중 오류 발생 (무시하고 진행): " + fe.getMessage());
+			}
 
-	    return new ModelAndView("redirect:/admin/cs/notice_list");
+			// 4. DB 저장 실행
+			service.insertNotice(dto);
+
+		} catch (Exception e) {
+			System.out.println("공지사항 등록에 오류가 발생하였습니다.");
+			e.printStackTrace();
+		}
+
+		return new ModelAndView("redirect:/admin/cs/notice_list");
 	}
-	
+
 	// 공지사항 상세 보기
-    @GetMapping("notice_article")
-    public ModelAndView noticeArticle(HttpServletRequest req, HttpServletResponse resp) {
-        String numStr = req.getParameter("num");
-        HttpSession session = req.getSession();
-        
-        if (numStr == null || numStr.isEmpty()) {
-            return new ModelAndView("redirect:/admin/cs/notice_list");
-        }
+	@GetMapping("notice_article")
+	public ModelAndView noticeArticle(HttpServletRequest req, HttpServletResponse resp) {
+		String numStr = req.getParameter("num");
+		HttpSession session = req.getSession();
 
-        try {
-            long num = Long.parseLong(numStr);
-            
-            @SuppressWarnings("unchecked")
-            List<Long> readList = (List<Long>) session.getAttribute("readNoticeList");
-            if (readList == null) {
-                readList = new ArrayList<>();
-            }
+		if (numStr == null || numStr.isEmpty()) {
+			return new ModelAndView("redirect:/admin/cs/notice_list");
+		}
 
-            // 2. 리스트에 현재 게시물 번호가 없으면 조회수 증가시키고 리스트에 추가
-            if (!readList.contains(num)) {
-                readList.add(num);
-                session.setAttribute("readNoticeList", readList);
-            }
+		try {
+			long num = Long.parseLong(numStr);
 
-            BoardDTO dto = service.findByIdNotice(num);
+			@SuppressWarnings("unchecked")
+			List<Long> readList = (List<Long>) session.getAttribute("readNoticeList");
+			if (readList == null) {
+				readList = new ArrayList<>();
+			}
 
-            if (dto == null) {
-                return new ModelAndView("redirect:/admin/cs/notice_list");
-            }
+			// 2. 리스트에 현재 게시물 번호가 없으면 조회수 증가시키고 리스트에 추가
+			if (!readList.contains(num)) {
+				readList.add(num);
+				session.setAttribute("readNoticeList", readList);
+			}
 
-            ModelAndView mav = new ModelAndView("admin/cs/notice_article");
-            mav.addObject("dto", dto);
-            
-            mav.addObject("query", req.getQueryString());
+			BoardDTO dto = service.findByIdNotice(num);
 
-            return mav;
+			if (dto == null) {
+				return new ModelAndView("redirect:/admin/cs/notice_list");
+			}
 
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ModelAndView("redirect:/admin/cs/notice_list");
-        }
-    }
-    
+			ModelAndView mav = new ModelAndView("admin/cs/notice_article");
+			mav.addObject("dto", dto);
+
+			mav.addObject("query", req.getQueryString());
+
+			return mav;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ModelAndView("redirect:/admin/cs/notice_list");
+		}
+	}
+
 	// 공지사항 삭제
 	@GetMapping("notice_delete")
 	public ModelAndView noticeDelete(HttpServletRequest req, HttpServletResponse resp) {
@@ -344,16 +344,19 @@ public class CsManageController {
 			String sort = req.getParameter("sort"); // latest(기본), score
 			String keyword = req.getParameter("keyword");
 			int score = 0;
-            
-            // 별점 필터링 (파라미터가 1~5인 경우)
-            if (req.getParameter("score") != null && !req.getParameter("score").equals("0")) {
-                try {
-                    score = Integer.parseInt(req.getParameter("score"));
-                } catch (NumberFormatException e) { }
-            }
 
-			if (sort == null) sort = "latest";
-			if (keyword == null) keyword = "";
+			// 별점 필터링 (파라미터가 1~5인 경우)
+			if (req.getParameter("score") != null && !req.getParameter("score").equals("0")) {
+				try {
+					score = Integer.parseInt(req.getParameter("score"));
+				} catch (NumberFormatException e) {
+				}
+			}
+
+			if (sort == null)
+				sort = "latest";
+			if (keyword == null)
+				keyword = "";
 
 			if (req.getMethod().equalsIgnoreCase("GET") && !keyword.isEmpty()) {
 				keyword = URLDecoder.decode(keyword, "utf-8");
@@ -367,10 +370,12 @@ public class CsManageController {
 			int dataCount = reviewService.dataCountAdmin(map);
 			int size = 10;
 			int total_page = dataCount / size + (dataCount % size > 0 ? 1 : 0);
-			if (current_page > total_page) current_page = total_page;
+			if (current_page > total_page)
+				current_page = total_page;
 
 			int offset = (current_page - 1) * size;
-			if (offset < 0) offset = 0;
+			if (offset < 0)
+				offset = 0;
 
 			map.put("start", offset + 1);
 			map.put("end", offset + size);
@@ -391,93 +396,133 @@ public class CsManageController {
 		return mav;
 	}
 
-	// [수정] 리뷰 상세 데이터 가져오기 (AJAX)
 	@ResponseBody
 	@GetMapping("review_detail")
 	public void reviewDetail(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		resp.setContentType("application/json; charset=utf-8");
 		JSONObject jobj = new JSONObject();
-		
-		try {
-            // 권한 체크
-            HttpSession session = req.getSession();
-            SessionInfo info = (SessionInfo) session.getAttribute("member");
-            if (info == null || info.getUserLevel() < 51) {
-                jobj.put("status", "permission_denied");
-                resp.getWriter().print(jobj.toString());
-                return;
-            }
 
+		try {
+			HttpSession session = req.getSession();
+			SessionInfo info = (SessionInfo) session.getAttribute("member");
+			if (info == null || info.getUserLevel() < 51) {
+				jobj.put("status", "permission_denied");
+				resp.getWriter().print(jobj.toString());
+				return;
+			}
+
+			// JS에서 보낸 파라미터 이름인 reviewId로 받기
 			long reviewId = Long.parseLong(req.getParameter("reviewId"));
+
+			// Service 호출
 			ReviewDTO dto = reviewService.findById(reviewId);
 
 			if (dto != null) {
 				jobj.put("status", "success");
 				jobj.put("reviewId", dto.getReviewId());
 				jobj.put("productName", dto.getProductName());
-				jobj.put("userName", dto.getWriterName()); // 작성자명
+				jobj.put("userName", dto.getWriterName());
 				jobj.put("userId", dto.getWriterId());
 				jobj.put("score", dto.getStarRating());
 				jobj.put("content", dto.getContent());
 				jobj.put("reg_date", dto.getRegDate());
 				jobj.put("reviewImg", dto.getReviewImg() != null ? dto.getReviewImg() : "");
-                jobj.put("optionValue", dto.getOptionValue());
+				jobj.put("optionValue", dto.getOptionValue());
+
+				// [중요] 답글 내용도 JSON에 담아 보내야 화면에 뜸
+				// ReviewDTO에 해당 필드가 없다면 DTO에 먼저 추가해야 함
+				// jobj.put("replyContent", dto.getReplyContent());
+				// jobj.put("replyDate", dto.getReplyDate());
 			} else {
 				jobj.put("status", "fail");
 			}
 		} catch (Exception e) {
-            e.printStackTrace();
+			e.printStackTrace();
 			jobj.put("status", "error");
 		}
 		resp.getWriter().print(jobj.toString());
 	}
-    
-    // [추가] 리뷰 삭제 (AJAX or Redirect)
-    @GetMapping("review_delete")
-    public ModelAndView reviewDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        try {
-            HttpSession session = req.getSession();
-            SessionInfo info = (SessionInfo) session.getAttribute("member");
-            
-            if (info == null || info.getUserLevel() < 51) {
-                return new ModelAndView("redirect:/admin/login");
-            }
-            
-            long reviewId = Long.parseLong(req.getParameter("reviewId"));
-            reviewService.deleteReview(reviewId);
-            
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return new ModelAndView("redirect:/admin/cs/review_list");
-    }
-    
-    // [추가] 리뷰 상태 변경 (AJAX) - 예: 블라인드 처리
-    @ResponseBody
-    @PostMapping("review_status")
-    public void reviewStatus(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        resp.setContentType("application/json; charset=utf-8");
-        JSONObject jobj = new JSONObject();
-        
-        try {
-            HttpSession session = req.getSession();
-            SessionInfo info = (SessionInfo) session.getAttribute("member");
-            if (info == null || info.getUserLevel() < 51) {
-                jobj.put("status", "permission_denied");
-                resp.getWriter().print(jobj.toString());
-                return;
-            }
 
-            long reviewId = Long.parseLong(req.getParameter("reviewId"));
-            String status = req.getParameter("status"); // blind, normal 등
-            
-            reviewService.updateReviewStatus(reviewId, status);
-            
-            jobj.put("status", "success");
-        } catch (Exception e) {
-            e.printStackTrace();
-            jobj.put("status", "error");
-        }
-        resp.getWriter().print(jobj.toString());
-    }
+	// [신규 추가] 리뷰 답글 등록 (AJAX)
+	@ResponseBody
+	@PostMapping("review_reply")
+	public void reviewReply(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+		resp.setContentType("application/json; charset=utf-8");
+		JSONObject jobj = new JSONObject();
+
+		try {
+			HttpSession session = req.getSession();
+			SessionInfo info = (SessionInfo) session.getAttribute("member");
+
+			if (info == null || info.getUserLevel() < 51) {
+				jobj.put("status", "permission_denied");
+				resp.getWriter().print(jobj.toString());
+				return;
+			}
+
+			long reviewId = Long.parseLong(req.getParameter("reviewId"));
+			String replyContent = req.getParameter("replyContent");
+
+			// Service에 답글 업데이트 메서드가 필요함
+			// 예: reviewService.updateReply(reviewId, replyContent);
+
+			// 임시 성공 처리 (Service 구현 후 주석 해제하세요)
+			jobj.put("status", "success");
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			jobj.put("status", "error");
+		}
+		resp.getWriter().print(jobj.toString());
+	}
+
+	// [추가] 리뷰 삭제 (AJAX or Redirect)
+	@GetMapping("review_delete")
+	public ModelAndView reviewDelete(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException {
+		try {
+			HttpSession session = req.getSession();
+			SessionInfo info = (SessionInfo) session.getAttribute("member");
+
+			if (info == null || info.getUserLevel() < 51) {
+				return new ModelAndView("redirect:/admin/login");
+			}
+
+			long reviewId = Long.parseLong(req.getParameter("reviewId"));
+			reviewService.deleteReview(reviewId);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return new ModelAndView("redirect:/admin/cs/review_list");
+	}
+
+	// [추가] 리뷰 상태 변경 (AJAX) - 예: 블라인드 처리
+	@ResponseBody
+	@PostMapping("review_status")
+	public void reviewStatus(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+		resp.setContentType("application/json; charset=utf-8");
+		JSONObject jobj = new JSONObject();
+
+		try {
+			HttpSession session = req.getSession();
+			SessionInfo info = (SessionInfo) session.getAttribute("member");
+			if (info == null || info.getUserLevel() < 51) {
+				jobj.put("status", "permission_denied");
+				resp.getWriter().print(jobj.toString());
+				return;
+			}
+
+			long reviewId = Long.parseLong(req.getParameter("reviewId"));
+			String status = req.getParameter("status"); // blind, normal 등
+
+			reviewService.updateReviewStatus(reviewId, status);
+
+			jobj.put("status", "success");
+		} catch (Exception e) {
+			e.printStackTrace();
+			jobj.put("status", "error");
+		}
+		resp.getWriter().print(jobj.toString());
+	}
 }
