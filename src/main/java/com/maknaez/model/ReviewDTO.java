@@ -12,6 +12,9 @@ public class ReviewDTO {
     private String writerId;
     private String writerName;
     private String orderNum;
+    
+    private String productName;
+    private String thumbNail;
 
     public ReviewDTO() {}
 
@@ -47,4 +50,10 @@ public class ReviewDTO {
     
     public String getOrderNum() { return orderNum; }
     public void setOrderNum(String orderNum) { this.orderNum = orderNum; }
+
+    public String getProductName() { return productName; }
+    public void setProductName(String productName) { this.productName = productName; }
+
+    public String getThumbNail() { return thumbNail; }
+    public void setThumbNail(String thumbNail) { this.thumbNail = thumbNail; }
 }

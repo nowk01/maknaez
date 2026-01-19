@@ -7,9 +7,12 @@ import com.maknaez.model.ReviewDTO;
 
 public interface ReviewMapper {
 	
-	int dataCount(long prodId);// 전체 리뷰 수
-	List<ReviewDTO> selectReviewsByProdId(Map<String, Object> map); // 페이징용
+	int dataCount(long prodId); // 상품별 리뷰 수
+	List<ReviewDTO> selectReviewsByProdId(Map<String, Object> map); // 상품별 리뷰 목록
 	
 	void insertReview(ReviewDTO dto) throws Exception;
-    int findByOrderNum(String orderNum);
+	int findByOrderNum(String orderNum);
+	
+	int countMyReviews(long memberIdx);
+	List<ReviewDTO> selectMyReviews(Map<String, Object> map);
 }

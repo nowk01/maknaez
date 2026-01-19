@@ -63,4 +63,16 @@ public class ReviewServiceImpl implements ReviewService {
 		}
 	}
 	
+    @Override
+    public int dataCountMyReviews(long memberIdx) {
+        return mapper.countMyReviews(memberIdx);
+    }
+    
+    @Override
+    public List<ReviewDTO> listMyReviews(Map<String, Object> map) {
+        return mapper.selectMyReviews(map);
+    }
+	
+	
+	
 }

@@ -2,68 +2,92 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.maknaez.mapper.ReviewMapper">
 
-	<select id="dataCount" parameterType="long" resultType="int">
-		SELECT COUNT(*)
-		FROM reviews r
-		JOIN order_items oi ON r.item_id = oi.item_id
-		JOIN pd_size sz ON oi.opt_id = sz.opt_id
-		JOIN products ps ON sz.prod_id = ps.prod_id
-		WHERE ps.prod_id = #{prodId}
-	</select>
+    <select id="dataCount" parameterType="long" resultType="int">
+        SELECT COUNT(*)
+        FROM reviews r
+        JOIN order_items oi ON r.item_id = oi.item_id
+        JOIN pd_size sz ON oi.opt_id = sz.opt_id
+        JOIN products ps ON sz.prod_id = ps.prod_id
+        WHERE ps.prod_id = #{prodId}
+    </select>
 
-	<select id="selectReviewsByProdId" parameterType="map" resultType="com.maknaez.model.ReviewDTO">
-		SELECT * FROM (
-			SELECT ROWNUM rnum, tb.* FROM (
-				SELECT
-					r.item_id AS reviewId,
-					ps.prod_id AS prodId,
-					m.memberidx AS memberIdx,
-					r.content AS content,
-					r.rating AS starRating,
-					NVL(r.img_url, '') AS reviewImg,
-					TO_CHAR(r.reg_date, 'YYYY-MM-DD') AS regDate,
-					CASE WHEN MOD(r.item_id, 2) = 0 THEN '260mm' ELSE '270mm' END AS optionValue,
-					CASE
-						WHEN m.nickname IS NULL THEN '익명'
-						WHEN LENGTH(m.nickname) &lt;= 1 THEN '*'
-						WHEN LENGTH(m.nickname) = 2 THEN SUBSTR(m.nickname, 1, 1) || '*'
-						ELSE SUBSTR(m.nickname, 1, 1) || LPAD('*', LENGTH(m.nickname) - 2, '*') || SUBSTR(m.nickname, -1, 1)
-					END AS writerName,
-					m.userid AS writerId
-				FROM reviews r
-				JOIN order_items oi ON r.item_id = oi.item_id
-				JOIN pd_size sz ON oi.opt_id = sz.opt_id
-				JOIN products ps ON sz.prod_id = ps.prod_id
-				JOIN orders o ON oi.order_id = o.items_id
-				JOIN member1 m ON o.memberidx = m.memberidx
-				WHERE ps.prod_id = #{prodId}
-				ORDER BY r.reg_date DESC
-			) tb WHERE ROWNUM &lt;= #{end}
-		) WHERE rnum &gt;= #{start}
-	</select>
+    <select id="selectReviewsByProdId" parameterType="map" resultType="com.maknaez.model.ReviewDTO">
+        SELECT * FROM (
+            SELECT ROWNUM rnum, tb.* FROM (
+                SELECT
+                    r.item_id AS reviewId,
+                    ps.prod_id AS prodId,
+                    m.memberidx AS memberIdx,
+                    r.content AS content,
+                    r.rating AS starRating,
+                    NVL(r.img_url, '') AS reviewImg,
+                    TO_CHAR(r.reg_date, 'YYYY-MM-DD') AS regDate,
+                    CASE WHEN MOD(r.item_id, 2) = 0 THEN '260mm' ELSE '270mm' END AS optionValue,
+                    CASE
+                        WHEN m.nickname IS NULL THEN '익명'
+                        WHEN LENGTH(m.nickname) &lt;= 1 THEN '*'
+                        WHEN LENGTH(m.nickname) = 2 THEN SUBSTR(m.nickname, 1, 1) || '*'
+                        ELSE SUBSTR(m.nickname, 1, 1) || LPAD('*', LENGTH(m.nickname) - 2, '*') || SUBSTR(m.nickname, -1, 1)
+                    END AS writerName,
+                    m.userid AS writerId
+                FROM reviews r
+                JOIN order_items oi ON r.item_id = oi.item_id
+                JOIN pd_size sz ON oi.opt_id = sz.opt_id
+                JOIN products ps ON sz.prod_id = ps.prod_id
+                JOIN orders o ON oi.order_id = o.items_id
+                JOIN member1 m ON o.memberidx = m.memberidx
+                WHERE ps.prod_id = #{prodId}
+                ORDER BY r.reg_date DESC
+            ) tb WHERE ROWNUM &lt;= #{end}
+        ) WHERE rnum &gt;= #{start}
+    </select>
 
-	<insert id="insertReview" parameterType="com.maknaez.model.ReviewDTO">
-		INSERT INTO reviews (
-			order_id, item_id, rating, content, img_url, reg_date
-		) VALUES (
-			#{orderNum}, #{prodId}, #{starRating}, #{content}, #{reviewImg, jdbcType=VARCHAR}, SYSDATE
-		)
-	</insert>
+    <insert id="insertReview" parameterType="com.maknaez.model.ReviewDTO">
+        INSERT INTO reviews (
+            item_id, rating, content, img_url, reg_date
+        ) VALUES (
+            -- REVIEWS 테이블 PK가 ITEM_ID(ORDER_ITEMS의 PK)이므로 이를 맞춰야 함
+            (SELECT item_id FROM order_items WHERE order_id = #{orderNum} AND ROWNUM = 1), 
+            #{starRating}, #{content}, #{reviewImg, jdbcType=VARCHAR}, SYSDATE
+        )
+    </insert>
+    <select id="findByOrderNum" parameterType="String" resultType="Integer">
+        SELECT COUNT(*)
+        FROM reviews r
+        JOIN order_items oi ON r.item_id = oi.item_id
+        WHERE oi.order_id = #{orderNum}
+    </select>
 
-	<select id="findByOrderNum" parameterType="String" resultType="Integer">
-		SELECT COUNT(*)
-		FROM reviews
-		WHERE order_id = #{orderNum}
-	</select>
-	
-	<!-- 리뷰 별점 조회 -->
-	<select id="getReviewAvgRating" parameterType="long" resultType="double">
-		SELECT NVL(ROUND(AVG(r.rating), 1), 0.0)
-		FROM reviews r
-		JOIN order_items oi ON r.item_id = oi.item_id
-		JOIN pd_size sz ON oi.opt_id = sz.opt_id
-		JOIN products ps ON sz.prod_id = ps.prod_id
-		WHERE ps.prod_id = #{prodId}
-	</select>
-	
+    <select id="countMyReviews" parameterType="long" resultType="int">
+        SELECT COUNT(*)
+        FROM reviews r
+        JOIN order_items oi ON r.item_id = oi.item_id
+        JOIN orders o ON oi.order_id = o.items_id
+        WHERE o.memberidx = #{memberIdx}
+    </select>
+
+    <select id="selectMyReviews" parameterType="map" resultType="com.maknaez.model.ReviewDTO">
+        SELECT * FROM (
+            SELECT ROWNUM rnum, tb.* FROM (
+                SELECT
+                    r.item_id AS reviewId,
+                    ps.prod_id AS prodId,
+                    o.items_id AS orderNum,
+                    r.content AS content,
+                    r.rating AS starRating,
+                    NVL(r.img_url, '') AS reviewImg,
+                    TO_CHAR(r.reg_date, 'YYYY-MM-DD') AS regDate,
+                    ps.prod_name AS productName,
+                    ps.thumb_nail AS thumbNail
+                FROM reviews r
+                JOIN order_items oi ON r.item_id = oi.item_id
+                JOIN pd_size sz ON oi.opt_id = sz.opt_id
+                JOIN products ps ON sz.prod_id = ps.prod_id
+                JOIN orders o ON oi.order_id = o.items_id
+                WHERE o.memberidx = #{memberIdx}
+                ORDER BY r.reg_date DESC
+            ) tb WHERE ROWNUM &lt;= #{end}
+        ) WHERE rnum &gt;= #{start}
+    </select>
+
 </mapper>

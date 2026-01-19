@@ -1,14 +1,14 @@
 package com.maknaez.service;
 
 import java.util.List;
+import java.util.Map;
 import com.maknaez.model.ReviewDTO;
 
 public interface ReviewService {
-    int dataCount(long prodId); // 제품 리뷰 검색
-
-    List<ReviewDTO> listReviews(long prodId, int start, int end);
-    
-    void insertReview(ReviewDTO dto, String pathname) throws Exception;
-    
-   
+	public int dataCount(long prodId);
+	public List<ReviewDTO> listReviews(long prodId, int start, int end);
+	public void insertReview(ReviewDTO dto, String pathname) throws Exception;
+	
+	public int dataCountMyReviews(long memberIdx);
+	public List<ReviewDTO> listMyReviews(Map<String, Object> map);
 }

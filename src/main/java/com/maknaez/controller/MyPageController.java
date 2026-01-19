@@ -11,6 +11,7 @@ import com.maknaez.model.MemberDTO;
 import com.maknaez.model.OrderDTO;
 import com.maknaez.model.PointDTO;
 import com.maknaez.model.ProductDTO;
+import com.maknaez.model.ReviewDTO;
 import com.maknaez.model.SessionInfo;
 import com.maknaez.model.WishlistDTO;
 import com.maknaez.mvc.annotation.Controller;
@@ -183,34 +184,48 @@ public class MyPageController {
 		return mav;
 	}
 
-	// 4. 리뷰 작성 가능 목록
-	@GetMapping("review")
-	public ModelAndView review(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		ModelAndView mav = new ModelAndView("mypage/review");
-		HttpSession session = req.getSession();
-		SessionInfo info = (SessionInfo) session.getAttribute("member");
-		if (info == null)
-			return new ModelAndView("redirect:/member/login");
+	// 4. 리뷰 작성 가능 목록 및 작성한 리뷰 목록
+		@GetMapping("review")
+		public ModelAndView review(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+			ModelAndView mav = new ModelAndView("mypage/review");
+			HttpSession session = req.getSession();
+			SessionInfo info = (SessionInfo) session.getAttribute("member");
+			if (info == null)
+				return new ModelAndView("redirect:/member/login");
 
-		OrderMapper mapper = MapperContainer.get(OrderMapper.class);
+			OrderMapper mapper = MapperContainer.get(OrderMapper.class);
 
-		try {
-			Map<String, Object> map = new HashMap<>();
-			map.put("memberIdx", info.getMemberIdx());
-			map.put("orderState", "배송완료");
-			map.put("start", 1);
-			map.put("end", 100);
+			try {
+				// 1. 작성 가능한 리뷰 목록 (기존 로직)
+				Map<String, Object> map = new HashMap<>();
+				map.put("memberIdx", info.getMemberIdx());
+				map.put("orderState", "배송완료");
+				map.put("start", 1);
+				map.put("end", 100);
 
-			List<OrderDTO> list = mapper.listOrder(map);
-			int dataCount = mapper.dataCount(map);
+				List<OrderDTO> list = mapper.listOrder(map);
+				int dataCount = mapper.dataCount(map);
 
-			mav.addObject("list", list);
-			mav.addObject("dataCount", dataCount);
-		} catch (Exception e) {
-			e.printStackTrace();
+				mav.addObject("list", list);
+				mav.addObject("dataCount", dataCount);
+				
+				// 2. [추가] 작성한 리뷰 목록
+				Map<String, Object> map2 = new HashMap<>();
+				map2.put("memberIdx", info.getMemberIdx());
+				map2.put("start", 1);
+				map2.put("end", 100); // 필요 시 페이징 로직 추가
+				
+				int writtenDataCount = reviewService.dataCountMyReviews(info.getMemberIdx());
+				List<ReviewDTO> writtenList = reviewService.listMyReviews(map2);
+				
+				mav.addObject("writtenList", writtenList);
+				mav.addObject("writtenDataCount", writtenDataCount);
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return mav;
 		}
-		return mav;
-	}
 
 	@GetMapping("wishList")
 	public ModelAndView wishList(HttpServletRequest req, HttpServletResponse resp) {
