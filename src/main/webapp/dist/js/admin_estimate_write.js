@@ -1,11 +1,5 @@
-// 견적서 출력 함수
-function printEstimate() {
-    window.print();
-}
-
 // 리스트로 돌아가기
 function goBackList() {
-    // 이전 페이지 히스토리가 있으면 뒤로가기, 없으면 리스트로 직접 이동
     if (document.referrer.indexOf('/admin/order/estimate_list') !== -1) {
         history.back();
     } else {
@@ -13,7 +7,27 @@ function goBackList() {
     }
 }
 
-// 혹시 모를 로딩 시 추가 로직 필요할 경우
+function downloadEstimate() {
+    const orderNum = currentOrderNum; 
+    
+    if(!orderNum || orderNum === "" || orderNum.includes("${")) {
+        alert("주문 번호를 불러오지 못했습니다.");
+        return;
+    }
+
+    const safeOrderNum = encodeURIComponent(orderNum);
+    const downloadUrl = contextPath + "/admin/order/estimate_download?orderNum=" + safeOrderNum;
+
+    const iframe = document.createElement("iframe");
+    iframe.style.display = "none";
+    iframe.src = downloadUrl;
+    document.body.appendChild(iframe);
+    
+    setTimeout(function() {
+        document.body.removeChild(iframe);
+    }, 1000);
+}
+
 document.addEventListener("DOMContentLoaded", function() {
     console.log("Estimate Write Page Loaded.");
 });
