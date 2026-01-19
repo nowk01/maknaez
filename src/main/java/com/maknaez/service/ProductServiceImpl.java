@@ -467,7 +467,7 @@ public class ProductServiceImpl implements ProductService {
 	
 	public void updateStock(long[] prodIds, long[] optIds, int qty, String reason) throws Exception {
 	    try {
-	        for (int i=0; i<optIds.length; i++) {
+	        for (int i=0; i<optIds.length; i++) {	        	
 	            // 1. 현재 재고 조회
 	            Integer currentStock = mapper.getLastStock(optIds[i]);
 	            if (currentStock == null) currentStock = 0;
@@ -485,6 +485,11 @@ public class ProductServiceImpl implements ProductService {
 	            map.put("reason", reason);
 
 	            mapper.insertStockUpdateLog(map); // <-- 이걸 호출합니다
+	            
+
+                if (currentStock <= 0 && finalStock > 0 && qty > 0) {
+                    sendRestockNotification(prodIds[i], optIds[i]);
+                }          
 	        }
 	    } catch (Exception e) {
 	        e.printStackTrace();
@@ -492,60 +497,67 @@ public class ProductServiceImpl implements ProductService {
 	    }
 	}
 	
-	
-	// [추가 구현] 재고 입고 알림 메일 발송
-    @Override
-    public void sendRestockAlarm(long optId) throws Exception {
-        try {
-            // 1. 옵션 ID로 상품명과 사이즈 정보 조회
-            ProductDTO productInfo = mapper.getOptionInfoForAlarm(optId);
-            if (productInfo == null) return;
+	public void sendRestockNotification(long prodId, long optId) {
+		try {
+			// 1. 상품 및 사이즈 정보 조회 (요청하신 메서드 사용)
+			ProductDTO pDto = mapper.getOptionInfoForAlarm(optId);
+			if (pDto == null) {
+				return;
+			}
+			
+			String prodName = pDto.getProdName();
+			// DTO에 prodSize 필드가 있어야 합니다. (없다면 DTO 수정 필요)
+			String sizeName = pDto.getProdSize(); 
 
-            long prodId = productInfo.getProdId();
-            String prodName = productInfo.getProdName();
-            String sizeName = productInfo.getProdSize();
+			// 2. 대상자 이메일 조회 (위시리스트 기준)
+			List<String> emailList = mapper.listWishListUserEmails(prodId);
+			
+			if (emailList == null || emailList.isEmpty()) {
+				return;
+			}
 
-            // 2. 해당 상품(prodId)을 위시리스트에 담은 회원들의 이메일 리스트 조회
-            // (SQL에서 DISTINCT 처리됨)
-            List<String> emailList = mapper.listWishListUserEmails(prodId);
-            
-            if (emailList == null || emailList.isEmpty()) {
-                return; // 발송 대상 없음
-            }
+			// 3. 메일 발송
+			MailSender sender = new MailSender();
+			Mail mail = new Mail();
+			
+			// [중요] MailSender.java에 설정된 구글 계정과 일치시킴
+			mail.setSenderEmail("ssangyoungyuwon@gmail.com");
+			mail.setSenderName("막내즈");
+			
+			mail.setSubject("[Maknaez] 재입고 알림 : " + prodName);
+			
+			StringBuilder sb = new StringBuilder();
+			sb.append("<div style='padding:20px; border:1px solid #ddd; background-color:#fff;'>");
+			sb.append("<h2 style='color:#111;'>재입고 알림</h2>");
+			sb.append("<p>고객님께서 기다리시던 상품의 재고가 추가되었습니다.</p>");
+			sb.append("<hr style='border:0; border-top:1px solid #eee; margin:20px 0;'>");
+			sb.append("<p><strong>상품명 : </strong> " + prodName + "</p>");
+			sb.append("<p><strong>입고 사이즈 : </strong> <span style='color:#e74c3c; font-weight:bold;'>" + sizeName + "</span></p>");
+			sb.append("<br>");
+			sb.append("<a href='http://localhost:9090/maknaez/product/detail?prod_id=" + prodId + "' style='padding:10px 20px; background:#333; color:#fff; text-decoration:none; border-radius:4px;'>상품 바로가기</a>");
+			sb.append("<p style='margin-top:20px; color:#888; font-size:12px;'>본 메일은 발신 전용입니다.</p>");
+			sb.append("</div>");
+			
+			mail.setContent(sb.toString());
 
-            // 3. 메일 발송 준비
-            MailSender sender = new MailSender();
-            Mail mail = new Mail();
-            mail.setSenderEmail("admin@maknaez.com");
-            mail.setSenderName("Maknaez 관리자");
-            mail.setSubject("[Maknaez] 재입고 알림 : " + prodName + " (" + sizeName + ")");
+			int successCount = 0;
+			for (String email : emailList) {
+				if(email != null && email.contains("@")) {
+					mail.setReceiverEmail(email);
+					boolean isSent = sender.mailSend(mail);
+					if(isSent) successCount++;
+					
+					// 메일 서버 부하 방지용 딜레이 (선택사항)
+					try { Thread.sleep(100); } catch(Exception e) {}
+				}
+			}
+			System.out.println("[알림완료] " + prodName + "(" + sizeName + ") - " + successCount + "명에게 발송.");
 
-            // 4. 메일 내용 (HTML)
-            StringBuilder sb = new StringBuilder();
-            sb.append("<div style='border:1px solid #ddd; padding:20px; max-width:600px;'>");
-            sb.append("<h2 style='color:#111;'>재입고 알림</h2>");
-            sb.append("<p>고객님께서 기다리시던 상품의 재고가 추가되었습니다.</p>");
-            sb.append("<hr style='border:0; border-top:1px solid #eee; margin:20px 0;'>");
-            sb.append("<p><strong>상품명 : </strong> " + prodName + "</p>");
-            sb.append("<p><strong>입고 사이즈 : </strong> <span style='color:#e74c3c; font-weight:bold;'>" + sizeName + "</span></p>");
-            sb.append("<p style='margin-top:20px; color:#888; font-size:12px;'>본 메일은 발신 전용입니다.</p>");
-            sb.append("</div>");
-            
-            mail.setContent(sb.toString());
-
-            for (String email : emailList) {
-                if(email.contains("@")) {
-                    mail.setReceiverEmail(email);
-                    sender.mailSend(mail);
-                    try { Thread.sleep(100); } catch(Exception e) {}
-                }
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("메일 발송 중 오류 발생: " + e.getMessage());
-        }
-    }
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("메일 발송 중 오류 발생: " + e.getMessage());
+		}
+	}
     
     @Override
 	public List<ProductDTO> listRelatedProducts(long prodId, String cateCode) {
@@ -566,6 +578,8 @@ public class ProductServiceImpl implements ProductService {
 		}
 		return list;
 	}
+
+
 
 	
 }

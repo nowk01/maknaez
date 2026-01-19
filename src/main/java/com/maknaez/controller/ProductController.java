@@ -100,8 +100,8 @@ public class ProductController {
         } catch (Exception e) {
         }
         List<ProductDTO> relatedProducts = productService.listRelatedProducts(prodId, dto.getCateCode());
-        List<ProductDTO> sizeList = productService.listProductSizes(prodId);
-        Map<String, Object> reviewStats = reviewService.readReviewStats(prodId);
+        List<ProductDTO> sizeList 		 = productService.listProductSizes(prodId);
+        Map<String, Object> reviewStats  = reviewService.readReviewStats(prodId);
 
         ModelAndView mav = new ModelAndView("product/detail");
         mav.addObject("dto", dto); 

@@ -42,6 +42,7 @@ public interface ProductMapper {
     public Integer getLastStock(long optId);
     public void insertStockUpdateLog(Map<String, Object> map) throws Exception; 
     
+    
     ProductDTO findById(long prod_id); // 상품 상세 정보 조회
     List<ProductDTO> listProductSize(long prod_id); // 상품별 사이즈 및 실시간 재고 리스트 조회
     void insertCart(Map<String, Object> map); // 장바구니 담기
@@ -54,6 +55,9 @@ public interface ProductMapper {
     
     public ProductDTO getOptionInfoForAlarm(long optId); // 입고알람용
     public List<String> listWishListUserEmails(long prodId); // 입고알람용
+    int getCurrentStock(long prodId);
+    
+    
     
     
     

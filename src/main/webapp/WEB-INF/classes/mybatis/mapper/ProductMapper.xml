@@ -243,6 +243,13 @@
         WHERE w.PROD_ID = #{prodId}
           AND m2.EMAIL IS NOT NULL
     </select>
+    
+    <select id="getCurrentStock" parameterType="Long" resultType="int">
+        SELECT NVL(SUM(AMOUNT), 0)
+        FROM STOCK_LOG
+        WHERE PROD_ID = #{prodId}
+    </select>
+    
 
 	<!-- 추천상품 -->
     <select id="listRelatedProducts" parameterType="map" resultType="com.maknaez.model.ProductDTO">
@@ -260,6 +267,9 @@
         ORDER BY DBMS_RANDOM.VALUE
     ) WHERE ROWNUM &lt;= 4
 </select>
+
+
+
     
     <!--  관리자관리자관리자관리자관리자관리자관리자관리자관리자관리자관리자관리자관리자관리자관리자관리자관리자관리자관리자 -->
 	
