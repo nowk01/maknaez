@@ -55,4 +55,15 @@
 		FROM reviews
 		WHERE order_id = #{orderNum}
 	</select>
+	
+	<!-- 리뷰 별점 조회 -->
+	<select id="getReviewAvgRating" parameterType="long" resultType="double">
+		SELECT NVL(ROUND(AVG(r.rating), 1), 0.0)
+		FROM reviews r
+		JOIN order_items oi ON r.item_id = oi.item_id
+		JOIN pd_size sz ON oi.opt_id = sz.opt_id
+		JOIN products ps ON sz.prod_id = ps.prod_id
+		WHERE ps.prod_id = #{prodId}
+	</select>
+	
 </mapper>
