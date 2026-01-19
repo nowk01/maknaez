@@ -47,45 +47,53 @@ to {
 
 /* 요약 카드 */
 .stat-card-grid {
-	display: grid;
-	grid-template-columns: repeat(4, 1fr);
-	gap: 20px;
-	margin-bottom: 30px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
 }
-
 .stat-card {
-	background: #fff;
-	border: 1px solid #eee;
-	padding: 25px;
-	border-radius: 2px;
-	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+    background: #fff;
+    border: 1px solid #eee;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 }
-
 .stat-label {
-	font-size: 12px;
-	font-weight: 700;
-	color: #888;
-	margin-bottom: 10px;
-	display: block;
+    font-size: 12px;
+    font-weight: 700;
+    color: #888;
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 5px;
 }
 
 .stat-value {
-	font-size: 24px;
-	font-weight: 800;
-	color: #1a1c1e;
+    font-size: 28px;
+    font-weight: 800;
+    color: #333;
+    margin-bottom: 5px;
 }
 
-.stat-value.point {
-	color: #ff4e00;
-}
+.stat-value.point { color: #ff4e00; } /* 포인트 컬러 */
+.stat-desc { font-size: 13px; color: #aaa; }
 
 /* 카드 박스 */
 .card-box {
-	background: #ffffff;
-	border-radius: 2px;
-	border: 1px solid #eee;
-	padding: 30px;
-	margin-bottom: 30px;
+    background: #fff;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    padding: 20px;
+    height: 100%;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.box-title {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    border-left: 4px solid #333;
+    padding-left: 10px;
 }
 
 .chart-container {

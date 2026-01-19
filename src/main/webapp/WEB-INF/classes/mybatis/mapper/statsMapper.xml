@@ -1,7 +1,65 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.maknaez.mapper.StatsMapper">
-	
-	
-	
+
+    <select id="getTodaySales" resultType="long">
+        SELECT NVL(SUM(p.pay_amount), 0)
+        FROM payments p
+        JOIN orders o ON p.order_id = o.items_id
+        WHERE p.pay_status = 'PAID'
+          AND TRUNC(o.order_date) = TRUNC(SYSDATE)
+    </select>
+
+    <select id="getMonthSales" resultType="long">
+        SELECT NVL(SUM(p.pay_amount), 0)
+        FROM payments p
+        JOIN orders o ON p.order_id = o.items_id
+        WHERE p.pay_status = 'PAID'
+          AND TO_CHAR(o.order_date, 'YYYY-MM') = TO_CHAR(SYSDATE, 'YYYY-MM')
+    </select>
+
+    <select id="getTodayOrderCount" resultType="int">
+        SELECT COUNT(*)
+        FROM orders
+        WHERE status NOT IN ('CANCEL', 'RETURN', 'EXCHANGE')
+          AND TRUNC(order_date) = TRUNC(SYSDATE)
+    </select>
+
+    <select id="getRecentSales" resultType="map">
+        SELECT 
+            TO_CHAR(dt, 'MM-DD') AS "statsDate",
+            NVL(SUM(sales.pay_amount), 0) AS "totalRevenue"
+        FROM (
+            SELECT TRUNC(SYSDATE) - LEVEL + 1 AS dt
+            FROM dual
+            CONNECT BY LEVEL &lt;= 7
+        ) d
+        LEFT JOIN (
+            SELECT o.order_date, p.pay_amount
+            FROM orders o
+            JOIN payments p ON o.items_id = p.order_id
+            WHERE p.pay_status = 'PAID'
+        ) sales ON TRUNC(sales.order_date) = d.dt
+        GROUP BY dt
+        ORDER BY dt
+    </select>
+
+    <select id="getTopSellingProducts" resultType="map">
+        SELECT * FROM (
+            SELECT 
+                pd.prod_name AS "productName",
+                ps.pd_size   AS "productSize",    SUM(oi.count) AS "salesCount",
+                SUM(oi.price * oi.count) AS "totalRevenue"
+            FROM order_items oi
+            JOIN pd_size ps ON oi.opt_id = ps.opt_id
+            JOIN products pd ON ps.prod_id = pd.prod_id
+            JOIN orders o ON oi.order_id = o.items_id
+            JOIN payments p ON o.items_id = p.order_id
+            WHERE o.status NOT IN ('CANCEL', 'RETURN')
+              AND p.pay_status = 'PAID'
+            GROUP BY pd.prod_name, ps.pd_size     ORDER BY "totalRevenue" DESC
+        )
+        WHERE ROWNUM &lt;= 5
+    </select>
+
 </mapper>

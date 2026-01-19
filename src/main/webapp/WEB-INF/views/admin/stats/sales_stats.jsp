@@ -7,8 +7,8 @@
     <meta charset="UTF-8">
     <title>매출 분석 통계 | MAKNAEZ ADMIN</title>
     <jsp:include page="/WEB-INF/views/admin/layout/headerResources.jsp" />
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/admin_sales_stats.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/admin_sales_stats.css">
 </head>
 <body>
     <div id="wrapper">
@@ -24,86 +24,56 @@
 
                 <div class="stat-card-grid">
                     <div class="stat-card">
-                        <span class="stat-label">TODAY SALES</span>
-                        <div class="stat-value point">₩ 2,450,000</div>
+                        <span class="stat-label">TODAY REVENUE</span>
+                        <div class="stat-value point" id="card-today-sales">₩ 0</div>
+                        <span class="stat-desc">오늘 하루 결제 완료 금액</span>
                     </div>
                     <div class="stat-card">
-                        <span class="stat-label">MONTHLY TOTAL</span>
-                        <div class="stat-value">₩ 84,200,000</div>
+                        <span class="stat-label">MONTHLY REVENUE</span>
+                        <div class="stat-value" id="card-month-sales">₩ 0</div>
+                        <span class="stat-desc">이번 달 누적 결제 금액</span>
                     </div>
                     <div class="stat-card">
-                        <span class="stat-label">AVG. PRICE</span>
-                        <div class="stat-value">₩ 145,000</div>
-                    </div>
-                    <div class="stat-card">
-                        <span class="stat-label">ORDERS</span>
-                        <div class="stat-value">158 건</div>
+                        <span class="stat-label">TODAY ORDERS</span>
+                        <div class="stat-value" id="card-order-count">0 건</div>
+                        <span class="stat-desc">오늘 신규 주문 (취소 제외)</span>
                     </div>
                 </div>
 
-                <div class="card-box">
-                    <div class="chart-header" style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 25px;">
-                        <div>
-                            <span style="font-size: 15px; font-weight: 800; color: #111;">WEEKLY REVENUE TREND</span>
-                            <p style="font-size: 12px; color: #aaa; margin-top: 4px;">마우스를 그래프 위에 올려 상세 데이터를 확인하세요.</p>
+                <div class="row">
+                    <div class="col-lg-8 mb-4">
+                        <div class="card-box">
+                            <h4 class="box-title">최근 7일 매출 추이</h4>
+                            <div class="chart-container" style="height: 350px;">
+                                <canvas id="salesChart"></canvas>
+                            </div>
                         </div>
-                        <div style="font-size: 11px; color: #ff4e00; font-weight: 700; border: 1px solid #ff4e00; padding: 2px 8px; border-radius: 20px;">
-                            LIVE ANALYTICS
-                        </div>
-                    </div>
-                    <div class="chart-container" style="position: relative; height: 350px; width: 100%;">
-                        <canvas id="premiumSalesChart"></canvas>
-                    </div>
-                </div>
-
-                <div class="card-box">
-                    <div class="d-flex justify-content-between align-items-center mb-4">
-                        <h5 style="font-size:15px; font-weight:800; color:#111; margin:0;">TOP SELLING PRODUCTS</h5>
-                        <button type="button" class="btn btn-dark" style="width:180px; height:45px; font-weight:700; font-size:13px; border-radius:1px;" onclick="downloadStats()">
-                            REPORT DOWNLOAD
-                        </button>
                     </div>
 
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th style="width:80px;">RANK</th>
-                                <th style="text-align:left;">PRODUCT NAME (ITEM)</th>
-                                <th>SOLD QTY</th>
-                                <th>NET REVENUE</th>
-                                <th>SHARE (%)</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td style="font-weight:800; color:#ff4e00;">01</td>
-                                <td style="text-align:left; font-weight:700;">MAKNAEZ Retro High 2026 Black</td>
-                                <td>45 켤레</td>
-                                <td style="font-weight:800;">₩ 8,325,000</td>
-                                <td style="color:#888;">12.4%</td>
-                            </tr>
-                            <tr>
-                                <td style="font-weight:800;">02</td>
-                                <td style="text-align:left; font-weight:700;">Court Classic Low-V1 White</td>
-                                <td>38 켤레</td>
-                                <td style="font-weight:800;">₩ 4,940,000</td>
-                                <td style="color:#888;">9.8%</td>
-                            </tr>
-                            <tr>
-                                <td style="font-weight:800;">03</td>
-                                <td style="text-align:left; font-weight:700;">Dunk Low Panda Custom</td>
-                                <td>32 켤레</td>
-                                <td style="font-weight:800;">₩ 4,160,000</td>
-                                <td style="color:#888;">8.1%</td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <div class="col-lg-4 mb-4">
+                        <div class="card-box">
+                            <h4 class="box-title">인기 판매 상품 (TOP 5)</h4>
+                            <div class="table-responsive">
+                                <table class="table table-hover" id="top-product-table">
+                                    <thead>
+                                        <tr>
+                                            <th>순위</th>
+                                            <th>상품명</th>
+                                            <th class="text-end">금액</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
     
     <jsp:include page="/WEB-INF/views/admin/layout/footerResources.jsp" />
-    <script src="${pageContext.request.contextPath}/dist/js/admin_sales_stats.js?v=1.2"></script>
+    <script src="${pageContext.request.contextPath}/dist/js/admin_sales_stats.js"></script>
 </body>
 </html>
