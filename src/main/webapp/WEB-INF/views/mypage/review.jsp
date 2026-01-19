@@ -9,10 +9,8 @@
 <link rel="icon" href="data:;base64,iVBORw0KGgo=">
 <jsp:include page="/WEB-INF/views/layout/headerResources.jsp" />
 
-<link rel="stylesheet"
-	href="${pageContext.request.contextPath}/dist/css/mypage.css">
-<link rel="stylesheet"
-	href="${pageContext.request.contextPath}/dist/css/my_review.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/mypage.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/my_review.css">
 
 <script>
     const contextPath = "${pageContext.request.contextPath}";
@@ -57,16 +55,17 @@
             </div>
         </aside>
 
-        <main class="account-main">
-            <h1 class="page-header">상품 리뷰</h1>
+        <main class="account-main customer-review-wrap">
+            <h1 class="page-header feature-header">상품 리뷰</h1>
+            <div class="line"></div>
 
             <div class="review-tabs">
                 <button type="button" class="tab-btn active" onclick="showTab('writable')">
                     작성 가능한 리뷰 <span>(${not empty dataCount ? dataCount : 0})</span>
                 </button>
                 <button type="button" class="tab-btn" onclick="showTab('written')">
-   					 작성한 리뷰 <span>(${not empty writtenDataCount ? writtenDataCount : 0})</span>
-				</button>
+                     작성한 리뷰 <span>(${not empty writtenDataCount ? writtenDataCount : 0})</span>
+                </button>
             </div>
 
             <div id="tab-writable" class="review-tab-content active">
@@ -87,91 +86,96 @@
                     </div>
                 </div>
 
-                <c:choose>
-                    <c:when test="${not empty list}">
-                        <c:forEach var="dto" items="${list}">
-                            <div class="review-card">
-                                <div class="card-header">
-                                    <span class="order-date">${dto.orderDate}</span>
-                                    <span class="order-status">배송완료</span>
-                                    <span class="order-number">No. ${dto.orderNum}</span>
-                                </div>
+                <div class="review-list-group">
+                    <c:choose>
+                        <c:when test="${not empty list}">
+                            <c:forEach var="dto" items="${list}">
+                                <div class="review-item-card">
+                                    <div class="card-header">
+                                        <span class="order-date">${dto.orderDate}</span>
+                                        <span class="order-status">배송완료</span>
+                                        <span class="order-number">No. ${dto.orderNum}</span>
+                                    </div>
 
-                                <div class="card-body">
-                                    <div class="product-thumb">
-                                        <img src="${pageContext.request.contextPath}/uploads/product/${dto.thumbNail}" 
-                                             onerror="this.src='${pageContext.request.contextPath}/dist/images/no-image.png'" alt="상품">
-                                    </div>
-                                    <div class="product-details">
-                                        <div class="product-name">${dto.productName}</div>
-                                        <div class="product-option">[옵션] ${not empty dto.pdSize ? dto.pdSize : '-'}</div>
-                                        <div class="product-price"><fmt:formatNumber value="${dto.totalAmount}" pattern="#,###" />원</div>
-                                    </div>
-                                    <div class="card-actions">
-                                        <a href="${pageContext.request.contextPath}/product/detail?productNum=${dto.productNum}" class="btn-action">상품상세</a>
-                                        <button type="button" class="btn-action btn-black" 
-                                                onclick="openReviewModal('${dto.orderNum}', '${dto.productNum}', '${dto.productName}', '${dto.thumbNail}')">리뷰쓰기</button>
+                                    <div class="card-body">
+                                        <div class="product-thumb">
+                                            <img src="${pageContext.request.contextPath}/uploads/product/${dto.thumbNail}" 
+                                                 onerror="this.src='${pageContext.request.contextPath}/dist/images/no-image.png'" alt="상품">
+                                        </div>
+                                        <div class="product-details">
+                                            <div class="product-name">${dto.productName}</div>
+                                            <div class="product-option">[옵션] ${not empty dto.pdSize ? dto.pdSize : '-'}</div>
+                                            <div class="product-price"><fmt:formatNumber value="${dto.totalAmount}" pattern="#,###" />원</div>
+                                        </div>
+                                        <div class="card-actions">
+                                            <a href="${pageContext.request.contextPath}/product/detail?productNum=${dto.productNum}" class="btn-text">상품상세</a>
+                                            <span class="bar">|</span>
+                                            <button type="button" class="btn-text btn-write" 
+                                                    onclick="openReviewModal('${dto.orderNum}', '${dto.productNum}', '${dto.productName}', '${dto.thumbNail}')">리뷰쓰기</button>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </c:forEach>
-                    </c:when>
-                    <c:otherwise>
-                        <div class="empty-state">작성 가능한 리뷰가 없습니다.</div>
-                    </c:otherwise>
-                </c:choose>
+                            </c:forEach>
+                        </c:when>
+                        <c:otherwise>
+                            <div class="empty-state">작성 가능한 리뷰가 없습니다.</div>
+                        </c:otherwise>
+                    </c:choose>
+                </div>
             </div>
 
             <div id="tab-written" class="review-tab-content">
-    <c:choose>
-        <c:when test="${not empty writtenList}">
-            <c:forEach var="dto" items="${writtenList}">
-                <div class="review-card">
-                    <div class="card-header">
-                        <span class="order-date">${dto.regDate}</span>
-                        <span class="order-status" style="color:#007bff;">작성완료</span>
-                        <span class="order-number">No. ${dto.orderNum}</span>
-                    </div>
+                <div class="review-list-group">
+                    <c:choose>
+                        <c:when test="${not empty writtenList}">
+                            <c:forEach var="dto" items="${writtenList}">
+                                <div class="review-item-card">
+                                    <div class="card-header">
+                                        <span class="order-date">${dto.regDate}</span>
+                                        <span class="order-status badge-complete">작성완료</span>
+                                        <span class="order-number">No. ${dto.orderNum}</span>
+                                    </div>
 
-                    <div class="card-body">
-                        <div class="product-thumb">
-                            <img src="${pageContext.request.contextPath}/uploads/product/${dto.thumbNail}" 
-                                 onerror="this.src='${pageContext.request.contextPath}/dist/images/no-image.png'" alt="상품">
-                        </div>
+                                    <div class="card-body">
+                                        <div class="product-thumb">
+                                            <img src="${pageContext.request.contextPath}/uploads/product/${dto.thumbNail}" 
+                                                 onerror="this.src='${pageContext.request.contextPath}/dist/images/no-image.png'" alt="상품">
+                                        </div>
 
-                        <div class="product-details">
-                            <div class="product-name">${dto.productName}</div>
-                            
-                            <div class="star-rating" style="margin: 5px 0; color: #f5c518; font-size: 14px;">
-                                <c:forEach begin="1" end="${dto.starRating}">★</c:forEach>
-                                <c:forEach begin="1" end="${5 - dto.starRating}">☆</c:forEach>
-                            </div>
+                                        <div class="product-details">
+                                            <div class="product-name">${dto.productName}</div>
+                                            
+                                            <div class="star-rating">
+                                                <c:forEach begin="1" end="${dto.starRating}">★</c:forEach>
+                                                <c:forEach begin="1" end="${5 - dto.starRating}">☆</c:forEach>
+                                            </div>
 
-                            <div class="review-content" style="font-size: 14px; color: #555; line-height: 1.4; margin-top: 5px;">
-                                ${dto.content}
-                            </div>
+                                            <div class="review-content">
+                                                ${dto.content}
+                                            </div>
 
-                            <c:if test="${not empty dto.reviewImg}">
-                                <div class="review-image" style="margin-top: 10px;">
-                                    <img src="${pageContext.request.contextPath}/uploads/review/${dto.reviewImg}" 
-                                         style="width: 80px; height: 80px; object-fit: cover; border-radius: 4px; border: 1px solid #eee;" alt="리뷰이미지">
+                                            <c:if test="${not empty dto.reviewImg}">
+                                                <div class="review-image">
+                                                    <img src="${pageContext.request.contextPath}/uploads/review/${dto.reviewImg}" 
+                                                         style="width: 80px; height: 80px; object-fit: cover; border: 1px solid #eee;" alt="리뷰이미지">
+                                                </div>
+                                            </c:if>
+                                        </div>
+
+                                        <div class="card-actions">
+                                            <a href="${pageContext.request.contextPath}/product/detail?prodId=${dto.prodId}" class="btn-text">상품보기</a>
+                                        </div>
+                                    </div>
                                 </div>
-                            </c:if>
-                        </div>
-
-                        <div class="card-actions">
-                            <a href="${pageContext.request.contextPath}/product/detail?prodId=${dto.prodId}" class="btn-action">상품보기</a>
-                        </div>
-                    </div>
+                            </c:forEach>
+                        </c:when>
+                        
+                        <c:otherwise>
+                            <div class="empty-state">작성한 리뷰 내역이 없습니다.</div>
+                        </c:otherwise>
+                    </c:choose>
                 </div>
-            </c:forEach>
-        </c:when>
-        
-        <c:otherwise>
-            <div class="empty-state">작성한 리뷰 내역이 없습니다.</div>
-        </c:otherwise>
-    </c:choose>
-</div>
+            </div>
 
             <div class="notice-container">
                 <h3>리뷰 작성 시 유의사항</h3>
@@ -183,6 +187,7 @@
                     <li>배송 완료일 기준 90일 이내 작성 가능하며, 중복 작성은 불가합니다.</li>
                     <li>리뷰 등록 후에는 수정·삭제가 불가합니다.</li>
                     <li>상품과 무관한 내용, 악의적 비방, 개인정보 노출 등은 사전 안내 없이 삭제될 수 있습니다.</li>
+                    <li>리뷰 정책은 당사 사정에 따라 변경되거나 종료될 수 있습니다.</li>
                 </ul>
             </div>
         </main>
@@ -193,7 +198,6 @@
 
     <div id="reviewModal" class="modal-overlay">
         <div class="modal-content review-write-modal">
-            
             <div class="modal-header">
                 <h3>후기 작성</h3>
                 <button type="button" class="close-btn" onclick="closeReviewModal()">
@@ -206,7 +210,6 @@
                 <input type="hidden" name="productNum" id="modalProductNum">
                 
                 <div class="modal-body custom-scroll">
-                    
                     <div class="rw-product-section">
                         <div class="rw-prod-img">
                             <img id="modalImg" src="" alt="상품이미지">
@@ -276,7 +279,6 @@
                             <span class="agree-text">작성된 후기는 홍보 콘텐츠로 사용될 수 있습니다. (필수)</span>
                         </label>
                     </div>
-
                 </div>
                 
                 <div class="modal-footer">

@@ -1,22 +1,23 @@
 @charset "UTF-8";
 
 /* =========================================
-   1. 기본 설정 및 레이아웃
-   ========================================= */
+   변수 및 공통 설정 (Salomon Style - Unified)
+========================================= */
 :root {
-    --font-primary: "Noto Sans KR", "Apple SD Gothic Neo", sans-serif;
+    --font-primary: "SALOMON Sans", "Noto Sans KR", sans-serif;
     --color-black: #000;
-    --color-dark-grey: #423f3f;
-    --color-light-grey: #e0e0e0;
-    --color-bg-grey: #f8f8f8;
-    --color-text-grey: #555;
+    --color-dark-gray: #333;
+    --color-gray: #e0e0e0;
+    --color-light-gray: #f7f7f7;
+    --color-white: #fff;
     --width-sidebar: 200px;
     --gap-layout: 50px;
 }
 
 body {
     font-family: var(--font-primary);
-    color: var(--color-dark-grey);
+    color: var(--color-black);
+    line-height: 1.5;
 }
 
 .mypage-wrapper {
@@ -29,82 +30,51 @@ body {
     box-sizing: border-box;
 }
 
-/* =========================================
-   2. 사이드바 (레퍼런스 디자인 적용)
-   ========================================= */
-.account-sidebar {
-    width: var(--width-sidebar);
-    flex-shrink: 0;
-}
-
-.sidebar-heading {
-    color: var(--color-black);
-    font-size: 24px;
-    font-weight: 700;
-    margin-bottom: 35px;
-    line-height: 1;
-}
-
-.menu-card {
-    margin-bottom: 24px;
-}
-
-.menu-title {
-    font-size: 15px;
-    font-weight: 700;
-    color: var(--color-black);
-    margin: 0 0 12px 0;
-    display: block;
-}
-
-.menu-link {
-    display: block;
-    color: var(--color-black);
-    font-size: 14px;
-    text-decoration: none;
-    margin-bottom: 8px;
-    transition: opacity 0.2s;
-    font-weight: 400;
-}
-
-.menu-link:hover {
-    opacity: 0.7;
-}
-
-.menu-link.active {
-    font-weight: 700;
-    text-decoration: underline;
-}
-
-.logout-link {
-    margin-top: 30px;
-    color: #999;
-}
+/* 사이드바 스타일 (기존 유지) */
+.account-sidebar { width: var(--width-sidebar); flex-shrink: 0; }
+.sidebar-heading { font-size: 24px; font-weight: 700; margin-bottom: 35px; line-height: 1; }
+.menu-card { margin-bottom: 24px; }
+.menu-title { font-size: 15px; font-weight: 700; margin: 0 0 12px 0; display: block; }
+.menu-link { display: block; color: var(--color-black); font-size: 14px; text-decoration: none; margin-bottom: 8px; transition: opacity 0.2s; }
+.menu-link:hover { opacity: 0.7; }
+.menu-link.active { font-weight: 700; text-decoration: underline; }
+.logout-link { margin-top: 30px; color: #999; }
 
 /* =========================================
-   3. 메인 콘텐츠
-   ========================================= */
+   메인 콘텐츠 (등장 애니메이션 적용)
+========================================= */
 .account-main {
     flex: 1;
     min-width: 0;
+    
+    /* 등장 애니메이션 (배송지 관리와 동일) */
+    opacity: 0;
+    animation: salomonSlideUp 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+    animation-delay: 0.2s;
 }
 
-.page-header {
+/* 타이틀 영역 */
+.feature-header {
     font-size: 24px;
-    font-weight: 700;
-    color: var(--color-black);
-    margin-bottom: 40px;
-    border-bottom: 2px solid var(--color-black);
-    padding-bottom: 20px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: -0.5px;
+    margin-bottom: 8px;
+    text-align: left; /* 리뷰 페이지는 왼쪽 정렬이 더 어울림 */
 }
 
-/* =========================================
-   4. 리뷰 탭 & 정렬
-   ========================================= */
+.line {
+    width: 100%;
+    height: 2px;
+    background: var(--color-black);
+    margin-bottom: 30px;
+}
+
+/* 탭 스타일 */
 .review-tabs {
     display: flex;
     gap: 30px;
-    border-bottom: 1px solid var(--color-light-grey);
+    border-bottom: 1px solid var(--color-gray);
     margin-bottom: 30px;
 }
 
@@ -120,106 +90,52 @@ body {
     font-family: var(--font-primary);
 }
 
-.tab-btn span {
-    font-size: 13px;
-    font-weight: 400;
-}
-
-.tab-btn.active {
-    color: var(--color-black);
-    font-weight: 700;
-}
-
+.tab-btn.active { color: var(--color-black); font-weight: 700; }
 .tab-btn.active::after {
-    content: '';
-    position: absolute;
-    bottom: -1px;
-    left: 0;
-    width: 100%;
-    height: 2px;
-    background-color: var(--color-black);
+    content: ''; position: absolute; bottom: -1px; left: 0;
+    width: 100%; height: 2px; background-color: var(--color-black);
 }
 
-.review-tab-content {
-    display: none;
-    animation: fadeIn 0.3s ease-out;
-}
-
-.review-tab-content.active {
-    display: block;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-}
+/* 탭 컨텐츠 */
+.review-tab-content { display: none; }
+.review-tab-content.active { display: block; }
 
 /* 정렬 드롭다운 */
-.sort-header {
-    display: flex;
-    justify-content: flex-end;
-    margin-bottom: 20px;
-}
-
-.sort-dropdown {
-    position: relative;
-    display: inline-block;
-}
-
-.sort-btn {
-    background: none;
-    border: none;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    font-size: 13px;
-    color: #333;
-    font-weight: 500;
-}
-
-.sort-menu {
-    display: none;
-    position: absolute;
-    top: 100%;
-    right: 0;
-    background: #fff;
-    border: 1px solid #eee;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-    min-width: 120px;
-    z-index: 10;
-    margin-top: 5px;
-}
-
-.sort-dropdown.open .sort-menu {
-    display: block;
-}
-
-.sort-item {
-    padding: 10px 15px;
-    font-size: 13px;
-    cursor: pointer;
-    transition: background 0.2s;
-}
-
-.sort-item:hover {
-    background-color: #f9f9f9;
-}
+.sort-header { display: flex; justify-content: flex-end; margin-bottom: 15px; }
+.sort-btn { background: none; border: none; cursor: pointer; display: flex; align-items: center; gap: 5px; font-size: 13px; color: #333; }
+.sort-menu { display: none; position: absolute; right: 0; background: #fff; border: 1px solid #eee; min-width: 120px; z-index: 10; margin-top: 5px; }
+.sort-dropdown.open .sort-menu { display: block; }
+.sort-item { padding: 10px 15px; font-size: 13px; cursor: pointer; }
+.sort-item:hover { background-color: #f9f9f9; }
 
 /* =========================================
-   5. 리뷰 카드 리스트 (디자인 개선)
-   ========================================= */
-.review-card {
-    border: 1px solid var(--color-light-grey);
-    border-radius: 4px;
-    margin-bottom: 20px;
-    background: #fff;
+   리뷰 카드 리스트 (배송지 관리 스타일 적용)
+========================================= */
+.review-list-group {
+    display: flex;
+    flex-direction: column;
 }
 
+.review-item-card {
+    padding: 25px 0;
+    border-bottom: 1px solid var(--color-gray);
+    
+    /* 리스트 등장 애니메이션 */
+    opacity: 0;
+    animation: salomonSlideUp 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+/* 순차 딜레이 */
+.review-item-card:nth-child(1) { animation-delay: 0.3s; }
+.review-item-card:nth-child(2) { animation-delay: 0.4s; }
+.review-item-card:nth-child(3) { animation-delay: 0.5s; }
+.review-item-card:nth-child(n+4) { animation-delay: 0.6s; }
+
+/* 카드 헤더 */
 .card-header {
-    background-color: #fcfcfc;
-    padding: 12px 20px;
-    border-bottom: 1px solid #eee;
+    background: transparent; /* 배경 제거 */
+    padding: 0 0 15px 0;
+    border: none;
     font-size: 13px;
     color: #666;
     display: flex;
@@ -227,487 +143,136 @@ body {
     gap: 10px;
 }
 
-.order-date {
-    font-weight: 700;
-    color: var(--color-black);
-}
+.order-date { font-weight: 700; color: var(--color-black); }
+.badge-complete { background: var(--color-black); color: var(--color-white); padding: 2px 6px; font-size: 11px; margin-left: 5px; }
+.order-number { margin-left: auto; font-family: 'Roboto', sans-serif; color: #999; font-size: 12px; }
 
-.order-status {
-    color: var(--color-black);
-    font-weight: 500;
-}
-
-.order-number {
-    margin-left: auto;
-    font-family: 'Roboto', sans-serif;
-    color: #999;
-}
-
+/* 카드 바디 */
 .card-body {
-    padding: 20px;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 20px;
+    padding: 0;
 }
 
 .product-thumb {
-    width: 80px;
-    height: 80px;
+    width: 90px; height: 90px;
     background: #f4f4f4;
     overflow: hidden;
     flex-shrink: 0;
 }
+.product-thumb img { width: 100%; height: 100%; object-fit: cover; }
 
-.product-thumb img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
+.product-details { flex: 1; }
+.product-name { font-size: 15px; font-weight: 700; color: var(--color-black); margin-bottom: 4px; }
+.product-option { font-size: 13px; color: #777; margin-bottom: 8px; }
+.product-price { font-size: 14px; font-weight: 600; }
 
-.product-details {
-    flex: 1;
-}
+.star-rating { margin: 8px 0; color: var(--color-black); font-size: 13px; letter-spacing: 1px; }
+.review-content { font-size: 14px; color: var(--color-dark-gray); line-height: 1.6; margin-top: 8px; }
+.review-image { margin-top: 12px; }
 
-.product-name {
-    font-size: 15px;
-    font-weight: 700;
-    color: var(--color-black);
-    margin-bottom: 4px;
-}
-
-.product-option {
-    font-size: 13px;
-    color: #777;
-    margin-bottom: 8px;
-}
-
-.product-price {
-    font-size: 14px;
-    font-weight: 600;
-}
-
+/* 버튼 영역 (배송지 관리 스타일: 텍스트 버튼 + 구분선) */
 .card-actions {
     display: flex;
-    gap: 8px;
-    flex-direction: column;
-    min-width: 100px;
+    align-items: center;
+    gap: 0;
+    flex-shrink: 0;
+    margin-left: auto;
 }
 
-.btn-action {
-    display: block;
-    text-align: center;
-    padding: 8px 0;
-    border: 1px solid #ccc;
-    background: #fff;
-    color: #333;
-    font-size: 12px;
-    text-decoration: none;
-    border-radius: 0; /* 각진 버튼 */
-    cursor: pointer;
-    transition: all 0.2s;
+.btn-text {
+    background: none; border: none; padding: 0;
+    font-size: 13px; color: #999; text-decoration: underline;
+    cursor: pointer; font-family: var(--font-primary);
+}
+.btn-text:hover { color: var(--color-black); font-weight: 600; }
+
+.btn-write { color: var(--color-black); font-weight: 600; } /* 리뷰쓰기 버튼 강조 */
+
+.bar {
+    font-size: 11px; color: #e0e0e0;
+    margin: 0 12px; display: inline-block;
 }
 
-.btn-action.btn-black {
-    background: var(--color-black);
-    color: #fff;
-    border-color: var(--color-black);
-}
-
-.btn-action:hover {
-    opacity: 0.8;
-}
-
-/* 데이터 없음 상태 */
-.empty-state {
-    padding: 80px 0;
-    text-align: center;
-    color: #888;
-    font-size: 14px;
-    border-bottom: 1px solid #eee;
-}
+.empty-state { padding: 80px 0; text-align: center; color: #888; font-size: 14px; border-bottom: 1px solid #eee; }
 
 /* =========================================
-   6. 유의사항 (Notice)
-   ========================================= */
+   유의사항 (Notice)
+========================================= */
 .notice-container {
-    background-color: var(--color-bg-grey);
-    padding: 30px;
     margin-top: 60px;
-    border-radius: 0;
+    padding-top: 30px;
+    border-top: 1px solid var(--color-gray);
+    color: var(--color-dark-gray);
 }
+.notice-container h3 { font-size: 15px; font-weight: 700; margin-bottom: 15px; color: var(--color-black); }
+.notice-container ul { list-style: none; padding: 0; margin: 0; }
+.notice-container li { font-size: 13px; margin-bottom: 6px; padding-left: 12px; position: relative; line-height: 1.6; }
+.notice-container li::before { content: '·'; position: absolute; left: 0; top: 0; font-weight: 700; color: #999; }
 
-.notice-container h3 {
-    font-size: 15px;
-    font-weight: 700;
-    margin-bottom: 15px;
-    color: var(--color-black);
-}
-
-.notice-container ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.notice-container li {
-    font-size: 13px;
-    color: var(--color-text-grey);
-    margin-bottom: 6px;
-    padding-left: 12px;
-    position: relative;
-    line-height: 1.5;
-}
-
-.notice-container li::before {
-    content: '·';
-    position: absolute;
-    left: 0;
-    font-weight: bold;
-    color: #999;
+/* =========================================
+   애니메이션 키프레임 (배송지와 동일)
+========================================= */
+@keyframes salomonSlideUp {
+    0% { opacity: 0; transform: translateY(50px); }
+    100% { opacity: 1; transform: translateY(0); }
 }
 
 /* =========================================
-   7. 모달 (Modal) - 기존 유지하되 깔끔하게
-   ========================================= */
-.modal-overlay {
-    display: none;
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    z-index: 9999;
-    justify-content: center;
-    align-items: center;
-}
-
-.modal-content {
-    background: #fff;
-    width: 500px;
-    padding: 30px;
-    border-radius: 0;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-}
-
-.modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-    border-bottom: 1px solid #eee;
-    padding-bottom: 15px;
-}
-
-.modal-header h3 {
-    margin: 0;
-    font-size: 18px;
-    font-weight: 700;
-}
-
-.close-btn {
-    background: none;
-    border: none;
-    font-size: 24px;
-    cursor: pointer;
-}
-
-.modal-product-info {
-    display: flex;
-    gap: 15px;
-    background: #f8f8f8;
-    padding: 15px;
-    margin-bottom: 20px;
-    align-items: center;
-}
-
-.modal-product-info img {
-    width: 50px; height: 50px; object-fit: cover;
-}
-
-.modal-prod-name { font-weight: 600; font-size: 14px; }
-
-.form-group { margin-bottom: 20px; }
-.form-group label { display: block; margin-bottom: 8px; font-weight: 600; font-size: 13px; }
-.form-select, .form-file { width: 100%; padding: 10px; border: 1px solid #ddd; font-size: 13px; }
-.form-textarea { width: 100%; height: 120px; padding: 10px; border: 1px solid #ddd; resize: none; font-size: 13px; }
-
-.modal-footer {
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
-    margin-top: 20px;
-    border-top: 1px solid #eee;
-    padding-top: 20px;
-}
-
-.btn-submit { background: #000; color: #fff; border: none; padding: 10px 25px; cursor: pointer; font-weight: 600; font-size: 13px; }
-.btn-cancel { background: #fff; color: #333; border: 1px solid #ddd; padding: 10px 25px; cursor: pointer; font-size: 13px; }
-
-/* =========================================
-   8. 반응형 처리
-   ========================================= */
-@media (max-width: 768px) {
-    .mypage-wrapper {
-        flex-direction: column;
-        padding: 30px 20px;
-    }
-    
-    .account-sidebar {
-        width: 100%;
-        margin-bottom: 40px;
-        border-bottom: 1px solid #eee;
-        padding-bottom: 20px;
-    }
-    
-    .sidebar-menu-list {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 20px;
-    }
-    
-    .menu-card {
-        flex: 1 1 45%;
-        margin-bottom: 10px;
-    }
-}
-
-/* =========================================
-   Review Write Modal (레퍼런스 스타일 적용)
-   ========================================= */
-
-/* 모달 크기 및 기본 설정 */
-.review-write-modal {
-    width: 500px;
-    padding: 0; /* 내부 패딩은 개별 섹션에서 처리 */
-    border-radius: 8px;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    max-height: 90vh;
-}
-
-.modal-body {
-    padding: 0 24px 24px;
-    overflow-y: auto;
-    flex: 1;
-}
-
-/* 스크롤바 커스텀 */
+   모달 (기존 유지)
+========================================= */
+.modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9999; justify-content: center; align-items: center; }
+.modal-content { background: #fff; width: 500px; border-radius: 0; } /* 각진 모서리 */
+.review-write-modal { display: flex; flex-direction: column; max-height: 90vh; }
+.modal-header { padding: 18px 24px; border-bottom: 1px solid #eee; position: relative; text-align: center; display: flex; justify-content: center; }
+.modal-header h3 { font-size: 18px; font-weight: 700; color: #000; margin: 0; }
+.close-btn { position: absolute; right: 20px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; }
+.modal-body { padding: 0 24px 24px; overflow-y: auto; flex: 1; }
 .custom-scroll::-webkit-scrollbar { width: 6px; }
 .custom-scroll::-webkit-scrollbar-thumb { background: #ddd; border-radius: 3px; }
-.custom-scroll::-webkit-scrollbar-track { background: transparent; }
 
-/* 헤더 */
-.modal-header {
-    padding: 18px 24px;
-    border-bottom: 1px solid #eee;
-    display: flex;
-    justify-content: center; /* 타이틀 중앙 정렬 */
-    position: relative;
-}
-
-.modal-header h3 {
-    font-size: 18px;
-    font-weight: 700;
-    color: #000;
-}
-
-.modal-header .close-btn {
-    position: absolute;
-    right: 20px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #000;
-    padding: 0;
-}
-
-/* 1. 상품 정보 섹션 */
-.rw-product-section {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    padding: 24px 0;
-}
-
-.rw-prod-img {
-    width: 72px;
-    height: 86px;
-    background: #f4f4f4;
-    border-radius: 4px;
-    overflow: hidden;
-}
-
-.rw-prod-img img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.rw-prod-info {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-}
-
+/* 모달 내부 요소 */
+.rw-product-section { display: flex; align-items: center; gap: 16px; padding: 24px 0; }
+.rw-prod-img { width: 72px; height: 86px; background: #f4f4f4; overflow: hidden; }
+.rw-prod-img img { width: 100%; height: 100%; object-fit: cover; }
+.rw-prod-info { flex: 1; display: flex; flex-direction: column; gap: 4px; }
 .rw-brand-name { font-size: 13px; font-weight: 700; color: #000; }
 .rw-prod-name { font-size: 13px; color: #333; line-height: 1.4; }
-.rw-prod-opt { font-size: 12px; color: #888; margin-top: 2px; }
+.rw-prod-opt { font-size: 12px; color: #888; }
 
-/* 공통 섹션 스타일 */
 .rw-section { margin-bottom: 24px; }
 .rw-section-title { font-size: 16px; font-weight: 700; color: #000; margin-bottom: 12px; }
 .rw-divider { height: 1px; background: #f1f1f1; margin: 0 -24px 24px; }
 
-/* 2. 별점 섹션 */
 .rw-star-section { text-align: center; padding: 10px 0; }
 .star-rating-box { display: flex; flex-direction: column; align-items: center; gap: 8px; }
-
 .stars { display: flex; gap: 8px; }
 .star-btn { background: none; border: none; padding: 0; cursor: pointer; }
 .star-btn svg { width: 36px; height: 36px; fill: #eee; transition: fill 0.2s; }
-.star-btn.active svg { fill: #000; } /* 활성화 시 검은색 별 */
-
+.star-btn.active svg { fill: #000; }
 .star-text { font-size: 13px; color: #888; font-weight: 500; margin-top: 5px; }
 
-/* 3. 텍스트 리뷰 섹션 */
-.rw-title-group { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 10px; }
-.rw-guide-text { font-size: 12px; color: #888; }
-
-.rw-textarea-box {
-    position: relative;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    padding: 14px;
-    transition: border-color 0.2s;
-}
-
+.rw-textarea-box { border: 1px solid #ddd; padding: 14px; transition: border-color 0.2s; }
 .rw-textarea-box:focus-within { border-color: #000; }
+.rw-textarea { width: 100%; height: 120px; border: none; resize: none; font-size: 14px; outline: none; }
+.rw-text-count { text-align: right; font-size: 12px; color: #999; margin-top: 8px; }
 
-.rw-textarea {
-    width: 100%;
-    height: 120px;
-    border: none;
-    resize: none;
-    font-size: 14px;
-    line-height: 1.6;
-    outline: none;
-    color: #000;
-}
-
-.rw-textarea::placeholder { color: #aaa; }
-
-.rw-text-count {
-    text-align: right;
-    font-size: 12px;
-    color: #999;
-    margin-top: 8px;
-}
-
-/* 4. 사진 업로드 섹션 */
 .rw-upload-box { display: flex; gap: 10px; }
-
-.upload-btn {
-    width: 80px;
-    height: 80px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    background: #fff;
-    color: #999;
-    font-size: 11px;
-    gap: 4px;
-}
-
+.upload-btn { width: 80px; height: 80px; border: 1px solid #ddd; display: flex; flex-direction: column; justify-content: center; align-items: center; cursor: pointer; background: #fff; color: #999; font-size: 11px; gap: 4px; }
 .file-input { display: none; }
-
-.image-preview {
-    width: 80px;
-    height: 80px;
-    border-radius: 4px;
-    overflow: hidden;
-    position: relative;
-    border: 1px solid #eee;
-}
-
+.image-preview { width: 80px; height: 80px; overflow: hidden; position: relative; border: 1px solid #eee; }
 .image-preview img { width: 100%; height: 100%; object-fit: cover; }
-
-.remove-img-btn {
-    position: absolute;
-    top: 0; right: 0;
-    background: rgba(0,0,0,0.6);
-    color: #fff;
-    border: none;
-    width: 20px; height: 20px;
-    font-size: 16px;
-    line-height: 1;
-    cursor: pointer;
-}
-
+.remove-img-btn { position: absolute; top: 0; right: 0; background: rgba(0,0,0,0.6); color: #fff; border: none; width: 20px; height: 20px; cursor: pointer; }
 .rw-guide-sub { font-size: 12px; color: #999; margin-top: 8px; }
 
-/* 5. 동의 섹션 */
-.rw-agree-box {
-    background: #f9f9f9;
-    padding: 16px;
-    border-radius: 6px;
-}
-
-.checkbox-label {
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-    gap: 8px;
-    font-size: 13px;
-    color: #666;
-}
-
+.rw-agree-box { background: #f9f9f9; padding: 16px; }
+.checkbox-label { display: flex; align-items: center; cursor: pointer; gap: 8px; font-size: 13px; color: #666; }
 .checkbox-label input { display: none; }
+.checkmark { width: 18px; height: 18px; border: 1px solid #ccc; background: #fff; display: inline-block; position: relative; }
+.checkbox-label input:checked + .checkmark { background: #000; border-color: #000; }
+.checkbox-label input:checked + .checkmark::after { content: ''; position: absolute; left: 5px; top: 1px; width: 5px; height: 10px; border: solid white; border-width: 0 2px 2px 0; transform: rotate(45deg); }
 
-/* 커스텀 체크박스 */
-.checkmark {
-    width: 18px;
-    height: 18px;
-    border: 1px solid #ccc;
-    border-radius: 2px;
-    background: #fff;
-    display: inline-block;
-    position: relative;
-}
-
-.checkbox-label input:checked + .checkmark {
-    background: #000;
-    border-color: #000;
-}
-
-.checkbox-label input:checked + .checkmark::after {
-    content: '';
-    position: absolute;
-    left: 5px; top: 1px;
-    width: 5px; height: 10px;
-    border: solid white;
-    border-width: 0 2px 2px 0;
-    transform: rotate(45deg);
-}
-
-/* 푸터 (등록 버튼) */
-.modal-footer {
-    padding: 0 24px 24px;
-    border-top: none;
-    margin-top: 0;
-}
-
-.btn-submit.full-width {
-    width: 100%;
-    background: #000;
-    color: #fff;
-    height: 52px;
-    font-size: 16px;
-    font-weight: 700;
-    border-radius: 6px;
-}
-
-.btn-submit.full-width:hover { background: #333; }
+.modal-footer { padding: 0 24px 24px; border-top: none; margin-top: 0; display: block; }
+.btn-submit.full-width { width: 100%; background: #000; color: #fff; height: 50px; font-size: 14px; font-weight: 700; text-transform: uppercase; border: 1px solid #000; cursor: pointer; transition: opacity 0.2s; }
+.btn-submit.full-width:hover { opacity: 0.8; }
