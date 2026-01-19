@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     // [2] 사이즈 옵션 생성 기능
-    const sizeList = [225, 230, 235, 240, 245, 250, 255, 260, 265, 270, 275, 280, 285, 290, 295, 300];
+    const sizeList = [220, 230, 235, 240, 245, 250, 255, 260, 265, 270, 275, 280, 285, 290];
     const optionTbody = document.getElementById('optionTbody');
     const colorInput = document.getElementById('colorInput');
 
