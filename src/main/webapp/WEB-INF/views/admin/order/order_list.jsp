@@ -72,12 +72,10 @@
 							Showing <b>${dataCount}</b> orders results
 						</div>
 						<div class="action-group">
-							<button type="button" class="btn" onclick="updateOrderStatus()">상태
-								일괄변경</button>
-							<button type="button" class="btn" onclick="sendDelivery()">발주
-								확인</button>
-							<button type="button" class="btn" onclick="excelDownload()">EXCEL
-								다운로드</button>
+							<button type="button" class="btn btn-outline-dark"
+								onclick="bulkTrackingUpdate()">송장번호 일괄등록</button>
+							<button type="button" class="btn btn-dark"
+								onclick="excelDownload()">EXCEL 다운로드</button>
 						</div>
 					</div>
 
@@ -158,6 +156,9 @@
 	</div>
 
 	<jsp:include page="/WEB-INF/views/admin/layout/footerResources.jsp" />
+	<script type="text/javascript">
+    var orderDataCount = "${dataCount}";
+	</script>
 	<script
 		src="${pageContext.request.contextPath}/dist/js/admin_order_list.js"></script>
 </body>

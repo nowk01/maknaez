@@ -47,9 +47,9 @@
 		NVL(ps.PD_SIZE, '-')
 		AS pdSize,
 
-		NVL(m2.userName, '탈퇴회원') AS userName, NVL(m1.userId,
-		'unknown') AS userId FROM orders
-		o
+		NVL(m2.userName, '탈퇴회원') AS userName, 
+		NVL(m1.userId,'unknown') AS userId,
+		m2.tel FROM orders o
 		LEFT JOIN order_items oi ON
 		o.ITEMS_ID = oi.ORDER_ID
 		LEFT JOIN pd_size ps ON oi.OPT_ID = ps.OPT_ID
