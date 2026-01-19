@@ -23,16 +23,20 @@
 				</div>
 
 				<div class="card-box">
-					<form class="search-grid" name="estimateSearchForm" method="get"
-						action="${pageContext.request.contextPath}/admin/order/estimate_list">
+					<form class="search-grid" name="estimateSearchForm"
+						onsubmit="searchList(); return false;">
 						<div>
-							<label class="form-label" style="font-size: 12px;">주문 기간</label>
-							<input type="date" name="startDate" class="form-control"
-								value="${startDate}">
+							<label class="form-label" style="font-size: 12px;">거래 기간</label>
+							<div class="d-flex align-items-center">
+								<input type="date" id="startDate" class="form-control"
+									value="${startDate}"> <span class="mx-1">~</span> <input
+									type="date" id="endDate" class="form-control"
+									value="${endDate}">
+							</div>
 						</div>
 						<div>
 							<label class="form-label" style="font-size: 12px;">주문 상태</label>
-							<select name="status" class="form-select">
+							<select id="status" class="form-select">
 								<option value="">전체 상태</option>
 								<option value="결제완료" ${status=='결제완료'?'selected':''}>결제완료</option>
 								<option value="배송중" ${status=='배송중'?'selected':''}>배송중</option>
@@ -41,11 +45,11 @@
 						</div>
 						<div>
 							<label class="form-label" style="font-size: 12px;">상세 검색</label>
-							<input type="text" name="searchValue" class="form-control"
+							<input type="text" id="searchValue" class="form-control"
 								placeholder="주문번호, 주문자명 입력" value="${searchValue}">
 						</div>
 						<div>
-							<button type="submit" class="btn-search">SEARCH</button>
+							<button type="button" class="btn-search" onclick="searchList()">SEARCH</button>
 						</div>
 					</form>
 				</div>
@@ -122,8 +126,8 @@
 		src="${pageContext.request.contextPath}/dist/js/admin_estimate_list.js"></script>
 
 	<script>
-	 	const contextPath = "${pageContext.request.contextPath}";
-	 	
+		const contextPath = "${pageContext.request.contextPath}";
+
 		function openEstimateWrite(orderNum) {
 			if (!orderNum || orderNum === 'null' || orderNum === '') {
 				alert("유효한 주문 번호가 없습니다.");
