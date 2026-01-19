@@ -67,6 +67,7 @@
                                     <tr>
                                         <td class="text-center">
                                             ${dataCount - (page-1) * 10 - status.index}
+                                            <input type="hidden" name="prodId" value="${dto.prodId}">
                                             <input type="checkbox" name="optIds" value="${dto.optId}" class="form-check-input ms-2">
                                         </td>
                                         
@@ -106,7 +107,7 @@
                                         
                                         <td class="text-center">
                                             <button type="button" class="btn btn-sm btn-outline-dark" 
-                                                    onclick="openStockModal('${dto.optId}', '${dto.prodName}', '${dto.prodSize}', '${dto.stockQty}')">
+                                                    onclick="openStockModal('${dto.prodId}', '${dto.optId}', '${dto.prodName}', '${dto.prodSize}', '${dto.stockQty}')">
                                                 <i class="fas fa-edit"></i>
                                             </button>
                                         </td>
@@ -169,7 +170,8 @@
                     </div>
                     
                     <input type="hidden" id="modalOptId">
-                    <input type="hidden" id="modalMode" value="single"> </div>
+					<input type="hidden" id="modalProdId"> 
+					<input type="hidden" id="modalMode" value="single"> </div>
                 <div class="modal-footer border-0 pt-0">
                     <button type="button" class="btn btn-dark w-100" onclick="updateStockSubmit()">저장 (Update)</button>
                 </div>

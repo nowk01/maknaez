@@ -439,11 +439,11 @@ public class ProductServiceImpl implements ProductService {
         return 0;
     }
 	
-	public void updateStock(long[] optIds, int qty, String reason) throws Exception {
+	public void updateStock(long[] prodIds, long[] optIds, int qty, String reason) throws Exception {
 	    try {
-	        for (long optId : optIds) {
+	        for (int i=0; i<optIds.length; i++) {
 	            // 1. 현재 재고 조회
-	            Integer currentStock = mapper.getLastStock(optId);
+	            Integer currentStock = mapper.getLastStock(optIds[i]);
 	            if (currentStock == null) currentStock = 0;
 
 	            // 2. 최종 재고 계산
@@ -452,7 +452,8 @@ public class ProductServiceImpl implements ProductService {
 
 	            // 3. 로그 기록 (신규 메서드 호출!)
 	            Map<String, Object> map = new HashMap<>();
-	            map.put("optId", optId);
+	            map.put("prodId", prodIds[i]);
+	            map.put("optId", optIds[i]);
 	            map.put("qty", qty);
 	            map.put("finalStock", finalStock); // 계산된 잔고
 	            map.put("reason", reason);
@@ -539,5 +540,6 @@ public class ProductServiceImpl implements ProductService {
 		}
 		return list;
 	}
+
 	
 }

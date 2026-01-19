@@ -48,5 +48,5 @@ public interface ProductService {
     
     public List<ProductDTO> listStock(Map<String, Object> map) throws Exception;
     public int dataCountStock(Map<String, Object> map) throws Exception;
-    public void updateStock(long[] optIds, int qty, String reason) throws Exception;
+    public void updateStock(long[] prodIds, long[] optIds, int qty, String reason) throws Exception;
 }

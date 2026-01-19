@@ -448,42 +448,52 @@
     <!-- 재고 관리(관리자) -->
     
     <select id="listStock" parameterType="map" resultType="com.maknaez.model.ProductDTO">
-        SELECT 
-            p.prod_id AS prodId,
-            p.prod_name AS prodName,
-            p.thumb_nail AS thumbnail,
-            c.cate_name AS cateName,
-            ps.opt_id,
-            ps.pd_size AS prodSize,
-            NVL((
-                SELECT prod_stock 
-                FROM stock_logs 
-                WHERE opt_id = ps.opt_id 
-                ORDER BY log_id DESC 
-                OFFSET 0 ROWS FETCH NEXT 1 ROWS ONLY
-            ), 0) AS stockQty,
-            (
-                SELECT reg_date 
-                FROM stock_logs 
-                WHERE opt_id = ps.opt_id 
-                ORDER BY log_id DESC 
-                OFFSET 0 ROWS FETCH NEXT 1 ROWS ONLY
-            ) AS regDate
+	    SELECT 
+	        p.prod_id    AS prodId,
+	        p.prod_name  AS prodName,
+	        p.thumb_nail AS thumbnail,
+	        c.cate_name  AS cateName,
+	        ps.opt_id    AS optId,
+	        ps.pd_size   AS prodSize,
+	        -- 재고 테이블과 조인하여 가져온 값 (없으면 0)
+	        NVL(sl.prod_stock, 0) AS stockQty,
+	        sl.reg_date           AS regDate
+	    FROM products p
 
-        FROM products p
-        JOIN pd_size ps ON p.prod_id = ps.prod_id
-        JOIN category c ON p.cate_code = c.cate_code
-        <where>
-            p.status != 0  <if test="cateCode != null and cateCode != ''">
-                AND p.cate_code = #{cateCode}
-            </if>
-            <if test="keyword != null and keyword != ''">
-                AND (p.prod_name LIKE '%' || #{keyword} || '%')
-            </if>
-        </where>
-        ORDER BY p.prod_id DESC, ps.pd_size ASC
-        OFFSET #{offset} ROWS FETCH NEXT #{size} ROWS ONLY
-    </select>
+	    JOIN pd_size ps ON p.prod_id = ps.prod_id
+	    JOIN category c ON p.cate_code = c.cate_code
+	    
+	    -- 2. [핵심] 재고 로그 중 '옵션별 최신 1건'만 가져와서 조인
+	    LEFT JOIN (
+	        SELECT 
+	            opt_id, 
+	            prod_stock, 
+	            reg_date
+	        FROM (
+	            SELECT 
+	                opt_id, 
+	                prod_stock, 
+	                reg_date,
+	                -- 옵션ID별로 log_id 내림차순 순번 매기기 (1등이 최신)
+	                ROW_NUMBER() OVER(PARTITION BY opt_id ORDER BY log_id DESC) as rn
+	            FROM stock_logs
+	        )
+	        WHERE rn = 1
+	    ) sl ON ps.opt_id = sl.opt_id
+	
+	    <where>
+	        p.status != 0 
+	        <if test="cateCode != null and cateCode != ''">
+	            AND p.cate_code = #{cateCode}
+	        </if>
+	        <if test="keyword != null and keyword != ''">
+	            AND (p.prod_name LIKE '%' || #{keyword} || '%')
+	        </if>
+	    </where>
+	
+	    ORDER BY p.prod_id DESC, ps.pd_size ASC
+	    OFFSET #{offset} ROWS FETCH NEXT #{size} ROWS ONLY
+	</select>
     
     <select id="dataCountStock" parameterType="map" resultType="Integer">
         SELECT COUNT(*)
@@ -513,7 +523,7 @@
             log_id, prod_id, opt_id, CHANGE_QTY, prod_stock, CHANGE_TYPE, reg_date
         ) VALUES (
             stock_seq.NEXTVAL,
-            (SELECT prod_id FROM pd_size WHERE opt_id = #{optId}), -- optId로 prodId 찾기
+            #{prodId},
             #{optId},
             #{qty},         -- 이번 변동 수량 (+5)
             #{finalStock},  -- [핵심] 계산된 최종 재고 (15)

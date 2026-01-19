@@ -176,19 +176,22 @@ public class ProductManageController {
         try {
             // 파라미터 받기 (단일/일괄 모두 처리 가능하도록 배열로 받음)
             String[] sOptIds = req.getParameterValues("optIds");
+            String[] sProdIds = req.getParameterValues("prodIds");
             String sQty = req.getParameter("qty"); // 변동 수량 (+/-)
             String reason = req.getParameter("reason"); // 변동 사유
             
             int qty = Integer.parseInt(sQty);
             
-            if(sOptIds != null && sOptIds.length > 0) {
+            if(sOptIds != null && sOptIds.length > 0 && sProdIds != null && sProdIds.length == sOptIds.length) {
                 long[] optIds = new long[sOptIds.length];
+                long[] prodIds = new long[sOptIds.length];
                 for(int i=0; i<sOptIds.length; i++) {
                     optIds[i] = Long.parseLong(sOptIds[i]);
+                    prodIds[i] = Long.parseLong(sProdIds[i]);
                 }
                 
                 // 서비스 호출
-                service.updateStock(optIds, qty, reason);
+                service.updateStock(prodIds, optIds, qty, reason);
             }
             
             resp.setContentType("application/json; charset=utf-8");

@@ -13,20 +13,24 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 });
 
-function openStockModal(optId, prodName, size, currentStock) {
+function openStockModal(prodId, optId, prodName, size, currentStock) {
     const modalTitle = document.getElementById('modalTitle');
     const inputName = document.getElementById('modalProdName');
     const inputStock = document.getElementById('modalCurrentStock');
     const inputOptId = document.getElementById('modalOptId');
     const inputMode = document.getElementById('modalMode');
     const stockArea = document.getElementById('currentStockArea');
+	const inputProdId = document.getElementById('modalProdId');
 
     modalTitle.textContent = "재고 개별 관리";
     inputName.value = prodName + " [" + size + "mm]";
     inputStock.value = currentStock + " 개";
     inputOptId.value = optId;
+	inputProdId.value = prodId;
+	
     inputMode.value = "single";
     stockArea.style.display = "block"; // 현재 재고 보이기
+	
 
     // 모달 표시
     const myModal = new bootstrap.Modal(document.getElementById('stockModal'));
@@ -66,15 +70,22 @@ function updateStockSubmit() {
     }
 
     let optIds = [];
+	let prodIds = [];
     
     if(mode === 'single') {
         // 단일 처리
         optIds.push(document.getElementById('modalOptId').value);
+		prodIds.push(document.getElementById('modalProdId').value);
     } else {
         // 일괄 처리 (체크박스 값 수집)
         const checkedBoxes = document.querySelectorAll('tbody input[name="optIds"]:checked');
         checkedBoxes.forEach(function(cb) {
             optIds.push(cb.value);
+			
+			const prodIdInput = cb.previousElementSibling; 
+            if(prodIdInput && prodIdInput.name === 'prodId') {
+                prodIds.push(prodIdInput.value);
+            }
         });
     }
 
@@ -85,6 +96,7 @@ function updateStockSubmit() {
         traditional: true, // 배열 전송 허용
         data: {
             optIds: optIds,
+			prodIds: prodIds,
             qty: qty,
             reason: reason
         },
