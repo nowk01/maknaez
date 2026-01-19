@@ -5,24 +5,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.json.JSONObject;
-
 import com.maknaez.model.ProductDTO;
 import com.maknaez.model.SessionInfo;
 import com.maknaez.model.WishlistDTO;
 import com.maknaez.mvc.annotation.Controller;
 import com.maknaez.mvc.annotation.GetMapping;
 import com.maknaez.mvc.annotation.PostMapping;
-import com.maknaez.mvc.annotation.RequestMapping;
-import com.maknaez.mvc.annotation.RequestMethod;
 import com.maknaez.mvc.annotation.ResponseBody;
 import com.maknaez.mvc.view.ModelAndView;
 import com.maknaez.service.ProductService;
 import com.maknaez.service.ProductServiceImpl;
+import com.maknaez.service.ReviewService;
+import com.maknaez.service.ReviewServiceImpl;
 import com.maknaez.service.WishlistService;
 import com.maknaez.service.WishlistServiceImpl;
 
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -32,10 +29,12 @@ public class ProductController {
 
     private ProductService productService;
     private WishlistService wishlistService;
+    private ReviewService reviewService;
 
     public ProductController() {
         this.productService = new ProductServiceImpl();
         this.wishlistService = new WishlistServiceImpl();
+        this.reviewService = new ReviewServiceImpl();
     }
     
 
@@ -102,12 +101,14 @@ public class ProductController {
         }
         List<ProductDTO> relatedProducts = productService.listRelatedProducts(prodId, dto.getCateCode());
         List<ProductDTO> sizeList = productService.listProductSizes(prodId);
+        Map<String, Object> reviewStats = reviewService.readReviewStats(prodId);
 
         ModelAndView mav = new ModelAndView("product/detail");
         mav.addObject("dto", dto); 
         mav.addObject("sizeList", sizeList); 
         mav.addObject("recentProductIds", idList);
         mav.addObject("relatedProducts", relatedProducts);
+        mav.addObject("reviewStats", reviewStats);
 
         HttpSession session = req.getSession();
         SessionInfo info = (SessionInfo) session.getAttribute("member");

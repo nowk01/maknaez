@@ -15,4 +15,7 @@ public interface ReviewMapper {
 	
 	int countMyReviews(long memberIdx);
 	List<ReviewDTO> selectMyReviews(Map<String, Object> map);
+
+	
+	public Map<String, Object> selectProductReviewStats(long prodId); // 상품별 평균 별점 및 리뷰 통계 조회
 }

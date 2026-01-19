@@ -11,4 +11,5 @@ public interface ReviewService {
 	
 	public int dataCountMyReviews(long memberIdx);
 	public List<ReviewDTO> listMyReviews(Map<String, Object> map);
+	public Map<String, Object> readReviewStats(long prodId); // 리뷰 통계(평점, 전체 개수) 조회
 }

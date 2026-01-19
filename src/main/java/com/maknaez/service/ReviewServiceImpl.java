@@ -72,6 +72,19 @@ public class ReviewServiceImpl implements ReviewService {
     public List<ReviewDTO> listMyReviews(Map<String, Object> map) {
         return mapper.selectMyReviews(map);
     }
+    
+    @Override
+	public Map<String, Object> readReviewStats(long prodId) {
+		Map<String, Object> map = null;
+		try {
+			map = mapper.selectProductReviewStats(prodId);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return map;
+	}
+    
+    
 	
 	
 	
