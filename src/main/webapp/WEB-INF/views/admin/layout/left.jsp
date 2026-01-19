@@ -386,6 +386,7 @@
         <div class="collapse" id="menu-stats">
             <div class="submenu">
                 <a href="${pageContext.request.contextPath}/admin/stats/sales_stats" class="submenu-item">매출 분석 (Sales)</a>
+                <a href="${pageContext.request.contextPath}/admin/stats/product_stats" class="submenu-item">상품 통계 (Product)</a>
                 <a href="${pageContext.request.contextPath}/admin/stats/customer_stats" class="submenu-item">고객 통계 (User)</a>
                 <a href="${pageContext.request.contextPath}/admin/stats/visitor_stats" class="submenu-item">트래픽 (Traffic)</a>
             </div>

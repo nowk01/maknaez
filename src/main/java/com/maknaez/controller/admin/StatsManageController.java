@@ -15,16 +15,24 @@ import jakarta.servlet.http.HttpServletResponse;
 @RequestMapping("/admin/stats/*")
 public class StatsManageController {
 	
-	@GetMapping("customer_stats")
-	public ModelAndView customerStats(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		ModelAndView mav = new ModelAndView("admin/stats/customer_stats");
-		
-		return mav;
-	}
 	
 	@GetMapping("sales_stats")
 	public ModelAndView salesStats(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		ModelAndView mav = new ModelAndView("admin/stats/sales_stats");
+		
+		return mav;
+	}
+	
+	@GetMapping("product_stats")
+	public ModelAndView productStats(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		ModelAndView mav = new ModelAndView("admin/stats/product_stats");
+		
+		return mav;
+	}
+	
+	@GetMapping("customer_stats")
+	public ModelAndView customerStats(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		ModelAndView mav = new ModelAndView("admin/stats/customer_stats");
 		
 		return mav;
 	}
