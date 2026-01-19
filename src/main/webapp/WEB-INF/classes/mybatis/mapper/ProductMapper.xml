@@ -317,6 +317,12 @@
 	        SYSDATE, 
 	        #{thumbnail, jdbcType=VARCHAR}  )
 	</insert>
+	
+	<select id="getOptId" parameterType="map" resultType="Long">
+	    SELECT opt_id 
+	    FROM pd_size 
+	    WHERE prod_id = #{prodId} AND pd_size = #{pdSize}
+	</select>
     
     <insert id="insertProductImg" parameterType="map">
 	    INSERT INTO product_img (img_id, prod_id, img)

@@ -348,21 +348,47 @@ public class ProductServiceImpl implements ProductService {
 
 	        if (sizes != null && stocks != null) {
 	            for (int i = 0; i < sizes.size(); i++) {
-	                try {
+	                String sizeName = sizes.get(i);
+	                int newStockQty = stocks.get(i);
+
+	                // 파라미터 맵 생성
+	                Map<String, Object> paramMap = new HashMap<>();
+	                paramMap.put("prodId", dto.getProdId());
+	                paramMap.put("pdSize", sizeName);
+
+	                // [핵심] 이미 존재하는 사이즈인지 확인
+	                Long existingOptId = mapper.getOptId(paramMap);
+	                long optId;
+
+	                if (existingOptId == null) {
+	                    // (1) 존재하지 않으면 -> INSERT (새 옵션 생성)
 	                    ProductDTO optDto = new ProductDTO();
 	                    optDto.setProdId(dto.getProdId());
-	                    optDto.setPdSize(sizes.get(i));
+	                    optDto.setPdSize(sizeName);
 	                    
-	                    mapper.insertPdSize(optDto); 
-	                    
-	                    // 재고 로그 추가
+	                    mapper.insertPdSize(optDto);
+	                    optId = optDto.getOptId(); // 새로 생성된 키값
+	                } else {
+	                    // (2) 존재하면 -> 기존 opt_id 사용 (pd_size 테이블은 건드리지 않음)
+	                    optId = existingOptId;
+	                }
+
+	                // 3. 재고 로그 업데이트 (값이 변경되었거나 새로 등록된 경우)
+	                // 현재 재고 조회
+	                Integer currentStock = mapper.getLastStock(optId);
+	                if (currentStock == null) currentStock = 0;
+
+	                // 재고 수량에 차이가 있을 때만 로그 insert (선택 사항, 모든 변경 시 기록하려면 조건문 제거)
+	                if (existingOptId == null || currentStock != newStockQty) {
 	                    Map<String, Object> stockMap = new HashMap<>();
 	                    stockMap.put("prodId", dto.getProdId());
-	                    stockMap.put("optId", optDto.getOptId()); // 방금 생성된 optId
-	                    stockMap.put("qty", stocks.get(i));
-	                    mapper.insertStockLog(stockMap);
+	                    stockMap.put("optId", optId);
 	                    
-	                } catch (Exception e) {
+	                    // 현재 작성된 insertStockLog 쿼리는 'qty'를 prod_stock(잔여량)으로 바로 세팅하므로
+	                    // 관리자가 입력한 최종 수량(newStockQty)을 그대로 넘겨주면 됩니다.
+	                    stockMap.put("qty", newStockQty); 
+	                    
+	                    mapper.insertStockLog(stockMap);
 	                }
 	            }
 	        }

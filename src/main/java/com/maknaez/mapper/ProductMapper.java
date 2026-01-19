@@ -35,6 +35,7 @@ public interface ProductMapper {
     public List<CategoryDTO> listCategoryAll();
     public void deleteProduct(long prodId) throws Exception;
     public void deleteProductImg(long imgId) throws Exception;
+    public Long getOptId(Map<String, Object> map);
     
     public List<ProductDTO> listStock(Map<String, Object> map); // 재고 현황 목록 조회
     public int dataCountStock(Map<String, Object> map); // 재고 목록 개수 (페이징용)
