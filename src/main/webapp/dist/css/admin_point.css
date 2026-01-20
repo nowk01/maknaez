@@ -1,6 +1,5 @@
 @charset "UTF-8";
 
-/* [MAKNAEZ] Premium Admin Point Theme - Minimal Luxury Edition */
 body {
 	background-color: #fcfcfd;
 	color: #202224;
@@ -138,7 +137,7 @@ to {
 
 .table {
 	width: 100%;
-	border-top: 2px solid #1a1c1e !important;
+	border-top: 1px solid #1a1c1e !important;
 	vertical-align: middle;
 }
 

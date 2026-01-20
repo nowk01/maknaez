@@ -12,8 +12,7 @@ body {
 	animation: fadeIn 0.5s ease-out;
 }
 
-@
-keyframes fadeIn {from { opacity:0;
+@keyframes fadeIn {from { opacity:0;
 	transform: translateY(10px);
 }
 
@@ -140,7 +139,7 @@ to {
 .custom-table {
 	width: 100%;
 	border-collapse: collapse;
-	border-top: 2px solid #111;
+	border-top: 1px solid #111;
 }
 
 .custom-table thead th {

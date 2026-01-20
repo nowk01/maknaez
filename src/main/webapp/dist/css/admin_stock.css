@@ -1,6 +1,5 @@
 @charset "UTF-8";
 
-/* [MAKNAEZ] Premium Stock Management Style */
 body { 
     background-color: #fafafa; 
     color: #111; 
@@ -18,7 +17,61 @@ body {
     to { opacity: 1; transform: translateY(0); }
 }
 
-/* 베스트 디자인: 5px 슬림 오렌지 바 헤더 */
+.search-main-row {
+    display: flex !important;
+    align-items: flex-end !important;
+    gap: 20px !important;
+    width: 100% !important;
+}
+
+.search-group-input {
+    display: flex !important;
+    flex: 1 !important; 
+    gap: 20px !important;
+    align-items: flex-end !important;
+}
+
+.search-item {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 8px !important;
+}
+
+.flex-grow-item {
+    flex: 1 !important; 
+}
+
+.search-label {
+    font-size: 13px !important;
+    font-weight: 800 !important;
+    color: #111 !important;
+    white-space: nowrap !important;
+}
+
+.premium-select {
+    width: 200px !important;
+    height: 44px !important;
+    border-radius: 0 !important;
+}
+
+.premium-input {
+    width: 100% !important; 
+    height: 44px !important;
+    border-radius: 0 !important;
+    padding: 0 15px !important;
+}
+
+.btn-search-wide {
+    width: 140px !important;
+    height: 44px !important;
+    background: #111 !important;
+    color: #fff !important;
+    font-weight: 800 !important;
+    border: none !important;
+    flex-shrink: 0 !important;
+}
+
+
 .page-header { 
     margin-bottom: 45px; 
     border-left: 5px solid #ff4e00; 
@@ -27,7 +80,6 @@ body {
 .page-title { font-weight: 800; font-size: 25px; color: #000; }
 .page-desc { color: #888; font-size: 14px; margin-top: 5px; font-weight: 500; }
 
-/* 섹션 카드 */
 .card-box {
     background: #ffffff;
     border-radius: 2px;
@@ -37,10 +89,8 @@ body {
     box-shadow: 0 2px 12px rgba(0,0,0,0.02);
 }
 
-/* 테이블 레이아웃 및 가독성 */
 .table { vertical-align: middle; margin-bottom: 0; table-layout: fixed; }
 
-/* [수정] 헤더 스타일 하나로 통합 */
 .table thead th { 
     background-color: #f8f9fa;
     color: #999;
@@ -61,7 +111,6 @@ body {
     text-align: center;
 }
 
-/* 뱃지 스타일 */
 .badge {
     font-weight: 500;
     padding: 6px 10px;
@@ -72,10 +121,8 @@ body {
 .bg-danger { background-color: #fff5f5 !important; color: #ff4e00; border: 1px solid #ff4e00; } /* 품절임박 */
 .bg-success { background-color: #f0fff4 !important; color: #28a745; border: 1px solid #28a745; } /* 정상 */
 
-/* 재고 위험 알림 텍스트 */
 .text-danger-custom { color: #ff4e00 !important; font-weight: 800; }
 
-/* 하단 버튼 바 */
 .btn-group-custom { display: flex; justify-content: flex-end; gap: 12px; margin-top: 50px; }
 .btn-luxury {
     width: 160px; height: 52px; font-weight: 800; font-size: 14px;
@@ -87,7 +134,6 @@ body {
 .btn-orange:hover { background: #000; transform: translateY(-3px); }
 .btn-dark { background: #111; color: #fff; }
 
-/* 체크박스 크기 조정 */
 .form-check-input {
     width: 1.1em;
     height: 1.1em;
@@ -122,9 +168,8 @@ body {
     font-weight: 700;
 }
 
-/* [추가] 모달 디자인 */
 .modal-header {
-    border-bottom: 3px solid #ff4e00 !important; /* 오렌지색 라인 강조 */
+    border-bottom: 3px solid #ff4e00 !important; 
     background-color: #fff;
     border-radius: 2px 2px 0 0;
 }
@@ -136,4 +181,29 @@ body {
     background-color: #f8f9fa;
     color: #666;
     border-color: #eee;
+}
+
+#stockModal .btn-dark:hover {
+    background-color: #ff4e00 !important;
+    border-color: #ff4e00 !important;
+    transform: translateY(-2px);
+    transition: all 0.2s ease;
+}
+
+#stockModal .form-control:not([readonly]):hover, 
+#stockModal .form-select:hover {
+    border-color: #ff4e00 !important;
+    background-color: #fffaf8 !important; 
+}
+
+#stockModal .form-control:focus, 
+#stockModal .form-select:focus {
+    border-color: #ff4e00 !important;
+    box-shadow: 0 0 0 0.25rem rgba(255, 78, 0, 0.15) !important;
+    outline: none !important;
+}
+
+#modalChangeQty:hover {
+    font-weight: 800;
+    color: #ff4e00;
 }

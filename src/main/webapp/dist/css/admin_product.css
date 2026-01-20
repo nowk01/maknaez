@@ -39,17 +39,23 @@ body {
 
 .search-premium-card {
 	background: #fff;
-	padding: 45px 50px;
+	padding: 40px 50px;
 	border: 1px solid #eee;
-	margin-bottom: 40px;
-	box-shadow: 0 15px 40px rgba(0, 0, 0, 0.02);
+	margin-bottom: 30px;
 }
 
-.search-main-row {
-	display: flex;
-	align-items: center;
-	gap: 20px;
-	width: 100%;
+.premium-select, .premium-input {
+    height: 44px;
+    border: 1px solid #ddd;
+    font-size: 14px;
+    padding: 0 15px;
+}
+
+.search-main-row, .search-flex-row {
+    display: flex !important;
+    align-items: flex-start !important;
+    gap: 10px !important;
+    width: 100%;
 }
 
 .search-group-input {
@@ -58,30 +64,29 @@ body {
 	gap: 12px;
 }
 
-.premium-select, .premium-input {
-	height: 60px !important;
-	border: 1px solid #ddd !important;
-	border-radius: 0 !important;
-	font-size: 15px !important;
-	padding: 0 20px !important;
+.btn-search-premium, .btn-search-wide, form[name="searchForm"] button {
+    margin-top: 0;
+    height: 44px;
+    width: 120px; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    vertical-align: top; 
 }
 
-.premium-select {
-	width: 200px !important;
-}
-
-.premium-input {
-	flex-grow: 1 !important;
+.premium-select, .premium-input, .form-control, .form-select {
+    height: 44px;
+    margin-top: 0;
 }
 
 .btn-search-wide {
 	background: #ff4e00;
 	color: #fff;
 	border: none;
-	height: 60px;
-	width: 200px;
+	height: 44px;
+	width: 140px;
 	font-weight: 800;
-	font-size: 16px;
+	font-size: 14px;
 	border-radius: 0;
 	cursor: pointer;
 	transition: 0.3s ease;
