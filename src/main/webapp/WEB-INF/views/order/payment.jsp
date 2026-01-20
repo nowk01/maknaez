@@ -16,138 +16,52 @@
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 
 <style>
+    /* ... (기존 스타일 유지) ... */
     @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&family=Noto+Sans+KR:wght@300;400;500;700&display=swap');
 
-    body {
-        font-family: 'Noto Sans KR', sans-serif;
-        color: #000;
-        background-color: #fff;
-    }
-
-    .payment-wrap {
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 60px 20px 120px;
-    }
-
-    /* 타이틀 */
-    .page-title {
-        text-align: center;
-        font-size: 32px;
-        font-weight: 700;
-        margin-bottom: 50px;
-        letter-spacing: -1px;
-    }
-
-    /* 섹션 공통 */
-    .section-title {
-        font-size: 20px;
-        font-weight: 700;
-        border-bottom: 2px solid #000;
-        padding-bottom: 15px;
-        margin-bottom: 20px;
-        margin-top: 40px;
-    }
+    body { font-family: 'Noto Sans KR', sans-serif; color: #000; background-color: #fff; }
+    .payment-wrap { max-width: 1200px; margin: 0 auto; padding: 60px 20px 120px; }
+    .page-title { text-align: center; font-size: 32px; font-weight: 700; margin-bottom: 50px; letter-spacing: -1px; }
+    
+    .section-title { font-size: 20px; font-weight: 700; border-bottom: 2px solid #000; padding-bottom: 15px; margin-bottom: 20px; margin-top: 40px; }
     .section-title:first-child { margin-top: 0; }
-
-    /* 상품 정보 테이블 */
-    .tbl-order {
-        width: 100%;
-        border-collapse: collapse;
-        border-bottom: 1px solid #ddd;
-    }
-    .tbl-order th {
-        padding: 15px;
-        border-bottom: 1px solid #000;
-        text-align: center;
-        font-weight: 600;
-        background: #f9f9f9;
-    }
-    .tbl-order td {
-        padding: 20px 10px;
-        text-align: center;
-        border-top: 1px solid #eee;
-        vertical-align: middle;
-    }
+    
+    .tbl-order { width: 100%; border-collapse: collapse; border-bottom: 1px solid #ddd; }
+    .tbl-order th { padding: 15px; border-bottom: 1px solid #000; text-align: center; font-weight: 600; background: #f9f9f9; }
+    .tbl-order td { padding: 20px 10px; text-align: center; border-top: 1px solid #eee; vertical-align: middle; }
     .td-info { text-align: left !important; display: flex; align-items: center; }
     .td-info img { width: 80px; height: 80px; object-fit: cover; border: 1px solid #eee; margin-right: 15px; }
     .td-info .p-name { font-weight: 500; font-size: 15px; margin-bottom: 5px; }
     .td-info .p-opt { font-size: 13px; color: #888; }
-
-    /* 폼 스타일 */
+    
     .form-label { font-weight: 500; font-size: 14px; margin-top: 10px; }
-    .form-control, .form-select {
-        border-radius: 0;
-        border: 1px solid #ddd;
-        padding: 10px 15px;
-        font-size: 14px;
-    }
-    .form-control:focus, .form-select:focus {
-        border-color: #000;
-        box-shadow: none;
-    }
-    .btn-addr {
-        border-radius: 0;
-        background: #333;
-        color: #fff;
-        border: 1px solid #333;
-        font-size: 13px;
-    }
-    .btn-addr:hover { background: #000; color: #fff; }
+    .form-control, .form-select { border-radius: 0; border: 1px solid #ddd; padding: 10px 15px; font-size: 14px; }
+    .form-control:focus, .form-select:focus { border-color: #000; box-shadow: none; }
+    
+    /* 읽기 전용 필드 스타일 (회색 배경) */
+    .form-control[readonly] { background-color: #f8f9fa; cursor: default; }
 
-    /* 결제 정보 (Sticky) */
-    .sticky-summary {
-        position: sticky;
-        top: 80px; 
-        background: #fdfdfd;
-        border: 1px solid #000;
-        padding: 30px;
-    }
+    .sticky-summary { position: sticky; top: 80px; background: #fdfdfd; border: 1px solid #000; padding: 30px; }
     .sum-row { display: flex; justify-content: space-between; margin-bottom: 15px; font-size: 15px; }
-    .sum-row.total { 
-        margin-top: 20px; 
-        padding-top: 20px; 
-        border-top: 1px solid #ddd; 
-        font-weight: 700; 
-        font-size: 18px; 
-        color: #dc3545; /* 강조색 */
-    }
+    .sum-row.total { margin-top: 20px; padding-top: 20px; border-top: 1px solid #ddd; font-weight: 700; font-size: 18px; color: #dc3545; }
     .sum-row.total .price { font-family: 'Montserrat', sans-serif; font-size: 24px; }
-
-    .btn-pay {
-        width: 100%;
-        height: 60px;
-        background: #000;
-        color: #fff;
-        font-size: 18px;
-        font-weight: 700;
-        border: none;
-        border-radius: 0;
-        margin-top: 30px;
-        transition: background 0.2s;
-    }
+    .btn-pay { width: 100%; height: 60px; background: #000; color: #fff; font-size: 18px; font-weight: 700; border: none; border-radius: 0; margin-top: 30px; transition: background 0.2s; }
     .btn-pay:hover { background: #333; }
-
-    /* 라디오 버튼 커스텀 */
     .pay-method-wrap { display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap; }
     .pay-radio { display: none; }
-    .pay-label {
-        flex: 1 1 30%; /* 3개 나란히 배치 */
-        text-align: center;
-        padding: 15px 0;
-        border: 1px solid #ddd;
-        cursor: pointer;
-        font-weight: 500;
-        transition: all 0.2s;
-        font-size: 13px;
-        white-space: nowrap;
-    }
-    .pay-radio:checked + .pay-label {
-        border-color: #000;
-        background: #000;
-        color: #fff;
-    }
+    .pay-label { flex: 1 1 30%; text-align: center; padding: 15px 0; border: 1px solid #ddd; cursor: pointer; font-weight: 500; transition: all 0.2s; font-size: 13px; white-space: nowrap; }
+    .pay-radio:checked + .pay-label { border-color: #000; background: #000; color: #fff; }
 
+    /* [수정] 배송지 변경 버튼 스타일 (오른쪽 정렬을 위해 margin-left 제거 후 아래 html에서 클래스 처리) */
+    .btn-change-addr {
+        border: 1px solid #ddd;
+        background: #fff;
+        font-size: 12px;
+        padding: 5px 10px;
+        vertical-align: middle;
+        font-weight: 500;
+    }
+    .btn-change-addr:hover { border-color: #000; background: #f9f9f9; }
 </style>
 </head>
 <body>
@@ -160,7 +74,6 @@
     <div class="page-title">주문 / 결제</div>
 
     <form name="paymentForm" id="paymentForm">
-        <!-- [중요] 전체 결제 금액은 한 번만 전송 -->
         <input type="hidden" name="total_amount" value="${totalPrice}">
 
         <div class="row">
@@ -183,16 +96,13 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- [수정] 여러 상품을 반복문으로 출력 -->
                         <c:forEach var="item" items="${orderList}">
                             <tr>
                                 <td class="td-info">
-                                    <!-- [중요] 상품별 개별 정보를 hidden으로 생성 -->
                                     <input type="hidden" name="prod_id" value="${item.PROD_ID}">
                                     <input type="hidden" name="quantity" value="${item.QUANTITY}">
                                     <input type="hidden" name="opt_id" value="${item.OPT_ID}">
                                     
-                                    <!-- 이미지 경로 수정: Map 키값은 대문자일 확률이 높음 -->
                                     <img src="${pageContext.request.contextPath}/uploads/product/${item.THUMBNAIL}" 
                                          onerror="this.src='https://placehold.co/80x80?text=No+Img'">
                                     <div>
@@ -206,13 +116,6 @@
                                 </td>
                             </tr>
                         </c:forEach>
-                        
-                        <!-- 상품이 없을 경우 처리 -->
-                        <c:if test="${empty orderList}">
-                            <tr>
-                                <td colspan="3" class="py-5 text-center">주문할 상품 정보가 없습니다.</td>
-                            </tr>
-                        </c:if>
                     </tbody>
                 </table>
 
@@ -233,37 +136,37 @@
                     </div>
                 </div>
 
-                <!-- 3. 배송지 정보 -->
-                <div class="d-flex justify-content-between align-items-end mt-5 mb-3 border-bottom border-dark pb-3">
+                <!-- 3. 배송지 정보 (수정됨) -->
+                <div class="d-flex align-items-center mt-5 mb-3 border-bottom border-dark pb-3">
                     <div class="h5 fw-bold m-0">배송지 정보</div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="sameAddress">
-                        <label class="form-check-label" for="sameAddress">주문자 정보와 동일</label>
-                    </div>
+                    <!-- [수정] ms-auto 클래스 추가하여 오른쪽 끝으로 이동 -->
+                    <button type="button" class="btn-change-addr ms-auto" onclick="openAddressPopup()">[배송지 변경]</button>
                 </div>
 
                 <div class="row mb-3">
                     <div class="col-md-6">
                         <label class="form-label">받는 분 <span class="text-danger">*</span></label>
-                        <input type="text" name="receiver_name" id="receiver_name" class="form-control" placeholder="이름">
+                        <!-- [수정] readonly 추가 (키인 금지) -->
+                        <input type="text" name="receiver_name" id="receiver_name" class="form-control" readonly placeholder="배송지 변경을 클릭하세요">
                     </div>
                     <div class="col-md-6">
                         <label class="form-label">연락처 <span class="text-danger">*</span></label>
-                        <input type="text" name="receiver_tel" id="receiver_tel" class="form-control" placeholder="- 없이 입력">
+                        <input type="text" name="receiver_tel" id="receiver_tel" class="form-control" readonly placeholder="배송지 변경을 클릭하세요">
                     </div>
                 </div>
 
                 <div class="row mb-3">
                     <label class="form-label">주소 <span class="text-danger">*</span></label>
                     <div class="col-12 d-flex gap-2 mb-2">
+                        <!-- [수정] 주소찾기 버튼 제거, readonly 유지 -->
                         <input type="text" name="zip_code" id="zip_code" class="form-control" style="width: 120px;" placeholder="우편번호" readonly>
-                        <button type="button" class="btn btn-addr" onclick="searchAddress()">주소찾기</button>
                     </div>
                     <div class="col-12 mb-2">
                         <input type="text" name="addr1" id="addr1" class="form-control" placeholder="기본 주소" readonly>
                     </div>
                     <div class="col-12">
-                        <input type="text" name="addr2" id="addr2" class="form-control" placeholder="상세 주소를 입력해주세요">
+                        <!-- [수정] 상세주소도 readonly -->
+                        <input type="text" name="addr2" id="addr2" class="form-control" placeholder="상세 주소" readonly>
                     </div>
                 </div>
 
@@ -334,70 +237,44 @@
 <jsp:include page="/WEB-INF/views/layout/footerResources.jsp"/>
 
 <script>
-// [주문자 정보 동일] 체크박스 이벤트
-$(function() {
-    $("#sameAddress").change(function() {
-        if($(this).is(":checked")) {
-            $("#receiver_name").val("${member.userName}");
-            $("#receiver_tel").val("${member.tel}");
-            // 회원의 저장된 주소 정보가 있다면 가져옴 (MemberDTO 필드 기준)
-            $("#zip_code").val("${member.zip}");
-            $("#addr1").val("${member.addr1}");
-            $("#addr2").val("${member.addr2}");
-        } else {
-            $("#receiver_name").val("");
-            $("#receiver_tel").val("");
-            $("#zip_code").val("");
-            $("#addr1").val("");
-            $("#addr2").val("");
-        }
-    });
-});
-
 // [배송 메모] 직접 입력 토글
 function changeMemo(select) {
     const $direct = $("#memoDirect");
     if(select.value === "direct") {
         $direct.show().focus();
-        $direct.prop("name", "memo"); // input이 name을 가짐
+        $direct.prop("name", "memo"); 
         $(select).removeAttr("name");
     } else {
         $direct.hide().val("");
-        $(select).prop("name", "memo"); // select가 name을 가짐
+        $(select).prop("name", "memo"); 
         $direct.removeAttr("name");
     }
 }
 
-// [주소 찾기] 다음 우편번호 API
-function searchAddress() {
-    new daum.Postcode({
-        oncomplete: function(data) {
-            let addr = '';
-            if (data.userSelectedType === 'R') { 
-                addr = data.roadAddress;
-            } else { 
-                addr = data.jibunAddress;
-            }
-            $("#zip_code").val(data.zonecode);
-            $("#addr1").val(addr);
-            $("#addr2").focus();
-        }
-    }).open();
+// [추가] 배송지 변경 팝업 열기
+function openAddressPopup() {
+    // 404 에러 발생 시 여기 URL이 맞는지 확인 필요 (/maknaez/order/address/list 가 되어야 함)
+    // contextPath가 /maknaez 라고 가정
+    const url = "${pageContext.request.contextPath}/order/address/list";
+    const option = "width=500,height=600,top=100,left=200";
+    window.open(url, "addressPopup", option);
 }
+
+// [추가] 팝업에서 호출하는 함수 (데이터 세팅)
+window.setShippingAddress = function(data) {
+    $("#receiver_name").val(data.name);
+    $("#receiver_tel").val(data.tel);
+    $("#zip_code").val(data.zip);
+    $("#addr1").val(data.addr1);
+    $("#addr2").val(data.addr2);
+};
 
 // [결제 요청]
 function processPayment() {
     const f = document.paymentForm;
 
     // 유효성 검사
-    if(!f.receiver_name.value) { alert("받는 분 이름을 입력해주세요."); f.receiver_name.focus(); return; }
-    if(!f.receiver_tel.value) { alert("연락처를 입력해주세요."); f.receiver_tel.focus(); return; }
-    if(!f.zip_code.value || !f.addr1.value) { alert("주소를 입력해주세요."); return; }
-    if(!f.addr2.value) { 
-        if(!confirm("상세주소가 입력되지 않았습니다. 그대로 진행하시겠습니까?")) {
-            f.addr2.focus(); return; 
-        }
-    }
+    if(!f.receiver_name.value) { alert("배송지를 선택해주세요."); openAddressPopup(); return; }
 
     if(!confirm("결제를 진행하시겠습니까?")) return;
 

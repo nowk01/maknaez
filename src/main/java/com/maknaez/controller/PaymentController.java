@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.maknaez.model.AddressDTO;
 import com.maknaez.model.MemberDTO;
 import com.maknaez.model.OrderDTO;
 import com.maknaez.model.OrderItemDTO;
@@ -208,4 +209,28 @@ public class PaymentController {
 
         return result;
     }
+    
+    @GetMapping("/address/list")
+    public ModelAndView addressList(HttpServletRequest req, HttpServletResponse resp) {
+        HttpSession session = req.getSession();
+        SessionInfo info = (SessionInfo) session.getAttribute("member");
+
+        // 로그인 상태가 아니면 빈 팝업을 띄우거나 로그인 유도 (여기선 빈 목록 처리)
+        if (info == null) {
+            return new ModelAndView("order/address_list");
+        }
+
+        ModelAndView mav = new ModelAndView("order/address_list");
+
+        try {
+            // Service 호출 -> Mapper -> DB 조회
+            List<AddressDTO> list = paymentService.getAddressList(info.getMemberIdx());
+            mav.addObject("list", list);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return mav;
+    }
+    
 }

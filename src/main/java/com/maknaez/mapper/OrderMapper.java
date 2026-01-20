@@ -3,6 +3,8 @@ package com.maknaez.mapper;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
+
+import com.maknaez.model.AddressDTO;
 import com.maknaez.model.OrderDTO;
 import com.maknaez.model.OrderItemDTO;
 import com.maknaez.model.ProductDTO;
@@ -29,5 +31,6 @@ public interface OrderMapper {
 
     public List<Map<String, Object>> selectOrderListByCart(String[] cartIds) throws SQLException;
     public Map<String, Object> selectProductForOrder(Map<String, Object> map) throws SQLException;
+    public List<AddressDTO> listAddress(long memberIdx) throws SQLException; // 배송지 목록 조회
 
 }

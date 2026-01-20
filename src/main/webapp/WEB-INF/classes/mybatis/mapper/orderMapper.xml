@@ -2,6 +2,22 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.maknaez.mapper.OrderMapper">
 
+	<select id="getProduct" parameterType="long" resultType="com.maknaez.model.ProductDTO">
+		SELECT
+			prod_id       AS prodId,
+			category_code AS categoryCode,
+			prod_name     AS prodName,
+			base_price    AS basePrice,
+			description   AS description,
+			stock         AS stock,
+			TO_CHAR(prod_date, 'YYYY-MM-DD') AS prodDate,
+			views         AS views,
+			thumb_nail    AS thumbNail,
+			detail_img    AS detailImg
+		FROM products
+		WHERE prod_id = #{prod_id}
+	</select>
+	
 	<select id="dataCount" parameterType="map" resultType="Integer">
 		SELECT NVL(COUNT(*), 0)
 		FROM orders o
@@ -332,4 +348,22 @@
 		LEFT JOIN pd_size s ON p.prod_id = s.prod_id AND s.opt_id = #{optId}
 		WHERE p.prod_id = #{prodId}
 	</select>
+	
+	<!-- 주문창 배송지 조회  -->
+	<select id="listAddress" parameterType="Long" resultType="com.maknaez.model.AddressDTO">
+        SELECT
+            addr_id AS addrId,
+            memberIdx,
+            NVL(addr_name, '배송지') AS addrName,
+            receiver_name AS receiverName,
+            receiver_tel AS receiverTel,
+            zip_code AS zipCode,
+            addr1,
+            addr2,
+            isbasic AS isBasic
+        FROM address
+        WHERE memberIdx = #{memberIdx}
+        ORDER BY isbasic DESC, addr_id DESC
+    </select>
+	
 </mapper>

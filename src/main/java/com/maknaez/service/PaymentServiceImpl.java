@@ -7,6 +7,7 @@ import java.util.Map;
 import org.apache.ibatis.session.SqlSession;
 
 import com.maknaez.mapper.OrderMapper;
+import com.maknaez.model.AddressDTO;
 import com.maknaez.model.OrderDTO;
 import com.maknaez.model.OrderItemDTO;
 import com.maknaez.model.ProductDTO;
@@ -86,7 +87,7 @@ public class PaymentServiceImpl implements PaymentService {
         
         return orderMapper.selectOrderListByCart(cartIds);
     }
-
+    
     /**
      * [추가] 단일 상품 바로 구매 정보 조회
      */
@@ -102,4 +103,12 @@ public class PaymentServiceImpl implements PaymentService {
         
         return orderMapper.selectProductForOrder(param);
     }
+    
+    @Override
+    public List<AddressDTO> getAddressList(long memberIdx) throws Exception {
+        SqlSession session = SqlSessionManager.getSession();
+        OrderMapper orderMapper = session.getMapper(OrderMapper.class);
+        return orderMapper.listAddress(memberIdx);
+    }
+    
 }
