@@ -18,9 +18,21 @@
 
             <div class="content-container">
                 <div class="page-header">
-                    <h3 class="page-title">회원 & VIP 분석</h3>
-                    <p class="page-desc">Customer Demographics & VIP Ranking</p>
-                </div>
+				    <div class="header-text">
+				        <h3 class="page-title">회원 & VIP 분석</h3>
+				        <p class="page-desc">Customer Demographics & VIP Ranking</p>
+				    </div>
+				    
+				    <button type="button" id="btnRefresh" class="btn-refresh" title="데이터 갱신">
+				        <span class="icon-box">
+				            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+				                <path d="M4 12C4 16.4183 7.58172 20 12 20C14.5422 20 16.7944 18.8118 18.242 16.945M20 12C20 7.58172 16.4183 4 12 4C9.55998 4 7.38883 5.09349 5.92383 6.81665" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+				                <path d="M6 3V7H2" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+				            </svg>
+				        </span>
+				        <span>새로고침</span>
+				    </button>
+				</div>
 
                 <div class="stat-card-grid">
 				    <div class="stat-card">

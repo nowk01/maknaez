@@ -2,7 +2,9 @@
 
 /* [MAKNAEZ] Customer Stats Style */
 html, body {
-    height: auto; margin: 0; padding: 0;
+    height: auto !important;
+    min-height: 100% !important;
+    overflow-y: auto !important;
     overflow-x: hidden;
     background-color: #f5f6f8;
     color: #1a1c1e;
@@ -11,9 +13,22 @@ html, body {
 
 #wrapper { display: flex; min-height: 100vh; width: 100%; }
 #page-content-wrapper { flex: 1; background-color: #f5f6f8; display: flex; flex-direction: column; }
+#wrapper, #page-content-wrapper {
+    height: auto !important;
+    overflow: visible !important;
+}
 .content-container { width: 100%; padding: 30px; box-sizing: border-box; }
 
-.page-header { margin-bottom: 20px; border-left: 5px solid #ff4e00; padding-left: 15px; }
+.page-header {
+	display: flex;
+    justify-content: space-between;
+	padding-left: 15px;
+	align-items: center;
+    margin-bottom: 20px;
+    border-left: 5px solid #ff4e00;
+    padding-left: 15px;
+    padding-right: 5px;
+}
 .page-title { font-weight: 800; font-size: 24px; color: #1a1c1e; margin: 0; }
 .page-desc { color: #999; font-size: 13px; margin-top: 5px; text-transform: uppercase; }
 
@@ -70,3 +85,56 @@ html, body {
 .rank-1 { background: #ff4e00; } /* 1등 오렌지 */
 .rank-2 { background: #333; }
 .rank-3 { background: #555; }
+
+
+.btn-refresh {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background-color: #fff;
+    border: 1px solid #e1e1e1;
+    color: #555;
+    padding: 8px 16px;
+    border-radius: 50px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    outline: none;
+}
+
+.btn-refresh svg {
+    width: 18px;
+    height: 18px;
+    transition: transform 0.5s ease;
+}
+
+.btn-refresh:hover {
+    border-color: #ff4e00;
+    color: #ff4e00;
+    background-color: #fff4f0;
+    box-shadow: 0 4px 8px rgba(255, 78, 0, 0.15);
+    transform: translateY(-2px);
+}
+
+/* 왼쪽(반시계) 회전 애니메이션 */
+.btn-refresh.spinning {
+    pointer-events: none;
+    opacity: 0.8;
+}
+
+.btn-refresh.spinning svg {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(-360deg); } /* -360deg: 왼쪽 회전 */
+}
+
+/* 모바일 대응 */
+@media (max-width: 576px) {
+    .btn-refresh span:last-child { display: none; }
+    .btn-refresh { padding: 8px; border-radius: 50%; }
+}

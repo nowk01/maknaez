@@ -2,6 +2,23 @@
 
 document.addEventListener("DOMContentLoaded", function() {
     loadStatsData();
+	
+	const btnRefresh = document.getElementById('btnRefresh');
+    if(btnRefresh) {
+        btnRefresh.addEventListener('click', function() {
+            // 1. 회전 클래스 추가 (애니메이션 시작)
+            this.classList.add('spinning');
+            
+            // 2. 데이터 다시 로드
+            loadStatsData(function() {
+                // 콜백: 로딩이 완료되면 실행
+                setTimeout(() => {
+                    // 너무 빨리 끝나면 어색하므로 최소 0.5초는 돌게 함 (UX 옵션)
+                    btnRefresh.classList.remove('spinning');
+                }, 500);
+            });
+        });
+    }
 });
 
 let statusChart, categoryChart, bestSellerChart, wishlistChart, cartChart;
@@ -12,7 +29,7 @@ const darkColor = '#1a1c1e';  // 2등 & 기본
 const subColor = '#666666';   // 3등
 const baseColor = '#d1d1d1';  // 4등 이하 (배경)
 
-function loadStatsData() {
+function loadStatsData(callback) { 
     $.ajax({
         url: 'product_stats_api',
         type: 'GET',
@@ -22,11 +39,16 @@ function loadStatsData() {
             initStatusChart(data.orderStatus);
             initCategoryChart(data.categoryShare);
             initBestSellerChart(data.bestSellers);
-            // 가로 막대 차트 (랭킹 강조 적용)
             initWishlistChart(data.topWishlist);
             initCartChart(data.topCart);
+            
+            // 이제 'callback'이 정의되었으므로 에러가 나지 않습니다.
+            if (callback) callback(); 
         },
-        error: function(xhr) { console.error(xhr); }
+        error: function(xhr) { 
+            console.error(xhr);
+            if (callback) callback();
+        }
     });
 }
 

@@ -1,29 +1,45 @@
-/* [admin_customer_stats.js] */
+/* [admin_customer_stats.js] - 최종 수정본 */
 
 document.addEventListener("DOMContentLoaded", function() {
     loadCustomerStats();
+
+    const btnRefresh = document.getElementById('btnRefresh');
+    if(btnRefresh) {
+        btnRefresh.addEventListener('click', function() {
+            this.classList.add('spinning');
+            
+            loadCustomerStats(function() {
+                setTimeout(() => {
+                    btnRefresh.classList.remove('spinning');
+                }, 500);
+            });
+        });
+    }
 });
 
-// 컬러 팔레트 (등급/연령대별 구분을 위해 다양화)
 const palette = ['#ff4e00', '#333333', '#555555', '#777777', '#999999', '#bbbbbb', '#dddddd'];
 
-function loadCustomerStats() {
+function loadCustomerStats(callback) {
     $.ajax({
         url: 'customer_stats_api',
         type: 'GET',
         dataType: 'json',
         success: function(data) {
             updateSummary(data);
-            initTrendChart(data.newMemberTrend);
-            initGradeChart(data.gradeDist);  // 색상 변경 적용
-            initAgeChart(data.ageDist);      // 색상 변경 적용
+            initTrendChart(data.newMemberTrend); // 이 함수가 아래에 정의되어 있어야 함
+            initGradeChart(data.gradeDist);
+            initAgeChart(data.ageDist);
             initGenderChart(data.genderDist);
             
-            // VIP 테이블 초기화
             vipDataList = data.vipList;
             renderVipTable(vipDataList); 
+            
+            if (callback) callback();
         },
-        error: function(err) { console.error(err); }
+        error: function(err) { 
+            console.error(err); 
+            if (callback) callback();
+        }
     });
 }
 
@@ -34,9 +50,8 @@ function updateSummary(data) {
 	$('#dormantMember').text(format(data.dormantCount || 0) + " 명");
     $('#withdrawnMember').text(format(data.withdrawnCount || 0) + " 명");
     
-    // [수정] VIP 비율 연동
     const ratio = data.vipRatio || 0;
-    $('#vipRatio').text(ratio + " %"); // 소수점은 SQL에서 이미 처리함
+    $('#vipRatio').text(ratio + " %"); 
 
     let newSum = 0;
     if(data.newMemberTrend) {
@@ -45,10 +60,16 @@ function updateSummary(data) {
     $('#newMember7').text("+ " + format(newSum) + " 명");
 }
 
-/* --- Charts (색상 로직 수정) --- */
+/* --- Charts --- */
 
+// [빠진 함수 추가] 1. 신규 가입 추이 차트
 function initTrendChart(list) {
-    const ctx = document.getElementById('trendChart').getContext('2d');
+    const canvasId = 'trendChart';
+    
+    const existingChart = Chart.getChart(canvasId);
+    if (existingChart) existingChart.destroy();
+
+    const ctx = document.getElementById(canvasId).getContext('2d');
     new Chart(ctx, {
         type: 'line',
         data: {
@@ -65,36 +86,80 @@ function initTrendChart(list) {
     });
 }
 
-// [수정] 등급별 분포도 - 막대마다 다른 색상 적용
-function initGradeChart(list) {
-    const ctx = document.getElementById('gradeChart').getContext('2d');
-    
-    // 데이터 개수에 맞춰 색상 배열 생성
-    const bgColors = list.map((_, i) => palette[i % palette.length]);
+// 헬퍼 함수: 레벨 -> 티어 변환
+function getTierInfo(level) {
+    if (level <= 10) return { name: 'IRON', color: '#5f6368', bg: '#f1f3f4' };       
+    if (level <= 20) return { name: 'BRONZE', color: '#a15c1e', bg: '#faeadd' };     
+    if (level <= 30) return { name: 'SILVER', color: '#70757a', bg: '#e8eaed' };     
+    if (level <= 40) return { name: 'GOLD', color: '#f29900', bg: '#fef7e0' };       
+    if (level <= 50) return { name: 'PLATINUM', color: '#188038', bg: '#e6f4ea' };   
+    return { name: 'UNKNOWN', color: '#000', bg: '#fff' };
+}
 
+// 2. 등급별 분포 차트 (티어 적용 버전 하나만 남김)
+function initGradeChart(list) {
+    const canvasId = 'gradeChart';
+    
+    const existingChart = Chart.getChart(canvasId);
+    if (existingChart) existingChart.destroy();
+
+    // 데이터 그룹화
+    const tierCounts = { 'IRON': 0, 'BRONZE': 0, 'SILVER': 0, 'GOLD': 0, 'PLATINUM': 0 };
+    
+    if(list) {
+        list.forEach(item => {
+            const tier = getTierInfo(item.grade).name;
+            if(tierCounts[tier] !== undefined) {
+                tierCounts[tier] += item.count;
+            }
+        });
+    }
+
+    const labels = ['IRON', 'BRONZE', 'SILVER', 'GOLD', 'PLATINUM'];
+    const dataValues = labels.map(label => tierCounts[label]);
+    
+    // 티어별 색상
+    const bgColors = [
+        '#9aa0a6', // IRON
+        '#cd7f32', // BRONZE
+        '#bdc1c6', // SILVER
+        '#fbbc04', // GOLD
+        '#0f9d58'  // PLATINUM
+    ];
+
+    const ctx = document.getElementById(canvasId).getContext('2d');
     new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: list.map(i => 'Level ' + i.grade),
+            labels: labels,
             datasets: [{
                 label: '회원 수',
-                data: list.map(i => i.count),
-                backgroundColor: bgColors, // 배열 적용
-                borderRadius: 4
+                data: dataValues,
+                backgroundColor: bgColors,
+                borderRadius: 4,
+                barPercentage: 0.6
             }]
         },
         options: { 
-            responsive: true, maintainAspectRatio: false, 
-            plugins: { legend: { display: false } } // 범례 숨김 (색상만으로 구분)
+            responsive: true, 
+            maintainAspectRatio: false, 
+            plugins: { legend: { display: false } },
+            scales: {
+                y: { beginAtZero: true, grid: { color: '#f0f0f0' }, ticks: { stepSize: 1 } },
+                x: { grid: { display: false } }
+            }
         }
     });
 }
 
-// [수정] 연령별 분포도 - 막대마다 다른 색상 적용
+// 3. 연령별 분포 차트
 function initAgeChart(list) {
-    const ctx = document.getElementById('ageChart').getContext('2d');
-    
-    // 데이터 개수에 맞춰 색상 배열 생성
+    const canvasId = 'ageChart';
+
+    const existingChart = Chart.getChart(canvasId);
+    if (existingChart) existingChart.destroy();
+
+    const ctx = document.getElementById(canvasId).getContext('2d');
     const bgColors = list.map((_, i) => palette[i % palette.length]);
 
     new Chart(ctx, {
@@ -104,7 +169,7 @@ function initAgeChart(list) {
             datasets: [{
                 label: '인원',
                 data: list.map(i => i.count),
-                backgroundColor: bgColors, // 배열 적용
+                backgroundColor: bgColors,
                 borderRadius: 4
             }]
         },
@@ -115,8 +180,14 @@ function initAgeChart(list) {
     });
 }
 
+// 4. 성별 분포 차트
 function initGenderChart(list) {
-    const ctx = document.getElementById('genderChart').getContext('2d');
+    const canvasId = 'genderChart';
+
+    const existingChart = Chart.getChart(canvasId);
+    if (existingChart) existingChart.destroy();
+
+    const ctx = document.getElementById(canvasId).getContext('2d');
     new Chart(ctx, {
         type: 'doughnut',
         data: {
@@ -130,9 +201,9 @@ function initGenderChart(list) {
     });
 }
 
-/* --- VIP Table Sorting (수정됨) --- */
+/* --- VIP Table Sorting --- */
 let vipDataList = [];
-let sortState = { col: 4, asc: false }; // 초기값: 구매횟수(4) 내림차순
+let sortState = { col: 4, asc: false }; 
 
 function renderVipTable(list) {
     const tbody = $('#vipTableBody');
@@ -144,20 +215,30 @@ function renderVipTable(list) {
     }
 
     list.forEach((item, index) => {
-        let badgeClass = 'rank-badge';
-        if(index === 0) badgeClass += ' rank-1';
-        else if(index === 1) badgeClass += ' rank-2';
-        else if(index === 2) badgeClass += ' rank-3';
+        let rankBadgeClass = 'rank-badge';
+        if(index === 0) rankBadgeClass += ' rank-1';
+        else if(index === 1) rankBadgeClass += ' rank-2';
+        else if(index === 2) rankBadgeClass += ' rank-3';
+        
+        const tier = getTierInfo(item.grade);
         
         const money = new Intl.NumberFormat('ko-KR').format(item.totalPayment);
         let regDate = item.regDate ? item.regDate.substring(0, 10) : '-';
 
         const row = `
             <tr>
-                <td><span class="${badgeClass}">${index + 1}</span></td>
+                <td><span class="${rankBadgeClass}">${index + 1}</span></td>
                 <td>${item.userId}</td>
                 <td style="font-weight:bold;">${item.userName}</td>
-                <td>LV.${item.grade}</td>
+                
+                <td>
+                    <span style="background-color:${tier.bg}; color:${tier.color}; 
+                                 padding:4px 8px; border-radius:4px; font-weight:700; font-size:12px;">
+                        ${tier.name}
+                    </span>
+                    <span style="color:#999; font-size:11px; margin-left:4px;">(Lv.${item.grade})</span>
+                </td>
+                
                 <td>${item.orderCount} 회</td>
                 <td style="color:#ff4e00; font-weight:800;">₩ ${money}</td>
                 <td>${regDate}</td>

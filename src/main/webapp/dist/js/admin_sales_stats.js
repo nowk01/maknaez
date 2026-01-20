@@ -1,8 +1,21 @@
 document.addEventListener("DOMContentLoaded", function() {
     loadSalesData();
+
+    const btnRefresh = document.getElementById('btnRefresh');
+    if(btnRefresh) {
+        btnRefresh.addEventListener('click', function() {
+            this.classList.add('spinning'); 
+            
+            loadSalesData(function() {
+                setTimeout(() => {
+                    btnRefresh.classList.remove('spinning'); 
+                }, 500);
+            });
+        });
+    }
 });
 
-function loadSalesData() {
+function loadSalesData(callback) {
     $.ajax({
         url: 'sales_api',
         type: 'GET',
@@ -15,9 +28,12 @@ function loadSalesData() {
 
             const topProducts = data.topProducts || [];
             updateTopProducts(topProducts);
+            
+            if (callback) callback();
         },
         error: function(xhr, status, error) {
             console.error("통계 데이터 로드 실패:", error);
+            if (callback) callback();
         }
     });
 }
