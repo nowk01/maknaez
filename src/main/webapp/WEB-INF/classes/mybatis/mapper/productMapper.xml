@@ -229,7 +229,8 @@
         SELECT 
             p.PROD_ID AS prodId, 
             p.PROD_NAME AS prodName, 
-            ps.PD_SIZE AS prodSize
+            ps.PD_SIZE AS prodSize,
+            p.THUMB_NAIL AS thumbnail
         FROM PRODUCTS p
         JOIN PD_SIZE ps ON p.PROD_ID = ps.PROD_ID
         WHERE ps.OPT_ID = #{optId}

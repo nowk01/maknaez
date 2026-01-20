@@ -499,46 +499,48 @@ public class ProductServiceImpl implements ProductService {
 	
 	public void sendRestockNotification(long prodId, long optId) {
 		try {
-			// 1. 상품 및 사이즈 정보 조회 (요청하신 메서드 사용)
+			// 1. 상품 및 사이즈 정보 조회
 			ProductDTO pDto = mapper.getOptionInfoForAlarm(optId);
 			if (pDto == null) {
 				return;
 			}
 			
 			String prodName = pDto.getProdName();
-			// DTO에 prodSize 필드가 있어야 합니다. (없다면 DTO 수정 필요)
 			String sizeName = pDto.getProdSize(); 
 
-			// 2. 대상자 이메일 조회 (위시리스트 기준)
+            // 2. 썸네일 이미지 URL 생성
+            // [중요] localhost 주소는 Gmail, Naver 등 외부 메일 서비스에서 접근할 수 없습니다.
+            // 로컬 테스트 시에는 이미지가 깨져 보이는(엑스박스) 것이 정상 동작입니다.
+            // 실제 서비스 배포 시에는 외부에서 접속 가능한 도메인 주소로 변경해야 합니다.
+            String imgBaseUrl = "http://localhost:9090/maknaez/uploads/product/"; 
+            String thumbnail = pDto.getThumbnail(); 
+            
+            String prodImgUrl = "";
+            if (thumbnail != null && !thumbnail.isEmpty()) {
+            	prodImgUrl = imgBaseUrl + thumbnail;
+            }
+            
+            // [디버깅] 콘솔에서 생성된 URL이 올바른지 확인 (복사해서 브라우저 주소창에 넣어보세요)
+            System.out.println(">> [재입고알림] 생성된 썸네일 URL: " + prodImgUrl);
+
+			// 3. 대상자 이메일 조회 (위시리스트 기준)
 			List<String> emailList = mapper.listWishListUserEmails(prodId);
 			
 			if (emailList == null || emailList.isEmpty()) {
 				return;
 			}
 
-			// 3. 메일 발송
+			// 4. 메일 발송 설정
 			MailSender sender = new MailSender();
 			Mail mail = new Mail();
 			
-			// [중요] MailSender.java에 설정된 구글 계정과 일치시킴
 			mail.setSenderEmail("ssangyoungyuwon@gmail.com");
 			mail.setSenderName("막내즈");
-			
 			mail.setSubject("[Maknaez] 재입고 알림 : " + prodName);
 			
-			StringBuilder sb = new StringBuilder();
-			sb.append("<div style='padding:20px; border:1px solid #ddd; background-color:#fff;'>");
-			sb.append("<h2 style='color:#111;'>재입고 알림</h2>");
-			sb.append("<p>고객님께서 기다리시던 상품의 재고가 추가되었습니다.</p>");
-			sb.append("<hr style='border:0; border-top:1px solid #eee; margin:20px 0;'>");
-			sb.append("<p><strong>상품명 : </strong> " + prodName + "</p>");
-			sb.append("<p><strong>입고 사이즈 : </strong> <span style='color:#e74c3c; font-weight:bold;'>" + sizeName + "</span></p>");
-			sb.append("<br>");
-			sb.append("<a href='http://localhost:9090/maknaez/product/detail?prod_id=" + prodId + "' style='padding:10px 20px; background:#333; color:#fff; text-decoration:none; border-radius:4px;'>상품 바로가기</a>");
-			sb.append("<p style='margin-top:20px; color:#888; font-size:12px;'>본 메일은 발신 전용입니다.</p>");
-			sb.append("</div>");
-			
-			mail.setContent(sb.toString());
+            // [수정] 내부 헬퍼 메서드를 호출하여 HTML 본문 생성
+			String htmlContent = generateRestockEmail(prodName, sizeName, String.valueOf(prodId), prodImgUrl);
+			mail.setContent(htmlContent);
 
 			int successCount = 0;
 			for (String email : emailList) {
@@ -558,6 +560,69 @@ public class ProductServiceImpl implements ProductService {
 			System.out.println("메일 발송 중 오류 발생: " + e.getMessage());
 		}
 	}
+    
+    /**
+     * 재입고 알림 이메일 HTML 생성 헬퍼 메서드
+     */
+    private String generateRestockEmail(String prodName, String sizeName, String prodId, String prodImgUrl) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("<div style='font-family: \"Apple SD Gothic Neo\", \"Malgun Gothic\", sans-serif; background-color: #f4f4f4; padding: 40px 20px; color: #333333;'>");
+        
+        // 2. 카드 컨테이너
+        sb.append("  <div style='max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.05);'>");
+        
+        // 3. 헤더
+        sb.append("    <div style='background-color: #111111; padding: 25px 0; text-align: center;'>");
+        sb.append("      <h2 style='margin: 0; color: #ffffff; font-size: 20px; font-weight: 500; letter-spacing: 1px;'>MAKNAEZ</h2>");
+        sb.append("    </div>");
+
+        // 4. 본문 내용
+        sb.append("    <div style='padding: 40px 30px;'>");
+        sb.append("      <h2 style='margin: 0 0 10px 0; font-size: 24px; font-weight: bold; color: #111;'>재입고 알림</h2>");
+        sb.append("      <p style='margin: 0 0 30px 0; font-size: 14px; color: #666; line-height: 1.6;'>");
+        sb.append("        고객님께서 오랫동안 기다리셨던 상품이 드디어 재입고되었습니다.<br>");
+        sb.append("        품절되기 전에 빠르게 확인해보세요!");
+        sb.append("      </p>");
+
+        // 5. 상품 정보 박스
+        sb.append("      <div style='background-color: #f9f9f9; padding: 20px; border-radius: 6px; border: 1px solid #eeeeee; text-align: left;'>");
+        
+        // 썸네일 이미지 (이미지 URL이 유효할 때만 표시)
+        if (prodImgUrl != null && !prodImgUrl.isEmpty()) {
+            sb.append("        <div style='text-align: center; margin-bottom: 15px; background-color: #fff; padding: 10px; border-radius: 4px; border: 1px solid #eee;'>");
+            sb.append("          <img src='" + prodImgUrl + "' alt='상품 이미지' style='max-width: 100%; height: auto; max-height: 150px; display: block; margin: 0 auto; border-radius: 2px;'>");
+            sb.append("        </div>");
+        }
+
+        sb.append("        <div style='margin-bottom: 10px;'>");
+        sb.append("          <span style='font-size: 12px; color: #888; display: block; margin-bottom: 4px;'>상품명</span>");
+        sb.append("          <span style='font-size: 16px; font-weight: bold; color: #333; display: block;'>" + prodName + "</span>");
+        sb.append("        </div>");
+        sb.append("        <div>");
+        sb.append("          <span style='font-size: 12px; color: #888; display: block; margin-bottom: 4px;'>입고 사이즈</span>");
+        sb.append("          <span style='font-size: 16px; font-weight: bold; color: #e74c3c; display: block;'>" + sizeName + "</span>");
+        sb.append("        </div>");
+        sb.append("      </div>");
+
+        // 6. 버튼
+        sb.append("      <div style='margin-top: 35px; text-align: center;'>");
+        sb.append("        <a href='http://localhost:9090/maknaez/product/detail?prod_id=" + prodId + "' style='display: block; width: 100%; padding: 16px 0; background-color: #111111; color: #ffffff; text-decoration: none; font-weight: bold; font-size: 16px; border-radius: 6px; box-sizing: border-box;'>상품 바로가기</a>");
+        sb.append("      </div>");
+        sb.append("    </div>");
+
+        // 7. 푸터
+        sb.append("    <div style='background-color: #f9f9f9; padding: 20px; text-align: center; border-top: 1px solid #eeeeee;'>");
+        sb.append("      <p style='margin: 0; font-size: 11px; color: #999; line-height: 1.5;'>");
+        sb.append("        본 메일은 발신 전용이며 회신되지 않습니다.<br>");
+        sb.append("        © MAKNAEZ Corp. All rights reserved.");
+        sb.append("      </p>");
+        sb.append("    </div>");
+
+        sb.append("  </div>");
+        sb.append("</div>");
+
+        return sb.toString();
+    }
     
     @Override
 	public List<ProductDTO> listRelatedProducts(long prodId, String cateCode) {

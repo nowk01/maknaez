@@ -157,12 +157,10 @@
 </header>
 
 <div class="payment-wrap">
-    <div class="page-title">주문 / 결제 </div>
+    <div class="page-title">주문 / 결제</div>
 
     <form name="paymentForm" id="paymentForm">
-        <!-- 서버 전송용 Hidden Data -->
-        <input type="hidden" name="prod_id" value="${product.prodId}">
-        <input type="hidden" name="quantity" value="${quantity}">
+        <!-- [중요] 전체 결제 금액은 한 번만 전송 -->
         <input type="hidden" name="total_amount" value="${totalPrice}">
 
         <div class="row">
@@ -185,19 +183,36 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td class="td-info">
-                                <!-- 이미지 경로: uploads/product/파일명 (예시) -->
-                                <img src="${pageContext.request.contextPath}/uploads/product/${product.thumbnail}" ...>
-									<div class="p-name">${product.prodName}</div>
-                                    <div class="p-opt">기본 옵션</div>
-                                </div>
-                            </td>
-                            <td>${quantity}개</td>
-                            <td class="fw-bold">
-                                <fmt:formatNumber value="${totalPrice}" pattern="#,###"/>원
-                            </td>
-                        </tr>
+                        <!-- [수정] 여러 상품을 반복문으로 출력 -->
+                        <c:forEach var="item" items="${orderList}">
+                            <tr>
+                                <td class="td-info">
+                                    <!-- [중요] 상품별 개별 정보를 hidden으로 생성 -->
+                                    <input type="hidden" name="prod_id" value="${item.PROD_ID}">
+                                    <input type="hidden" name="quantity" value="${item.QUANTITY}">
+                                    <input type="hidden" name="opt_id" value="${item.OPT_ID}">
+                                    
+                                    <!-- 이미지 경로 수정: Map 키값은 대문자일 확률이 높음 -->
+                                    <img src="${pageContext.request.contextPath}/uploads/product/${item.THUMBNAIL}" 
+                                         onerror="this.src='https://placehold.co/80x80?text=No+Img'">
+                                    <div>
+                                        <div class="p-name">${item.PROD_NAME}</div>
+                                        <div class="p-opt">옵션: ${item.OPTION_VALUE}</div>
+                                    </div>
+                                </td>
+                                <td>${item.QUANTITY}개</td>
+                                <td class="fw-bold">
+                                    <fmt:formatNumber value="${item.TOTAL_PRICE}" pattern="#,###"/>원
+                                </td>
+                            </tr>
+                        </c:forEach>
+                        
+                        <!-- 상품이 없을 경우 처리 -->
+                        <c:if test="${empty orderList}">
+                            <tr>
+                                <td colspan="3" class="py-5 text-center">주문할 상품 정보가 없습니다.</td>
+                            </tr>
+                        </c:if>
                     </tbody>
                 </table>
 
@@ -206,17 +221,14 @@
                 <div class="row mb-3">
                     <div class="col-md-6">
                         <label class="form-label">보내는 분</label>
-                        <!-- MemberDTO의 userName -->
                         <input type="text" class="form-control" value="${member.userName}" readonly>
                     </div>
                     <div class="col-md-6">
                         <label class="form-label">연락처</label>
-                        <!-- MemberDTO의 tel -->
                         <input type="text" class="form-control" value="${member.tel}" readonly>
                     </div>
                     <div class="col-12 mt-2">
                         <label class="form-label">이메일</label>
-                        <!-- MemberDTO의 email -->
                         <input type="text" class="form-control" value="${member.email}" readonly>
                     </div>
                 </div>
@@ -276,16 +288,16 @@
                     <div class="h5 fw-bold mb-4">결제 상세</div>
                     
                     <div class="sum-row">
+                        <span>총 수량</span>
+                        <span>${totalQuantity}개</span>
+                    </div>
+                    <div class="sum-row">
                         <span>상품금액</span>
                         <span><fmt:formatNumber value="${totalPrice}" pattern="#,###"/>원</span>
                     </div>
                     <div class="sum-row">
                         <span>배송비</span>
-                        <span>0원</span> <!-- 조건부 무료배송 로직 필요시 추가 -->
-                    </div>
-                    <div class="sum-row">
-                        <span>할인금액</span>
-                        <span>0원</span>
+                        <span>0원</span> 
                     </div>
 
                     <div class="sum-row total">
@@ -295,24 +307,20 @@
 
                     <div class="mt-4">
                         <label class="form-label fw-bold">결제 수단</label>
-                        <!-- [수정] 결제 수단 추가 및 변경 -->
                         <div class="pay-method-wrap">
-                            <!-- 1. 카카오페이 -->
                             <input type="radio" name="pay_method" id="kakaopay" value="kakaopay" class="pay-radio" checked>
                             <label for="kakaopay" class="pay-label">카카오페이</label>
 
-                            <!-- 2. 신용카드 -->
                             <input type="radio" name="pay_method" id="card" value="card" class="pay-radio">
                             <label for="card" class="pay-label">신용카드</label>
 
-                            <!-- 3. 무통장입금 -->
                             <input type="radio" name="pay_method" id="bank" value="bank" class="pay-radio">
                             <label for="bank" class="pay-label">무통장입금</label>
                         </div>
                     </div>
 
                     <button type="button" class="btn-pay" onclick="processPayment()">
-                        결제하기
+                        <fmt:formatNumber value="${totalPrice}" pattern="#,###"/>원 결제하기
                     </button>
                 </div>
             </div>
