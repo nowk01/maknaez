@@ -11,7 +11,7 @@
             <div class="product-img-box" style="position: relative;">
                 
                 <div class="wish-icon-btn" onclick="toggleWish('${dto.prodId}', event, this)" 
-                     style="position: absolute; top: 10px; left: 10px; z-index: 10; cursor: pointer; font-size: 22px; filter: drop-shadow(0 0 2px rgba(0,0,0,0.3)); transition: transform 0.2s;">
+                     style="position: absolute; top: 10px; right: 10px; z-index: 10; cursor: pointer; font-size: 22px; filter: drop-shadow(0 0 2px rgba(0,0,0,0.3)); transition: transform 0.2s;">
                     <c:choose>
                         <c:when test="${dto.liked}">
                             <i class="fas fa-heart" style="color: #dc3545;"></i> </c:when>
