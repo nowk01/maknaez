@@ -15,6 +15,9 @@ public class ReviewDTO {
     
     private String productName;
     private String thumbNail;
+    
+    private String replyContent; // 답글 내용
+    private String replyDate;    // 답글 작성일
 
     public ReviewDTO() {}
 
@@ -60,4 +63,11 @@ public class ReviewDTO {
     private int enabled;
     public int getEnabled() { return enabled; }
     public void setEnabled(int enabled) { this.enabled = enabled; }
+    
+    public String getReplyContent() { return replyContent; }
+    public void setReplyContent(String replyContent) { this.replyContent = replyContent; }
+
+    public String getReplyDate() { return replyDate; }
+    public void setReplyDate(String replyDate) { this.replyDate = replyDate; }
+    
 }

@@ -30,40 +30,41 @@
 		</where>
 	</select>
 
-	<select id="selectReviewsByProdId" parameterType="map"
-		resultType="com.maknaez.model.ReviewDTO">
-		SELECT * FROM (
-		SELECT ROWNUM rnum, tb.* FROM (
-		SELECT
-		r.item_id AS reviewId,
-		sz.prod_id AS prodId,
-		m.memberidx AS memberIdx,
-		r.content AS content,
-		r.rating AS starRating,
-		NVL(r.img_url, '') AS reviewImg,
-		TO_CHAR(r.reg_date, 'YYYY-MM-DD') AS regDate,
-		sz.pd_size AS optionValue,
-		CASE
-		WHEN m.nickname IS NULL THEN '익명'
-		WHEN LENGTH(m.nickname) &lt;= 1 THEN '*'
-		WHEN LENGTH(m.nickname) = 2 THEN SUBSTR(m.nickname, 1, 1) || '*'
-		ELSE SUBSTR(m.nickname, 1, 1) || LPAD('*', LENGTH(m.nickname) - 2, '*') ||
-		SUBSTR(m.nickname, -1, 1)
-		END AS writerName,
-		m.userid AS writerId,
-		r.reply_content AS replyContent,
-		TO_CHAR(r.reply_date, 'YYYY-MM-DD') AS replyDate
-		FROM reviews r
-		JOIN order_items oi ON r.item_id = oi.item_id
-		JOIN pd_size sz ON oi.opt_id = sz.opt_id
-		JOIN orders o ON oi.order_id = o.items_id
-		JOIN member1 m ON o.memberidx = m.memberidx
-		WHERE sz.prod_id = #{prodId}
-		AND r.enabled = 1
-		ORDER BY r.reg_date DESC
-		) tb WHERE ROWNUM &lt;= #{end}
-		) WHERE rnum &gt;= #{start}
-	</select>
+	<select id="selectReviewsByProdId" parameterType="map" resultType="com.maknaez.model.ReviewDTO">
+    SELECT * FROM (
+        SELECT ROWNUM rnum, tb.* FROM (
+            SELECT
+                r.item_id AS reviewId,
+                sz.prod_id AS prodId,
+                m.memberidx AS memberIdx,
+                r.content AS content,
+                r.rating AS starRating,
+                NVL(r.img_url, '') AS reviewImg,
+                TO_CHAR(r.reg_date, 'YYYY-MM-DD') AS regDate,
+                sz.pd_size AS optionValue,
+                CASE
+                    WHEN m.nickname IS NULL THEN '익명'
+                    WHEN LENGTH(m.nickname) &lt;= 1 THEN '*'
+                    WHEN LENGTH(m.nickname) = 2 THEN SUBSTR(m.nickname, 1, 1) || '*'
+                    ELSE SUBSTR(m.nickname, 1, 1) || LPAD('*', LENGTH(m.nickname) - 2, '*') || SUBSTR(m.nickname, -1, 1)
+                END AS writerName,
+                m.userid AS writerId,
+                
+                /* [수정 완료] 중복 제거함 */
+                r.reply_content AS replyContent,
+                TO_CHAR(r.reply_date, 'YYYY-MM-DD') AS replyDate
+
+            FROM reviews r
+            JOIN order_items oi ON r.item_id = oi.item_id
+            JOIN pd_size sz ON oi.opt_id = sz.opt_id
+            JOIN orders o ON oi.order_id = o.items_id
+            JOIN member1 m ON o.memberidx = m.memberidx
+            WHERE sz.prod_id = #{prodId}
+            AND r.enabled = 1
+            ORDER BY r.reg_date DESC
+        ) tb WHERE ROWNUM &lt;= #{end}
+    ) WHERE rnum &gt;= #{start}
+</select>
 
 	<select id="listReviewAdmin" parameterType="map"
 		resultType="com.maknaez.model.ReviewDTO">
