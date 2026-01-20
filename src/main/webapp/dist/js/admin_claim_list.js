@@ -79,3 +79,26 @@ function openApproveModal(orderNum, type, productName, qty, link) {
 
     document.getElementById('approveModal').style.display = 'flex';
 }
+
+function searchList() {
+    if (typeof contextPath === 'undefined') {
+        alert("경로 변수가 설정되지 않았습니다.");
+        return;
+    }
+
+    let startDate = document.getElementById("startDate").value;
+    let endDate = document.getElementById("endDate").value;
+    let claimType = document.getElementById("claimType").value;
+    let status = document.getElementById("status").value;
+    let searchValue = document.getElementById("searchValue").value;
+
+    let url = contextPath + "/admin/order/claim_list";
+    let query = "page=1";
+
+    if (startDate && endDate) query += "&startDate=" + startDate + "&endDate=" + endDate;
+    if (claimType) query += "&claimType=" + encodeURIComponent(claimType);
+    if (status) query += "&status=" + encodeURIComponent(status);
+    if (searchValue) query += "&searchValue=" + encodeURIComponent(searchValue);
+
+    location.href = url + "?" + query;
+}

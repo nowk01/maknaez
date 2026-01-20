@@ -96,10 +96,12 @@
 				OR
 				m2.userName LIKE '%' || #{searchValue} || '%')
 			</if>
+			<if test="claimType != null and claimType != ''">
+				AND o.STATUS LIKE '%' || #{claimType} || '%'
+			</if>
 
 			<if test="mode == 'claim' or mode == 'cancel'">
-				AND o.STATUS IN ('취소신청', '취소처리중', '취소완료', '반품신청',
-				'반품진행중', '반품완료',
+				AND o.STATUS IN ('취소신청', '취소처리중', '취소완료', '반품신청', '반품진행중', '반품완료',
 				'환불완료', '교환신청', '교환완료')
 			</if>
 		</where>
@@ -205,14 +207,17 @@
 		m2 ON o.MEMBERIDX = m2.MEMBERIDX
 		<where>
 			<if test="startDate != null and startDate != ''">
-				AND o.ORDER_DATE &gt;= TO_DATE(#{startDate}, 'YYYY-MM-DD')
+				AND o.ORDER_DATE &gt;= TO_DATE(#{startDate},
+				'YYYY-MM-DD')
 			</if>
 			<if test="endDate != null and endDate != ''">
-				AND o.ORDER_DATE &lt; TO_DATE(#{endDate}, 'YYYY-MM-DD') + 1
+				AND o.ORDER_DATE &lt; TO_DATE(#{endDate}, 'YYYY-MM-DD') +
+				1
 			</if>
 			<if test="searchValue != null and searchValue != ''">
 				AND (o.ITEMS_ID LIKE '%' || #{searchValue} || '%'
-				OR m2.userName LIKE '%' || #{searchValue} || '%')
+				OR
+				m2.userName LIKE '%' || #{searchValue} || '%')
 			</if>
 		</where>
 		ORDER BY o.ORDER_DATE DESC
