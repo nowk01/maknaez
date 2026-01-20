@@ -104,7 +104,7 @@
                                 </c:if>
                             </div>
                             
-                            <c:forEach var="i" begin="1" end="5">
+                            <c:forEach var="i" begin="1" end="4">
 							    <div class="img-upload-box" id="box${i}" onclick="openFile('f${i}')">
 							        <span>추가 ${i}</span>
 							        <input type="file" id="f${i}" name="imgs" style="display:none" accept="image/*" onchange="previewImage(this, 'box${i}')">
