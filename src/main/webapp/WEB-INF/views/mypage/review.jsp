@@ -56,8 +56,7 @@
         </aside>
 
         <main class="account-main customer-review-wrap">
-            <h1 class="page-header feature-header">상품 리뷰</h1>
-            <div class="line"></div>
+            <h2 class="page-header feature-header">상품 리뷰</h2>
 
             <div class="review-tabs">
                 <button type="button" class="tab-btn active" onclick="showTab('writable')">
