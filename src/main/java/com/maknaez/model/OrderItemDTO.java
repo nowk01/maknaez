@@ -4,7 +4,9 @@ public class OrderItemDTO {
     private long item_id;      // 상세 ID (PK)
     private long order_id;     // 주문 ID (FK)
     private long prod_id;      // 상품 ID (FK)
-    private int quantity;      // 수량
+    private long opt_id;       // [추가] 옵션 ID (FK)
+    
+	private int quantity;      // 수량
     private long price;        // 가격
     
     // [추가] 배송지 관련 정보
@@ -63,4 +65,7 @@ public class OrderItemDTO {
     
     public String getMemo() { return memo; }
     public void setMemo(String memo) { this.memo = memo; }
+    
+    public long getOpt_id() { return opt_id; }
+	public void setOpt_id(long opt_id) { this.opt_id = opt_id; }
 }

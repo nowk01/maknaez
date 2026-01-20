@@ -188,10 +188,8 @@
                         <tr>
                             <td class="td-info">
                                 <!-- 이미지 경로: uploads/product/파일명 (예시) -->
-                                <img src="${pageContext.request.contextPath}/uploads/product/${product.imageFile}" 
-                                     onerror="this.src='https://placehold.co/80x80?text=No+Img'">
-                                <div>
-                                    <div class="p-name">${product.productName}</div>
+                                <img src="${pageContext.request.contextPath}/uploads/product/${product.thumbnail}" ...>
+									<div class="p-name">${product.prodName}</div>
                                     <div class="p-opt">기본 옵션</div>
                                 </div>
                             </td>

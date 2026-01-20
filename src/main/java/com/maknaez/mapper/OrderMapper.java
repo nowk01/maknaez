@@ -27,4 +27,7 @@ public interface OrderMapper {
     public int waitingEstimateCount();
 	public List<Map<String, Object>> getOrderDetailsForEstimate(String orderNum);
 
+    public List<Map<String, Object>> selectOrderListByCart(String[] cartIds) throws SQLException;
+    public Map<String, Object> selectProductForOrder(Map<String, Object> map) throws SQLException;
+
 }
