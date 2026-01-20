@@ -512,7 +512,7 @@ public class ProductServiceImpl implements ProductService {
             // [중요] localhost 주소는 Gmail, Naver 등 외부 메일 서비스에서 접근할 수 없습니다.
             // 로컬 테스트 시에는 이미지가 깨져 보이는(엑스박스) 것이 정상 동작입니다.
             // 실제 서비스 배포 시에는 외부에서 접속 가능한 도메인 주소로 변경해야 합니다.
-            String imgBaseUrl = "http://localhost:9090/maknaez/uploads/product/"; 
+            String imgBaseUrl = "http://61.73.115.26:9090/maknaez/uploads/product/"; 
             String thumbnail = pDto.getThumbnail(); 
             
             String prodImgUrl = "";

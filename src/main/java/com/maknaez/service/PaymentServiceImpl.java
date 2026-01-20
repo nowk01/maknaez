@@ -34,12 +34,6 @@ public class PaymentServiceImpl implements PaymentService {
         return orderMapper.getOrderSeq();
     }
 
-    /**
-     * [결제 프로세스 구현]
-     * 1. 주문 마스터(Order) 생성
-     * 2. 주문 상세(Item) 리스트 반복 저장 및 재고 차감
-     * 3. 결제 내역 저장
-     */
     @Override
     public void processPayment(OrderDTO order, List<OrderItemDTO> items) throws Exception {
         SqlSession session = SqlSessionManager.getSession();
@@ -52,7 +46,7 @@ public class PaymentServiceImpl implements PaymentService {
 
             for (OrderItemDTO item : items) {
                 try {
-                     item.setOrder_id(Long.parseLong(orderNum));
+                     item.setOrder_id(orderNum);
                      
                 } catch (NumberFormatException e) {
                     // 주문번호에 문자가 섞여있다면 이 부분 수정 필요

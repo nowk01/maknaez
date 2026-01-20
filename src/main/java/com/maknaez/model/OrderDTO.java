@@ -22,6 +22,13 @@ public class OrderDTO {
     private long productNum;
     private String historyStartDate;
     private String historyEndDate;
+    
+    private Integer realTotalAmount; // 실 결제 금액 -> ORDERS.REAL_TOTAL_AMOUNT
+    private Integer point;           // 포인트 -> ORDERS.POINT
+    private Long deliveryNumber;     // 운송장 번호 -> ORDERS.DELIVERY_NUMBER
+    private String memo;             // 배송 요청사항 (payment.jsp)
+    private String receiverName;     // 받는 사람 이름 (payment.jsp)
+    private String receiverTel;      // 받는 사람 전화번호 (payment.jsp)
 
     public String getHistoryStartDate() {
 		return historyStartDate;
@@ -113,4 +120,22 @@ public class OrderDTO {
     
     public String getPdSize() { return pdSize; }
     public void setPdSize(String pdSize) { this.pdSize = pdSize; }
+    
+    public Integer getRealTotalAmount() { return realTotalAmount; }
+    public void setRealTotalAmount(Integer realTotalAmount) { this.realTotalAmount = realTotalAmount; }
+
+    public Integer getPoint() { return point; }
+    public void setPoint(Integer point) { this.point = point; }
+
+    public Long getDeliveryNumber() { return deliveryNumber; }
+    public void setDeliveryNumber(Long deliveryNumber) { this.deliveryNumber = deliveryNumber; }
+
+    public String getMemo() { return memo; }
+    public void setMemo(String memo) { this.memo = memo; }
+
+    public String getReceiverName() { return receiverName; }
+    public void setReceiverName(String receiverName) { this.receiverName = receiverName; }
+
+    public String getReceiverTel() { return receiverTel; }
+    public void setReceiverTel(String receiverTel) { this.receiverTel = receiverTel; }
 }

@@ -2,14 +2,14 @@ package com.maknaez.model;
 
 public class OrderItemDTO {
     private long item_id;      // 상세 ID (PK)
-    private long order_id;     // 주문 ID (FK)
+    private String order_id;   // 주문 ID (FK) - String으로 변경됨
     private long prod_id;      // 상품 ID (FK)
     private long opt_id;       // [추가] 옵션 ID (FK)
     
-	private int quantity;      // 수량
+    private int quantity;      // 수량
     private long price;        // 가격
     
-    // [추가] 배송지 관련 정보
+    // 배송지 관련 정보 (주문 상세별로 배송지가 다를 수 있는 경우 대비 혹은 주문 당시 스냅샷)
     private Long addressId;       // 배송지 번호 (기존 배송지 선택 시)
     private String receiverName;  // 수령인
     private String receiverTel;   // 연락처
@@ -26,11 +26,14 @@ public class OrderItemDTO {
     public long getItem_id() { return item_id; }
     public void setItem_id(long item_id) { this.item_id = item_id; }
     
-    public long getOrder_id() { return order_id; }
-    public void setOrder_id(long order_id) { this.order_id = order_id; }
+    public String getOrder_id() { return order_id; }
+    public void setOrder_id(String order_id) { this.order_id = order_id; }
     
     public long getProd_id() { return prod_id; }
     public void setProd_id(long prod_id) { this.prod_id = prod_id; }
+    
+    public long getOpt_id() { return opt_id; }
+    public void setOpt_id(long opt_id) { this.opt_id = opt_id; }
     
     public int getQuantity() { return quantity; }
     public void setQuantity(int quantity) { this.quantity = quantity; }
@@ -38,12 +41,6 @@ public class OrderItemDTO {
     public long getPrice() { return price; }
     public void setPrice(long price) { this.price = price; }
     
-    public String getProd_name() { return prod_name; }
-    public void setProd_name(String prod_name) { this.prod_name = prod_name; }
-    
-    public String getProd_image() { return prod_image; }
-    public void setProd_image(String prod_image) { this.prod_image = prod_image; }
-
     // 배송지 정보 Getters/Setters
     public Long getAddressId() { return addressId; }
     public void setAddressId(Long addressId) { this.addressId = addressId; }
@@ -66,6 +63,10 @@ public class OrderItemDTO {
     public String getMemo() { return memo; }
     public void setMemo(String memo) { this.memo = memo; }
     
-    public long getOpt_id() { return opt_id; }
-	public void setOpt_id(long opt_id) { this.opt_id = opt_id; }
+    // 조인 정보 Getters/Setters
+    public String getProd_name() { return prod_name; }
+    public void setProd_name(String prod_name) { this.prod_name = prod_name; }
+    
+    public String getProd_image() { return prod_image; }
+    public void setProd_image(String prod_image) { this.prod_image = prod_image; }
 }
