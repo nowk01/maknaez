@@ -64,8 +64,7 @@ public class MyPageController {
 	}
 
 	@GetMapping("orderList")
-	public ModelAndView orderList(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
+	public ModelAndView orderList(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		ModelAndView mav = new ModelAndView("mypage/orderList");
 		HttpSession session = req.getSession();
 		SessionInfo info = (SessionInfo) session.getAttribute("member");
@@ -81,8 +80,14 @@ public class MyPageController {
 			if (page != null)
 				current_page = Integer.parseInt(page);
 
+			String historyStartDate = req.getParameter("historyStartDate");
+	        String historyEndDate = req.getParameter("historyEndDate");
+	        
 			Map<String, Object> map = new HashMap<>();
+			
 			map.put("memberIdx", info.getMemberIdx());
+			map.put("historyStartDate", historyStartDate);
+	        map.put("historyEndDate", historyEndDate);
 
 			int dataCount = mapper.dataCount(map);
 			
@@ -106,14 +111,20 @@ public class MyPageController {
 
 			List<OrderDTO> list = mapper.listOrder(map);
 			String listUrl = req.getContextPath() + "/member/mypage/orderList";
+			if (historyStartDate != null && !historyStartDate.isEmpty()) {
+	            listUrl += "?historyStartDate=" + historyStartDate + "&historyEndDate=" + historyEndDate;
+	        }
+			
 			String paging = util.paging(current_page, total_page, listUrl);
-
+			
 			mav.addObject("list", list);
 			mav.addObject("dataCount", dataCount);
 			mav.addObject("paging", paging);
 			mav.addObject("paymentCount", paymentCount);
 			mav.addObject("shippingCount", shippingCount);
 			mav.addObject("completeCount", completeCount);
+			mav.addObject("historyStartDate", historyStartDate);
+	        mav.addObject("historyEndDate", historyEndDate);
 
 		} catch (Exception e) {
 			e.printStackTrace();

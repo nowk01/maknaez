@@ -20,8 +20,22 @@ public class OrderDTO {
     private String addr1;
     private String addr2;
     private long productNum;
+    private String historyStartDate;
+    private String historyEndDate;
 
-    public long getProductNum() {
+    public String getHistoryStartDate() {
+		return historyStartDate;
+	}
+	public void setHistoryStartDate(String historyStartDate) {
+		this.historyStartDate = historyStartDate;
+	}
+	public String getHistoryEndDate() {
+		return historyEndDate;
+	}
+	public void setHistoryEndDate(String historyEndDate) {
+		this.historyEndDate = historyEndDate;
+	}
+	public long getProductNum() {
 		return productNum;
 	}
 	public void setProductNum(long productNum) {

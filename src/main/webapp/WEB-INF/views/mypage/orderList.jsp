@@ -544,7 +544,6 @@ body {
             if(f.historyEndDate.value) document.getElementById("eDate").value = f.historyEndDate.value;
         });
 
-        // AJAX 리스트 갱신 함수
         function ajaxLoadList() {
             const f = document.searchForm;
             const formData = new FormData(f);
@@ -563,38 +562,60 @@ body {
             })
             .catch(error => {
                 console.error("AJAX Error:", error);
-                f.submit(); // 실패 시 일반 폼 전송
+                f.submit(); 
             });
         }
 
         function setPeriod(months) {
             const now = new Date();
             const past = new Date();
+            
             past.setMonth(now.getMonth() - parseInt(months));
+            
             const formatDate = (d) => {
                 let y = d.getFullYear();
                 let m = ('0' + (d.getMonth() + 1)).slice(-2);
                 let day = ('0' + d.getDate()).slice(-2);
                 return y + '-' + m + '-' + day;
             };
+
+            const sDateStr = formatDate(past);
+            const eDateStr = formatDate(now);
+
+            document.getElementById("sDate").value = sDateStr;
+            document.getElementById("eDate").value = eDateStr;
+
             const f = document.searchForm;
-            f.historyStartDate.value = formatDate(past);
-            f.historyEndDate.value = formatDate(now);
+            f.historyStartDate.value = sDateStr;
+            f.historyEndDate.value = eDateStr;
             f.page.value = "1";
+
             ajaxLoadList();
         }
 
         function searchList() {
-            const f = document.searchForm;
-            const start = document.getElementById("sDate").value;
-            const end = document.getElementById("eDate").value;
-            if(!start || !end) { alert("날짜를 모두 선택해주세요."); return; }
-            f.historyStartDate.value = start; 
-            f.historyEndDate.value = end;
-            f.page.value = "1";
-            ajaxLoadList();
-        }
+            const sDateVal = document.getElementById("sDate").value;
+            const eDateVal = document.getElementById("eDate").value;
 
+            console.log("선택된 날짜:", sDateVal, "~", eDateVal);
+
+            if(!sDateVal || !eDateVal) {
+                alert("시작일과 종료일을 모두 선택해주세요.");
+                return;
+            }
+
+            const f = document.searchForm;
+            f.historyStartDate.value = sDateVal; 
+            f.historyEndDate.value = eDateVal;
+            
+            f.page.value = "1";
+
+            ajaxLoadList();
+            
+            const pills = document.querySelectorAll('.custom-pill-btn');
+            pills.forEach(p => p.classList.remove('active'));
+        }
+        
         function listPage(page) {
             const f = document.searchForm;
             f.page.value = page;
