@@ -39,8 +39,8 @@
 							</div>
 						</div>
 						<div>
-							<label class="form-label">주문 상태</label> <select name="status"
-								id="status" class="form-select">
+							<label class="form-label">주문 상태</label> 
+							<select name="status" id="status" class="form-select">
 								<option value="">전체 상태</option>
 								<option value="결제완료" ${status=='결제완료'?'selected':''}>결제완료</option>
 								<option value="배송중" ${status=='배송중'?'selected':''}>배송중</option>

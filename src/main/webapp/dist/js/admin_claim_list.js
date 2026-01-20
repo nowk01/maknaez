@@ -30,13 +30,11 @@ function excelDownload() {
 function openApproveModal(orderNum, type, productName, qty, link) {
     console.log("모달 열기 클릭됨:", orderNum, type);
 
-    // 1. 기본 데이터 바인딩 (텍스트 채우기)
     document.getElementById('m_orderNum').innerText = orderNum;
     document.getElementById('m_type').innerText = type;
     document.getElementById('m_product').innerText = productName;
     document.getElementById('m_qty').innerText = qty;
 
-    // 2. [승인하기] 버튼에 실제 이동할 링크 연결
     const btn = document.getElementById('realApproveBtn');
     btn.onclick = function() {
         location.href = link;
@@ -46,7 +44,6 @@ function openApproveModal(orderNum, type, productName, qty, link) {
     const typeSpan = document.getElementById('m_type');  
 
     if (type === '반품') {
-        // [CASE 1] 반품일 때 -> 회수 확인 경고창 띄우기
         typeSpan.style.color = '#dc3545'; 
         
         infoBox.innerHTML = `
@@ -80,11 +77,5 @@ function openApproveModal(orderNum, type, productName, qty, link) {
         btn.innerText = "취소 승인하기";
     }
 
-    // 4. 모달창 보여주기
     document.getElementById('approveModal').style.display = 'flex';
-}
-
-// 5. 모달창 닫기
-function closeModal() {
-    document.getElementById('approveModal').style.display = 'none';
 }
