@@ -18,7 +18,7 @@ function searchList() {
     let status = document.getElementById("status").value;
     let searchValue = document.getElementById("searchValue").value;
 
-    let url = "${pageContext.request.contextPath}/admin/order/estimate_list";
+    let url = contextPath + "/admin/order/estimate_list";
     let query = "page=1";
 
     if (startDate) query += "&startDate=" + startDate;
@@ -29,9 +29,7 @@ function searchList() {
     location.href = url + "?" + query;
 }
 
-function deleteEstimate() {
-}
 
-function downloadExcel() {
-    alert("견적서 목록을 엑셀로 추출합니다.");
+function closeModal() {
+    document.getElementById('approveModal').style.display = 'none';
 }

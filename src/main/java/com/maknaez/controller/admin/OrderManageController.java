@@ -156,44 +156,85 @@ public class OrderManageController {
 
 	// 거래명세서(내역서) 리스트
 	@GetMapping("estimate_list")
-	public ModelAndView estimateList(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
-		ModelAndView mav = new ModelAndView("admin/order/estimate_list");
-		OrderMapper mapper = MapperContainer.get(OrderMapper.class);
-		MyUtil util = new MyUtil();
+	public ModelAndView estimateList(HttpServletRequest req, HttpServletResponse resp) throws Exception {
+	    ModelAndView mav = new ModelAndView("admin/order/estimate_list");
+	    OrderMapper mapper = MapperContainer.get(OrderMapper.class);
+	    MyUtil util = new MyUtil();
 
-		try {
-			String page = req.getParameter("page");
-			int current_page = (page != null) ? Integer.parseInt(page) : 1;
+	    try {
+	        String page = req.getParameter("page");
+	        int current_page = 1;
+	        if (page != null && !page.isEmpty()) {
+	            try {
+	                current_page = Integer.parseInt(page);
+	            } catch (Exception e) {}
+	        }
+ 
+	        String startDate = req.getParameter("startDate");
+	        String endDate = req.getParameter("endDate");
+	        String status = req.getParameter("status");
+	        String searchValue = req.getParameter("searchValue");
 
-			Map<String, Object> map = new HashMap<>();
-			int dataCount = mapper.estimateCount(map);
-			int size = 10;
-			int total_page = util.pageCount(dataCount, size);
-			if (current_page > total_page)
-				current_page = total_page;
+	        if (status == null) status = "";
+	        if (searchValue == null) searchValue = "";
 
-			int start = (current_page - 1) * size + 1;
-			int end = current_page * size;
-			map.put("start", start);
-			map.put("end", end);
+	        Map<String, Object> map = new HashMap<>();
+	        map.put("startDate", startDate);
+	        map.put("endDate", endDate);
+	        map.put("status", status);
+	        map.put("searchValue", searchValue);
 
-			List<Map<String, Object>> list = mapper.listEstimate(map);
+	        int dataCount = mapper.estimateCount(map);
 
-			String cp = req.getContextPath();
-			String listUrl = cp + "/admin/order/estimate_list";
-			String paging = util.paging(current_page, total_page, listUrl);
+	        int size = 10;
+	        int total_page = util.pageCount(dataCount, size);
+	        if (current_page > total_page) current_page = total_page;
 
-			mav.addObject("list", list);
-			mav.addObject("page", current_page);
-			mav.addObject("dataCount", dataCount);
-			mav.addObject("paging", paging);
-			mav.addObject("waitingCount", mapper.waitingEstimateCount());
+	        int start = (current_page - 1) * size + 1;
+	        int end = current_page * size;
+	        map.put("start", start);
+	        map.put("end", end);
 
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return mav;
+	        List<Map<String, Object>> list = mapper.listEstimate(map);
+
+	        String query = "";
+	        if (startDate != null && !startDate.isEmpty()) {
+	            query = "startDate=" + startDate + "&endDate=" + endDate;
+	        }
+	        
+	        if (!status.isEmpty()) {
+	            if (!query.isEmpty()) query += "&";
+	            query += "status=" + java.net.URLEncoder.encode(status, "UTF-8");
+	        }
+
+	        if (!searchValue.isEmpty()) {
+	            if (!query.isEmpty()) query += "&";
+	            query += "searchValue=" + java.net.URLEncoder.encode(searchValue, "UTF-8");
+	        }
+
+	        String listUrl = req.getContextPath() + "/admin/order/estimate_list";
+	        if (!query.isEmpty()) {
+	            listUrl += "?" + query;
+	        }
+
+	        String paging = util.paging(current_page, total_page, listUrl);
+
+	        mav.addObject("list", list);
+	        mav.addObject("page", current_page);
+	        mav.addObject("dataCount", dataCount);
+	        mav.addObject("total_page", total_page);
+	        mav.addObject("paging", paging);
+	        
+	        mav.addObject("startDate", startDate);
+	        mav.addObject("endDate", endDate);
+	        mav.addObject("status", status);
+	        mav.addObject("searchValue", searchValue);
+	        mav.addObject("waitingCount", mapper.waitingEstimateCount());
+
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	    return mav;
 	}
 
 	// 거래명세서(내역서) 작성/상세

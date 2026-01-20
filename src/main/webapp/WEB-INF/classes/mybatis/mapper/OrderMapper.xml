@@ -5,14 +5,18 @@
 	<select id="dataCount" parameterType="map" resultType="Integer">
 		SELECT NVL(COUNT(*), 0)
 		FROM orders o
-		LEFT JOIN member1 m1 ON o.MEMBERIDX = m1.MEMBERIDX
-		LEFT JOIN member2 m2 ON o.MEMBERIDX = m2.MEMBERIDX
+		LEFT JOIN member1 m1 ON
+		o.MEMBERIDX = m1.MEMBERIDX
+		LEFT JOIN member2 m2 ON o.MEMBERIDX =
+		m2.MEMBERIDX
 		<where>
 			<if test="startDate != null and startDate != ''">
-				AND o.ORDER_DATE &gt;= TO_DATE(#{startDate}, 'YYYY-MM-DD')
+				AND o.ORDER_DATE &gt;= TO_DATE(#{startDate},
+				'YYYY-MM-DD')
 			</if>
 			<if test="endDate != null and endDate != ''">
-				AND o.ORDER_DATE &lt; TO_DATE(#{endDate}, 'YYYY-MM-DD') + 1
+				AND o.ORDER_DATE &lt; TO_DATE(#{endDate}, 'YYYY-MM-DD') +
+				1
 			</if>
 
 			<if test="status != null and status != ''">
@@ -21,11 +25,13 @@
 
 			<if test="searchValue != null and searchValue != ''">
 				AND (o.ITEMS_ID LIKE '%' || #{searchValue} || '%'
-				OR m2.userName LIKE '%' || #{searchValue} || '%')
+				OR
+				m2.userName LIKE '%' || #{searchValue} || '%')
 			</if>
 
 			<if test="mode == 'claim' or mode == 'cancel'">
-				AND o.STATUS IN ('취소신청', '취소처리중', '취소완료', '반품신청', '반품진행중', '반품완료',
+				AND o.STATUS IN ('취소신청', '취소처리중', '취소완료', '반품신청',
+				'반품진행중', '반품완료',
 				'환불완료', '교환신청', '교환완료')
 			</if>
 		</where>
@@ -71,50 +77,31 @@
 			<if test="memberIdx != null and memberIdx != ''">
 				AND o.MEMBERIDX = #{memberIdx}
 			</if>
-			<if test="orderState != null and orderState != ''">
-				AND o.STATUS = #{orderState}
-			</if>
 
-			<if test="mode == 'cancel'">
-				AND o.STATUS IN ('취소신청', '취소처리중', '취소완료', '반품신청',
-				'반품진행중', '반품완료',
-				'환불완료', '교환신청', '교환완료')
-			</if>
-
-			<if test="mode == 'claim'">
-				AND o.STATUS IN ('취소신청', '취소처리중', '취소완료', '반품신청',
-				'반품진행중', '반품완료',
-				'환불완료', '교환신청', '교환완료')
-			</if>
-
-			<if test="historyStartDate != null and historyStartDate != ''">
-				AND o.ORDER_DATE &gt;= TO_DATE(#{historyStartDate},
+			<if test="startDate != null and startDate != ''">
+				AND o.ORDER_DATE &gt;= TO_DATE(#{startDate},
 				'YYYY-MM-DD')
 			</if>
-			<if test="historyEndDate != null and historyEndDate != ''">
-				AND o.ORDER_DATE &lt; TO_DATE(#{historyEndDate},
-				'YYYY-MM-DD') + 1
+			<if test="endDate != null and endDate != ''">
+				AND o.ORDER_DATE &lt; TO_DATE(#{endDate}, 'YYYY-MM-DD') +
+				1
 			</if>
-			<if test="startDate != null and startDate != ''">
-                AND o.ORDER_DATE &gt;= TO_DATE(#{startDate}, 'YYYY-MM-DD')
-            </if>
-            <if test="endDate != null and endDate != ''">
-                AND o.ORDER_DATE &lt; TO_DATE(#{endDate}, 'YYYY-MM-DD') + 1
-            </if>
 
-            <if test="status != null and status != ''">
-                AND o.STATUS = #{status}
-            </if>
+			<if test="status != null and status != ''">
+				AND o.STATUS = #{status}
+			</if>
 
-            <if test="searchValue != null and searchValue != ''">
-                AND (o.ITEMS_ID LIKE '%' || #{searchValue} || '%' 
-                     OR m2.userName LIKE '%' || #{searchValue} || '%')
-            </if>
+			<if test="searchValue != null and searchValue != ''">
+				AND (o.ITEMS_ID LIKE '%' || #{searchValue} || '%'
+				OR
+				m2.userName LIKE '%' || #{searchValue} || '%')
+			</if>
 
-            <if test="mode == 'claim' or mode == 'cancel'">
-                AND o.STATUS IN ('취소신청', '취소처리중', '취소완료', '반품신청', '반품진행중', '반품완료', '환불완료', '교환신청', '교환완료')
-            </if>
-
+			<if test="mode == 'claim' or mode == 'cancel'">
+				AND o.STATUS IN ('취소신청', '취소처리중', '취소완료', '반품신청',
+				'반품진행중', '반품완료',
+				'환불완료', '교환신청', '교환완료')
+			</if>
 		</where>
 		) WHERE rnum BETWEEN #{start} AND #{end}
 	</select>
@@ -169,7 +156,24 @@
 
 	<select id="estimateCount" parameterType="map"
 		resultType="Integer">
-		SELECT NVL(COUNT(*), 0) FROM orders
+		SELECT NVL(COUNT(*), 0) FROM orders o
+		LEFT JOIN member2 m2 ON
+		o.MEMBERIDX = m2.MEMBERIDX
+		<where>
+			<if test="startDate != null and startDate != ''">
+				AND o.ORDER_DATE &gt;= TO_DATE(#{startDate},
+				'YYYY-MM-DD')
+			</if>
+			<if test="endDate != null and endDate != ''">
+				AND o.ORDER_DATE &lt; TO_DATE(#{endDate}, 'YYYY-MM-DD') +
+				1
+			</if>
+			<if test="searchValue != null and searchValue != ''">
+				AND (o.ITEMS_ID LIKE '%' || #{searchValue} || '%'
+				OR
+				m2.userName LIKE '%' || #{searchValue} || '%')
+			</if>
+		</where>
 	</select>
 
 	<select id="listEstimate" parameterType="map" resultType="map">
@@ -177,10 +181,12 @@
 		* FROM (
 		SELECT rownum rnum, tb.* FROM (
 		SELECT
-		o.ITEMS_ID AS "orderNum",
+		o.ITEMS_ID AS
+		"orderNum",
 		m2.userName AS "userName",
 		m1.userId AS "userId",
-		m2.tel AS "tel",
+		m2.tel AS
+		"tel",
 		(SELECT MIN(p2.PROD_NAME) || DECODE(COUNT(*), 1, '', ' 외 ' ||
 		(COUNT(*) - 1)
 		|| '건')
@@ -197,10 +203,24 @@
 		JOIN member1 m1 ON o.MEMBERIDX = m1.MEMBERIDX
 		JOIN member2
 		m2 ON o.MEMBERIDX = m2.MEMBERIDX
+		<where>
+			<if test="startDate != null and startDate != ''">
+				AND o.ORDER_DATE &gt;= TO_DATE(#{startDate}, 'YYYY-MM-DD')
+			</if>
+			<if test="endDate != null and endDate != ''">
+				AND o.ORDER_DATE &lt; TO_DATE(#{endDate}, 'YYYY-MM-DD') + 1
+			</if>
+			<if test="searchValue != null and searchValue != ''">
+				AND (o.ITEMS_ID LIKE '%' || #{searchValue} || '%'
+				OR m2.userName LIKE '%' || #{searchValue} || '%')
+			</if>
+		</where>
 		ORDER BY o.ORDER_DATE DESC
 		) tb WHERE
 		rownum &lt;= #{end}
-		) WHERE rnum &gt;= #{start}
+		) WHERE rnum
+		&gt;= #{start}
+
 	</select>
 
 	<select id="waitingEstimateCount" resultType="Integer">
