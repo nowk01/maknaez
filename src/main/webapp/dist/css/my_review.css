@@ -47,30 +47,20 @@ body {
     flex: 1;
     min-width: 0;
     
-    /* 등장 애니메이션 (배송지 관리와 동일) */
     opacity: 0;
     animation: salomonSlideUp 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
     animation-delay: 0.2s;
 }
 
-/* 타이틀 영역 */
 .feature-header {
-    font-size: 24px;
-    font-weight: 800;
+    font-size: 27px;      
+    font-weight: 700;     
     text-transform: uppercase;
-    letter-spacing: -0.5px;
-    margin-bottom: 8px;
-    text-align: left; /* 리뷰 페이지는 왼쪽 정렬이 더 어울림 */
+    letter-spacing: 0;  
+    margin-bottom: 12px;   
+    text-align: center;
 }
 
-.line {
-    width: 100%;
-    height: 2px;
-    background: var(--color-black);
-    margin-bottom: 30px;
-}
-
-/* 탭 스타일 */
 .review-tabs {
     display: flex;
     gap: 30px;
@@ -95,12 +85,9 @@ body {
     content: ''; position: absolute; bottom: -1px; left: 0;
     width: 100%; height: 2px; background-color: var(--color-black);
 }
-
-/* 탭 컨텐츠 */
 .review-tab-content { display: none; }
 .review-tab-content.active { display: block; }
 
-/* 정렬 드롭다운 */
 .sort-header { display: flex; justify-content: flex-end; margin-bottom: 15px; }
 .sort-btn { background: none; border: none; cursor: pointer; display: flex; align-items: center; gap: 5px; font-size: 13px; color: #333; }
 .sort-menu { display: none; position: absolute; right: 0; background: #fff; border: 1px solid #eee; min-width: 120px; z-index: 10; margin-top: 5px; }
@@ -120,20 +107,17 @@ body {
     padding: 25px 0;
     border-bottom: 1px solid var(--color-gray);
     
-    /* 리스트 등장 애니메이션 */
     opacity: 0;
     animation: salomonSlideUp 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
 }
 
-/* 순차 딜레이 */
 .review-item-card:nth-child(1) { animation-delay: 0.3s; }
 .review-item-card:nth-child(2) { animation-delay: 0.4s; }
 .review-item-card:nth-child(3) { animation-delay: 0.5s; }
 .review-item-card:nth-child(n+4) { animation-delay: 0.6s; }
 
-/* 카드 헤더 */
 .card-header {
-    background: transparent; /* 배경 제거 */
+    background: transparent;
     padding: 0 0 15px 0;
     border: none;
     font-size: 13px;
@@ -147,7 +131,6 @@ body {
 .badge-complete { background: var(--color-black); color: var(--color-white); padding: 2px 6px; font-size: 11px; margin-left: 5px; }
 .order-number { margin-left: auto; font-family: 'Roboto', sans-serif; color: #999; font-size: 12px; }
 
-/* 카드 바디 */
 .card-body {
     display: flex;
     align-items: flex-start;
@@ -172,7 +155,6 @@ body {
 .review-content { font-size: 14px; color: var(--color-dark-gray); line-height: 1.6; margin-top: 8px; }
 .review-image { margin-top: 12px; }
 
-/* 버튼 영역 (배송지 관리 스타일: 텍스트 버튼 + 구분선) */
 .card-actions {
     display: flex;
     align-items: center;
