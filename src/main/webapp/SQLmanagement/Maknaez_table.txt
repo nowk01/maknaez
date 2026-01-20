@@ -279,12 +279,18 @@ CREATE TABLE STOCK_LOGS (
 
 -- 18. 배송 정보
 CREATE TABLE SHIPMENTS (
-    DELIVERY_NUMBER     NUMBER          NOT NULL,       -- PK
-    ADDR_ID             NUMBER          NOT NULL,       -- FK (ADDRESS)
-    DELIVERY_NAME       VARCHAR2(50)    NULL,
-    DELIVERY_TEL        VARCHAR2(50)    NULL,
-    DELIVERY_PERSONNAME VARCHAR2(50)    NULL
-);
+    "DELIVERY_NUMBER"   NUMBER NOT NULL,        			-- 배송 고유 번호 (PK)
+    "ADDR_ID" 			NUMBER,                         	-- 기존 배송지 목록 ID (직접 입력일 경우 NULL 허용을 권장)
+    "RECEIVER_NAME" 	VARCHAR2(50 BYTE),        			-- 수령인
+    "RECEIVER_TEL" 		VARCHAR2(50 BYTE),         			-- 연락처
+    "ZIP_CODE" 			VARCHAR2(20 BYTE),             		-- 우편번호
+    "ADDR1" 			VARCHAR2(200 BYTE),               	-- 기본 주소
+    "ADDR2" 			VARCHAR2(200 BYTE),               	-- 상세 주소
+    "MEMO" 				VARCHAR2(300 BYTE),                	-- 배송 메모 
+    "STATUS" 			VARCHAR2(20 BYTE) DEFAULT 'READY', 	-- 배송 상태 (READY, SHIPPING, COMPLETED 등)
+    "TRACKING_NO" 		VARCHAR2(100 BYTE),         		-- 운송장 번호
+    "DELIVERY_COMPANY"  VARCHAR2(50 BYTE)      				-- 택배사
+) 
 
 -- 19. 주문 마스터
 CREATE TABLE ORDERS (
@@ -382,12 +388,16 @@ CREATE TABLE POINT_MEMBER (
 );
 
 -- 28. 리뷰
-CREATE TABLE REVIEWS (
-    ITEM_ID         NUMBER          NOT NULL,           -- PK, FK (ORDER_ITEMS)
-    RATING          NUMBER          DEFAULT 5,
-    CONTENT         VARCHAR2(2000)  NULL,
-    IMG_URL         VARCHAR2(2000)  NULL,
-    REG_DATE        DATE            DEFAULT SYSDATE
+CREATE TABLE reviews (
+    review_id       NUMBER          PRIMARY KEY,    -- 리뷰 고유 번호
+    prod_id         NUMBER          NOT NULL,       -- 상품 번호 (FK)
+    member_idx      NUMBER          NOT NULL,       -- 작성자 (FK)
+    content         CLOB            NOT NULL,       -- 리뷰 내용
+    star_rating     NUMBER(1)       DEFAULT 5,      -- 별점 (1~5)
+    review_img      VARCHAR2(255)   NULL,           -- 리뷰 이미지 (대표 1장)
+    option_value    VARCHAR2(50)    NULL,           -- 구매 옵션 (예: 260mm)
+    reg_date        DATE            DEFAULT SYSDATE,-- 작성일
+     ENABLED        NUMBER(1,0)     DEFAULT 1       -- 리뷰 삭제 0 삭제 1노출
 );
 
 /* -- -----------------------------------------------------------------
