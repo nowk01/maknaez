@@ -130,7 +130,7 @@ body {
 
 /* 3. 게시판 UI */
 .order-list-board {
-	border-top: 2.5px solid #000;
+	border-top: 1px solid #000;
 	margin-top: 10px;
 }
 
@@ -138,7 +138,7 @@ body {
 	display: flex;
 	padding: 18px 0;
 	text-align: center;
-	border-bottom: 2.5px solid #000;
+	border-bottom: 1px solid #000;
 }
 
 .board-thead>div {
