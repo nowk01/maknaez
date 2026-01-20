@@ -4,18 +4,18 @@
 
 	<select id="getProduct" parameterType="long" resultType="com.maknaez.model.ProductDTO">
 		SELECT
-			prod_id       AS prodId,
-			category_code AS categoryCode,
-			prod_name     AS prodName,
-			base_price    AS basePrice,
-			description   AS description,
-			stock         AS stock,
-			TO_CHAR(prod_date, 'YYYY-MM-DD') AS prodDate,
-			views         AS views,
-			thumb_nail    AS thumbNail,
-			detail_img    AS detailImg
-		FROM products
-		WHERE prod_id = #{prod_id}
+			PROD_ID       AS prodId,
+			CATE_CODE     AS cateCode,
+			PROD_NAME     AS prodName,
+			PROD_DESC     AS description,
+			BASE_PRICE    AS price,
+			IS_DISPLAYED  AS isDisplayed,
+			THUMB_NAIL    AS thumbnail,
+			TO_CHAR(PROD_DATE, 'YYYY-MM-DD')    AS regDate,
+			TO_CHAR(SHIPPED_DATE, 'YYYY-MM-DD') AS shippedDate,
+			STATUS        AS status
+		FROM PRODUCTS
+		WHERE PROD_ID = #{prodId}
 	</select>
 	
 	<select id="dataCount" parameterType="map" resultType="Integer">
@@ -365,5 +365,34 @@
         WHERE memberIdx = #{memberIdx}
         ORDER BY isbasic DESC, addr_id DESC
     </select>
+    
+    <!-- 1. 주문 테이블 저장 -->
+	<insert id="insertOrder" parameterType="com.maknaez.model.OrderDTO">
+		INSERT INTO orders (
+			order_num, 
+			memberIdx, 
+			order_date, 
+			total_amount, 
+			status, 
+			receiver_name, 
+			receiver_tel, 
+			addr_main, 
+			addr_detail, 
+			zip_code, 
+			deli_memo
+		) VALUES (
+			#{orderNum}, 
+			#{memberIdx}, 
+			SYSDATE, 
+			#{totalAmount}, 
+			'결제완료', 
+			#{receiverName}, 
+			#{receiverTel}, 
+			#{addrMain}, 
+			#{addrDetail}, 
+			#{zipCode}, 
+			#{deliMemo}
+		)
+	</insert>
 	
 </mapper>
