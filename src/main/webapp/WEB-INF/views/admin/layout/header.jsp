@@ -165,7 +165,7 @@
                     <strong>${sessionScope.member.userName}</strong>
                     <span>Master Admin</span>
                 </div>
-                <a href="${pageContext.request.contextPath}/member/mypage/myInfo"><i class="fas fa-user-cog"></i> 계정 설정</a>
+                <a href="${pageContext.request.contextPath}/admin/member/profile"><i class="fas fa-user-cog"></i> 계정 설정</a>
                 <a href="https://mail.google.com" target="_blank"><i class="fas fa-envelope"></i> 업무 메일함</a>
                 <a href="${pageContext.request.contextPath}/"><i class="fas fa-shopping-cart"></i> 소비자 페이지</a>
                 <a href="${pageContext.request.contextPath}/admin/logout" class="logout-item"><i class="fas fa-sign-out-alt"></i> 로그아웃</a>

@@ -11,6 +11,7 @@ import org.json.JSONObject;
 
 import com.maknaez.model.MemberDTO;
 import com.maknaez.model.PointDTO;
+import com.maknaez.model.SessionInfo;
 import com.maknaez.mvc.annotation.Controller;
 import com.maknaez.mvc.annotation.GetMapping;
 import com.maknaez.mvc.annotation.PostMapping;
@@ -25,6 +26,7 @@ import com.maknaez.util.MyUtil;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping("/admin/member/*")
@@ -557,5 +559,51 @@ public class MemberManageController {
         }
         
         return model;
+    }
+	
+	@GetMapping("profile")
+	public ModelAndView adminProfile(HttpServletRequest req, HttpServletResponse resp) {
+	    ModelAndView mav = new ModelAndView("admin/member/profile");
+	    
+	    HttpSession session = req.getSession();
+	    SessionInfo info = (SessionInfo) session.getAttribute("member");
+
+	    try {
+	        MemberDTO dto = service.findByIdx(info.getMemberIdx());
+	        mav.addObject("dto", dto);
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	    return mav;
+	}
+	
+	@PostMapping("updateProfile")
+    public String updateProfile(HttpServletRequest req, HttpServletResponse resp) {
+        HttpSession session = req.getSession();
+        SessionInfo info = (SessionInfo) session.getAttribute("member");
+        
+        try {
+            MemberDTO dto = service.findByIdx(info.getMemberIdx());
+            
+            dto.setUserName(req.getParameter("userName"));
+            dto.setTel(req.getParameter("tel"));
+            
+            String pwd = req.getParameter("userPwd");
+            if(pwd != null && !pwd.trim().isEmpty()) {
+                dto.setUserPwd(pwd);
+            }
+
+            service.updateMember(dto);
+
+            info.setUserName(dto.getUserName());
+            session.setAttribute("member", info);
+            
+            return "redirect:/admin?result=profile_updated";
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        return "redirect:/admin/member/profile";
     }
 }

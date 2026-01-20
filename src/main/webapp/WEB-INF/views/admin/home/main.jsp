@@ -369,6 +369,18 @@
             tempDate.setDate(tempDate.getDate() + 1);
         }
     }
+    
+    <script>
+    $(document).ready(function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        
+        if(urlParams.get('result') === 'profile_updated') {
+            alert("관리자 정보가 성공적으로 수정되었습니다.");
+            
+            const cleanUrl = window.location.pathname;
+            window.history.replaceState({}, document.title, cleanUrl);
+        }
+    });
 </script>
 
 </body>
