@@ -10,4 +10,5 @@ public interface WishlistMapper {
     public List<WishlistDTO> listWish(Map<String, Object> map) throws Exception;
     public int dataCountWish(Map<String, Object> map) throws Exception;
     public int checkWish(Map<String, Object> map) throws Exception;
+    public List<Long> listLikedProductIds(long memberIdx) throws Exception;
 }

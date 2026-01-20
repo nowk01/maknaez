@@ -221,4 +221,13 @@ public class ProductDTO {
 	public void setFileName(String fileName) {
 		this.fileName = fileName;
 	}
+	
+	private boolean liked;
+
+	public boolean isLiked() {
+	    return liked;
+	}
+	public void setLiked(boolean liked) {
+	    this.liked = liked;
+	}
 }

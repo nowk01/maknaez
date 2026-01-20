@@ -70,4 +70,16 @@ public class WishlistServiceImpl implements WishlistService {
         }
         return result;
     }
+    
+
+    @Override
+    public List<Long> listLikedProductIds(long memberIdx) {
+        List<Long> list = null;
+        try {
+            list = mapper.listLikedProductIds(memberIdx);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
 }

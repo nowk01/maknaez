@@ -10,4 +10,6 @@ public interface WishlistService {
     public List<WishlistDTO> listWish(Map<String, Object> map);
     public int dataCountWish(Map<String, Object> map);
     public boolean isLiked(long memberIdx, long prodId);
+    public List<Long> listLikedProductIds(long memberIdx);
+    
 }

@@ -2,7 +2,6 @@
 <%@ taglib prefix="c" uri="jakarta.tags.core"%>
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt"%>
 
-<!-- 이미지 경로 설정 -->
 <jsp:include page="/WEB-INF/views/common/image_config.jsp" />
 
 <!DOCTYPE html>
@@ -17,7 +16,6 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/header.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/footer.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/list.css">
-    <!-- list-sidebar.css가 있다면 유지 -->
     <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/list-sidebar.css">
     
     <style>
@@ -35,6 +33,9 @@
         
         /* 로딩 오버레이 (필터링 시 깜빡임 방지) */
         .loading-overlay { opacity: 0.5; pointer-events: none; transition: opacity 0.2s; }
+        
+        /* [추가] 하트 아이콘 호버 효과 */
+        .wish-icon-btn:hover { transform: scale(1.1); }
     </style>
 </head>
 <body>
@@ -61,9 +62,7 @@
         </div>
 
         <div class="row">
-            <!-- Left Sidebar -->
             <aside class="col-lg-2 d-none d-lg-block sidebar-container">
-                <!-- method="get" 유지하되, 실제로는 AJAX로 전송함 -->
                 <form name="searchForm" id="searchForm">
                     <input type="hidden" name="page" id="page" value="1">
                     <input type="hidden" name="category" value="${categoryCode}">
@@ -75,7 +74,6 @@
                         </button>
                     </div>
 
-                    <!-- 1. 카테고리 -->
                     <details class="filter-group" open>
                         <summary class="filter-title">카테고리</summary>
                         <div class="filter-content">
@@ -98,7 +96,6 @@
                         </div>
                     </details>
 
-                    <!-- 2. 판매 상태 -->
                     <details class="filter-group" open>
                         <summary class="filter-title">판매 상태</summary>
                         <div class="filter-content">
@@ -111,7 +108,6 @@
                         </div>
                     </details>
 
-                    <!-- 3. 성별 -->
                     <details class="filter-group" open>
                         <summary class="filter-title">성별</summary>
                         <div class="filter-content">
@@ -134,14 +130,12 @@
                         </div>
                     </details>
 
-                    <!-- 4. 가격 (슬라이더) -->
                     <details class="filter-group" open>
                         <summary class="filter-title">가격</summary>
                         <div class="filter-content">
                             <div class="price-slider">
                                 <div class="slider-track"></div>
                                 <div id="sliderFill" class="slider-fill" style="left:0%; width:100%;"></div>
-                                <!-- [수정] onchange 이벤트를 추가하여 마우스 뗄 때 즉시 검색 -->
                                 <input type="range" id="rangeMin" min="0" max="500000" step="5000" 
                                        value="${empty minPrice ? 0 : minPrice}" 
                                        oninput="updateSliderUI(event)" 
@@ -161,15 +155,12 @@
                                     <input type="text" id="inputMax" value="500,000" readonly>
                                 </div>
                             </div>
-                            <!-- 적용 버튼 삭제됨 (자동 적용) -->
                             
-                            <!-- 실제 전송될 값 -->
                             <input type="hidden" name="minPrice" id="hiddenMinPrice" value="${empty minPrice ? 0 : minPrice}">
                             <input type="hidden" name="maxPrice" id="hiddenMaxPrice" value="${empty maxPrice ? 500000 : maxPrice}">
                         </div>
                     </details>
 
-                    <!-- 5. 색상 -->
                     <details class="filter-group" open>
                         <summary class="filter-title">색상</summary>
                         <div class="filter-content">
@@ -196,7 +187,6 @@
                 </form>
             </aside>
 
-            <!-- Main Content -->
             <main class="col-12 col-lg-10">
                 <div id="productList" class="row gx-4 gy-5">
                     
@@ -220,7 +210,6 @@
     </div>
 
     <jsp:include page="/WEB-INF/views/layout/footer.jsp" />
-    <!-- Footer Resources (jQuery 포함) -->
     <jsp:include page="/WEB-INF/views/layout/footerResources.jsp" />
     
     <script>
@@ -266,7 +255,6 @@
             if(productListEl) productListEl.classList.add('loading-overlay');
 
             // AJAX 요청 (listMore 컨트롤러 재사용하여 HTML 조각만 받아옴)
-            // 주의: listMore는 HTML 조각만 주므로, 전체 구조를 유지하며 내용만 교체
             $.ajax({
                 url: "${pageContext.request.contextPath}/collections/listMore",
                 type: "GET",
@@ -284,8 +272,6 @@
                     // 무한 스크롤 상태 초기화
                     currentPage = 1;
                     isEnd = false;
-                    
-                    // (선택) 개수 업데이트 로직이 필요하다면 별도 API가 필요하지만, 여기선 생략하거나 listMore에 포함 가능
                 },
                 error: function(err) {
                     console.error("검색 실패", err);
@@ -388,6 +374,42 @@
                 complete: function() {
                     isLoading = false;
                     $(".loading-spinner").hide();
+                }
+            });
+        }
+        
+        // [추가] 하트 토글 함수
+        function toggleWish(prodId, event, element) {
+            // 부모 클릭(상세페이지 이동) 방지
+            event.stopPropagation();
+            event.preventDefault();
+
+            $.ajax({
+                url: "${pageContext.request.contextPath}/collections/wishlist/toggle",
+                type: "POST",
+                data: { prodId: prodId },
+                dataType: "json",
+                success: function(data) {
+                    if (data.status === "login_required") {
+                        if(confirm("로그인이 필요한 서비스입니다.\n로그인 페이지로 이동하시겠습니까?")) {
+                            location.href = "${pageContext.request.contextPath}/member/login";
+                        }
+                    } else if (data.status === "success") {
+                        const icon = $(element).find("i");
+                        if (data.liked) {
+                            // 찜 등록됨: 빨간 하트
+                            icon.removeClass("fa-heart-broken").addClass("fa-heart").css("color", "#dc3545");
+                        } else {
+                            // 찜 해제됨: 흰색 하트
+                            icon.css("color", "#ffffff");
+                        }
+                    } else {
+                        alert("오류가 발생했습니다.");
+                    }
+                },
+                error: function(e) {
+                    console.error(e);
+                    alert("서버 통신 오류");
                 }
             });
         }

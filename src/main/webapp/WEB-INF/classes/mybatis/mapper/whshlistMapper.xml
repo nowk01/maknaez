@@ -38,5 +38,9 @@
         SELECT COUNT(*) FROM wishlist 
         WHERE memberIdx = #{memberIdx} AND prod_id = #{prodId}
     </select>
+    
+    <select id="listLikedProductIds" parameterType="Long" resultType="Long">
+    SELECT prod_id FROM wishlist WHERE memberIdx = #{memberIdx}
+	</select>
 
 </mapper>

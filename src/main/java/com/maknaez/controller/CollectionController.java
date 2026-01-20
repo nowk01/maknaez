@@ -7,23 +7,32 @@ import java.util.List;
 import java.util.Map;
 
 import com.maknaez.model.ProductDTO;
+import com.maknaez.model.SessionInfo; // 추가됨
+import com.maknaez.model.WishlistDTO; // 추가됨
 import com.maknaez.mvc.annotation.Controller;
+import com.maknaez.mvc.annotation.PostMapping; // 추가됨
 import com.maknaez.mvc.annotation.RequestMapping;
+import com.maknaez.mvc.annotation.ResponseBody; // 추가됨
 import com.maknaez.mvc.view.ModelAndView;
 import com.maknaez.service.ProductService;
 import com.maknaez.service.ProductServiceImpl;
+import com.maknaez.service.WishlistService;
+import com.maknaez.service.WishlistServiceImpl;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping("/collections") 
 public class CollectionController {
 
     private ProductService productService;
+    private WishlistService wishlistService; 
 
     public CollectionController() {
         this.productService = new ProductServiceImpl();
+        this.wishlistService = new WishlistServiceImpl(); 
     }
 
     @RequestMapping("/list") 
@@ -43,7 +52,6 @@ public class CollectionController {
         
         List<String> dynamicSportList = new ArrayList<>();
         try {
-            
             if ("sale".equalsIgnoreCase(category)) {
                  dynamicSportList = productService.listCategoryNames(category); 
             } else {
@@ -55,6 +63,25 @@ public class CollectionController {
 
         try {
             list = productService.listProduct(map);
+            
+            // [수정] 로그인 상태라면 찜한 상품인지 확인하여 체크
+            HttpSession session = req.getSession();
+            SessionInfo info = (SessionInfo) session.getAttribute("member");
+            
+            if (info != null && list != null && !list.isEmpty()) {
+                // 회원이 찜한 상품 ID 목록 가져오기 (Service에 해당 메서드가 구현되어 있어야 함)
+                List<Long> likedIds = wishlistService.listLikedProductIds(info.getMemberIdx());
+                
+                if (likedIds != null) {
+                    for (ProductDTO dto : list) {
+                        // 리스트에 있는 상품 ID가 찜 목록에 있다면 liked=true 설정
+                        if (likedIds.contains(dto.getProdId())) {
+                            dto.setLiked(true);
+                        }
+                    }
+                }
+            }
+            
             dataCount = productService.dataCount(map);
             
             int size = (int)map.get("size");
@@ -109,10 +136,70 @@ public class CollectionController {
 
         try {
             List<ProductDTO> list = productService.listProduct(map);
+            
+            // [수정] 무한스크롤 로드 시에도 찜 상태 반영
+            HttpSession session = req.getSession();
+            SessionInfo info = (SessionInfo) session.getAttribute("member");
+            
+            if (info != null && list != null && !list.isEmpty()) {
+                List<Long> likedIds = wishlistService.listLikedProductIds(info.getMemberIdx());
+                if (likedIds != null) {
+                    for (ProductDTO dto : list) {
+                        if (likedIds.contains(dto.getProdId())) {
+                            dto.setLiked(true);
+                        }
+                    }
+                }
+            }
+            
             mav.addObject("list", list);
         } catch (Exception e) { e.printStackTrace(); }
         
         return mav;
+    }
+
+    // [추가] 하트 클릭 시 찜 등록/해제 처리 (AJAX)
+    @ResponseBody
+    @PostMapping("/wishlist/toggle")
+    public Map<String, Object> toggleWish(HttpServletRequest req, HttpServletResponse resp) {
+        Map<String, Object> result = new HashMap<>();
+        HttpSession session = req.getSession();
+        SessionInfo info = (SessionInfo) session.getAttribute("member");
+        
+        if (info == null) {
+            result.put("status", "login_required");
+            return result;
+        }
+        
+        try {
+            long prodId = Long.parseLong(req.getParameter("prodId"));
+            
+            // 이미 찜했는지 확인
+            boolean isLiked = wishlistService.isLiked(info.getMemberIdx(), prodId);
+            
+            if (isLiked) {
+                // 이미 찜 상태면 삭제 (해제)
+                Map<String, Object> param = new HashMap<>();
+                param.put("memberIdx", info.getMemberIdx());
+                param.put("prodId", prodId);
+                wishlistService.deleteWish(param);
+                result.put("liked", false);
+            } else {
+                // 찜 상태가 아니면 추가
+                WishlistDTO dto = new WishlistDTO();
+                dto.setMemberIdx(info.getMemberIdx());
+                dto.setProdId(prodId);
+                wishlistService.insertWish(dto);
+                result.put("liked", true);
+            }
+            result.put("status", "success");
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            result.put("status", "error");
+        }
+        
+        return result;
     }
     
     private Map<String, Object> getSearchMap(HttpServletRequest req) {

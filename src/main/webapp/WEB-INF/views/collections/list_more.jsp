@@ -2,25 +2,29 @@
 <%@ taglib prefix="c" uri="jakarta.tags.core"%>
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt"%>
 
-<!-- 이미지 경로 변수 설정 -->
 <jsp:include page="/WEB-INF/views/common/image_config.jsp" />
 
 <c:forEach var="dto" items="${list}">
     <div class="col-6 col-md-4 col-lg-3 product-item-wrap">
-        <!-- 클릭 시 상세 페이지 이동 -->
         <div class="product-card" onclick="location.href='${pageContext.request.contextPath}/product/detail?prod_id=${dto.prodId}'">
             
-            <div class="product-img-box">
-                <!-- 할인 뱃지 -->
+            <div class="product-img-box" style="position: relative;">
+                
+                <div class="wish-icon-btn" onclick="toggleWish('${dto.prodId}', event, this)" 
+                     style="position: absolute; top: 10px; left: 10px; z-index: 10; cursor: pointer; font-size: 22px; filter: drop-shadow(0 0 2px rgba(0,0,0,0.3)); transition: transform 0.2s;">
+                    <c:choose>
+                        <c:when test="${dto.liked}">
+                            <i class="fas fa-heart" style="color: #dc3545;"></i> </c:when>
+                        <c:otherwise>
+                            <i class="fas fa-heart" style="color: #ffffff;"></i> </c:otherwise>
+                    </c:choose>
+                </div>
+            
                 <c:if test="${dto.discountRate > 0}">
                     <span class="badge-new" style="background-color: #dc3545;">SALE ${dto.discountRate}%</span>
                 </c:if>
                 
-                <!-- 신상품 뱃지 (예시: 필요 시 로직 추가) -->
-                <!-- <span class="badge-new">NEW</span> -->
-                
                 <div class="placeholder-div" style="background: white; padding-bottom: 0; height: auto;">
-                    <!-- 썸네일 이미지 -->
                     <img src="${uploadPath}/${dto.thumbnail}" 
                          alt="${dto.prodName}" 
                          style="width: 100%; aspect-ratio: 1/1; object-fit: cover; display: block;"
@@ -29,13 +33,10 @@
             </div>
             
             <div class="product-info">
-                <!-- 카테고리명 -->
                 <div class="product-meta">${dto.cateName}</div> 
                 
-                <!-- 상품명 -->
                 <h3 class="product-name">${dto.prodName}</h3>
                 
-                <!-- 가격 -->
                 <div class="product-price">
                     <c:choose>
                         <c:when test="${dto.discountRate > 0}">
