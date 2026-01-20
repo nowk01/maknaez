@@ -13,7 +13,7 @@ public interface StatsMapper {
     
     // 상품 통계 관련 
     List<Map<String, Object>> getOrderStatusDistribution() throws Exception;
-    int getPendingClaimCount() throws Exception;
+    int getPendingInquiryCount() throws Exception;
     int getSoldOutCount() throws Exception;
     int getLowStockCount() throws Exception;
     List<Map<String, Object>> getCategoryShare() throws Exception;
@@ -29,4 +29,10 @@ public interface StatsMapper {
     List<Map<String, Object>> getAgeDistribution() throws Exception;
     List<Map<String, Object>> getVipRanking() throws Exception;
     double getVipRatio() throws Exception;
+    
+    // 방문자 통계 관련
+    List<Map<String, Object>> getDailyDau() throws Exception;
+    List<Map<String, Object>> getMonthlyDau() throws Exception;
+    List<Map<String, Object>> getHourlyTraffic() throws Exception;
+    int getTodayTotalLogin() throws Exception;
 }

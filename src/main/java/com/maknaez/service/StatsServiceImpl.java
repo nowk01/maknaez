@@ -39,7 +39,7 @@ public class StatsServiceImpl implements StatsService{
         StatsMapper mapper = SqlSessionManager.getSession().getMapper(StatsMapper.class);
         Map<String, Object> map = new HashMap<>();
 
-        map.put("pendingClaimCount", mapper.getPendingClaimCount());
+        map.put("pendingInquiryCount", mapper.getPendingInquiryCount());
         map.put("soldOutCount", mapper.getSoldOutCount());
         map.put("lowStockCount", mapper.getLowStockCount());
 
@@ -68,6 +68,24 @@ public class StatsServiceImpl implements StatsService{
         
         // 2. VIP 리스트 (전체 데이터를 가져와서 JS에서 정렬)
         map.put("vipList", mapper.getVipRanking());
+
+        return map;
+    }
+	
+	@Override
+    public Map<String, Object> getVisitorStats(String mode) throws Exception {
+        StatsMapper mapper = SqlSessionManager.getSession().getMapper(StatsMapper.class);
+        Map<String, Object> map = new HashMap<>();
+
+        if ("monthly".equals(mode)) {
+            map.put("dauStats", mapper.getMonthlyDau());
+        } else {
+            map.put("dauStats", mapper.getDailyDau());
+        }
+
+        map.put("hourlyStats", mapper.getHourlyTraffic());
+
+        map.put("todayTotalLogin", mapper.getTodayTotalLogin());
 
         return map;
     }

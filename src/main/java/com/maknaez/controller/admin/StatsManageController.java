@@ -95,4 +95,24 @@ public class StatsManageController {
 		
 		return mav;
 	}
+	
+	@GetMapping("visitor_stats_api")
+    @ResponseBody
+    public void visitorStatsApi(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        try {
+            String mode = req.getParameter("mode");
+            if(mode == null || mode.isEmpty()) {
+                mode = "daily";
+            }
+
+            Map<String, Object> data = service.getVisitorStats(mode);
+            JSONObject json = new JSONObject(data);
+
+            resp.setContentType("application/json; charset=UTF-8");
+            resp.getWriter().write(json.toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+            resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        }
+    }
 }

@@ -32,7 +32,7 @@ function loadStatsData() {
 
 function updateSummaryCards(data) {
     const format = (n) => new Intl.NumberFormat().format(n);
-    $('#claimCount').text(format(data.pendingClaimCount || 0) + " 건");
+    $('#inquiryCount').text(format(data.pendingInquiryCount || 0) + " 건");
     
     const soldOut = data.soldOutCount || 0;
     $('#soldOutCount').text(format(soldOut) + " 품목");

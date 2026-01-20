@@ -24,8 +24,8 @@
 
                 <div class="stat-card-grid">
 				    <div class="stat-card">
-				        <span class="stat-label">CLAIM REQUESTS (WAITING)</span>
-				        <div class="stat-value text-orange" id="claimCount">0 건</div>
+				        <span class="stat-label">UNANSWERED INQUIRIES (1:1 문의)</span>
+				        <div class="stat-value text-orange" id="inquiryCount">0 건</div>
 				    </div>
 				
 				    <div class="stat-card" style="border-left: 4px solid #d93025;">
