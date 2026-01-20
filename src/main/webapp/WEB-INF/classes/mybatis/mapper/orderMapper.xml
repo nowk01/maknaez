@@ -10,6 +10,17 @@
 		LEFT JOIN member2 m2 ON o.MEMBERIDX =
 		m2.MEMBERIDX
 		<where>
+			<if test="memberIdx != null and memberIdx != ''">
+				AND o.MEMBERIDX = #{memberIdx}
+			</if>
+			<if test="historyStartDate != null and historyStartDate != ''">
+				AND o.ORDER_DATE &gt;= TO_DATE(#{historyStartDate},
+				'YYYY-MM-DD')
+			</if>
+			<if test="historyEndDate != null and historyEndDate != ''">
+				AND o.ORDER_DATE &lt; TO_DATE(#{historyEndDate},
+				'YYYY-MM-DD') + 1
+			</if>
 			<if test="startDate != null and startDate != ''">
 				AND o.ORDER_DATE &gt;= TO_DATE(#{startDate},
 				'YYYY-MM-DD')
@@ -18,9 +29,12 @@
 				AND o.ORDER_DATE &lt; TO_DATE(#{endDate}, 'YYYY-MM-DD') +
 				1
 			</if>
-
 			<if test="status != null and status != ''">
 				AND o.STATUS = #{status}
+			</if>
+
+			<if test="orderState != null and orderState != ''">
+				AND o.STATUS = #{orderState}
 			</if>
 
 			<if test="searchValue != null and searchValue != ''">
@@ -28,7 +42,9 @@
 				OR
 				m2.userName LIKE '%' || #{searchValue} || '%')
 			</if>
-
+			<if test="claimType != null and claimType != ''">
+				AND o.STATUS LIKE '%' || #{claimType} || '%'
+			</if>
 			<if test="mode == 'claim' or mode == 'cancel'">
 				AND o.STATUS IN ('취소신청', '취소처리중', '취소완료', '반품신청',
 				'반품진행중', '반품완료',
@@ -77,7 +93,17 @@
 			<if test="memberIdx != null and memberIdx != ''">
 				AND o.MEMBERIDX = #{memberIdx}
 			</if>
-
+			<if test="orderState != null and orderState != ''">
+				AND o.STATUS = #{orderState}
+			</if>
+			<if test="historyStartDate != null and historyStartDate != ''">
+				AND o.ORDER_DATE &gt;= TO_DATE(#{historyStartDate},
+				'YYYY-MM-DD')
+			</if>
+			<if test="historyEndDate != null and historyEndDate != ''">
+				AND o.ORDER_DATE &lt; TO_DATE(#{historyEndDate},
+				'YYYY-MM-DD') + 1
+			</if>
 			<if test="startDate != null and startDate != ''">
 				AND o.ORDER_DATE &gt;= TO_DATE(#{startDate},
 				'YYYY-MM-DD')
@@ -86,7 +112,6 @@
 				AND o.ORDER_DATE &lt; TO_DATE(#{endDate}, 'YYYY-MM-DD') +
 				1
 			</if>
-
 			<if test="status != null and status != ''">
 				AND o.STATUS = #{status}
 			</if>
@@ -96,14 +121,24 @@
 				OR
 				m2.userName LIKE '%' || #{searchValue} || '%')
 			</if>
+
 			<if test="claimType != null and claimType != ''">
 				AND o.STATUS LIKE '%' || #{claimType} || '%'
 			</if>
 
-			<if test="mode == 'claim' or mode == 'cancel'">
-				AND o.STATUS IN ('취소신청', '취소처리중', '취소완료', '반품신청', '반품진행중', '반품완료',
+			<if test="mode == 'cancel'">
+				AND o.STATUS IN ('취소신청', '취소처리중', '취소완료', '반품신청',
+				'반품진행중', '반품완료',
 				'환불완료', '교환신청', '교환완료')
 			</if>
+
+			<if test="mode == 'claim'">
+				AND o.STATUS IN ('취소신청', '취소처리중', '취소완료', '반품신청',
+				'반품진행중', '반품완료',
+				'환불완료', '교환신청', '교환완료')
+			</if>
+
+
 		</where>
 		) WHERE rnum BETWEEN #{start} AND #{end}
 	</select>
