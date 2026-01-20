@@ -24,4 +24,7 @@ public interface ReviewMapper {
     ReviewDTO findById(long reviewId); // 상세 조회
     void deleteReview(long reviewId); // 삭제
     void updateReviewStatus(Map<String, Object> map); // 상태 변경
+    
+	void updateReply(Map<String, Object> map);
+
 }

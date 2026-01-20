@@ -232,5 +232,12 @@
 		sz.prod_id =
 		#{prodId}
 	</select>
+	
+	<update id="updateReply" parameterType="map">
+    UPDATE reviews 
+    SET reply_content = #{replyContent},
+        reply_date = SYSDATE
+    WHERE item_id = #{reviewId}
+	</update>
 
 </mapper>

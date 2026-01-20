@@ -105,4 +105,18 @@ public class ReviewServiceImpl implements ReviewService {
 			throw e;
 		}
 	}
+	
+	@Override
+	public void updateReply(long reviewId, String replyContent) throws Exception {
+	    try {
+	        Map<String, Object> map = new HashMap<>();
+	        map.put("reviewId", reviewId);
+	        map.put("replyContent", replyContent);
+	        
+	        mapper.updateReply(map); // 방금 만든 Mapper ID 호출
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        throw e;
+	    }
+	}
 }

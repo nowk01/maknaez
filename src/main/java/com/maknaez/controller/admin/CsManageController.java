@@ -463,10 +463,9 @@ public class CsManageController {
 			long reviewId = Long.parseLong(req.getParameter("reviewId"));
 			String replyContent = req.getParameter("replyContent");
 
-			// Service에 답글 업데이트 메서드가 필요함
-			// 예: reviewService.updateReply(reviewId, replyContent);
+			// [수정] 실제 서비스 호출하여 DB 업데이트 수행
+			reviewService.updateReply(reviewId, replyContent);
 
-			// 임시 성공 처리 (Service 구현 후 주석 해제하세요)
 			jobj.put("status", "success");
 
 		} catch (Exception e) {

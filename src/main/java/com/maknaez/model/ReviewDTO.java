@@ -18,7 +18,7 @@ public class ReviewDTO {
     
     private String replyContent; // 답글 내용
     private String replyDate;    // 답글 작성일
-
+    
     public ReviewDTO() {}
 
     public long getReviewId() { return reviewId; }

@@ -19,4 +19,7 @@ public interface ReviewService {
     public ReviewDTO findById(long reviewId);
     public void deleteReview(long reviewId) throws Exception;
     public void updateReviewStatus(long reviewId, int enabled) throws Exception;
+    
+    public void updateReply(long reviewId, String replyContent) throws Exception;
+    
 }
