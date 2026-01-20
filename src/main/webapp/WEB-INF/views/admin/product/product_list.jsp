@@ -5,13 +5,13 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Product List | MAKNAEZ</title>
+<title>상품 목록 관리 | MAKNAEZ</title>
 <jsp:include page="/WEB-INF/views/admin/layout/headerResources.jsp" />
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath}/dist/css/admin_product.css?v=1.0">
 <script>
-        const cp = "${pageContext.request.contextPath}";
-    </script>
+	const cp = "${pageContext.request.contextPath}";
+</script>
 </head>
 <body>
 	<div id="wrapper">
@@ -24,25 +24,27 @@
 					<h3 class="page-title">상품 목록 관리</h3>
 					<p class="page-desc">Product List & Search Configuration</p>
 				</div>
-
 				<div class="search-premium-card">
 					<form name="searchForm"
 						action="${pageContext.request.contextPath}/admin/product/product_list"
 						method="get">
 						<div class="search-main-row">
 							<div class="search-group-input">
-								<select name="category" class="form-select premium-select">
+								<span class="search-label">카테고리</span> <select name="category"
+									class="form-select premium-select">
 									<option value="">전체 카테고리</option>
 									<c:forEach var="cat" items="${categoryList}">
 										<option value="${cat.cateCode}"
 											${category == cat.cateCode ? "selected" : ""}>${cat.cateName}</option>
 									</c:forEach>
-								</select> <select name="schType" class="form-select premium-select">
+								</select> <span class="search-label">구분</span> <select name="schType"
+									class="form-select premium-select">
 									<option value="all" ${schType=="all"?"selected":""}>전체검색</option>
 									<option value="name" ${schType=="name"?"selected":""}>상품명</option>
 									<option value="code" ${schType=="code"?"selected":""}>상품코드</option>
-								</select> <input type="text" name="kwd" value="${kwd}"
-									class="form-control premium-input" placeholder="검색어를 입력해 주세요">
+								</select> <span class="search-label">검색</span> <input type="text"
+									name="kwd" value="${kwd}" class="form-control premium-input"
+									placeholder="검색어를 입력해 주세요">
 							</div>
 
 							<button type="button" class="btn-search-wide"
@@ -52,6 +54,13 @@
 				</div>
 
 				<div class="list-premium-card">
+					<div class="list-header-action">
+						<button type="button" class="btn-luxury-action btn-delete"
+							onclick="deleteSelected()">DELETE</button>
+						<button type="button" class="btn-luxury-action btn-register"
+							onclick="location.href='${pageContext.request.contextPath}/admin/product/product_write'">PRODUCT
+							REGISTRATION</button>
+					</div>
 					<div class="table-responsive">
 						<table class="table table-hover align-middle">
 							<thead>
@@ -106,26 +115,20 @@
 
 					<div class="pagination-center">${paging}</div>
 
-					<div class="bottom-action-area">
-						<button type="button" class="btn-luxury-action btn-delete"
-							onclick="deleteSelected()">DELETE</button>
-						<button type="button" class="btn-luxury-action btn-register"
-							onclick="location.href='${pageContext.request.contextPath}/admin/product/product_write'">PRODUCT
-							REGISTRATION</button>
-					</div>
 				</div>
 			</div>
 		</div>
+	</div>
 	</div>
 
 	<jsp:include page="/WEB-INF/views/admin/layout/footerResources.jsp" />
 	<script
 		src="${pageContext.request.contextPath}/dist/js/admin_product.js"></script>
 	<script>
-        function searchList() {
-            const f = document.searchForm;
-            f.submit();
-        }
-    </script>
+		function searchList() {
+			const f = document.searchForm;
+			f.submit();
+		}
+	</script>
 </body>
 </html>
