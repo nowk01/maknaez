@@ -134,8 +134,7 @@ public class MyPageController {
 
 	// 3. 취소/반품 내역
 	@GetMapping("cancelList")
-	public ModelAndView cancelList(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
+	public ModelAndView cancelList(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		ModelAndView mav = new ModelAndView("mypage/cancelList");
 		HttpSession session = req.getSession();
 		SessionInfo info = (SessionInfo) session.getAttribute("member");
@@ -146,6 +145,9 @@ public class MyPageController {
 		MyUtil util = new MyUtil();
 
 		try {
+			String historyStartDate = req.getParameter("historyStartDate");
+	        String historyEndDate = req.getParameter("historyEndDate");
+			
 			String page = req.getParameter("page");
 			int current_page = 1;
 			if (page != null)
@@ -154,7 +156,10 @@ public class MyPageController {
 			Map<String, Object> map = new HashMap<>();
 			map.put("memberIdx", info.getMemberIdx());
 			map.put("mode", "cancel");
-
+			
+			map.put("historyStartDate", historyStartDate);
+	        map.put("historyEndDate", historyEndDate);
+	        
 			int dataCount = mapper.dataCount(map);
 
 			map.put("orderState", "취소완료");
@@ -179,6 +184,11 @@ public class MyPageController {
 
 			List<OrderDTO> list = mapper.listOrder(map);
 			String listUrl = req.getContextPath() + "/member/mypage/cancelList";
+			
+			if (historyStartDate != null && !historyStartDate.isEmpty()) {
+	            listUrl += "?historyStartDate=" + historyStartDate + "&historyEndDate=" + historyEndDate;
+	        }
+			
 			String paging = util.paging(current_page, total_page, listUrl);
 
 			mav.addObject("list", list);
@@ -188,6 +198,8 @@ public class MyPageController {
 			mav.addObject("returnCheckCount", returnCheckCount);
 			mav.addObject("returnIngCount", returnIngCount);
 			mav.addObject("returnDoneCount", returnDoneCount);
+			mav.addObject("historyStartDate", historyStartDate);
+	        mav.addObject("historyEndDate", historyEndDate);
 
 		} catch (Exception e) {
 			e.printStackTrace();
