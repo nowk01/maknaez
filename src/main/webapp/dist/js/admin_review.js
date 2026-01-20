@@ -2,6 +2,7 @@
  * MAKNAEZ Admin Review Logic - Professional Wide UI
  */
 let currentReviewNum = 0;
+let lastRequestId = 0;
 
 function getContextPath() {
     return window.location.pathname.substring(0, window.location.pathname.indexOf("/", 2));
@@ -14,6 +15,8 @@ function searchList() {
 function openReview(num) {
     currentReviewNum = num;
     const cp = getContextPath();
+	
+	const requestId = ++lastRequestId;
     
     // 1. UI 초기화: 왼쪽 리스트 선택 효과
     document.querySelectorAll('.inquiry-item').forEach(el => el.classList.remove('active'));
@@ -47,6 +50,9 @@ function openReview(num) {
         data: { reviewId: num }, 
         dataType: "json",
         success: function(data) {
+			
+			if (requestId !== lastRequestId) return;
+			
             console.log("Review Data:", data);
 
             if(data.status === "success") {
