@@ -211,7 +211,7 @@ $(function() {
             })
             .catch(err => console.log("알람 체크 대기 중..."));
     }
-    setInterval(checkNewOrder, 30000);
-    checkNewOrder();
+    // setInterval(checkNewOrder, 30000);
+    // fetch("${pageContext.request.contextPath}/admin/checkAlarmCount")
 });
 </script>
