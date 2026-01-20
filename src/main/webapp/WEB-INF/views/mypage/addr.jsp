@@ -12,58 +12,106 @@
 
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/mypage.css">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/my_address.css">
-<script src="${pageContext.request.contextPath}/dist/js/my_address.js?v=2"></script></head>
+<script src="${pageContext.request.contextPath}/dist/js/my_address.js?v=2"></script>
+<style>
+    .popup-mode .main-content {
+        width: 100%;
+        margin: 0;
+        padding: 20px;
+        border: none;
+    }
+    .popup-mode .mypage-container {
+        display: block; 
+        width: 100%;
+        margin: 0;
+        padding: 0;
+    }
+    
+    .popup-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 20px;
+        border-bottom: 2px solid #000;
+        margin-bottom: 20px;
+    }
+    .popup-header h2 { font-size: 20px; font-weight: 700; margin: 0; }
+    .btn-back {
+        background: #fff;
+        border: 1px solid #ddd;
+        padding: 6px 12px;
+        font-size: 13px;
+        cursor: pointer;
+        font-weight: 500;
+    }
+    .btn-back:hover { background: #f9f9f9; border-color: #000; }
+</style>
+</head>
 
-<body>
+<body class="${not empty param.popup ? 'popup-mode' : ''}">
 
-<jsp:include page="/WEB-INF/views/layout/header.jsp" />
+<c:if test="${empty param.popup}">
+    <jsp:include page="/WEB-INF/views/layout/header.jsp" />
+</c:if>
+
+<c:if test="${not empty param.popup}">
+    <div class="popup-header">
+        <h2>배송지 관리</h2>
+        <button type="button" class="btn-back" onclick="history.back()">이전으로 돌아가기</button>
+    </div>
+</c:if>
 
 <div class="mypage-container">
-    <aside class="sidebar">
-        <h2>마이페이지</h2>
-        <div class="menu-group">
-            <span class="menu-title">구매내역</span>
-            <ul>
-                <li><a href="${pageContext.request.contextPath}/member/mypage/orderList">주문/배송조회</a></li>
-                <li><a href="${pageContext.request.contextPath}/member/mypage/cancelList">취소상품조회</a></li>
-            </ul>
-        </div>
-        <div class="menu-group">
-            <span class="menu-title">혜택내역</span>
-            <ul>
-                <li><a href="${pageContext.request.contextPath}/member/mypage/review">상품 리뷰</a></li>
-                <li><a href="${pageContext.request.contextPath}/member/mypage/membership">포인트/쿠폰</a></li>
-            </ul>
-        </div>
-        <div class="menu-group">
-            <span class="menu-title">상품내역</span>
-            <ul>
-                <li><a href="${pageContext.request.contextPath}/member/mypage/wishList">관심 상품</a></li>
-            </ul>
-        </div>
-        <div class="menu-group">
-            <span class="menu-title">회원정보</span>
-            <ul>
-                <li><a href="${pageContext.request.contextPath}/member/mypage/myInfo">내 정보 관리</a></li>
-                <li><a href="${pageContext.request.contextPath}/member/mypage/addr" class="active">배송지 관리</a></li>
-                <li><a href="${pageContext.request.contextPath}/member/mypage/level_benefit">회원등급</a></li>
-            </ul>
-        </div>
-        <div class="menu-group">
-             <ul>
-                <li><a href="${pageContext.request.contextPath}/member/logout" style="color:#999;">로그아웃</a></li>
-             </ul>
-        </div>
-    </aside>
+    
+    <c:if test="${empty param.popup}">
+        <aside class="sidebar">
+            <h2>마이페이지</h2>
+            <div class="menu-group">
+                <span class="menu-title">구매내역</span>
+                <ul>
+                    <li><a href="${pageContext.request.contextPath}/member/mypage/orderList">주문/배송조회</a></li>
+                    <li><a href="${pageContext.request.contextPath}/member/mypage/cancelList">취소상품조회</a></li>
+                </ul>
+            </div>
+            <div class="menu-group">
+                <span class="menu-title">혜택내역</span>
+                <ul>
+                    <li><a href="${pageContext.request.contextPath}/member/mypage/review">상품 리뷰</a></li>
+                    <li><a href="${pageContext.request.contextPath}/member/mypage/membership">포인트/쿠폰</a></li>
+                </ul>
+            </div>
+            <div class="menu-group">
+                <span class="menu-title">상품내역</span>
+                <ul>
+                    <li><a href="${pageContext.request.contextPath}/member/mypage/wishList">관심 상품</a></li>
+                </ul>
+            </div>
+            <div class="menu-group">
+                <span class="menu-title">회원정보</span>
+                <ul>
+                    <li><a href="${pageContext.request.contextPath}/member/mypage/myInfo">내 정보 관리</a></li>
+                    <li><a href="${pageContext.request.contextPath}/member/mypage/addr" class="active">배송지 관리</a></li>
+                    <li><a href="${pageContext.request.contextPath}/member/mypage/level_benefit">회원등급</a></li>
+                </ul>
+            </div>
+            <div class="menu-group">
+                 <ul>
+                    <li><a href="${pageContext.request.contextPath}/member/logout" style="color:#999;">로그아웃</a></li>
+                 </ul>
+            </div>
+        </aside>
+    </c:if>
 
     <main class="main-content">
         <div class="customer-address-wrap">
 
-            <div class="group">
-                <h2 class="h2 feature-header">배송지 관리</h2>
-                <p class="feature-subtext">자주 사용하시는 배송지 주소를 저장하세요</p>
-                <div class="line"></div>
-            </div>
+            <c:if test="${empty param.popup}">
+                <div class="group">
+                    <h2 class="h2 feature-header">배송지 관리</h2>
+                    <p class="feature-subtext">자주 사용하시는 배송지 주소를 저장하세요</p>
+                    <div class="line"></div>
+                </div>
+            </c:if>
 
             <div id="address-list">
 
@@ -112,6 +160,10 @@
                               data-write-url="${pageContext.request.contextPath}/member/mypage/addr/write"
                               data-update-url="${pageContext.request.contextPath}/member/mypage/addr/update">
                             
+                            <c:if test="${not empty param.popup}">
+                                <input type="hidden" name="popup" value="true">
+                            </c:if>
+                            
                             <input type="hidden" name="addrId" value="">
 
                             <div class="customer_address_table">
@@ -156,7 +208,11 @@
     </main>
 </div>
 
-<jsp:include page="/WEB-INF/views/layout/footer.jsp" />
+<!-- 팝업이 아닐 때만 푸터 표시 -->
+<c:if test="${empty param.popup}">
+    <jsp:include page="/WEB-INF/views/layout/footer.jsp" />
+</c:if>
+
 <jsp:include page="/WEB-INF/views/layout/footerResources.jsp" />
 
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>

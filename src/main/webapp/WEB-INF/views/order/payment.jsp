@@ -260,10 +260,33 @@ function openAddressPopup() {
     window.open(url, "addressPopup", option);
 }
 
+// [추가] 전화번호 포맷팅 함수 (데이터 수신 시 사용)
+function formatPhoneNumber(tel) {
+    if(!tel) return "";
+    let str = tel.replace(/[^0-9]/g, ''); // 숫자만 추출
+    let result = "";
+    
+    if(str.length < 4) {
+        return str;
+    } else if(str.length < 7) {
+        result = str.substr(0, 3) + " - " + str.substr(3);
+    } else if(str.length < 11) { // 02-123-4567 등
+        if(str.startsWith('02')) {
+            result = str.substr(0, 2) + " - " + str.substr(2, 3) + " - " + str.substr(5);
+        } else {
+            result = str.substr(0, 3) + " - " + str.substr(3, 3) + " - " + str.substr(6);
+        }
+    } else { // 010-1234-5678
+        result = str.substr(0, 3) + " - " + str.substr(3, 4) + " - " + str.substr(7);
+    }
+    return result;
+}
+
 // [추가] 팝업에서 호출하는 함수 (데이터 세팅)
 window.setShippingAddress = function(data) {
     $("#receiver_name").val(data.name);
-    $("#receiver_tel").val(data.tel);
+    // [수정] 포맷팅 함수 적용하여 값 입력
+    $("#receiver_tel").val(formatPhoneNumber(data.tel));
     $("#zip_code").val(data.zip);
     $("#addr1").val(data.addr1);
     $("#addr2").val(data.addr2);

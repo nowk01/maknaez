@@ -38,4 +38,13 @@ public class AddressDTO {
     
     public int getIsBasic() { return isBasic; }
     public void setIsBasic(int isBasic) { this.isBasic = isBasic; }
+    
+    public String getTelFormat() {
+		if (receiverTel == null || receiverTel.length() == 0) {
+			return "";
+		}
+		
+		String tel = receiverTel.replaceAll("[^0-9]", ""); // 숫자만 남김
+		return tel.replaceAll("^(02|0505|1[0-9]{3}|0[0-9]{2})([0-9]+)([0-9]{4})$", "$1 - $2 - $3");
+	}
 }
