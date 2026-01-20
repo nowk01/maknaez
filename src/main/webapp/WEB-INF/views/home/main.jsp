@@ -174,7 +174,7 @@
 
         function resetTimer() {
             clearInterval(slideInterval);
-            slideInterval = setInterval(nextSlide, 5000); // 5초마다 자동 슬라이드
+            slideInterval = setInterval(nextSlide, 4600);
         }
 
         // 초기 실행
