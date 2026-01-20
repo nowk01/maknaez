@@ -175,6 +175,18 @@
     </select>
     
     <!--                              회원 통계                             -->
+    <select id="getDormantMemberCount" resultType="int">
+        SELECT COUNT(*) 
+        FROM member1 
+        WHERE enabled = 0
+    </select>
+
+    <select id="getWithdrawnMemberCount" resultType="int">
+        SELECT COUNT(*) 
+        FROM member3 
+        WHERE withdraw_date IS NOT NULL
+    </select>
+    
     <select id="getTotalMemberCount" resultType="int">
         SELECT COUNT(*) 
         FROM member1 

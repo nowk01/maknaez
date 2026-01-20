@@ -23,18 +23,33 @@
                 </div>
 
                 <div class="stat-card-grid">
-                    <div class="stat-card">
-                        <span class="stat-label">TOTAL MEMBERS</span>
-                        <div class="stat-value" id="totalMember">0 명</div>
-                    </div>
-                    <div class="stat-card">
-                        <span class="stat-label">NEW MEMBERS (7 DAYS)</span>
-                        <div class="stat-value text-orange" id="newMember7">0 명</div>
-                    </div>
-                   <div class="stat-card">
-					    <span class="stat-label">TOP VIP RATIO (> LV.40)</span>
-					    <div class="stat-value" id="vipRatio">0 %</div> </div>
-                </div>
+				    <div class="stat-card">
+				        <span class="stat-label">TOTAL MEMBERS</span>
+				        <div class="stat-value" id="totalMember">0 명</div>
+				    </div>
+				
+				    <div class="stat-card">
+				        <span class="stat-label">DORMANT (휴면)</span>
+				        <div class="stat-value text-secondary" id="dormantMember">0 명</div>
+				    </div>
+				    
+				    <div class="stat-card">
+				        <span class="stat-label">WITHDRAWN (탈퇴)</span>
+				        <div class="stat-value text-danger" id="withdrawnMember">0 명</div>
+				    </div>
+				
+				    <div class="stat-card">
+				        <span class="stat-label">VIP RATIO</span>
+				        <div class="stat-value" id="vipRatio">0%</div>
+				    </div>
+				    
+				    <div class="stat-card">
+				        <span class="stat-label">NEW MEMBERS (7d)</span>
+				        <div class="stat-value text-success">
+				             <span id="newMemberCount">0</span> 명
+				        </div>
+				    </div>
+				</div>
 
                 <div class="chart-row-2">
                     <div class="card-box">

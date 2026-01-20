@@ -65,6 +65,8 @@ public class StatsServiceImpl implements StatsService{
         map.put("gradeDist", mapper.getGradeDistribution());
         map.put("genderDist", mapper.getGenderDistribution());
         map.put("ageDist", mapper.getAgeDistribution());
+        map.put("dormantCount", mapper.getDormantMemberCount());     
+        map.put("withdrawnCount", mapper.getWithdrawnMemberCount()); 
         
         // 2. VIP 리스트 (전체 데이터를 가져와서 JS에서 정렬)
         map.put("vipList", mapper.getVipRanking());

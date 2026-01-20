@@ -29,6 +29,8 @@ public interface StatsMapper {
     List<Map<String, Object>> getAgeDistribution() throws Exception;
     List<Map<String, Object>> getVipRanking() throws Exception;
     double getVipRatio() throws Exception;
+    int getDormantMemberCount() throws Exception;
+    int getWithdrawnMemberCount() throws Exception;
     
     // 방문자 통계 관련
     List<Map<String, Object>> getDailyDau() throws Exception;

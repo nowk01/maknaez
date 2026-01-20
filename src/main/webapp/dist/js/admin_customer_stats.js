@@ -30,6 +30,9 @@ function loadCustomerStats() {
 function updateSummary(data) {
     const format = (n) => new Intl.NumberFormat().format(n);
     $('#totalMember').text(format(data.totalMemberCount) + " 명");
+	
+	$('#dormantMember').text(format(data.dormantCount || 0) + " 명");
+    $('#withdrawnMember').text(format(data.withdrawnCount || 0) + " 명");
     
     // [수정] VIP 비율 연동
     const ratio = data.vipRatio || 0;
