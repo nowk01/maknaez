@@ -18,5 +18,5 @@ public interface ReviewService {
     public List<ReviewDTO> listReviewAdmin(Map<String, Object> map);
     public ReviewDTO findById(long reviewId);
     public void deleteReview(long reviewId) throws Exception;
-    public void updateReviewStatus(long reviewId, String status) throws Exception;
+    public void updateReviewStatus(long reviewId, int enabled) throws Exception;
 }

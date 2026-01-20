@@ -497,32 +497,38 @@ public class CsManageController {
 		return new ModelAndView("redirect:/admin/cs/review_list");
 	}
 
-	// [추가] 리뷰 상태 변경 (AJAX) - 예: 블라인드 처리
+	// [수정] 리뷰 상태 변경 (AJAX) - 예: 블라인드 처리
 	@ResponseBody
 	@PostMapping("review_status")
 	public void reviewStatus(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-		resp.setContentType("application/json; charset=utf-8");
-		JSONObject jobj = new JSONObject();
+	    resp.setContentType("application/json; charset=utf-8");
+	    JSONObject jobj = new JSONObject();
 
-		try {
-			HttpSession session = req.getSession();
-			SessionInfo info = (SessionInfo) session.getAttribute("member");
-			if (info == null || info.getUserLevel() < 51) {
-				jobj.put("status", "permission_denied");
-				resp.getWriter().print(jobj.toString());
-				return;
-			}
+	    try {
+	        HttpSession session = req.getSession();
+	        SessionInfo info = (SessionInfo) session.getAttribute("member");
+	        // 관리자 권한 체크
+	        if (info == null || info.getUserLevel() < 51) {
+	            jobj.put("status", "permission_denied");
+	            resp.getWriter().print(jobj.toString());
+	            return;
+	        }
 
-			long reviewId = Long.parseLong(req.getParameter("reviewId"));
-			String status = req.getParameter("status"); // blind, normal 등
+	        long reviewId = Long.parseLong(req.getParameter("reviewId"));
+	        
+	        // [중요 수정 부분] 
+	        // JS에서 보낸 파라미터 이름은 'status'가 아니라 'enabled'입니다.
+	        // 또한 문자열(String)이 아닌 정수(int)로 변환해서 받아야 합니다.
+	        int enabled = Integer.parseInt(req.getParameter("enabled"));
 
-			reviewService.updateReviewStatus(reviewId, status);
+	        // Service 호출 (매개변수 타입을 int로 변경해야 함)
+	        reviewService.updateReviewStatus(reviewId, enabled);
 
-			jobj.put("status", "success");
-		} catch (Exception e) {
-			e.printStackTrace();
-			jobj.put("status", "error");
-		}
-		resp.getWriter().print(jobj.toString());
+	        jobj.put("status", "success");
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        jobj.put("status", "error");
+	    }
+	    resp.getWriter().print(jobj.toString());
 	}
 }
