@@ -76,25 +76,22 @@ to {
 	animation: blink 2s infinite;
 }
 
-@
-keyframes blink { 0% {
-	opacity: 1;
+.status-dot.offline { 
+    color: #ff0000; 
+    animation: none;
+    text-shadow: 0 0 5px rgba(255, 0, 0, 0.5); 
 }
 
-50
-%
-{
-opacity
-:
-0.4;
-}
-100
-%
-{
-opacity
-:
-1;
-}
+@keyframes blink {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 
 /* 4. 마스터 카드 (상하 분할 디자인) */
@@ -253,7 +250,7 @@ opacity
 
 /* 버튼 영역 */
 .btn-group-st {
-	margin-top: 30px;
+	margin-top: 80px;
 	display: flex;
 	justify-content: flex-end;
 	gap: 10px;
@@ -324,15 +321,18 @@ opacity
 						</div>
 
 						<div class="log-area">
-							<div class="log-title">Security Audit Log</div>
+							<div class="log-title">System Status Monitor</div>
 							<div class="log-row">
-								Last Access: <span class="log-data">2026.01.20 22:30</span>
+								Last Login Log: <span class="log-data" style="color: #ff4e00;">
+									${sessionScope.lastLoginLog} </span>
 							</div>
 							<div class="log-row">
-								IP Address: <span class="log-data">192.168.0.1</span>
+								Access IP: <span class="log-data" style="color: #23a55a;">
+									${sessionScope.lastLoginIP} </span>
 							</div>
 							<div class="log-status">
-								<i class="fas fa-shield-alt"></i> Auth Granted
+								<i id="statusIcon" class="fas fa-satellite-dish status-dot"></i>
+								<span id="networkStatus">Online</span>
 							</div>
 						</div>
 					</div>
@@ -381,18 +381,65 @@ opacity
 
 	<jsp:include page="/WEB-INF/views/admin/layout/footerResources.jsp" />
 	<script>
-        $(document).ready(function() {
-            const urlParams = new URLSearchParams(window.location.search);
-            
-            if(urlParams.get('result') === 'ok') {
-                // 1. 알림창 띄우기
-                alert("관리자 정보가 성공적으로 수정되었습니다.");
-                
-                // 2. 주소창에서 '?result=ok' 글씨 없애기 (새로고침 시 알림 반복 방지)
-                const cleanUrl = window.location.pathname;
-                window.history.replaceState({}, document.title, cleanUrl);
-            }
-        });
-    </script>
+		$(document).ready(function() {
+			const urlParams = new URLSearchParams(window.location.search);
+
+			if (urlParams.get('result') === 'ok') {
+				// 1. 알림창 띄우기
+				alert("관리자 정보가 성공적으로 수정되었습니다.");
+
+				// 2. 주소창에서 '?result=ok' 글씨 없애기 (새로고침 시 알림 반복 방지)
+				const cleanUrl = window.location.pathname;
+				window.history.replaceState({}, document.title, cleanUrl);
+			}
+		});
+
+		function updateSystemClock() {
+			const now = new Date();
+			const year = now.getFullYear();
+			const month = String(now.getMonth() + 1).padStart(2, '0');
+			const day = String(now.getDate()).padStart(2, '0');
+			const hours = String(now.getHours()).padStart(2, '0');
+			const minutes = String(now.getMinutes()).padStart(2, '0');
+			const seconds = String(now.getSeconds()).padStart(2, '0');
+
+			const timeString = `${year}.${month}.${day} ${hours}:${minutes}:${seconds} (KST)`;
+
+			const clockElement = document.getElementById('realTimeClock');
+			if (clockElement) {
+				clockElement.innerText = timeString;
+			}
+		}
+
+		setInterval(updateSystemClock, 1000);
+		updateSystemClock();
+
+		function updateConnectionStatus() {
+			const statusText = document.getElementById('networkStatus');
+			const statusIcon = document.getElementById('statusIcon');
+
+			if (!statusText || !statusIcon)
+				return;
+
+			if (navigator.onLine) {
+				// 온라인 상태
+				statusText.innerText = "System Online";
+				statusText.style.color = "#23a55a"; // 초록색 텍스트
+				statusIcon.className = "fas fa-satellite-dish status-dot"; // 초록불 깜빡임
+			} else {
+				// 오프라인 상태 (인터넷 끊김)
+				statusText.innerText = "Connection Lost";
+				statusText.style.color = "#ff0000"; // 빨간색 텍스트
+				statusIcon.className = "fas fa-satellite-dish status-dot offline"; // 빨간불 정지
+			}
+		}
+
+		// 상태가 바뀔 때마다 즉시 실행 (이벤트 리스너)
+		window.addEventListener('online', updateConnectionStatus);
+		window.addEventListener('offline', updateConnectionStatus);
+
+		// 페이지 로드 시 최초 1회 실행
+		updateConnectionStatus();
+	</script>
 </body>
 </html>
