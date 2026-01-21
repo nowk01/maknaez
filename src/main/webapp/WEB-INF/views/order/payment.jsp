@@ -16,11 +16,11 @@
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 
 <style>
-    /* ... (기존 스타일 유지) ... */
     @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&family=Noto+Sans+KR:wght@300;400;500;700&display=swap');
 
     body { font-family: 'Noto Sans KR', sans-serif; color: #000; background-color: #fff; }
     .payment-wrap { max-width: 1200px; margin: 0 auto; padding: 60px 20px 120px; }
+    
     .page-title { text-align: center; font-size: 32px; font-weight: 700; margin-bottom: 50px; letter-spacing: -1px; }
     
     .section-title { font-size: 20px; font-weight: 700; border-bottom: 2px solid #000; padding-bottom: 15px; margin-bottom: 20px; margin-top: 40px; }
@@ -52,7 +52,6 @@
     .pay-label { flex: 1 1 30%; text-align: center; padding: 15px 0; border: 1px solid #ddd; cursor: pointer; font-weight: 500; transition: all 0.2s; font-size: 13px; white-space: nowrap; }
     .pay-radio:checked + .pay-label { border-color: #000; background: #000; color: #fff; }
 
-    /* [수정] 배송지 변경 버튼 스타일 (오른쪽 정렬을 위해 margin-left 제거 후 아래 html에서 클래스 처리) */
     .btn-change-addr {
         border: 1px solid #ddd;
         background: #fff;
@@ -62,6 +61,57 @@
         font-weight: 500;
     }
     .btn-change-addr:hover { border-color: #000; background: #f9f9f9; }
+
+    /* 포인트 입력 영역 스타일 */
+    .point-box { background: #fff; border: 1px solid #ddd; padding: 15px; margin: 15px 0; border-radius: 4px; }
+    .point-input-group { display: flex; gap: 5px; margin-bottom: 5px; }
+    .point-input-group input { text-align: right; font-weight: 600; }
+    .btn-use-point { background: #555; color: #fff; border: 1px solid #555; font-size: 12px; padding: 0 10px; white-space: nowrap; cursor: pointer; }
+    .point-desc { font-size: 12px; color: #888; text-align: right; line-height: 1.4; }
+    .point-avail { color: #000; font-weight: 600; }
+
+    /* [수정] 오버레이 스타일 (강력한 z-index 및 flex 중앙 정렬) */
+    #payment-loading-overlay {
+        display: none; /* JS로 flex 변경 */
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background-color: rgba(0, 0, 0, 0.85); /* 더 어둡게 */
+        z-index: 10000; /* 최상단 보장 */
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        color: #fff;
+    }
+
+    /* 로딩 스피너 (Bootstrap spinner-border 활용 또는 커스텀) */
+    .custom-spinner {
+        width: 60px;
+        height: 60px;
+        border: 6px solid rgba(255, 255, 255, 0.3);
+        border-radius: 50%;
+        border-top-color: #fff;
+        animation: spin 1s ease-in-out infinite;
+        margin-bottom: 25px;
+    }
+
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+
+    .loading-text {
+        font-size: 1.4rem;
+        font-weight: 700;
+        letter-spacing: 1px;
+        margin-bottom: 10px;
+    }
+    .loading-sub-text {
+        font-size: 1rem;
+        color: #ccc;
+        font-weight: 300;
+    }
 </style>
 </head>
 <body>
@@ -73,7 +123,7 @@
 <div class="payment-wrap">
     <div class="page-title">주문 / 결제</div>
 
-    <form name="paymentForm" id="paymentForm">
+    <form name="paymentForm" id="paymentForm" method="post">
         <input type="hidden" name="total_amount" value="${totalPrice}">
 
         <div class="row">
@@ -138,37 +188,33 @@
                     </div>
                 </div>
 
-                <!-- 3. 배송지 정보 (수정됨) -->
+                <!-- 3. 배송지 정보 -->
                 <div class="d-flex align-items-center mt-5 mb-3 border-bottom border-dark pb-3">
                     <div class="h5 fw-bold m-0">배송지 정보</div>
-                    <!-- [수정] ms-auto 클래스 추가하여 오른쪽 끝으로 이동 -->
                     <button type="button" class="btn-change-addr ms-auto" onclick="openAddressPopup()">[배송지 변경]</button>
                 </div>
 
                 <div class="row mb-3">
                     <div class="col-md-6">
                         <label class="form-label">받는 분 <span class="text-danger">*</span></label>
-                        <!-- [수정] readonly 추가 (키인 금지) -->
-                        <input type="text" name="receiver_name" id="receiver_name" class="form-control" readonly placeholder="배송지 변경을 클릭하세요">
+                        <input type="text" name="receiver_name" id="receiver_name" class="form-control" value="${member.userName}" readonly placeholder="배송지 변경을 클릭하세요">
                     </div>
                     <div class="col-md-6">
                         <label class="form-label">연락처 <span class="text-danger">*</span></label>
-                        <input type="text" name="receiver_tel" id="receiver_tel" class="form-control" readonly placeholder="배송지 변경을 클릭하세요">
+                        <input type="text" name="receiver_tel" id="receiver_tel" class="form-control" value="${member.tel}" readonly placeholder="배송지 변경을 클릭하세요">
                     </div>
                 </div>
 
                 <div class="row mb-3">
                     <label class="form-label">주소 <span class="text-danger">*</span></label>
                     <div class="col-12 d-flex gap-2 mb-2">
-                        <!-- [수정] 주소찾기 버튼 제거, readonly 유지 -->
-                        <input type="text" name="zip_code" id="zip_code" class="form-control" style="width: 120px;" placeholder="우편번호" readonly>
+                        <input type="text" name="zip_code" id="zip_code" class="form-control" style="width: 120px;" placeholder="우편번호" value="${member.zip}" readonly>
                     </div>
                     <div class="col-12 mb-2">
-                        <input type="text" name="addr1" id="addr1" class="form-control" placeholder="기본 주소" readonly>
+                        <input type="text" name="addr1" id="addr1" class="form-control" placeholder="기본 주소" value="${member.addr1}" readonly>
                     </div>
                     <div class="col-12">
-                        <!-- [수정] 상세주소도 readonly -->
-                        <input type="text" name="addr2" id="addr2" class="form-control" placeholder="상세 주소" readonly>
+                        <input type="text" name="addr2" id="addr2" class="form-control" placeholder="상세 주소" value="${member.addr2}">
                     </div>
                 </div>
 
@@ -205,9 +251,25 @@
                         <span>0원</span> 
                     </div>
 
+                    <!-- 포인트 입력 영역 -->
+                    <div class="point-box">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span style="font-size:14px; font-weight:600;">포인트 사용</span>
+                        </div>
+                        <div class="point-input-group">
+                            <input type="text" name="point" id="pointInput" class="form-control form-control-sm" value="0" oninput="validatePoint(this)">
+                            <button type="button" class="btn-use-point" onclick="useAllPoints()">전액사용</button>
+                        </div>
+                        <div class="point-desc">
+                            보유: <span class="point-avail" id="availPoint"><fmt:formatNumber value="${currentPoint}" pattern="#,###"/></span> P<br>
+                            - 1,000 포인트 이상부터 사용 가능합니다.<br>
+                            - 총 결제금액의 30% 이내에서 사용 가능합니다.
+                        </div>
+                    </div>
+
                     <div class="sum-row total">
                         <span>총 결제금액</span>
-                        <span class="price"><fmt:formatNumber value="${totalPrice}" pattern="#,###"/>원</span>
+                        <span class="price" id="finalPriceDisplay"><fmt:formatNumber value="${totalPrice}" pattern="#,###"/>원</span>
                     </div>
 
                     <div class="mt-4">
@@ -223,16 +285,21 @@
                             <label for="bank" class="pay-label">무통장입금</label>
                         </div>
                     </div>
-                    
-                    
 
                     <button type="button" class="btn-pay" onclick="processPayment()">
-                        <fmt:formatNumber value="${totalPrice}" pattern="#,###"/>원 결제하기
+                        결제하기
                     </button>
                 </div>
             </div>
         </div>
     </form>
+</div>
+
+<!-- [수정] 결제 로딩 오버레이 (구조 변경 및 스타일 강화) -->
+<div id="payment-loading-overlay">
+    <div class="custom-spinner"></div>
+    <div class="loading-text">결제가 진행중입니다...</div>
+    <div class="loading-sub-text">잠시만 기다려주세요.</div>
 </div>
 
 <footer>
@@ -241,7 +308,11 @@
 <jsp:include page="/WEB-INF/views/layout/footerResources.jsp"/>
 
 <script>
-// [배송 메모] 직접 입력 토글
+// 전역 변수
+const totalPrice = ${totalPrice};
+const availPoint = ${currentPoint};
+
+// 배송메모 직접입력 토글
 function changeMemo(select) {
     const $direct = $("#memoDirect");
     if(select.value === "direct") {
@@ -255,78 +326,150 @@ function changeMemo(select) {
     }
 }
 
-// [추가] 배송지 변경 팝업 열기
+// 다음 주소 API
+function daumPostcode() {
+    new daum.Postcode({
+        oncomplete: function(data) {
+            var fullAddr = data.userSelectedType === 'R' ? data.roadAddress : data.jibunAddress;
+            var extraAddr = '';
+            if(data.userSelectedType === 'R'){
+                if(data.bname !== '') extraAddr += data.bname;
+                if(data.buildingName !== '') extraAddr += (extraAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+                fullAddr += (extraAddr !== '' ? ' ('+ extraAddr +')' : '');
+            }
+            document.getElementById('zip_code').value = data.zonecode;
+            document.getElementById('addr1').value = fullAddr;
+            document.getElementById('addr2').focus();
+        }
+    }).open();
+}
+
+// 배송지 목록 팝업
 function openAddressPopup() {
-    // 404 에러 발생 시 여기 URL이 맞는지 확인 필요 (/maknaez/order/address/list 가 되어야 함)
-    // contextPath가 /maknaez 라고 가정
     const url = "${pageContext.request.contextPath}/order/address/list";
     const option = "width=500,height=600,top=100,left=200";
     window.open(url, "addressPopup", option);
 }
 
-// [추가] 전화번호 포맷팅 함수 (데이터 수신 시 사용)
+// 전화번호 포맷팅
 function formatPhoneNumber(tel) {
     if(!tel) return "";
-    let str = tel.replace(/[^0-9]/g, ''); // 숫자만 추출
+    let str = tel.replace(/[^0-9]/g, '');
     let result = "";
-    
-    if(str.length < 4) {
-        return str;
-    } else if(str.length < 7) {
-        result = str.substr(0, 3) + " - " + str.substr(3);
-    } else if(str.length < 11) { // 02-123-4567 등
-        if(str.startsWith('02')) {
-            result = str.substr(0, 2) + " - " + str.substr(2, 3) + " - " + str.substr(5);
-        } else {
-            result = str.substr(0, 3) + " - " + str.substr(3, 3) + " - " + str.substr(6);
-        }
-    } else { // 010-1234-5678
-        result = str.substr(0, 3) + " - " + str.substr(3, 4) + " - " + str.substr(7);
-    }
+    if(str.length < 4) return str;
+    if(str.length < 7) result = str.substr(0, 3) + "-" + str.substr(3);
+    else if(str.length < 11) result = str.substr(0, 3) + "-" + str.substr(3, 3) + "-" + str.substr(6);
+    else result = str.substr(0, 3) + "-" + str.substr(3, 4) + "-" + str.substr(7);
     return result;
 }
 
-// [추가] 팝업에서 호출하는 함수 (데이터 세팅)
+// 팝업에서 호출하는 데이터 세팅 함수
 window.setShippingAddress = function(data) {
     $("#receiver_name").val(data.name);
-    // [수정] 포맷팅 함수 적용하여 값 입력
     $("#receiver_tel").val(formatPhoneNumber(data.tel));
     $("#zip_code").val(data.zip);
     $("#addr1").val(data.addr1);
     $("#addr2").val(data.addr2);
 };
 
+// [포인트 유효성 검사 및 계산]
+function validatePoint(input) {
+    let val = input.value.replace(/[^0-9]/g, ""); // 숫자만
+    if(val === "") val = 0;
+    val = parseInt(val);
+
+    const maxLimit = Math.floor(totalPrice * 0.3); // 30% 제한
+
+    if (val > availPoint) {
+        alert("보유 포인트를 초과하여 사용할 수 없습니다.");
+        val = availPoint;
+    }
+    
+    if (val > maxLimit) {
+        alert("포인트는 결제 금액의 30% (" + maxLimit.toLocaleString() + " P) 까지만 사용 가능합니다.");
+        val = maxLimit;
+    }
+
+    input.value = val;
+    updateFinalPrice(val);
+}
+
+// [포인트 전액 사용]
+function useAllPoints() {
+    if (availPoint < 1000) {
+        alert("포인트는 1,000 P 이상부터 사용 가능합니다.");
+        return;
+    }
+
+    const maxLimit = Math.floor(totalPrice * 0.3);
+    let useAmount = availPoint;
+
+    if (useAmount > maxLimit) {
+        useAmount = maxLimit;
+    }
+
+    $("#pointInput").val(useAmount);
+    updateFinalPrice(useAmount);
+}
+
+// [최종 금액 업데이트]
+function updateFinalPrice(usePoint) {
+    const finalPrice = totalPrice - usePoint;
+    $("#finalPriceDisplay").text(finalPrice.toLocaleString() + "원");
+}
+
 // [결제 요청]
 function processPayment() {
     const f = document.paymentForm;
 
-    // 유효성 검사
-    if(!f.receiver_name.value) { alert("배송지를 선택해주세요."); openAddressPopup(); return; }
+    if(!f.receiver_name.value || !f.zip_code.value || !f.addr1.value) { 
+        alert("배송지 정보를 입력하거나 목록에서 선택해주세요.");
+        openAddressPopup(); 
+        return; 
+    }
+    
+    if(!f.addr2.value) {
+        alert("상세주소를 입력해주세요.");
+        f.addr2.focus();
+        return;
+    }
+
+    let usePoint = parseInt(f.point.value) || 0;
+    if (usePoint > 0 && usePoint < 1000) {
+        alert("포인트는 1,000 P 이상부터 사용 가능합니다.");
+        f.point.focus();
+        return;
+    }
 
     if(!confirm("결제를 진행하시겠습니까?")) return;
 
-    // Ajax 전송
-    const url = "${pageContext.request.contextPath}/order/pay";
-    const formData = $(f).serialize();
+    // [수정] 오버레이 노출 및 flex 설정
+    $("#payment-loading-overlay").css("display", "flex");
 
-    $.ajax({
-        type: "POST",
-        url: url,
-        data: formData,
-        dataType: "json",
-        success: function(data) {
-            if (data.status === "success") {
-                alert("결제가 완료되었습니다.");
-                location.href = "${pageContext.request.contextPath}" + data.redirect;
-            } else {
-                alert(data.message);
+    setTimeout(function() {
+        const url = "${pageContext.request.contextPath}/order/pay";
+        const formData = $(f).serialize();
+
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: formData,
+            dataType: "json",
+            success: function(data) {
+                if (data.status === "success") {
+                    location.href = "${pageContext.request.contextPath}" + data.redirect;
+                } else {
+                    $("#payment-loading-overlay").hide();
+                    alert(data.message);
+                }
+            },
+            error: function(jqXHR) {
+                $("#payment-loading-overlay").hide();
+                console.log(jqXHR.responseText);
+                alert("통신 중 오류가 발생했습니다.");
             }
-        },
-        error: function(e) {
-            console.log(e);
-            alert("서버 통신 중 오류가 발생했습니다.");
-        }
-    });
+        });
+    }, 3000); 
 }
 </script>
 

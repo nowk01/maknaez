@@ -22,6 +22,8 @@ import com.maknaez.service.MemberService;
 import com.maknaez.service.MemberServiceImpl;
 import com.maknaez.service.PaymentService;
 import com.maknaez.service.PaymentServiceImpl;
+import com.maknaez.service.PointService;
+import com.maknaez.service.PointServiceImpl;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -33,6 +35,8 @@ public class PaymentController {
 
     private PaymentService paymentService = new PaymentServiceImpl();
     private MemberService memberService = new MemberServiceImpl();
+    // [추가] 포인트 조회를 위해 서비스 추가
+    private PointService pointService = new PointServiceImpl();
 
     /**
      * 결제 페이지 진입 (GET)
@@ -61,6 +65,10 @@ public class PaymentController {
             if (member == null) {
                 return new ModelAndView("redirect:/member/login");
             }
+
+            // [추가] 회원의 현재 보유 포인트 조회
+            int currentPoint = pointService.findCurrentPoint(info.getMemberIdx());
+            mav.addObject("currentPoint", currentPoint);
 
             List<Map<String, Object>> orderList = new ArrayList<>();
             long totalPrice = 0;
@@ -133,7 +141,7 @@ public class PaymentController {
             String[] prodIds = req.getParameterValues("prod_id");
             String[] quantities = req.getParameterValues("quantity");
             String[] optIds = req.getParameterValues("opt_id");
-            String[] cartIds = req.getParameterValues("cart_id"); // 장바구니 ID 수신
+            String[] cartIds = req.getParameterValues("cart_id");
             
             if (prodIds == null || prodIds.length == 0) {
                 result.put("status", "fail");
@@ -142,12 +150,17 @@ public class PaymentController {
             }
 
             long totalAmount = Long.parseLong(req.getParameter("total_amount"));
+            // [추가] 사용 포인트 수신
+            String pointParam = req.getParameter("point");
+            int usePoint = (pointParam != null && !pointParam.isEmpty()) ? Integer.parseInt(pointParam) : 0;
 
-            // 1. OrderDTO 생성
             OrderDTO order = new OrderDTO();
             order.setMemberIdx(info.getMemberIdx());
+            order.setUserId(info.getUserId());
             order.setOrderState("결제완료");
-            order.setTotalAmount((int)totalAmount); 
+            order.setTotalAmount((int)totalAmount);
+            // [추가] 주문 DTO에 사용 포인트 설정
+            order.setPoint(usePoint);
             
             ProductDTO firstProd = paymentService.getProduct(Long.parseLong(prodIds[0]));
             String orderName = firstProd.getProdName();
@@ -157,16 +170,13 @@ public class PaymentController {
             order.setProductName(orderName);
             order.setThumbNail(firstProd.getThumbnail());
             
-            // 2. PaymentDTO 생성 (결제 정보)
             PaymentDTO payment = new PaymentDTO();
-            String payMethod = req.getParameter("pay_method"); // card or bank
+            String payMethod = req.getParameter("pay_method"); 
             payment.setPayMethod(payMethod);
-            payment.setPayAmount(totalAmount);
+            // payment amount는 서비스에서 계산됨 (total - point)
             payment.setPayStatus("결제완료");
             
-            // 가상 결제 정보 설정 (실제 연동 시에는 PG사 응답값 사용)
             if ("card".equals(payMethod)) {
-                // payment.jsp에 카드 관련 input이 없으면 임의값 설정
                 String cardName = req.getParameter("card_name");
                 String cardNum = req.getParameter("card_num");
                 payment.setCardName(cardName != null ? cardName : "현대카드"); 
@@ -176,7 +186,6 @@ public class PaymentController {
                 payment.setCardNum("");
             }
             
-            // 3. OrderItemDTO 리스트 생성
             List<OrderItemDTO> orderItems = new ArrayList<>();
             for (int i = 0; i < prodIds.length; i++) {
                 OrderItemDTO item = new OrderItemDTO();
@@ -190,7 +199,6 @@ public class PaymentController {
                 item.setCount(count);
                 item.setOpt_id(optId);
                 
-                // 배송 정보
                 item.setReceiver_name(req.getParameter("receiver_name"));
                 item.setReceiver_tel(req.getParameter("receiver_tel"));
                 item.setZip_code(req.getParameter("zip_code"));
@@ -198,7 +206,6 @@ public class PaymentController {
                 item.setAddr2(req.getParameter("addr2"));
                 item.setMemo(req.getParameter("memo"));
                 
-                // 가격 재조회 (보안)
                 Map<String, Object> productInfo = paymentService.getProductDetailForOrder(prodId, count, optId);
                 if (productInfo != null && productInfo.containsKey("PRICE")) {
                     long unitPrice = Long.parseLong(String.valueOf(productInfo.get("PRICE")));
@@ -210,7 +217,6 @@ public class PaymentController {
                 orderItems.add(item);
             }
 
-            // 4. 결제 처리 요청 (PaymentDTO 포함)
             String orderId = paymentService.processPayment(order, orderItems, cartIds, payment);
 
             result.put("status", "success");
@@ -246,10 +252,6 @@ public class PaymentController {
         return mav;
     }
 
-    /**
-     * [결제 완료 페이지]
-     * URL: /order/complete
-     */
     @GetMapping("/complete")
     public ModelAndView paymentComplete(HttpServletRequest req, HttpServletResponse resp) {
         HttpSession session = req.getSession();
@@ -264,11 +266,9 @@ public class PaymentController {
         mav.addObject("orderId", orderId);
         
         try {
-            // 1. 주문/배송 정보 조회
             OrderDTO orderInfo = paymentService.getOrderCompleteInfo(orderId);
             mav.addObject("order", orderInfo);
             
-            // 2. 결제 정보 조회
             PaymentDTO payInfo = paymentService.getPaymentInfo(orderId);
             mav.addObject("payment", payInfo);
             
