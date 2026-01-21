@@ -100,7 +100,9 @@ public class PaymentController {
             for (Map<String, Object> item : orderList) {
                 // Map의 키값(Alias)은 Service/Mapper와 일치해야 함 (대소문자 주의)
                 long price = Long.parseLong(String.valueOf(item.get("PRICE")));
-                int qty = Integer.parseInt(String.valueOf(item.get("QUANTITY")));
+                
+                // 주의: SQL Alias가 'QUANTITY'로 유지되었다고 가정. 'COUNT'라면 변경 필요.
+                int qty = Integer.parseInt(String.valueOf(item.get("QUANTITY"))); 
                 
                 totalPrice += (price * qty);
                 totalQuantity += qty;
@@ -138,10 +140,11 @@ public class PaymentController {
         }
 
         try {
-            // 다중 상품 처리를 위해 배열로 수신
             String[] prodIds = req.getParameterValues("prod_id");
             String[] quantities = req.getParameterValues("quantity");
-            String[] optIds = req.getParameterValues("opt_id"); // JSP에서 hidden 필드로 전송 필요
+            String[] optIds = req.getParameterValues("opt_id");
+            
+            String[] cartIds = req.getParameterValues("cart_id");
             
             if (prodIds == null || prodIds.length == 0) {
                 result.put("status", "fail");
@@ -151,13 +154,10 @@ public class PaymentController {
 
             long totalAmount = Long.parseLong(req.getParameter("total_amount"));
 
-            // 1. OrderDTO (주문 마스터 정보) 생성
             OrderDTO order = new OrderDTO();
             order.setMemberIdx(info.getMemberIdx());
             order.setOrderState("결제완료");
-            order.setTotalAmount((int)totalAmount); // 형변환 주의 (int vs long)
-            
-            // 상품명 설정 (첫 번째 상품 이름 외 N건) - 간단하게 처리
+            order.setTotalAmount((int)totalAmount); 
             ProductDTO firstProd = paymentService.getProduct(Long.parseLong(prodIds[0]));
             String orderName = firstProd.getProdName();
             if (prodIds.length > 1) {
@@ -170,36 +170,43 @@ public class PaymentController {
             
             for (int i = 0; i < prodIds.length; i++) {
                 OrderItemDTO item = new OrderItemDTO();
-                item.setProd_id(Long.parseLong(prodIds[i]));
-                item.setQuantity(Integer.parseInt(quantities[i]));
                 
+                long prodId = Long.parseLong(prodIds[i]);
+                int count = Integer.parseInt(quantities[i]);
                 long optId = (optIds != null && i < optIds.length && optIds[i] != null && !optIds[i].isEmpty()) 
-                           ? Long.parseLong(optIds[i]) : 0;
-                item.setOpt_id(optId);
+                            ? Long.parseLong(optIds[i]) : 0;
 
-                // 배송지 정보 (모든 아이템에 동일하게 적용)
+                item.setProd_id(prodId);
+                item.setCount(count);
+                item.setOpt_id(optId);
+                
                 String addrIdParam = req.getParameter("address_id");
-                if(addrIdParam != null && !addrIdParam.isEmpty()) {
-                    item.setAddressId(Long.parseLong(addrIdParam));
-                }
-                item.setReceiverName(req.getParameter("receiver_name"));
-                item.setReceiverTel(req.getParameter("receiver_tel"));
-                item.setZipCode(req.getParameter("zip_code"));
+                item.setReceiver_name(req.getParameter("receiver_name"));
+                item.setReceiver_tel(req.getParameter("receiver_tel"));
+                item.setZip_code(req.getParameter("zip_code"));
+                
                 item.setAddr1(req.getParameter("addr1"));
                 item.setAddr2(req.getParameter("addr2"));
                 item.setMemo(req.getParameter("memo"));
                 
-                // 가격 정보는 간단히 첫 번째 상품 조회했던 것을 쓰거나, 실제로는 각각 조회해야 정확함.
-                // 여기서는 생략하고 서비스단에서 처리하거나 0으로 넘김 (DB 트리거 등으로 처리 추천)
+                // 가격 정보 재조회 (보안)
+                Map<String, Object> productInfo = paymentService.getProductDetailForOrder(prodId, count, optId);
+                if (productInfo != null && productInfo.containsKey("PRICE")) {
+                    long unitPrice = Long.parseLong(String.valueOf(productInfo.get("PRICE")));
+                    item.setPrice(unitPrice);
+                } else {
+                    item.setPrice(0); 
+                }
                 
                 orderItems.add(item); // 리스트에 추가
             }
 
             // 3. 결제 처리 요청 (수정완료: items -> orderItems 로 변경!)
-            paymentService.processPayment(order, orderItems);
+            // [수정] cartIds 파라미터 전달
+            String orderId = paymentService.processPayment(order, orderItems, cartIds);
 
             result.put("status", "success");
-            result.put("redirect", "/mypage/myMain");
+            result.put("redirect", "/order/complete?order_id=" + orderId);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -229,6 +236,27 @@ public class PaymentController {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        return mav;
+    }
+
+    /**
+     * [추가] 결제 완료 페이지
+     * URL: /order/complete
+     */
+    @GetMapping("/complete")
+    public ModelAndView paymentComplete(HttpServletRequest req, HttpServletResponse resp) {
+        // 로그인 체크
+        HttpSession session = req.getSession();
+        SessionInfo info = (SessionInfo) session.getAttribute("member");
+        if (info == null) {
+            return new ModelAndView("redirect:/member/login");
+        }
+
+        String orderId = req.getParameter("order_id");
+        
+        ModelAndView mav = new ModelAndView("order/complete");
+        mav.addObject("orderId", orderId);
 
         return mav;
     }

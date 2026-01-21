@@ -102,7 +102,9 @@
                                     <input type="hidden" name="prod_id" value="${item.PROD_ID}">
                                     <input type="hidden" name="quantity" value="${item.QUANTITY}">
                                     <input type="hidden" name="opt_id" value="${item.OPT_ID}">
-                                    
+                                    <c:if test="${not empty item.CART_ID}">
+                                        <input type="hidden" name="cart_id" value="${item.CART_ID}">
+                                    </c:if>
                                     <img src="${pageContext.request.contextPath}/uploads/product/${item.THUMBNAIL}" 
                                          onerror="this.src='https://placehold.co/80x80?text=No+Img'">
                                     <div>
@@ -221,6 +223,8 @@
                             <label for="bank" class="pay-label">무통장입금</label>
                         </div>
                     </div>
+                    
+                    
 
                     <button type="button" class="btn-pay" onclick="processPayment()">
                         <fmt:formatNumber value="${totalPrice}" pattern="#,###"/>원 결제하기

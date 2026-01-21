@@ -32,5 +32,10 @@ public interface OrderMapper {
     public List<Map<String, Object>> selectOrderListByCart(String[] cartIds) throws SQLException;
     public Map<String, Object> selectProductForOrder(Map<String, Object> map) throws SQLException;
     public List<AddressDTO> listAddress(long memberIdx) throws SQLException; // 배송지 목록 조회
+ 
+    public void insertShipment(Map<String, Object> map) throws SQLException; //  배송 정보 저장 (SHIPMENTS 테이블)
+
+    public List<Map<String, Object>> getOrderListByCart(Map<String, Object> map) throws SQLException; // 장바구니 주문 목록 조회 (XML ID: getOrderListByCart) 
+    public Map<String, Object> getProductDetailForOrder(Map<String, Object> map) throws SQLException; // 단일 상품 구매 정보 조회 (XML ID: getProductDetailForOrder)
 
 }
