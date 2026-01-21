@@ -14,6 +14,7 @@ import com.maknaez.mapper.ProductMapper;
 import com.maknaez.model.AddressDTO;
 import com.maknaez.model.OrderDTO;
 import com.maknaez.model.OrderItemDTO;
+import com.maknaez.model.PaymentDTO;
 import com.maknaez.model.ProductDTO;
 import com.maknaez.mybatis.support.MapperContainer;
 
@@ -70,13 +71,11 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public String processPayment(OrderDTO order, List<OrderItemDTO> items, String[] cartIds) throws Exception {
+    public String processPayment(OrderDTO order, List<OrderItemDTO> items, String[] cartIds, PaymentDTO payment) throws Exception {
         
-        // 1. 주문 번호 생성
         String orderId = generateOrderId();
         order.setOrderNum(orderId); 
 
-        // 2. 배송 번호 생성 및 배송지 정보 저장 (SHIPMENTS)
         if (!items.isEmpty()) {
             OrderItemDTO info = items.get(0);
             
@@ -98,10 +97,26 @@ public class PaymentServiceImpl implements PaymentService {
             order.setDeliveryNumber(deliveryNumber);
         }
 
-        // 3. 주문 마스터 저장 (ORDERS)
         orderMapper.insertOrder(order);
+        
+        payment.setOrderId(orderId); // 생성된 주문번호 연결
+        
+        // 결제 상태가 없으면 기본값 설정
+        if (payment.getPayStatus() == null || payment.getPayStatus().isEmpty()) {
+            payment.setPayStatus("결제완료");
+        }        
+        // PG 거래번호가 없으면 임시값 생성 (실결제 연동 시에는 PG사 값을 사용)
+        if (payment.getPgTid() == null || payment.getPgTid().isEmpty()) {
+            payment.setPgTid("IMP_" + System.currentTimeMillis()); 
+        }
+        
+        // 결제 금액이 0이면 주문 금액으로 설정
+        if (payment.getPayAmount() == 0) {
+            payment.setPayAmount(order.getTotalAmount());
+        }
+        
+        orderMapper.insertPayment(payment);
 
-        // 4. 주문 상세 저장 및 재고 차감
         for (OrderItemDTO item : items) {
             item.setOrder_id(orderId);
             orderMapper.insertOrderItem(item);
@@ -116,12 +131,11 @@ public class PaymentServiceImpl implements PaymentService {
                 throw new Exception("상품(옵션ID: " + optId + ")의 재고가 부족합니다. (남은수량: " + currentStock + ")");
             }
 
-            // [수정] XML의 #{finalStock}, #{reason} 변수명에 맞춰 Map 키값 설정
             Map<String, Object> logMap = new HashMap<>();
             logMap.put("prodId", item.getProd_id());
             logMap.put("optId", optId);
-            logMap.put("qty", buyQty); // #{qty}
-            logMap.put("finalStock", currentStock - buyQty); // #{finalStock} (계산된 최종 재고)
+            logMap.put("qty", buyQty); 
+            logMap.put("finalStock", currentStock - buyQty); 
             logMap.put("reason", "정상판매"); 
 
             productMapper.insertStockUpdateLog(logMap);
@@ -166,5 +180,27 @@ public class PaymentServiceImpl implements PaymentService {
         String dateStr = sdf.format(new Date());
         int randomNum = new Random().nextInt(9000) + 1000;
         return "ORD_" + dateStr + "_" + randomNum;
+    }
+    
+ // 주문 완료 정보 조회
+    @Override
+    public OrderDTO getOrderCompleteInfo(String orderId) throws Exception {
+        try {
+            return orderMapper.selectOrderCompleteInfo(orderId);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e;
+        }
+    }
+
+    // 결제 정보 조회
+    @Override
+    public PaymentDTO getPaymentInfo(String orderId) throws Exception {
+        try {
+            return orderMapper.selectPaymentByOrder(orderId);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e;
+        }
     }
 }

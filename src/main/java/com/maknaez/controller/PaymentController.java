@@ -9,6 +9,7 @@ import com.maknaez.model.AddressDTO;
 import com.maknaez.model.MemberDTO;
 import com.maknaez.model.OrderDTO;
 import com.maknaez.model.OrderItemDTO;
+import com.maknaez.model.PaymentDTO;
 import com.maknaez.model.ProductDTO;
 import com.maknaez.model.SessionInfo;
 import com.maknaez.mvc.annotation.Controller;
@@ -50,14 +51,12 @@ public class PaymentController {
 
         ModelAndView mav = new ModelAndView("order/payment");
         
-        // 파라미터 수신 (장바구니 vs 바로구매)
         String[] cartIds = req.getParameterValues("cartIds");
         String prodIdParam = req.getParameter("prod_id");
         String quantityParam = req.getParameter("quantity");
-        String optIdParam = req.getParameter("opt_id"); // 옵션 추가
+        String optIdParam = req.getParameter("opt_id"); 
 
         try {
-            // 1. 회원 정보 조회
             MemberDTO member = memberService.findById(info.getUserId());
             if (member == null) {
                 return new ModelAndView("redirect:/member/login");
@@ -67,14 +66,11 @@ public class PaymentController {
             long totalPrice = 0;
             int totalQuantity = 0;
 
-            // 2. 상품 정보 조회 로직 (분기 처리)
             if (cartIds != null && cartIds.length > 0) {
-                // [CASE 1] 장바구니에서 진입 (여러 상품)
                 System.out.println(">>> [Debug] 장바구니 결제 진입: " + cartIds.length + "건");
                 orderList = paymentService.getOrderListByCart(cartIds);
 
             } else if (prodIdParam != null && quantityParam != null) {
-                // [CASE 2] 상세페이지에서 바로 구매 (단일 상품)
                 System.out.println(">>> [Debug] 바로 구매 진입");
                 long prodId = Long.parseLong(prodIdParam);
                 int quantity = Integer.parseInt(quantityParam);
@@ -85,23 +81,17 @@ public class PaymentController {
                     orderList.add(item);
                 }
             } else {
-                // [Error] 파라미터 없음
                 System.out.println(">>> [Error] 유효한 결제 파라미터가 없습니다.");
                 return new ModelAndView("redirect:/home/main");
             }
 
-            // 3. 상품 정보가 없는 경우 처리
             if (orderList == null || orderList.isEmpty()) {
                 System.out.println(">>> [Error] 주문할 상품 목록이 비어있습니다.");
                 return new ModelAndView("redirect:/home/main");
             }
 
-            // 4. 총 가격 및 수량 계산
             for (Map<String, Object> item : orderList) {
-                // Map의 키값(Alias)은 Service/Mapper와 일치해야 함 (대소문자 주의)
                 long price = Long.parseLong(String.valueOf(item.get("PRICE")));
-                
-                // 주의: SQL Alias가 'QUANTITY'로 유지되었다고 가정. 'COUNT'라면 변경 필요.
                 int qty = Integer.parseInt(String.valueOf(item.get("QUANTITY"))); 
                 
                 totalPrice += (price * qty);
@@ -109,7 +99,7 @@ public class PaymentController {
             }
 
             mav.addObject("member", member);
-            mav.addObject("orderList", orderList); // 리스트 전달
+            mav.addObject("orderList", orderList); 
             mav.addObject("totalPrice", totalPrice);
             mav.addObject("totalQuantity", totalQuantity);
 
@@ -143,8 +133,7 @@ public class PaymentController {
             String[] prodIds = req.getParameterValues("prod_id");
             String[] quantities = req.getParameterValues("quantity");
             String[] optIds = req.getParameterValues("opt_id");
-            
-            String[] cartIds = req.getParameterValues("cart_id");
+            String[] cartIds = req.getParameterValues("cart_id"); // 장바구니 ID 수신
             
             if (prodIds == null || prodIds.length == 0) {
                 result.put("status", "fail");
@@ -154,10 +143,12 @@ public class PaymentController {
 
             long totalAmount = Long.parseLong(req.getParameter("total_amount"));
 
+            // 1. OrderDTO 생성
             OrderDTO order = new OrderDTO();
             order.setMemberIdx(info.getMemberIdx());
             order.setOrderState("결제완료");
             order.setTotalAmount((int)totalAmount); 
+            
             ProductDTO firstProd = paymentService.getProduct(Long.parseLong(prodIds[0]));
             String orderName = firstProd.getProdName();
             if (prodIds.length > 1) {
@@ -166,8 +157,27 @@ public class PaymentController {
             order.setProductName(orderName);
             order.setThumbNail(firstProd.getThumbnail());
             
-            List<OrderItemDTO> orderItems = new ArrayList<>();
+            // 2. PaymentDTO 생성 (결제 정보)
+            PaymentDTO payment = new PaymentDTO();
+            String payMethod = req.getParameter("pay_method"); // card or bank
+            payment.setPayMethod(payMethod);
+            payment.setPayAmount(totalAmount);
+            payment.setPayStatus("결제완료");
             
+            // 가상 결제 정보 설정 (실제 연동 시에는 PG사 응답값 사용)
+            if ("card".equals(payMethod)) {
+                // payment.jsp에 카드 관련 input이 없으면 임의값 설정
+                String cardName = req.getParameter("card_name");
+                String cardNum = req.getParameter("card_num");
+                payment.setCardName(cardName != null ? cardName : "현대카드"); 
+                payment.setCardNum(cardNum != null ? cardNum : "1234-****-****-5678");
+            } else {
+                payment.setCardName("무통장입금");
+                payment.setCardNum("");
+            }
+            
+            // 3. OrderItemDTO 리스트 생성
+            List<OrderItemDTO> orderItems = new ArrayList<>();
             for (int i = 0; i < prodIds.length; i++) {
                 OrderItemDTO item = new OrderItemDTO();
                 
@@ -180,16 +190,15 @@ public class PaymentController {
                 item.setCount(count);
                 item.setOpt_id(optId);
                 
-                String addrIdParam = req.getParameter("address_id");
+                // 배송 정보
                 item.setReceiver_name(req.getParameter("receiver_name"));
                 item.setReceiver_tel(req.getParameter("receiver_tel"));
                 item.setZip_code(req.getParameter("zip_code"));
-                
                 item.setAddr1(req.getParameter("addr1"));
                 item.setAddr2(req.getParameter("addr2"));
                 item.setMemo(req.getParameter("memo"));
                 
-                // 가격 정보 재조회 (보안)
+                // 가격 재조회 (보안)
                 Map<String, Object> productInfo = paymentService.getProductDetailForOrder(prodId, count, optId);
                 if (productInfo != null && productInfo.containsKey("PRICE")) {
                     long unitPrice = Long.parseLong(String.valueOf(productInfo.get("PRICE")));
@@ -198,12 +207,11 @@ public class PaymentController {
                     item.setPrice(0); 
                 }
                 
-                orderItems.add(item); // 리스트에 추가
+                orderItems.add(item);
             }
 
-            // 3. 결제 처리 요청 (수정완료: items -> orderItems 로 변경!)
-            // [수정] cartIds 파라미터 전달
-            String orderId = paymentService.processPayment(order, orderItems, cartIds);
+            // 4. 결제 처리 요청 (PaymentDTO 포함)
+            String orderId = paymentService.processPayment(order, orderItems, cartIds, payment);
 
             result.put("status", "success");
             result.put("redirect", "/order/complete?order_id=" + orderId);
@@ -222,7 +230,6 @@ public class PaymentController {
         HttpSession session = req.getSession();
         SessionInfo info = (SessionInfo) session.getAttribute("member");
 
-        // 로그인 상태가 아니면 빈 팝업을 띄우거나 로그인 유도 (여기선 빈 목록 처리)
         if (info == null) {
             return new ModelAndView("order/address_list");
         }
@@ -230,7 +237,6 @@ public class PaymentController {
         ModelAndView mav = new ModelAndView("order/address_list");
 
         try {
-            // Service 호출 -> Mapper -> DB 조회
             List<AddressDTO> list = paymentService.getAddressList(info.getMemberIdx());
             mav.addObject("list", list);
         } catch (Exception e) {
@@ -241,12 +247,11 @@ public class PaymentController {
     }
 
     /**
-     * [추가] 결제 완료 페이지
+     * [결제 완료 페이지]
      * URL: /order/complete
      */
     @GetMapping("/complete")
     public ModelAndView paymentComplete(HttpServletRequest req, HttpServletResponse resp) {
-        // 로그인 체크
         HttpSession session = req.getSession();
         SessionInfo info = (SessionInfo) session.getAttribute("member");
         if (info == null) {
@@ -257,8 +262,20 @@ public class PaymentController {
         
         ModelAndView mav = new ModelAndView("order/complete");
         mav.addObject("orderId", orderId);
+        
+        try {
+            // 1. 주문/배송 정보 조회
+            OrderDTO orderInfo = paymentService.getOrderCompleteInfo(orderId);
+            mav.addObject("order", orderInfo);
+            
+            // 2. 결제 정보 조회
+            PaymentDTO payInfo = paymentService.getPaymentInfo(orderId);
+            mav.addObject("payment", payInfo);
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         return mav;
     }
-    
 }
