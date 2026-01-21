@@ -35,13 +35,8 @@ public class PaymentController {
 
     private PaymentService paymentService = new PaymentServiceImpl();
     private MemberService memberService = new MemberServiceImpl();
-    // [추가] 포인트 조회를 위해 서비스 추가
     private PointService pointService = new PointServiceImpl();
 
-    /**
-     * 결제 페이지 진입 (GET)
-     * URL: /order/payment
-     */
     @GetMapping("/payment")
     public ModelAndView paymentForm(HttpServletRequest req, HttpServletResponse resp) {
         System.out.println(">>> [PaymentController] 결제 페이지 진입");
@@ -66,7 +61,6 @@ public class PaymentController {
                 return new ModelAndView("redirect:/member/login");
             }
 
-            // [추가] 회원의 현재 보유 포인트 조회
             int currentPoint = pointService.findCurrentPoint(info.getMemberIdx());
             mav.addObject("currentPoint", currentPoint);
 
@@ -106,10 +100,26 @@ public class PaymentController {
                 totalQuantity += qty;
             }
 
+            // [추가] 등급별 적립 예정 포인트 계산
+            int userLevel = member.getUserLevel();
+            double saveRate = 0.01; // 기본 1%
+
+            if (userLevel >= 1 && userLevel <= 10) saveRate = 0.01;
+            else if (userLevel >= 11 && userLevel <= 20) saveRate = 0.015;
+            else if (userLevel >= 21 && userLevel <= 30) saveRate = 0.02;
+            else if (userLevel >= 31 && userLevel <= 40) saveRate = 0.03;
+            else if (userLevel >= 41 && userLevel <= 50) saveRate = 0.05;
+
+            int expectedPoint = (int)(totalPrice * saveRate);
+            
             mav.addObject("member", member);
             mav.addObject("orderList", orderList); 
             mav.addObject("totalPrice", totalPrice);
             mav.addObject("totalQuantity", totalQuantity);
+            
+            // View로 전달
+            mav.addObject("saveRate", saveRate);
+            mav.addObject("expectedPoint", expectedPoint);
 
         } catch (Exception e) {
             System.out.println(">>> [Fatal Error] 결제 페이지 처리 중 오류 발생");
@@ -120,10 +130,6 @@ public class PaymentController {
         return mav;
     }
 
-    /**
-     * 결제 처리 (POST)
-     * URL: /order/pay
-     */
     @PostMapping("/pay")
     @ResponseBody
     public Map<String, Object> payProcess(HttpServletRequest req, HttpServletResponse resp) {
@@ -150,7 +156,6 @@ public class PaymentController {
             }
 
             long totalAmount = Long.parseLong(req.getParameter("total_amount"));
-            // [추가] 사용 포인트 수신
             String pointParam = req.getParameter("point");
             int usePoint = (pointParam != null && !pointParam.isEmpty()) ? Integer.parseInt(pointParam) : 0;
 
@@ -159,7 +164,6 @@ public class PaymentController {
             order.setUserId(info.getUserId());
             order.setOrderState("결제완료");
             order.setTotalAmount((int)totalAmount);
-            // [추가] 주문 DTO에 사용 포인트 설정
             order.setPoint(usePoint);
             
             ProductDTO firstProd = paymentService.getProduct(Long.parseLong(prodIds[0]));
@@ -173,14 +177,13 @@ public class PaymentController {
             PaymentDTO payment = new PaymentDTO();
             String payMethod = req.getParameter("pay_method"); 
             payment.setPayMethod(payMethod);
-            // payment amount는 서비스에서 계산됨 (total - point)
             payment.setPayStatus("결제완료");
             
             if ("card".equals(payMethod)) {
                 String cardName = req.getParameter("card_name");
                 String cardNum = req.getParameter("card_num");
                 payment.setCardName(cardName != null ? cardName : "현대카드"); 
-                payment.setCardNum(cardNum != null ? cardNum : "1234-****-****-5678");
+                payment.setCardNum(cardNum != null ? cardNum : "9981-****-****-5423");
             } else {
                 payment.setCardName("무통장입금");
                 payment.setCardNum("");

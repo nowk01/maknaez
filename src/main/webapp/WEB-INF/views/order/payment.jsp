@@ -271,6 +271,11 @@
                         <span>총 결제금액</span>
                         <span class="price" id="finalPriceDisplay"><fmt:formatNumber value="${totalPrice}" pattern="#,###"/>원</span>
                     </div>
+                    
+                    <!-- [추가] 적립 예정 포인트 표시 영역 -->
+                    <div class="text-end" style="font-size: 12px; color: #888; margin-top: -10px; margin-bottom: 20px;">
+                        * <span id="expectedPointDisplay"><fmt:formatNumber value="${expectedPoint}" pattern="#,###"/></span> 포인트 적립 예정
+                    </div>
 
                     <div class="mt-4">
                         <label class="form-label fw-bold">결제 수단</label>
@@ -311,6 +316,7 @@
 // 전역 변수
 const totalPrice = ${totalPrice};
 const availPoint = ${currentPoint};
+const saveRate = ${saveRate}; // 적립률
 
 // 배송메모 직접입력 토글
 function changeMemo(select) {
@@ -412,10 +418,14 @@ function useAllPoints() {
     updateFinalPrice(useAmount);
 }
 
-// [최종 금액 업데이트]
+// [최종 금액 및 적립금 업데이트]
 function updateFinalPrice(usePoint) {
     const finalPrice = totalPrice - usePoint;
     $("#finalPriceDisplay").text(finalPrice.toLocaleString() + "원");
+    
+    // 적립 예정 포인트 업데이트 (실결제 금액 기준)
+    const newExpected = Math.floor(finalPrice * saveRate);
+    $("#expectedPointDisplay").text(newExpected.toLocaleString());
 }
 
 // [결제 요청]
