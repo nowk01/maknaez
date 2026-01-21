@@ -5,13 +5,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 
 import com.maknaez.mapper.AlertMapper;
-import com.maknaez.model.SessionInfo;
 import com.maknaez.mvc.annotation.Controller;
 import com.maknaez.mvc.annotation.GetMapping;
 import com.maknaez.mvc.annotation.PostMapping;
@@ -21,6 +16,11 @@ import com.maknaez.mybatis.support.MapperContainer;
 import com.maknaez.service.AlertService;
 import com.maknaez.service.AlertServiceImpl;
 
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+
 @Controller
 @RequestMapping("/admin/alert")
 public class AlertManageController {
@@ -28,62 +28,71 @@ public class AlertManageController {
 
 	@GetMapping("list")
 	public String list(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		req.setAttribute("list", getAlertList());
+		req.setAttribute("list", getAlertList(req.getSession()));
 		return "admin/alert/list";
 	}
 
 	@GetMapping("history")
 	public String history(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		req.setAttribute("list", getAlertList());
+		req.setAttribute("list", getAlertList(req.getSession()));
 		return "admin/alert/history";
 	}
 
-	private List<Map<String, Object>> getAlertList() {
-		List<Map<String, Object>> allAlerts = new ArrayList<>();
-		try {
-			AlertMapper mapper = MapperContainer.get(AlertMapper.class);
+	@SuppressWarnings("unchecked")
+	private List<Map<String, Object>> getAlertList(HttpSession session) {
+	    List<Map<String, Object>> allAlerts = new ArrayList<>();
+	    try {
+	        AlertMapper mapper = MapperContainer.get(AlertMapper.class);
+	        List<Map<String, Object>> orders = mapper.listNewOrders();
+	        List<Map<String, Object>> inquiries = mapper.listNewInquiries();
 
-			List<Map<String, Object>> orders = mapper.listNewOrders();
-			List<Map<String, Object>> inquiries = mapper.listNewInquiries();
+	        if (orders != null) allAlerts.addAll(orders);
+	        if (inquiries != null) allAlerts.addAll(inquiries);
 
-			if (orders != null)
-				allAlerts.addAll(orders);
-			if (inquiries != null)
-				allAlerts.addAll(inquiries);
+	        List<String> readList = (List<String>) session.getAttribute("READ_ALERTS");
+	        
+	        if (readList != null && !readList.isEmpty()) {
+	            allAlerts.removeIf(map -> {
+	                String currentId = String.valueOf(map.get("ID"));
+	                return readList.contains(currentId);
+	            });
+	        }
 
-			int size = allAlerts.size();
-			for (int i = 0; i < size - 1; i++) {
-				for (int j = 0; j < size - 1 - i; j++) {
-					Map<String, Object> map1 = allAlerts.get(j);
-					Map<String, Object> map2 = allAlerts.get(j + 1);
-
-					String date1 = String.valueOf(map1.get("REG_DATE"));
-					String date2 = String.valueOf(map2.get("REG_DATE"));
-
-					if (date1.compareTo(date2) < 0) {
-						allAlerts.set(j, map2);
-						allAlerts.set(j + 1, map1);
-					}
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return allAlerts;
+	        allAlerts.sort((m1, m2) -> String.valueOf(m2.get("REG_DATE")).compareTo(String.valueOf(m1.get("REG_DATE"))));
+	        
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	    return allAlerts;
 	}
 
-	@PostMapping("readAll")
+	@SuppressWarnings("unchecked")
+	@PostMapping("read")
 	@ResponseBody
-	public Map<String, Object> readAll(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
+	public Map<String, Object> read(HttpServletRequest req) {
 		Map<String, Object> model = new HashMap<>();
 		try {
+			String alertIdx = req.getParameter("alertIdx");
 			HttpSession session = req.getSession();
-			SessionInfo info = (SessionInfo) session.getAttribute("member");
+			
+			if (alertIdx != null && !alertIdx.isEmpty()) {
+				List<String> readList = (List<String>) session.getAttribute("READ_ALERTS");
+				if (readList == null) {
+					readList = new ArrayList<>();
+				}
+				
+				if (!readList.contains(alertIdx)) {
+					readList.add(alertIdx);
+				}
+				session.setAttribute("READ_ALERTS", readList);
+				
+				try {
+					service.updateRead(Integer.parseInt(alertIdx));
+				} catch(Exception e) {}
 
-			if (info != null) {
-				service.updateReadAll(info.getMemberIdx());
 				model.put("state", "true");
+			} else {
+				model.put("state", "false");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -92,27 +101,28 @@ public class AlertManageController {
 		return model;
 	}
 
-	@PostMapping("read")
+	@SuppressWarnings("unchecked")
+	@PostMapping("readAll")
 	@ResponseBody
-	public Map<String, Object> read(HttpServletRequest req) {
-	    Map<String, Object> model = new HashMap<>();
-	    try {
-	        String strIdx = req.getParameter("alertIdx");
-	        
-	        if (strIdx != null && !strIdx.isEmpty()) {
-	            int alertIdx = Integer.parseInt(strIdx);
-	            
-	            service.updateRead(alertIdx);
-	            
-	            model.put("state", "true");
-	            System.out.println("알림 읽음 처리 성공: " + alertIdx);
-	        } else {
-	            model.put("state", "false");
-	        }
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	        model.put("state", "false");
-	    }
-	    return model;
+	public Map<String, Object> readAll(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException {
+		Map<String, Object> model = new HashMap<>();
+		try {
+			HttpSession session = req.getSession();
+			List<Map<String, Object>> currentList = getAlertList(session);
+			List<String> readList = (List<String>) session.getAttribute("READ_ALERTS");
+			if (readList == null) readList = new ArrayList<>();
+			
+			for(Map<String, Object> alert : currentList) {
+				readList.add(String.valueOf(alert.get("ID")));
+			}
+			session.setAttribute("READ_ALERTS", readList);
+			
+			model.put("state", "true");
+		} catch (Exception e) {
+			e.printStackTrace();
+			model.put("state", "false");
+		}
+		return model;
 	}
 }

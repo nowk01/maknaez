@@ -10,6 +10,7 @@ public interface AlertMapper {
     public List<Map<String, Object>> listNewInquiries();
     public List<AlertDTO> listAlert(Map<String, Object> map);
     public int dataCount(Map<String, Object> map);
-    public void updateRead(int alertIdx);
+    public int updateRead(int alertIdx);
     public void updateReadAll(long memberIdx);
+	public void insertAlertRead(Map<String, Object> map);
 }

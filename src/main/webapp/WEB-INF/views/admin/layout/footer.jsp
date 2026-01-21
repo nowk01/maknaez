@@ -65,9 +65,6 @@ $(function() {
         });
     });
     
-    
-    
-
     $(document).on('click', '.noti-header a', function(e) {
         e.preventDefault();
         $.ajax({
