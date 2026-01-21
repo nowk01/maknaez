@@ -170,7 +170,6 @@ to {
 	background-color: #fcfcfc;
 }
 
-/* 오렌지 & 다크 배지 스타일 */
 .badge-luxury {
 	font-size: 11px;
 	font-weight: 700;
@@ -185,20 +184,21 @@ to {
 	border-color: #ff4e00;
 	color: #ff4e00;
 	background: #fffaf7;
-} /* 결제완료 */
+}
+
 .st-ship {
 	border-color: #1a1c1e;
 	color: #1a1c1e;
 	background: #f9fafb;
-} /* 배송중 */
+}
+
 .st-cancel {
 	border-color: #eee;
 	color: #bbb;
 	background: #fff;
 	text-decoration: line-through;
-} /* 취소 */
+} 
 
-/* 텍스트 강조 */
 .order-no {
 	font-family: 'Inter', sans-serif;
 	font-weight: 800;
@@ -217,19 +217,49 @@ to {
 	color: #1a1c1e;
 }
 
-/* 페이지네이션 */
-.pagination .page-link {
-	border: none;
-	color: #999;
-	font-size: 14px;
-	padding: 8px 15px;
-	font-weight: 600;
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 40px;
+    gap: 8px; 
 }
 
-.pagination .page-item.active .page-link {
-	background: none;
-	color: #ff4e00;
-	font-weight: 800;
-	text-decoration: underline;
-	text-underline-offset: 5px;
+.pagination a, 
+.pagination span, 
+.pagination b {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    min-width: 32px;
+    height: 32px;
+    padding: 0 5px;
+    text-decoration: none !important;
+    color: #444 !important;
+    font-size: 14px;
+    border: none !important;    
+    background: none !important; 
+    box-shadow: none !important; 
+    transition: all 0.2s ease;
+}
+
+.pagination b {
+    color: #000 !important;
+    font-weight: 800 !important;
+    text-decoration: underline !important;
+    text-underline-offset: 6px;    
+    text-decoration-thickness: 2px;
+}
+
+.pagination a:hover {
+    color: #000 !important;
+    font-weight: bold;
+    background-color: #f0f0f0 !important;
+    border-radius: 4px;
+}
+
+.pagination a[title] {
+    font-weight: normal;
+    font-size: 12px;
+    color: #888 !important;
 }

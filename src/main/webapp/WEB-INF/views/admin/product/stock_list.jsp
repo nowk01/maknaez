@@ -135,8 +135,7 @@
 						</table>
 					</div>
 
-					<div class="page-navigation d-flex justify-content-center mt-4">
-						${paging}</div>
+					<div class="pagination">${paging}</div>
 
 					<div class="btn-group-custom mt-3 text-end">
 						<button type="button" class="btn btn-luxury btn-orange"

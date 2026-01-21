@@ -113,12 +113,11 @@
 						</table>
 					</div>
 
-					<div class="pagination-center">${paging}</div>
+					<div class="pagination">${paging}</div>
 
 				</div>
 			</div>
 		</div>
-	</div>
 	</div>
 
 	<jsp:include page="/WEB-INF/views/admin/layout/footerResources.jsp" />

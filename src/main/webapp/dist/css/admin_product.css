@@ -206,91 +206,42 @@ body {
     background: #ff4e00;
 }
 
-/* 4. 페이징 */
-.pagination-center {
+.pagination {
     display: flex !important;
     justify-content: center !important;
-    margin-top: 40px;
-    gap: 8px;
+    align-items: center !important;    
+    width: 100% !important;           
+    margin: 50px 0 !important;       
+    gap: 12px !important;             
 }
 
-.pagination-center a, .pagination-center span {
-    display: inline-flex !important;
-    min-width: 36px;
-    height: 36px;
-    justify-content: center;
-    align-items: center;
-    border: 1px solid #eee;
-    color: #666;
-    font-weight: 600;
-    text-decoration: none;
-    background: #fff;
-}
-
-.pagination-center a:hover {
-    background-color: #fffaf7 !important;
-    color: #ff4e00 !important;
-    border-color: #ff4e00 !important;
-}
-
-.pagination-center b, .pagination-center strong {
-    background: #111 !important;
-    color: #fff !important;
-    border-color: #111 !important;
-    min-width: 36px;
-    height: 36px;
+.pagination a, 
+.pagination span, 
+.pagination b {
     display: inline-flex !important;
     justify-content: center;
     align-items: center;
+    min-width: 36px;  
+    height: 36px;
+    text-decoration: none !important;
+    color: #666 !important;
+    font-size: 15px;                  
+    border: none !important;
+    background: none !important;
+    transition: all 0.2s;
 }
 
-.table td .badge {
-    color: #000000 !important; 
-}
-
-.badge.bg-secondary {
-    color: #000000 !important;
-}
-
-.table tbody td:nth-child(4) {
-    text-align: center !important; 
-    vertical-align: middle !important;
-    line-height: 1.4 !important;
-}
-
-.table td .badge.bg-secondary {
-    display: inline-block !important;
-    background-color: #f1f3f5 !important;
-    color: #111 !important;
-    border: 1px solid #dee2e6 !important;
-    padding: 3px 10px !important;
-    font-size: 11px !important;
+/* 현재 페이지 강조 (거래명세서 스타일 밑줄) */
+.pagination b {
+    color: #000 !important;
     font-weight: 800 !important;
-    margin-bottom: 3px !important; 
-    border-radius: 0 !important;
+    text-decoration: underline !important;
+    text-underline-offset: 8px;     
+    text-decoration-thickness: 2px;
 }
 
-.table td:nth-child(4) span:last-child {
-    display: block !important;
-    color: #111 !important;
-    font-weight: 600 !important;
-    font-size: 14px !important;
-    margin-top: 4px !important;
-}
-
-.table thead th:nth-child(4) {
-    text-align: center !important;
-}
-
-div.pagination-center a:hover,
-div.premium-paging-container a:hover {
-    background-color: #fffaf7 !important;
-    color: #ff4e00 !important;
-    border-color: #ff4e00 !important;
-    transition: all 0.2s ease-in-out !important;
-}
-
-.pagination-center a:hover *,
-.premium-paging-container a:hover * {
-    color: #ff4e00 !important;
+.pagination a:hover {
+    color: #000 !important;
+    background-color: #f0f2f5 !important; 
+    border-radius: 50%;
 }

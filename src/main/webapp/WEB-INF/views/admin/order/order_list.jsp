@@ -147,7 +147,7 @@
 						</tbody>
 					</table>
 
-					<div class="mt-5 d-flex justify-content-center">
+					<div class="pagination">
 						<c:if test="${dataCount != 0}">
 							${paging}
 						</c:if>
