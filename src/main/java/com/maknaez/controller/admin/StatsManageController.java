@@ -28,11 +28,18 @@ public class StatsManageController {
         return mav;
     }
     
-    @GetMapping("sales_api")
+	@GetMapping("sales_api")
     @ResponseBody 
     public void salesApi(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-    	try {
-            Map<String, Object> stats = service.getSalesStats();
+        try {
+            // 차트 모드 받기 (daily / monthly)
+            String mode = req.getParameter("mode");
+            if(mode == null || mode.isEmpty()) {
+                mode = "daily";
+            }
+            
+            // 서비스에 mode 전달
+            Map<String, Object> stats = service.getSalesStats(mode);
             
             JSONObject json = new JSONObject(stats);
             

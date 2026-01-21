@@ -1,34 +1,38 @@
 document.addEventListener("DOMContentLoaded", function() {
-    loadSalesData();
+    loadSalesData('daily');
 
     const btnRefresh = document.getElementById('btnRefresh');
     if(btnRefresh) {
         btnRefresh.addEventListener('click', function() {
-            this.classList.add('spinning'); 
-            
-            loadSalesData(function() {
-                setTimeout(() => {
-                    btnRefresh.classList.remove('spinning'); 
-                }, 500);
+            const currentMode = document.querySelector('input[name="salesMode"]:checked').value;
+            this.classList.add('spinning');
+            loadSalesData(currentMode, function() {
+                setTimeout(() => btnRefresh.classList.remove('spinning'), 500);
             });
         });
     }
+
+    const radios = document.getElementsByName('salesMode');
+    radios.forEach(radio => {
+        radio.addEventListener('change', function(e) {
+            loadSalesData(e.target.value);
+        });
+    });
 });
 
-function loadSalesData(callback) {
+function loadSalesData(mode, callback) {
     $.ajax({
         url: 'sales_api',
         type: 'GET',
+        data: { mode: mode }, // 모드 전달
         dataType: 'json',
         success: function(data) {
             updateCards(data);
-
-            const recentSales = data.recentSales || [];
-            renderChart(recentSales);
-
-            const topProducts = data.topProducts || [];
-            updateTopProducts(topProducts);
             
+            renderChart(data.salesTrend, mode); 
+            
+            updateTopProducts(data.topProducts);
+
             if (callback) callback();
         },
         error: function(xhr, status, error) {
@@ -40,46 +44,51 @@ function loadSalesData(callback) {
 
 function updateCards(data) {
     const fmt = (num) => new Intl.NumberFormat('ko-KR').format(num);
+
     $('#card-today-sales').text('₩ ' + fmt(data.todaySales));
+    $('#diff-today-sales').text(data.todaySalesDiff)
+                          .removeClass('text-success text-danger')
+                          .addClass(data.todaySalesColor); // 색상 클래스 적용
+    $('#text-today-diff').text(data.todaySalesDiff + (data.todaySalesColor === 'text-success' ? ' 증가' : ' 감소'));
+
     $('#card-month-sales').text('₩ ' + fmt(data.monthSales));
+    $('#diff-month-sales').text(data.monthSalesDiff)
+                          .removeClass('text-success text-danger')
+                          .addClass(data.monthSalesColor);
+    $('#text-month-diff').text(data.monthSalesDiff + (data.monthSalesColor === 'text-success' ? ' 증가' : ' 감소'));
+
     $('#card-order-count').text(fmt(data.todayOrderCount) + ' 건');
+    $('#diff-order-count').text(data.orderDiffStr)
+                          .removeClass('text-success text-danger')
+                          .addClass(data.orderDiffColor);
+    $('#text-order-diff').text(data.orderDiffStr + (data.orderDiffColor === 'text-success' ? ' 증가' : ' 감소'));
 }
 
 // [핵심 수정 부분] renderChart 함수
-function renderChart(salesList) {
-    const canvasId = 'salesChart'; // 캔버스 ID
-
-    // 1. 데이터 유효성 검사
-    if (!Array.isArray(salesList) || salesList.length === 0) {
-        console.warn("차트 데이터가 없습니다.");
-        return;
-    }
-
-    // 2. [중요] 해당 캔버스에 이미 그려진 차트가 있는지 확인하고 파괴(Destroy)
-    // Chart.getChart(ID)는 Chart.js 3.0+ 에서 지원하는 내장 함수입니다.
+function renderChart(salesList, mode) {
+    const canvasId = 'salesChart';
     const existingChart = Chart.getChart(canvasId);
-    if (existingChart) {
-        existingChart.destroy();
+    if (existingChart) existingChart.destroy();
+
+    if (!Array.isArray(salesList) || salesList.length === 0) {
+        return; // 데이터 없음 처리 (필요시)
     }
 
     const ctx = document.getElementById(canvasId).getContext('2d');
-
-    // 3. 데이터 가공
-    const labels = salesList.map(item => item.statsDate);
+    const labels = salesList.map(item => item.statsDate); // "MM-DD" or "YYYY-MM"
     const revenues = salesList.map(item => item.totalRevenue);
 
-    // 4. 그라데이션 효과
+    // 그라데이션
     const gradient = ctx.createLinearGradient(0, 0, 0, 400);
     gradient.addColorStop(0, 'rgba(255, 78, 0, 0.4)');
     gradient.addColorStop(1, 'rgba(255, 78, 0, 0.0)');
 
-    // 5. 새 차트 생성 (변수에 담을 필요 없음)
     new Chart(ctx, {
         type: 'line',
         data: {
             labels: labels,
             datasets: [{
-                label: '일별 매출',
+                label: (mode === 'daily' ? '일별' : '월별') + ' 매출',
                 data: revenues,
                 borderColor: '#ff4e00',
                 backgroundColor: gradient,
@@ -105,23 +114,16 @@ function renderChart(salesList) {
                 }
             },
             scales: {
-				y: {
-			        beginAtZero: true,
-			        grace: '20%', 
-			        
-			        grid: { borderDash: [2, 4] },
-			        ticks: {
-			            font: {
-			                size: 12 
-			            },
-			            callback: function(value) {
-			                return '₩' + new Intl.NumberFormat('ko-KR').format(value);
-			            }
-			        }
-			    },
-			    x: {
-			        grid: { display: false }
-			    }
+                y: {
+                    beginAtZero: true,
+                    grid: { borderDash: [2, 4] },
+                    ticks: {
+                        callback: function(value) {
+                            return '₩' + new Intl.NumberFormat('ko-KR').format(value);
+                        }
+                    }
+                },
+                x: { grid: { display: false } }
             }
         }
     });

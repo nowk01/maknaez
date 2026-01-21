@@ -195,3 +195,13 @@ to {
     .btn-refresh span:last-child { display: none; }
     .btn-refresh { padding: 8px; border-radius: 50%; }
 }
+
+.badge-growth {
+    font-size: 13px;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 4px;
+    margin-bottom: 8px; /* 숫자 높이랑 맞추기 위해 */
+}
+.text-success { color: #2ecc71 !important; background: #e6f9ed; } /* 초록 (상승) */
+.text-danger { color: #e74c3c !important; background: #fde8e7; }  /* 빨강 (하락) */

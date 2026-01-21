@@ -4,7 +4,7 @@ import java.util.Map;
 
 public interface StatsService {
 	
-	public Map<String, Object> getSalesStats() throws Exception;
+	public Map<String, Object> getSalesStats(String mode) throws Exception;
 	
 	public Map<String, Object> getProductStats() throws Exception;
 	

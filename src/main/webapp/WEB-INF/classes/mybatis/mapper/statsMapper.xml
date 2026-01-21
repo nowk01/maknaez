@@ -62,6 +62,48 @@
         )
         WHERE ROWNUM &lt;= 5
     </select>
+    
+    <select id="getYesterdaySales" resultType="long">
+        SELECT NVL(SUM(p.pay_amount), 0)
+        FROM payments p
+        JOIN orders o ON p.order_id = o.items_id
+        WHERE p.pay_status = 'PAID'
+          AND TRUNC(o.order_date) = TRUNC(SYSDATE - 1)
+    </select>
+
+    <select id="getLastMonthSales" resultType="long">
+        SELECT NVL(SUM(p.pay_amount), 0)
+        FROM payments p
+        JOIN orders o ON p.order_id = o.items_id
+        WHERE p.pay_status = 'PAID'
+          AND TO_CHAR(o.order_date, 'YYYY-MM') = TO_CHAR(ADD_MONTHS(SYSDATE, -1), 'YYYY-MM')
+    </select>
+
+    <select id="getYesterdayOrderCount" resultType="int">
+        SELECT COUNT(*)
+        FROM orders
+        WHERE status NOT IN ('CANCEL', 'RETURN', 'EXCHANGE')
+          AND TRUNC(order_date) = TRUNC(SYSDATE - 1)
+    </select>
+
+    <select id="getMonthlySalesTrend" resultType="map">
+        SELECT 
+            TO_CHAR(d.dt, 'YYYY-MM') AS "statsDate",
+            NVL(SUM(sales.pay_amount), 0) AS "totalRevenue"
+        FROM (
+            SELECT ADD_MONTHS(TRUNC(SYSDATE, 'MM'), -LEVEL + 1) AS dt
+            FROM dual
+            CONNECT BY LEVEL &lt;= 12
+        ) d
+        LEFT JOIN (
+            SELECT o.order_date, p.pay_amount
+            FROM orders o
+            JOIN payments p ON o.items_id = p.order_id
+            WHERE p.pay_status = 'PAID'
+        ) sales ON TO_CHAR(sales.order_date, 'YYYY-MM') = TO_CHAR(d.dt, 'YYYY-MM')
+        GROUP BY d.dt
+        ORDER BY d.dt
+    </select>
 	
 	<!--                              상품 통계                             -->
     

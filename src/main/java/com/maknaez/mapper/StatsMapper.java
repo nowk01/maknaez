@@ -10,6 +10,10 @@ public interface StatsMapper {
     int getTodayOrderCount() throws Exception;
     List<Map<String, Object>> getRecentSales();
     List<Map<String, Object>> getTopSellingProducts();
+    long getYesterdaySales() throws Exception;
+    long getLastMonthSales() throws Exception;
+    int getYesterdayOrderCount() throws Exception;
+    List<Map<String, Object>> getMonthlySalesTrend() throws Exception;
     
     // 상품 통계 관련 
     List<Map<String, Object>> getOrderStatusDistribution() throws Exception;
@@ -20,6 +24,7 @@ public interface StatsMapper {
     List<Map<String, Object>> getBestSellers() throws Exception;
     List<Map<String, Object>> getTopWishlist() throws Exception;
     List<Map<String, Object>> getTopCart() throws Exception;
+    
     
     // 회원 통계 관련
     int getTotalMemberCount() throws Exception;

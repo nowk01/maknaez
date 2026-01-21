@@ -11,27 +11,55 @@ public class StatsServiceImpl implements StatsService{
 	StatsMapper mapper = SqlSessionManager.getSession().getMapper(StatsMapper.class);
 	
 	@Override
-    public Map<String, Object> getSalesStats() throws Exception {
-        // 매퍼 가져오기
+    public Map<String, Object> getSalesStats(String mode) throws Exception {
         StatsMapper mapper = SqlSessionManager.getSession().getMapper(StatsMapper.class);
-        
-        // try-catch 제거! 예외 발생 시 컨트롤러로 전파되도록 함.
         Map<String, Object> resultMap = new HashMap<>();
         
-        // 1. 요약 카드 데이터
-        resultMap.put("todaySales", mapper.getTodaySales());
-        resultMap.put("monthSales", mapper.getMonthSales());
-        resultMap.put("todayOrderCount", mapper.getTodayOrderCount());
+        long todaySales = mapper.getTodaySales();
+        long yesterdaySales = mapper.getYesterdaySales();
+        resultMap.put("todaySales", todaySales);
+        resultMap.put("todaySalesDiff", calculateGrowth(todaySales, yesterdaySales)); // 증감률 문자열 (+ 5.0%)
+        resultMap.put("todaySalesColor", getGrowthColor(todaySales, yesterdaySales)); // 색상 클래스
+
+        long monthSales = mapper.getMonthSales();
+        long lastMonthSales = mapper.getLastMonthSales();
+        resultMap.put("monthSales", monthSales);
+        resultMap.put("monthSalesDiff", calculateGrowth(monthSales, lastMonthSales));
+        resultMap.put("monthSalesColor", getGrowthColor(monthSales, lastMonthSales));
+
+        int todayOrders = mapper.getTodayOrderCount();
+        int yesterdayOrders = mapper.getYesterdayOrderCount();
+        int diffOrders = todayOrders - yesterdayOrders;
+        String diffOrderStr = (diffOrders >= 0 ? "+ " : "") + diffOrders; // "+ 5" or "- 3"
         
-        // 2. 그래프 데이터 (최근 7일)
-        List<Map<String, Object>> recentSales = mapper.getRecentSales();
-        resultMap.put("recentSales", recentSales);
+        resultMap.put("todayOrderCount", todayOrders);
+        resultMap.put("orderDiffStr", diffOrderStr + " 건");
+        resultMap.put("orderDiffColor", (diffOrders >= 0) ? "text-success" : "text-danger"); // Green : Red
+
+        List<Map<String, Object>> salesTrend;
+        if ("monthly".equals(mode)) {
+            salesTrend = mapper.getMonthlySalesTrend(); // 최근 1년
+        } else {
+            salesTrend = mapper.getRecentSales();       // 최근 7일 (기본)
+        }
+        resultMap.put("salesTrend", salesTrend);
         
-        // 3. 상품 랭킹 (TOP 5)
-        List<Map<String, Object>> topProducts = mapper.getTopSellingProducts();
-        resultMap.put("topProducts", topProducts);
+        resultMap.put("topProducts", mapper.getTopSellingProducts());
 
         return resultMap;
+    }
+
+    private String calculateGrowth(long current, long past) {
+        if (past == 0) {
+            return current > 0 ? "+ 100%" : "0%";
+        }
+        double diff = (double) (current - past);
+        double percent = (diff / past) * 100.0;
+        return (percent >= 0 ? "+ " : "") + String.format("%.1f", percent) + "%";
+    }
+
+    private String getGrowthColor(long current, long past) {
+        return (current >= past) ? "text-success" : "text-danger";
     }
 	
 	@Override

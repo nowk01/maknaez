@@ -37,25 +37,45 @@
                 <div class="stat-card-grid">
                     <div class="stat-card">
                         <span class="stat-label">TODAY REVENUE</span>
-                        <div class="stat-value point" id="card-today-sales">₩ 0</div>
-                        <span class="stat-desc">오늘 하루 결제 완료 금액</span>
+                        <div class="d-flex align-items-end gap-2 mb-1">
+                            <div class="stat-value point" id="card-today-sales">₩ 0</div>
+                            <span id="diff-today-sales" class="badge-growth"></span> 
+                        </div>
+                        <span class="stat-desc">어제보다 <span id="text-today-diff">0%</span></span>
                     </div>
                     <div class="stat-card">
                         <span class="stat-label">MONTHLY REVENUE</span>
-                        <div class="stat-value" id="card-month-sales">₩ 0</div>
-                        <span class="stat-desc">이번 달 누적 결제 금액</span>
+                        <div class="d-flex align-items-end gap-2 mb-1">
+                            <div class="stat-value" id="card-month-sales">₩ 0</div>
+                            <span id="diff-month-sales" class="badge-growth"></span>
+                        </div>
+                        <span class="stat-desc">지난달보다 <span id="text-month-diff">0%</span></span>
                     </div>
                     <div class="stat-card">
                         <span class="stat-label">TODAY ORDERS</span>
-                        <div class="stat-value" id="card-order-count">0 건</div>
-                        <span class="stat-desc">오늘 신규 주문 (취소 제외)</span>
+                        <div class="d-flex align-items-end gap-2 mb-1">
+                            <div class="stat-value" id="card-order-count">0 건</div>
+                            <span id="diff-order-count" class="badge-growth"></span>
+                        </div>
+                        <span class="stat-desc">어제보다 <span id="text-order-diff">0 건</span></span>
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="col-lg-8 mb-4">
                         <div class="card-box">
-                            <h4 class="box-title">최근 7일 매출 추이</h4>
+                            <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3">
+                                <h4 class="box-title mb-0" style="border:none; padding:0;">매출 추이 분석</h4>
+                                
+                                <div class="btn-group" role="group">
+                                    <input type="radio" class="btn-check" name="salesMode" id="modeDaily" value="daily" checked>
+                                    <label class="btn btn-outline-dark btn-sm" for="modeDaily">최근 7일</label>
+
+                                    <input type="radio" class="btn-check" name="salesMode" id="modeMonthly" value="monthly">
+                                    <label class="btn btn-outline-dark btn-sm" for="modeMonthly">최근 1년</label>
+                                </div>
+                            </div>
+                            
                             <div class="chart-container" style="height: 350px;">
                                 <canvas id="salesChart"></canvas>
                             </div>
