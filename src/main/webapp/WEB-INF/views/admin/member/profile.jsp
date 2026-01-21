@@ -9,24 +9,20 @@
 <jsp:include page="/WEB-INF/views/admin/layout/headerResources.jsp" />
 
 <style>
-/* [System Control Panel 디자인 - 사용자님 Pick] */
 
-/* 1. 기본 배경 및 폰트 */
 body {
 	background-color: #f5f6f8;
 	color: #202224;
 	font-family: 'Pretendard', sans-serif;
 }
 
-/* 2. 컨텐츠 컨테이너 (표준 레이아웃용 클래스) */
 .content-container {
 	padding: 50px 60px;
 	min-height: 100vh;
 	animation: fadeIn 0.5s ease-out;
 }
 
-@
-keyframes fadeIn {from { opacity:0;
+@keyframes fadeIn {from { opacity:0;
 	transform: translateY(10px);
 }
 
@@ -37,7 +33,6 @@ to {
 
 }
 
-/* 3. HUD 스타일 타이틀 */
 .system-header {
 	display: flex;
 	align-items: center;
@@ -94,17 +89,15 @@ to {
   }
 }
 
-/* 4. 마스터 카드 (상하 분할 디자인) */
 .master-card {
 	display: flex;
-	flex-direction: column; /* 상하 배치 */
+	flex-direction: column; 
 	background: #fff;
 	box-shadow: 0 5px 30px rgba(0, 0, 0, 0.03);
 	border: 1px solid #ebebeb;
 	min-height: 600px;
 }
 
-/* [상단] 와이드 블랙 패널 */
 .panel-dark {
 	background: #1a1a1c;
 	color: #fff;
@@ -115,7 +108,7 @@ to {
 	position: relative;
 	overflow: hidden;
 }
-/* 오렌지 라인 포인트 */
+
 .panel-dark::before {
 	content: '';
 	position: absolute;
@@ -165,7 +158,6 @@ to {
 	text-transform: uppercase;
 }
 
-/* 로그 영역 */
 .log-area {
 	text-align: right;
 	border-left: 1px solid #333;
@@ -198,7 +190,6 @@ to {
 	font-weight: 600;
 }
 
-/* [하단] 와이드 화이트 폼 */
 .panel-light {
 	flex: 1;
 	padding: 60px 80px;
@@ -225,7 +216,6 @@ to {
 	letter-spacing: 0.5px;
 }
 
-/* 인풋 디자인 (밑줄형 - 사용자 선호) */
 .input-st {
 	border: none;
 	border-bottom: 1px solid #ddd;
@@ -248,7 +238,6 @@ to {
 	cursor: not-allowed;
 }
 
-/* 버튼 영역 */
 .btn-group-st {
 	margin-top: 80px;
 	display: flex;
@@ -302,9 +291,6 @@ to {
 				<div class="system-header">
 					<span class="system-badge">System Config</span> <span
 						class="system-title">Administrator Profile</span>
-					<div class="system-status">
-						SERVER CONNECTED <span class="status-dot">●</span>
-					</div>
 				</div>
 
 				<div class="master-card">
@@ -385,10 +371,8 @@ to {
 			const urlParams = new URLSearchParams(window.location.search);
 
 			if (urlParams.get('result') === 'ok') {
-				// 1. 알림창 띄우기
 				alert("관리자 정보가 성공적으로 수정되었습니다.");
 
-				// 2. 주소창에서 '?result=ok' 글씨 없애기 (새로고침 시 알림 반복 방지)
 				const cleanUrl = window.location.pathname;
 				window.history.replaceState({}, document.title, cleanUrl);
 			}
@@ -422,23 +406,19 @@ to {
 				return;
 
 			if (navigator.onLine) {
-				// 온라인 상태
 				statusText.innerText = "System Online";
 				statusText.style.color = "#23a55a"; // 초록색 텍스트
 				statusIcon.className = "fas fa-satellite-dish status-dot"; // 초록불 깜빡임
 			} else {
-				// 오프라인 상태 (인터넷 끊김)
 				statusText.innerText = "Connection Lost";
 				statusText.style.color = "#ff0000"; // 빨간색 텍스트
 				statusIcon.className = "fas fa-satellite-dish status-dot offline"; // 빨간불 정지
 			}
 		}
 
-		// 상태가 바뀔 때마다 즉시 실행 (이벤트 리스너)
 		window.addEventListener('online', updateConnectionStatus);
 		window.addEventListener('offline', updateConnectionStatus);
 
-		// 페이지 로드 시 최초 1회 실행
 		updateConnectionStatus();
 	</script>
 </body>

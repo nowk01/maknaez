@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.maknaez.mapper.AlertMapper">
+
+	<select id="listNewOrders" resultType="map">
+		SELECT
+		'order' AS TYPE,
+		o.ITEMS_ID AS ID,
+		o.ORDER_DATE AS REG_DATE,
+		m.NICKNAME ||
+		CASE o.STATUS
+		WHEN '결제완료' THEN '님이 주문을 결제했습니다.'
+		WHEN '취소신청' THEN '님이 주문 취소를 요청했습니다.'
+		WHEN '반품신청' THEN '님이 반품을 요청했습니다.'
+		ELSE '님의 주문 상태가 변경되었습니다.'
+		END AS CONTENT,
+		CASE o.STATUS
+		WHEN '결제완료' THEN '/admin/order/order_list?status=결제완료'
+		ELSE '/admin/order/claim_list?status=' || o.STATUS
+		END AS URL
+		FROM ORDERS o
+		JOIN MEMBER1 m ON o.MEMBERIDX = m.MEMBERIDX
+		WHERE o.STATUS IN ('결제완료', '취소신청', '반품신청')
+		ORDER BY o.ORDER_DATE DESC
+	</select>
+
+	<select id="listNewInquiries" resultType="map">
+		SELECT
+		'inquiry' AS TYPE,
+		NUM AS ID, REG_DATE AS REG_DATE, SUBJECT AS CONTENT,
+		'/admin/cs/inquiry_list?num=' || NUM AS URL FROM BOARD WHERE
+		REPLYCONTENT IS NULL ORDER BY REG_DATE DESC
+	</select>
+
+</mapper>
