@@ -22,6 +22,37 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         });
     }
+
+	function searchList() {
+	    const f = document.searchForm;
+	    if(!f.kwd.value.trim()) {
+	        alert("검색어를 입력하세요.");
+	        f.kwd.focus();
+	        return;
+	    }
+	    f.submit();
+	}
+
+	document.addEventListener("DOMContentLoaded", function() {
+	    const kwdInput = document.querySelector("input[name='kwd']");
+	    if(kwdInput) {
+	        kwdInput.addEventListener("keypress", function(e) {
+	            if (e.key === "Enter") {
+	                e.preventDefault();
+	                document.searchForm.submit();
+	            }
+	        });
+	    }
+
+	    const checkAll = document.getElementById("checkAll");
+	    if(checkAll) {
+	        checkAll.addEventListener("change", function() {
+	            const chks = document.querySelectorAll("input[name='nums']");
+	            chks.forEach(chk => chk.checked = this.checked);
+	        });
+	    }
+	});
+	
 	
 	window.onpageshow = function(event) {
 	    if (event.persisted || (window.performance && window.performance.navigation.type === 2)) {

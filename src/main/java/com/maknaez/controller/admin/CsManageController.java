@@ -169,6 +169,12 @@ public class CsManageController {
 		try {
 			String page = req.getParameter("page");
 			int current_page = (page != null) ? Integer.parseInt(page) : 1;
+			
+			String schType = req.getParameter("schType");
+	        String kwd = req.getParameter("kwd");
+	        
+	        if (schType == null) schType = "all";
+	        if (kwd == null) kwd = "";
 
 			String condition = req.getParameter("condition");
 			String keyword = req.getParameter("keyword");
@@ -182,6 +188,8 @@ public class CsManageController {
 			}
 
 			Map<String, Object> map = new HashMap<>();
+			map.put("schType", schType);
+	        map.put("kwd", kwd);
 			map.put("condition", condition);
 			map.put("keyword", keyword);
 
@@ -194,7 +202,7 @@ public class CsManageController {
 			int offset = (current_page - 1) * size;
 			if (offset < 0)
 				offset = 0;
-
+			
 			map.put("offset", offset);
 			map.put("size", size);
 
@@ -206,7 +214,9 @@ public class CsManageController {
 			mav.addObject("total_page", total_page);
 			mav.addObject("condition", condition);
 			mav.addObject("keyword", keyword);
-
+			mav.addObject("schType", schType);
+	        mav.addObject("kwd", kwd);
+	        
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
