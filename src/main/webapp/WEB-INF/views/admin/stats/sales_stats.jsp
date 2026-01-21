@@ -36,7 +36,7 @@
 
                 <div class="stat-card-grid">
                     <div class="stat-card">
-                        <span class="stat-label">TODAY REVENUE</span>
+                        <span class="stat-label">오늘의 매출</span>
                         <div class="d-flex align-items-end gap-2 mb-1">
                             <div class="stat-value point" id="card-today-sales">₩ 0</div>
                             <span id="diff-today-sales" class="badge-growth"></span> 
@@ -44,7 +44,7 @@
                         <span class="stat-desc">어제보다 <span id="text-today-diff">0%</span></span>
                     </div>
                     <div class="stat-card">
-                        <span class="stat-label">MONTHLY REVENUE</span>
+                        <span class="stat-label">월 매출</span>
                         <div class="d-flex align-items-end gap-2 mb-1">
                             <div class="stat-value" id="card-month-sales">₩ 0</div>
                             <span id="diff-month-sales" class="badge-growth"></span>
@@ -52,7 +52,7 @@
                         <span class="stat-desc">지난달보다 <span id="text-month-diff">0%</span></span>
                     </div>
                     <div class="stat-card">
-                        <span class="stat-label">TODAY ORDERS</span>
+                        <span class="stat-label">신규 주문</span>
                         <div class="d-flex align-items-end gap-2 mb-1">
                             <div class="stat-value" id="card-order-count">0 건</div>
                             <span id="diff-order-count" class="badge-growth"></span>

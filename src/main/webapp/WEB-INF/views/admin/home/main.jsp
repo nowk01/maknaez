@@ -145,34 +145,60 @@
 
         <div class="workspace">
             <div class="stats-grid">
-                <div class="card-box stat-item">
-                    <div class="stat-label">오늘의 매출</div>
-                    <div class="d-flex align-items-center"><div class="stat-val">12,450,000</div><span class="stat-badge bg-up">▲ 8.5%</span></div>
-                </div>
-                <div class="card-box stat-item">
-                    <div class="stat-label">신규 주문</div>
-                    <div class="d-flex align-items-center"><div class="stat-val">156</div><span class="stat-badge bg-up">▲ 5건</span></div>
-                </div>
-                <div class="card-box stat-item">
-                    <div class="stat-label">미답변 문의</div>
-                    <div class="d-flex align-items-center"><div class="stat-val" style="color: #ff6b6b;">24</div><span class="stat-badge bg-down">! Action</span></div>
-                </div>
-                <div class="card-box stat-item">
-                    <div class="stat-label">실시간 방문자</div>
-                    <div class="d-flex align-items-center"><div class="stat-val">42</div><span class="stat-badge bg-neutral">● Live</span></div>
-                </div>
-            </div>
+			    <div class="card-box stat-item" 
+			         onclick="location.href='${pageContext.request.contextPath}/admin/stats/sales_stats'" 
+			         style="cursor: pointer;">
+			        <div class="stat-label">오늘의 매출</div>
+			        <div class="d-flex align-items-center">
+			            <div class="stat-val" id="main-today-sales">loading...</div>
+			            <span class="stat-badge" id="main-diff-sales"></span>
+			        </div>
+			    </div>
+			
+			    <div class="card-box stat-item" 
+			         onclick="location.href='${pageContext.request.contextPath}/admin/order/order_list'" 
+			         style="cursor: pointer;">
+			        <div class="stat-label">신규 주문</div>
+			        <div class="d-flex align-items-center">
+			            <div class="stat-val" id="main-new-orders">loading...</div>
+			            <span class="stat-badge" id="main-diff-orders"></span>
+			        </div>
+			    </div>
+			
+			    <div class="card-box stat-item" 
+			         onclick="location.href='${pageContext.request.contextPath}/admin/cs/inquiry_list'" 
+			         style="cursor: pointer;">
+			        <div class="stat-label">미답변 문의</div>
+			        <div class="d-flex align-items-center">
+			            <div class="stat-val" style="color: #ff6b6b;" id="main-inquiry-count">loading...</div>
+			            <span class="stat-badge bg-down" id="main-inquiry-badge">! Action</span>
+			        </div>
+			    </div>
+			
+			    <div class="card-box stat-item">
+			        <div class="stat-label">실시간 방문자</div>
+			        <div class="d-flex align-items-center">
+			            <div class="stat-val highlight-green">${currentCount}</div>
+			            <span class="stat-badge bg-neutral" style="color: #2ecc71; background: #e6f9ed; border: 1px solid #b7ebc9;">
+			                <span class="live-dot" style="display:inline-block; width:6px; height:6px; background:#2ecc71; border-radius:50%; margin-right:4px;"></span>
+			                Live
+			            </span>
+			        </div>
+			    </div>
+			</div>
 
             <div class="card-box chart-section">
-                <div class="chart-header">
-                    <span class="chart-title">Revenue Analytics</span>
-                    <div class="btn-group" role="group">
-                        <button type="button" class="btn btn-sm btn-dark rounded-start-3 px-3" id="btnWeekly" onclick="updateChart('weekly')">Weekly</button>
-                        <button type="button" class="btn btn-sm btn-outline-light text-dark border rounded-end-3 px-3" id="btnMonthly" onclick="updateChart('monthly')">Monthly</button>
-                    </div>
-                </div>
-                <div class="chart-canvas-wrapper"><canvas id="mainChart"></canvas></div>
-            </div>
+			    <div class="chart-header">
+			        <span class="chart-title">Revenue Analytics</span>
+			        <div class="btn-group" role="group">
+			            <button type="button" class="btn btn-sm btn-dark rounded-start-3 px-3" id="btnWeekly" onclick="loadMainSalesData('daily')">Weekly</button>
+			            <button type="button" class="btn btn-sm btn-outline-light text-dark border rounded-end-3 px-3" id="btnMonthly" onclick="loadMainSalesData('monthly')">Monthly</button>
+			        </div>
+			    </div>
+			    <div class="chart-canvas-wrapper">
+			        <canvas id="mainChart"></canvas>
+			    </div>
+			</div>
 
             <div class="side-stack">
                 <div class="card-box schedule-card">
@@ -248,72 +274,16 @@
 <script src="https://npmcdn.com/flatpickr/dist/l10n/ko.js"></script>
 
 <script>
-    const ctx = document.getElementById('mainChart').getContext('2d');
-    let gradient = ctx.createLinearGradient(0, 0, 0, 400);
-    gradient.addColorStop(0, 'rgba(255, 78, 0, 0.15)');
-    gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
-
-    const weeklyData = { labels: ['1', '5', '10', '15', '20', '25', '30'], data: [120, 240, 180, 450, 320, 500, 420] };
-    const monthlyData = { labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'], data: [450, 520, 480, 600, 750, 680, 800, 720, 850, 900, 880, 950] };
-
-    let myChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: weeklyData.labels,
-            datasets: [{ label: 'Sales', data: weeklyData.data, borderColor: '#ff4e00', borderWidth: 2.5, backgroundColor: gradient, pointBackgroundColor: '#fff', pointBorderColor: '#ff4e00', pointBorderWidth: 2, pointRadius: 4, pointHoverRadius: 6, tension: 0.35, fill: true }]
-        },
-        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { backgroundColor: 'rgba(0,0,0,0.8)', padding: 10, cornerRadius: 8, displayColors: false } }, scales: { x: { grid: { display: false }, ticks: { color: '#adb5bd', font: { size: 11 } } }, y: { beginAtZero: true, border: { display: false }, grid: { color: '#f1f3f5', borderDash: [5, 5] }, ticks: { color: '#adb5bd' } } }, layout: { padding: { top: 10, bottom: 10, left: 0, right: 0 } } }
-    });
-
-    function updateChart(type) {
-        const btnW = document.getElementById('btnWeekly');
-        const btnM = document.getElementById('btnMonthly');
-        
-        if (type === 'weekly') {
-            myChart.data.labels = weeklyData.labels;
-            myChart.data.datasets[0].data = weeklyData.data;
-
-            btnW.classList.remove('btn-outline-light', 'text-dark', 'border');
-            btnW.classList.add('btn-dark');
-            
-            btnM.classList.remove('btn-dark', 'text-white');
-            btnM.classList.add('btn-outline-light', 'text-dark', 'border');
-
-        } else {
-            myChart.data.labels = monthlyData.labels;
-            myChart.data.datasets[0].data = monthlyData.data;
-
-            btnM.classList.remove('btn-outline-light', 'text-dark', 'border');
-            btnM.classList.add('btn-dark');
-
-            btnW.classList.remove('btn-dark', 'text-white');
-            btnW.classList.add('btn-outline-light', 'text-dark', 'border');
-        }
-        myChart.update();
-    }
-
-    function toggleRow(row) {
-        const chk = row.querySelector('.custom-chk');
-        const txt = row.querySelector('.todo-content');
-        chk.classList.toggle('checked'); txt.classList.toggle('done');
-    }
-
-    function toggleStatus(row) {
-        const dot = row.querySelector('.on-dot');
-        dot.classList.toggle('active');
-        updateOnlineCount();
-    }
-
-    function updateOnlineCount() {
-        const count = document.querySelectorAll('.on-dot.active').length;
-        document.getElementById('onlineCount').innerText = count + ' Online';
-    }
-
+    let mainChartInstance = null;
     let currentWeekStart = new Date(); 
-    const day = currentWeekStart.getDay(); 
+    const day = currentWeekStart.getDay();
     currentWeekStart.setDate(currentWeekStart.getDate() - day); 
 
     document.addEventListener("DOMContentLoaded", function() {
+        loadMainSalesData('daily');
+
+        loadInquiryData();
+
         renderWeekView();
         updateOnlineCount();
 
@@ -324,7 +294,7 @@
         const fp = flatpickr("#hiddenDatePick", {
             locale: "ko", mode: "range", defaultDate: [today, tomorrow], dateFormat: "Y-m-d", 
             appendTo: document.getElementById('calBtnWrapper'), position: 'auto', 
-            onClose: function(selectedDates, dateStr, instance) {
+            onClose: function(selectedDates) {
                 if(selectedDates.length > 0) {
                     currentWeekStart = new Date(selectedDates[0]);
                     const d = currentWeekStart.getDay();
@@ -333,54 +303,155 @@
                 }
             }
         });
-        
         document.getElementById('openCalBtn').addEventListener('click', function() { fp.open(); });
     });
 
+    function loadInquiryData() {
+        $.ajax({
+            url: '${pageContext.request.contextPath}/admin/stats/product_stats_api',
+            type: 'GET',
+            dataType: 'json',
+            success: function(data) {
+                const count = data.pendingInquiryCount || 0;
+                
+                $('#main-inquiry-count').text(count);
+
+                const $badge = $('#main-inquiry-badge');
+                if (count > 0) {
+                    $badge.text('! Action')
+                          .removeClass('bg-neutral').addClass('bg-down') 
+                          .show();
+                } else {
+                    $badge.text('✓ Clear')
+                          .removeClass('bg-down').addClass('bg-neutral') 
+                          .css('color', '#2ecc71'); 
+                }
+            },
+            error: function(err) {
+                console.error("미답변 문의 로드 실패:", err);
+            }
+        });
+    }
+
+    function loadMainSalesData(mode) {
+        updateButtonStyles(mode);
+        $.ajax({
+            url: '${pageContext.request.contextPath}/admin/stats/sales_api',
+            type: 'GET',
+            data: { mode: mode },
+            dataType: 'json',
+            success: function(data) {
+                updateMainCards(data);
+                renderMainChart(data.salesTrend, mode);
+            },
+            error: function(error) { console.error("매출 데이터 로드 실패:", error); }
+        });
+    }
+
+    function updateMainCards(data) {
+        const fmt = (num) => new Intl.NumberFormat('ko-KR').format(num);
+
+        $('#main-today-sales').text('₩ ' + fmt(data.todaySales));
+        const $salesBadge = $('#main-diff-sales');
+        $salesBadge.text(data.todaySalesDiff).removeClass('bg-up bg-down bg-neutral');
+        $salesBadge.addClass(data.todaySalesColor === 'text-success' ? 'bg-up' : 'bg-down');
+
+        $('#main-new-orders').text(fmt(data.todayOrderCount));
+        const $orderBadge = $('#main-diff-orders');
+        $orderBadge.text(data.orderDiffStr).removeClass('bg-up bg-down bg-neutral');
+        $orderBadge.addClass(data.orderDiffColor === 'text-success' ? 'bg-up' : 'bg-down');
+    }
+
+    function renderMainChart(salesList, mode) {
+        const ctx = document.getElementById('mainChart').getContext('2d');
+        if (mainChartInstance) mainChartInstance.destroy();
+
+        const labels = salesList.map(item => item.statsDate);
+        const revenues = salesList.map(item => item.totalRevenue);
+
+        let gradient = ctx.createLinearGradient(0, 0, 0, 400);
+        gradient.addColorStop(0, 'rgba(255, 78, 0, 0.15)');
+        gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
+
+        mainChartInstance = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{ 
+                    label: 'Sales Revenue', data: revenues, 
+                    borderColor: '#ff4e00', borderWidth: 2.5, backgroundColor: gradient, 
+                    pointBackgroundColor: '#fff', pointBorderColor: '#ff4e00', 
+                    pointBorderWidth: 2, pointRadius: 4, pointHoverRadius: 6, tension: 0.35, fill: true 
+                }]
+            },
+            options: { 
+                responsive: true, maintainAspectRatio: false, 
+                plugins: { 
+                    legend: { display: false }, 
+                    tooltip: { 
+                        backgroundColor: 'rgba(0,0,0,0.8)', padding: 10, cornerRadius: 8, displayColors: false,
+                        callbacks: { label: function(c) { return ' ₩ ' + new Intl.NumberFormat('ko-KR').format(c.parsed.y); } }
+                    } 
+                }, 
+                scales: { 
+                    x: { grid: { display: false }, ticks: { color: '#adb5bd', font: { size: 11 } } }, 
+                    y: { beginAtZero: true, border: { display: false }, grid: { color: '#f1f3f5', borderDash: [5, 5] }, ticks: { color: '#adb5bd', callback: function(v) { return new Intl.NumberFormat('ko-KR', { notation: "compact" }).format(v); } } } 
+                }, 
+                layout: { padding: { top: 10, bottom: 10, left: 0, right: 0 } } 
+            }
+        });
+    }
+
+    function updateButtonStyles(mode) {
+        const btnW = document.getElementById('btnWeekly');
+        const btnM = document.getElementById('btnMonthly');
+        if (mode === 'daily') { 
+            btnW.classList.replace('btn-outline-light', 'btn-dark'); btnW.classList.remove('text-dark', 'border');
+            btnM.classList.replace('btn-dark', 'btn-outline-light'); btnM.classList.add('text-dark', 'border');
+        } else { 
+            btnM.classList.replace('btn-outline-light', 'btn-dark'); btnM.classList.remove('text-dark', 'border');
+            btnW.classList.replace('btn-dark', 'btn-outline-light'); btnW.classList.add('text-dark', 'border');
+        }
+    }
+
+    function toggleRow(row) {
+        row.querySelector('.custom-chk').classList.toggle('checked');
+        row.querySelector('.todo-content').classList.toggle('done');
+    }
+    function toggleStatus(row) {
+        row.querySelector('.on-dot').classList.toggle('active');
+        updateOnlineCount();
+    }
+    function updateOnlineCount() {
+        document.getElementById('onlineCount').innerText = document.querySelectorAll('.on-dot.active').length + ' Online';
+    }
     function changeWeek(direction) {
         currentWeekStart.setDate(currentWeekStart.getDate() + (direction * 7));
         renderWeekView();
     }
-
     function renderWeekView() {
         const grid = document.getElementById('weekGrid');
         const title = document.getElementById('calDisplayMonth');
         grid.innerHTML = "";
-
         const today = new Date();
         let tempDate = new Date(currentWeekStart);
-
-        const year = tempDate.getFullYear();
-        const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-        title.innerText = monthNames[tempDate.getMonth()] + " " + year;
+        title.innerText = tempDate.toLocaleString('default', { month: 'long' }) + " " + tempDate.getFullYear();
 
         for (let i = 0; i < 7; i++) {
-            const dateNum = tempDate.getDate();
             const div = document.createElement('div');
             div.className = 'cal-d';
-            div.innerText = dateNum;
+            div.innerText = tempDate.getDate();
+            if (tempDate.toDateString() === today.toDateString()) div.classList.add('active');
+            if (tempDate.getMonth() !== currentWeekStart.getMonth()) div.classList.add('other-month');
+            
             div.onclick = function() {
                 document.querySelectorAll('.cal-d').forEach(d => d.classList.remove('active'));
                 this.classList.add('active');
             };
-            if (tempDate.toDateString() === today.toDateString()) div.classList.add('active');
-            if (tempDate.getMonth() !== currentWeekStart.getMonth()) div.classList.add('other-month');
             grid.appendChild(div);
             tempDate.setDate(tempDate.getDate() + 1);
         }
     }
-    
-    <script>
-    $(document).ready(function() {
-        const urlParams = new URLSearchParams(window.location.search);
-        
-        if(urlParams.get('result') === 'profile_updated') {
-            alert("관리자 정보가 성공적으로 수정되었습니다.");
-            
-            const cleanUrl = window.location.pathname;
-            window.history.replaceState({}, document.title, cleanUrl);
-        }
-    });
 </script>
 
 </body>
