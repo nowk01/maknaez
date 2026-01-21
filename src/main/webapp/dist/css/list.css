@@ -127,3 +127,20 @@
     font-size: 13px; font-weight: 500; text-align: right; outline: none;
 }
 .sort-select { border: none; font-size: 14px; font-weight: 500; color: #333; outline: none; cursor: pointer; }
+
+/* [List Page Layout] 등 기존 CSS 아래에 추가하세요 */
+
+/* Scroll Animation - Premium Smooth Ease */
+.product-item-wrap {
+    opacity: 0;
+    transform: translateY(50px); /* 아래에서 시작 */
+    transition: opacity 1.0s cubic-bezier(0.23, 1, 0.32, 1), 
+                transform 1.0s cubic-bezier(0.23, 1, 0.32, 1); /* 살로몬 스타일의 부드러운 감속 */
+    will-change: opacity, transform;
+}
+
+/* 화면에 나타날 때 붙을 클래스 */
+.product-item-wrap.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+}

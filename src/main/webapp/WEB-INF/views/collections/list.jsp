@@ -34,7 +34,7 @@
         /* 로딩 오버레이 (필터링 시 깜빡임 방지) */
         .loading-overlay { opacity: 0.5; pointer-events: none; transition: opacity 0.2s; }
         
-        /* [추가] 하트 아이콘 호버 효과 */
+        /* 하트 아이콘 호버 효과 */
         .wish-icon-btn:hover { transform: scale(1.1); }
     </style>
 </head>
@@ -213,9 +213,35 @@
     <jsp:include page="/WEB-INF/views/layout/footerResources.jsp" />
     
     <script>
+        // [Scroll Animation Setup]
+        // 화면에 요소가 나타날 때 감지하는 Observer 설정
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.1 // 10% 정도 보이면 애니메이션 시작
+        };
+
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible'); // CSS 애니메이션 클래스 추가
+                    observer.unobserve(entry.target); // 한 번 실행 후 감시 해제
+                }
+            });
+        }, observerOptions);
+
+        // 상품 요소들을 찾아 Observer에 등록하는 함수
+        function observeProducts() {
+            // 아직 .is-visible 클래스가 없는 상품들만 선택
+            const items = document.querySelectorAll('.product-item-wrap:not(.is-visible)');
+            items.forEach(item => observer.observe(item));
+        }
+
         document.addEventListener('DOMContentLoaded', function() {
             // 초기 슬라이더 UI 설정
             updateSliderUI();
+            // [추가] 초기 로딩된 상품에 애니메이션 적용
+            observeProducts();
         });
 
         // 정렬 변경
@@ -265,6 +291,8 @@
                             productListEl.innerHTML = '<div class="col-12 text-center py-5"><h4>해당하는 상품이 없습니다.</h4></div>';
                         } else {
                             productListEl.innerHTML = html;
+                            // [추가] 검색 결과로 바뀐 상품들 애니메이션 적용
+                            observeProducts();
                         }
                         productListEl.classList.remove('loading-overlay');
                     }
@@ -287,7 +315,7 @@
             const inputMin = document.getElementById('inputMin');
             const inputMax = document.getElementById('inputMax');
             const sliderFill = document.getElementById('sliderFill');
-            const minGap = 50000; 
+            const minGap = 50000;
             const maxValLimit = 500000;
 
             let minVal = parseInt(rangeMin.value);
@@ -363,6 +391,8 @@
                 success: function(html) {
                     if ($.trim(html) !== "") {
                          $("#productList").append(html);
+                         // [추가] 더보기로 불러온 상품들 애니메이션 적용
+                         observeProducts();
                     }
                     if (currentPage >= totalPage) {
                         isEnd = true;
@@ -378,9 +408,8 @@
             });
         }
         
-        // [추가] 하트 토글 함수
+        // 하트 토글 함수
         function toggleWish(prodId, event, element) {
-            // 부모 클릭(상세페이지 이동) 방지
             event.stopPropagation();
             event.preventDefault();
 
@@ -397,10 +426,8 @@
                     } else if (data.status === "success") {
                         const icon = $(element).find("i");
                         if (data.liked) {
-                            // 찜 등록됨: 빨간 하트
                             icon.removeClass("fa-heart-broken").addClass("fa-heart").css("color", "#dc3545");
                         } else {
-                            // 찜 해제됨: 흰색 하트
                             icon.css("color", "#ffffff");
                         }
                     } else {
