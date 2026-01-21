@@ -2,69 +2,78 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.maknaez.mapper.OrderMapper">
 
-	<select id="getProduct" parameterType="long" resultType="com.maknaez.model.ProductDTO">
+	<select id="getProduct" parameterType="long"
+		resultType="com.maknaez.model.ProductDTO">
 		SELECT
-			PROD_ID       AS prodId,
-			CATE_CODE     AS cateCode,
-			PROD_NAME     AS prodName,
-			PROD_DESC     AS description,
-			BASE_PRICE    AS price,
-			IS_DISPLAYED  AS isDisplayed,
-			THUMB_NAIL    AS thumbnail,
-			TO_CHAR(PROD_DATE, 'YYYY-MM-DD')    AS regDate,
-			TO_CHAR(SHIPPED_DATE, 'YYYY-MM-DD') AS shippedDate,
-			STATUS        AS status
+		PROD_ID AS prodId,
+		CATE_CODE AS cateCode,
+		PROD_NAME AS
+		prodName,
+		PROD_DESC AS description,
+		BASE_PRICE AS price,
+		IS_DISPLAYED AS
+		isDisplayed,
+		THUMB_NAIL AS thumbnail,
+		TO_CHAR(PROD_DATE, 'YYYY-MM-DD')
+		AS regDate,
+		TO_CHAR(SHIPPED_DATE, 'YYYY-MM-DD') AS shippedDate,
+		STATUS
+		AS status
 		FROM PRODUCTS
 		WHERE PROD_ID = #{prodId}
 	</select>
-	
+
 	<select id="dataCount" parameterType="map" resultType="Integer">
 		SELECT NVL(COUNT(*), 0)
 		FROM orders o
-		LEFT JOIN member1 m1 ON
-		o.MEMBERIDX = m1.MEMBERIDX
-		LEFT JOIN member2 m2 ON o.MEMBERIDX =
-		m2.MEMBERIDX
+		LEFT JOIN member1 m1 ON o.MEMBERIDX = m1.MEMBERIDX
+		LEFT JOIN member2 m2 ON o.MEMBERIDX = m2.MEMBERIDX
+
+		<if test="mode == 'writable'">
+			JOIN order_items oi ON o.ITEMS_ID = oi.ORDER_ID
+		</if>
+
 		<where>
 			<if test="memberIdx != null and memberIdx != ''">
 				AND o.MEMBERIDX = #{memberIdx}
 			</if>
+
 			<if test="historyStartDate != null and historyStartDate != ''">
-				AND o.ORDER_DATE &gt;= TO_DATE(#{historyStartDate},
-				'YYYY-MM-DD')
+				AND o.ORDER_DATE &gt;= TO_DATE(#{historyStartDate}, 'YYYY-MM-DD')
 			</if>
 			<if test="historyEndDate != null and historyEndDate != ''">
-				AND o.ORDER_DATE &lt; TO_DATE(#{historyEndDate},
-				'YYYY-MM-DD') + 1
+				AND o.ORDER_DATE &lt; TO_DATE(#{historyEndDate}, 'YYYY-MM-DD') + 1
 			</if>
 			<if test="startDate != null and startDate != ''">
-				AND o.ORDER_DATE &gt;= TO_DATE(#{startDate},
-				'YYYY-MM-DD')
+				AND o.ORDER_DATE &gt;= TO_DATE(#{startDate}, 'YYYY-MM-DD')
 			</if>
 			<if test="endDate != null and endDate != ''">
-				AND o.ORDER_DATE &lt; TO_DATE(#{endDate}, 'YYYY-MM-DD') +
-				1
+				AND o.ORDER_DATE &lt; TO_DATE(#{endDate}, 'YYYY-MM-DD') + 1
 			</if>
 			<if test="status != null and status != ''">
 				AND o.STATUS = #{status}
 			</if>
-
 			<if test="orderState != null and orderState != ''">
 				AND o.STATUS = #{orderState}
 			</if>
-
 			<if test="searchValue != null and searchValue != ''">
 				AND (o.ITEMS_ID LIKE '%' || #{searchValue} || '%'
-				OR
-				m2.userName LIKE '%' || #{searchValue} || '%')
+				OR m2.userName LIKE '%' || #{searchValue} || '%')
 			</if>
 			<if test="claimType != null and claimType != ''">
 				AND o.STATUS LIKE '%' || #{claimType} || '%'
 			</if>
 			<if test="mode == 'claim' or mode == 'cancel'">
 				AND o.STATUS IN ('취소신청', '취소처리중', '취소완료', '반품신청',
-				'반품진행중', '반품완료',
-				'환불완료', '교환신청', '교환완료')
+				'반품진행중', '반품완료', '환불완료', '교환신청', '교환완료')
+			</if>
+
+			<if test="mode == 'writable'">
+				AND NOT EXISTS (
+				SELECT 1
+				FROM REVIEWS r
+				WHERE r.ITEM_ID = oi.ITEM_ID
+				)
 			</if>
 		</where>
 	</select>
@@ -150,11 +159,16 @@
 
 			<if test="mode == 'claim'">
 				AND o.STATUS IN ('취소신청', '취소처리중', '취소완료', '반품신청',
-				'반품진행중', '반품완료',
-				'환불완료', '교환신청', '교환완료')
+				'반품진행중', '반품완료', '환불완료', '교환신청', '교환완료')
 			</if>
 
-
+			<if test="mode == 'writable'">
+				AND NOT EXISTS (
+				SELECT 1
+				FROM REVIEWS r
+				WHERE r.ITEM_ID = oi.ITEM_ID
+				)
+			</if>
 		</where>
 		) WHERE rnum BETWEEN #{start} AND #{end}
 	</select>
@@ -312,161 +326,102 @@
 		m2.MEMBERIDX
 		WHERE o.ITEMS_ID = #{orderNum}
 	</select>
-	
+
 	<!-- 장바구니 기반 주문 목록 조회 -->
-	<select id="selectOrderListByCart" parameterType="list" resultType="map">
-		SELECT 
-			p.prod_id    AS "PROD_ID",
-			p.prod_name  AS "PROD_NAME",
-			p.thumb_nail AS "THUMBNAIL",
-			p.base_price AS "PRICE",
-			c.quantity   AS "QUANTITY",
-			(p.base_price * c.quantity) AS "TOTAL_PRICE",
-			NVL(s.pd_size, '기본옵션') AS "OPTION_VALUE",
-			c.opt_id     AS "OPT_ID"
+	<select id="selectOrderListByCart" parameterType="list"
+		resultType="map">
+		SELECT
+		p.prod_id AS "PROD_ID",
+		p.prod_name AS "PROD_NAME",
+		p.thumb_nail
+		AS "THUMBNAIL",
+		p.base_price AS "PRICE",
+		c.quantity AS "QUANTITY",
+		(p.base_price * c.quantity) AS "TOTAL_PRICE",
+		NVL(s.pd_size, '기본옵션') AS
+		"OPTION_VALUE",
+		c.opt_id AS "OPT_ID"
 		FROM cart c
-		JOIN products p ON c.prod_id = p.prod_id
-		LEFT JOIN pd_size s ON c.opt_id = s.opt_id
-		WHERE c.cart_id IN 
-		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+		JOIN products p ON
+		c.prod_id = p.prod_id
+		LEFT
+		JOIN pd_size s ON c.opt_id = s.opt_id
+		WHERE
+		c.cart_id IN
+		<foreach item="item" index="index" collection="array" open="("
+			separator="," close=")">
 			#{item}
 		</foreach>
 	</select>
 
 	<!-- 단일 상품 바로 구매 정보 조회 -->
-	<select id="selectProductForOrder" parameterType="map" resultType="map">
-		SELECT 
-			p.prod_id    AS "PROD_ID",
-			p.prod_name  AS "PROD_NAME",
-			p.thumb_nail AS "THUMBNAIL",
-			p.base_price AS "PRICE",
-			#{quantity}  AS "QUANTITY",
-			(p.base_price * #{quantity}) AS "TOTAL_PRICE",
-			NVL(s.pd_size, '기본옵션') AS "OPTION_VALUE",
-			NVL(s.opt_id, 0) AS "OPT_ID"
+	<select id="selectProductForOrder" parameterType="map"
+		resultType="map">
+		SELECT
+		p.prod_id AS "PROD_ID",
+		p.prod_name AS "PROD_NAME",
+		p.thumb_nail AS "THUMBNAIL",
+		p.base_price AS "PRICE",
+		#{quantity} AS
+		"QUANTITY",
+		(p.base_price * #{quantity}) AS "TOTAL_PRICE",
+		NVL(s.pd_size, '기본옵션') AS "OPTION_VALUE",
+		NVL(s.opt_id, 0) AS "OPT_ID"
 		FROM products p
-		LEFT JOIN pd_size s ON p.prod_id = s.prod_id AND s.opt_id = #{optId}
+		LEFT JOIN pd_size s ON p.prod_id =
+		s.prod_id AND
+		s.opt_id = #{optId}
 		WHERE p.prod_id = #{prodId}
 	</select>
-	
-	<!-- 주문창 배송지 조회  -->
-	<select id="listAddress" parameterType="Long" resultType="com.maknaez.model.AddressDTO">
-        SELECT
-            addr_id AS addrId,
-            memberIdx,
-            NVL(addr_name, '배송지') AS addrName,
-            receiver_name AS receiverName,
-            receiver_tel AS receiverTel,
-            zip_code AS zipCode,
-            addr1,
-            addr2,
-            isbasic AS isBasic
-        FROM address
-        WHERE memberIdx = #{memberIdx}
-        ORDER BY isbasic DESC, addr_id DESC
-    </select>
-    
-   <!-- 주문 마스터 저장 -->
-	<insert id="insertOrder" parameterType="com.maknaez.model.OrderDTO">
+
+	<!-- 주문창 배송지 조회 -->
+	<select id="listAddress" parameterType="Long"
+		resultType="com.maknaez.model.AddressDTO">
+		SELECT
+		addr_id AS addrId,
+		memberIdx,
+		NVL(addr_name, '배송지') AS
+		addrName,
+		receiver_name AS receiverName,
+		receiver_tel AS receiverTel,
+		zip_code AS zipCode,
+		addr1,
+		addr2,
+		isbasic AS isBasic
+		FROM address
+		WHERE
+		memberIdx = #{memberIdx}
+		ORDER BY isbasic DESC, addr_id DESC
+	</select>
+
+	<!-- 1. 주문 테이블 저장 -->
+	<insert id="insertOrder"
+		parameterType="com.maknaez.model.OrderDTO">
 		INSERT INTO orders (
-			ITEMS_ID, 
-			MEMBERIDX, 
-			ORDER_DATE, 
-			TOTAL_AMOUNT, 
-			REAL_TOTAL_AMOUNT, 
-			STATUS, 
-			DELIVERY_NUMBER
+		order_num,
+		memberIdx,
+		order_date,
+		total_amount,
+		status,
+		receiver_name,
+		receiver_tel,
+		addr_main,
+		addr_detail,
+		zip_code,
+		deli_memo
 		) VALUES (
-			#{orderNum}, 
-			#{memberIdx}, 
-			SYSDATE, 
-			#{totalAmount}, 
-			#{totalAmount}, 
-			#{orderState}, 
-			#{deliveryNumber}
+		#{orderNum},
+		#{memberIdx},
+		SYSDATE,
+		#{totalAmount},
+		'결제완료',
+		#{receiverName},
+		#{receiverTel},
+		#{addrMain},
+		#{addrDetail},
+		#{zipCode},
+		#{deliMemo}
 		)
 	</insert>
 
-	<!-- 장바구니 기반 주문 목록 조회 -->
-	<select id="getOrderListByCart" parameterType="map" resultType="map">
-		SELECT 
-			c.cart_id    AS "CART_ID",
-			p.prod_id    AS "PROD_ID",
-			p.prod_name  AS "PROD_NAME",
-			p.thumb_nail AS "THUMBNAIL",
-			p.base_price AS "PRICE",
-			c.quantity   AS "QUANTITY",
-			(p.base_price * c.quantity) AS "TOTAL_PRICE",
-			NVL(s.pd_size, '기본옵션') AS "PD_SIZE",
-			c.opt_id     AS "OPT_ID"
-		FROM cart c
-		JOIN products p ON c.prod_id = p.prod_id
-		LEFT JOIN pd_size s ON c.opt_id = s.opt_id
-		WHERE c.cart_id IN 
-		<foreach item="item" index="index" collection="cartIds" open="(" separator="," close=")">
-			#{item}
-		</foreach>
-	</select>
-
-	<!-- [추가] 단일 상품 바로 구매 정보 조회 -->
-	<select id="getProductDetailForOrder" parameterType="map" resultType="map">
-		SELECT 
-			p.prod_id    AS "PROD_ID",
-			p.prod_name  AS "PROD_NAME",
-			p.thumb_nail AS "THUMBNAIL",
-			p.base_price AS "PRICE",
-			#{quantity}  AS "QUANTITY",
-			(p.base_price * #{quantity}) AS "TOTAL_PRICE",
-			NVL(s.pd_size, '기본옵션') AS "PD_SIZE",
-			NVL(s.opt_id, 0) AS "OPT_ID"
-		FROM products p
-		LEFT JOIN pd_size s ON p.prod_id = s.prod_id AND s.opt_id = #{optId}
-		WHERE p.prod_id = #{prodId}
-	</select>
-
-    
-    <!-- [추가] 1. 배송 정보 저장 (SHIPMENTS 테이블) -->
-    <insert id="insertShipment" parameterType="map">
-        INSERT INTO shipments (
-            delivery_number, 
-            addr_id, 
-            receiver_name, 
-            receiver_tel, 
-            zip_code, 
-            addr1, 
-            addr2, 
-            memo, 
-            status, 
-            delivery_company
-        ) VALUES (
-            #{deliveryNumber}, 
-            #{addrId, jdbcType=NUMERIC}, 
-            #{receiverName}, 
-            #{receiverTel}, 
-            #{zipCode}, 
-            #{addr1}, 
-            #{addr2}, 
-            #{memo, jdbcType=VARCHAR}, 
-            #{status}, 
-            #{company}
-        )
-    </insert>
-
-    <!-- [추가] 3. 주문 상세 저장 (ORDER_ITEMS 테이블) -->
-	<insert id="insertOrderItem" parameterType="com.maknaez.model.OrderItemDTO">
-		INSERT INTO order_items (
-			ITEM_ID, 
-			ORDER_ID, 
-			OPT_ID, 
-			COUNT, 
-			PRICE
-		) VALUES (
-			ITEM_SEQ.NEXTVAL, 
-			#{order_id}, 
-			#{opt_id}, 
-			#{count}, 
-			#{price}
-		)
-	</insert>
-	
 </mapper>

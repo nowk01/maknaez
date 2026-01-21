@@ -223,6 +223,7 @@ public class MyPageController {
 				Map<String, Object> map = new HashMap<>();
 				map.put("memberIdx", info.getMemberIdx());
 				map.put("orderState", "배송완료");
+				map.put("mode", "writable");  
 				map.put("start", 1);
 				map.put("end", 100);
 
@@ -237,6 +238,7 @@ public class MyPageController {
 				map2.put("memberIdx", info.getMemberIdx());
 				map2.put("start", 1);
 				map2.put("end", 100); // 필요 시 페이징 로직 추가
+				
 				
 				int writtenDataCount = reviewService.dataCountMyReviews(info.getMemberIdx());
 				List<ReviewDTO> writtenList = reviewService.listMyReviews(map2);

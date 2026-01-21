@@ -1,4 +1,4 @@
-/* review.js */
+/* review.js - 수정버전 */
 
 /** 1. 탭 전환 기능 */
 function showTab(tabName) {
@@ -33,6 +33,8 @@ function selectSort(item, sortName, sortCodeParam) {
 
 /** 4. 리뷰 작성 모달 열기 */
 function openReviewModal(orderNum, productNum, prodName, thumbNail) {
+    console.log("모달 열기 시도:", orderNum, prodName); // 디버깅용
+
     // 데이터 세팅
     document.getElementById('modalOrderNum').value = orderNum;
     document.getElementById('modalProductNum').value = productNum;
@@ -65,14 +67,38 @@ function closeReviewModal() {
     document.getElementById('reviewModal').style.display = 'none';
 }
 
-/** 6. 폼 유효성 검사 */
+/** 6. 폼 유효성 검사 (수정됨) */
 function validateReviewForm() {
+    console.log("유효성 검사 시작..."); // 클릭 확인용
+    
+    // 폼 가져오기
     const form = document.reviewForm;
-    if (form.content.value.trim().length < 20) {
-        alert("리뷰 내용은 최소 20자 이상 입력하셔야 합니다.");
+    
+    // 1. 별점 검사 (혹시 0점일 경우)
+    const rating = document.getElementById("ratingInput").value;
+    if (!rating || rating == "0") {
+        alert("별점을 선택해주세요.");
+        return false;
+    }
+
+    // 2. 내용 길이 검사 [수정: 20자 -> 5자]
+    const content = form.content.value.trim();
+    if (content.length < 5) {
+        alert("리뷰 내용은 최소 5자 이상 입력하셔야 합니다.\n현재 글자수: " + content.length);
         form.content.focus();
         return false;
     }
+    
+    // 3. 동의 체크박스 검사 [추가됨]
+    // JSP에 <input type="checkbox" id="agreeCheck"> 라고 ID를 줘야 작동합니다.
+    const agree = document.getElementById("agreeCheck");
+    if (agree && !agree.checked) {
+        alert("개인정보 수집 및 이용에 동의해주세요.");
+        agree.focus();
+        return false;
+    }
+
+    console.log("유효성 검사 통과! 전송 시작.");
     return true;
 }
 
@@ -85,7 +111,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
     if(starBtns) {
         starBtns.forEach(btn => {
-            btn.addEventListener('click', function() {
+            btn.addEventListener('click', function(e) {
+                // 버튼 타입이 submit이 되지 않도록 방지
+                e.preventDefault(); 
+                
                 const value = parseInt(this.getAttribute('data-value'));
                 ratingInput.value = value;
                 
