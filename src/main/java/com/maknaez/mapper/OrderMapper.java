@@ -7,6 +7,7 @@ import java.util.Map;
 import com.maknaez.model.AddressDTO;
 import com.maknaez.model.OrderDTO;
 import com.maknaez.model.OrderItemDTO;
+import com.maknaez.model.PaymentDTO;
 import com.maknaez.model.ProductDTO;
 
 public interface OrderMapper {
@@ -37,5 +38,9 @@ public interface OrderMapper {
 
     public List<Map<String, Object>> getOrderListByCart(Map<String, Object> map) throws SQLException; // 장바구니 주문 목록 조회 (XML ID: getOrderListByCart) 
     public Map<String, Object> getProductDetailForOrder(Map<String, Object> map) throws SQLException; // 단일 상품 구매 정보 조회 (XML ID: getProductDetailForOrder)
+ 
+    public void insertPayment(PaymentDTO dto) throws SQLException; // PaymentDTO를 이용한 결제 정보 저장    
+    public OrderDTO selectOrderCompleteInfo(String orderId) throws SQLException; // 완료 페이지용 조회
+    public PaymentDTO selectPaymentByOrder(String orderId) throws SQLException;
 
 }

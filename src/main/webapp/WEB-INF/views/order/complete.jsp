@@ -61,7 +61,7 @@
     </div>
 
     <div class="btn-group-custom">
-        <button type="button" class="btn btn-custom btn-home" onclick="location.href='${pageContext.request.contextPath}/home/main'">쇼핑 계속하기</button>
+        <button type="button" class="btn btn-custom btn-home" onclick="location.href='${pageContext.request.contextPath}/main'">메인으로</button>
         <button type="button" class="btn btn-custom btn-mypage" onclick="location.href='${pageContext.request.contextPath}/member/mypage/orderList'">주문내역 확인</button>
     </div>
 </div>
