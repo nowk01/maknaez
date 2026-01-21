@@ -250,9 +250,9 @@ public class CollectionController {
     
     private List<Map<String, String>> getColorList() {
         List<Map<String, String>> list = new ArrayList<>();
-        String[] codes = {"BK", "WH", "GY", "NV", "SV", "GR", "BE", "OR", "PK"};
-        String[] names = {"블랙", "화이트", "그레이", "네이비", "실버", "그린", "베이지", "오렌지", "핑크"};
-        String[] hexes = {"#000000", "#FFFFFF", "#808080", "#000080", "#C0C0C0", "#008000", "#F5F5DC", "#FFA500", "#FFC0CB"};
+        String[] codes = {"BK", "WH", "GY", "NV", "SV", "GR", "BE", "OR", "PK", "RD"};
+        String[] names = {"블랙", "화이트", "그레이", "네이비", "실버", "그린", "베이지", "오렌지", "핑크", "레드"};
+        String[] hexes = {"#000000", "#FFFFFF", "#808080", "#000080", "#C0C0C0", "#008000", "#F5F5DC", "#FFA500", "#FFC0CB", "#ff0000"};
         
         for(int i=0; i<codes.length; i++) {
             Map<String, String> m = new HashMap<>();
