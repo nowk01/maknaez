@@ -51,4 +51,20 @@
 					}
 				});
 	});
+	
+	function updateHeaderStatus() {
+	    const statusDot = document.getElementById('header-user-status');
+	    if (!statusDot) return;
+
+	    if (navigator.onLine) {
+	        statusDot.classList.remove('offline');
+	    } else {
+	        statusDot.classList.add('offline');
+	    }
+	}
+
+	window.addEventListener('online', updateHeaderStatus);
+	window.addEventListener('offline', updateHeaderStatus);
+
+	document.addEventListener('DOMContentLoaded', updateHeaderStatus);
 </script>

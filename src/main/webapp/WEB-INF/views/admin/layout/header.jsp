@@ -232,6 +232,10 @@ body.header-wide .top-navbar {
 	position: relative;
 }
 
+.user-status.offline {
+    background: #ff0000;
+}
+
 .user-status {
 	position: absolute;
 	bottom: -3px;
@@ -317,8 +321,7 @@ body.header-wide .top-navbar {
 	margin-top: 5px;
 }
 
-@
-keyframes slideDown {from { opacity:0;
+@keyframes slideDown {from { opacity:0;
 	transform: translateY(-10px);
 }
 
@@ -373,7 +376,7 @@ to {
 				</div>
 				<div class="user-avatar">
 					${fn:substring(sessionScope.member.userName, 0, 1)}
-					<div class="user-status"></div>
+					<div class="user-status" id="header-user-status"></div>
 				</div>
 			</div>
 
