@@ -3,10 +3,13 @@ package com.maknaez.mapper;
 import java.util.List;
 import java.util.Map;
 
+import com.maknaez.model.AlertDTO;
+
 public interface AlertMapper {
-    // 결제완료된 주문 내역 조회
     public List<Map<String, Object>> listNewOrders();
-    
-    // 답변 대기 중인 문의 내역 조회
     public List<Map<String, Object>> listNewInquiries();
+    public List<AlertDTO> listAlert(Map<String, Object> map);
+    public int dataCount(Map<String, Object> map);
+    public void updateRead(int alertIdx);
+    public void updateReadAll(long memberIdx);
 }

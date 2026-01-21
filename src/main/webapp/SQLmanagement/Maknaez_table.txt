@@ -68,6 +68,7 @@ DROP TABLE MEMBER1 CASCADE CONSTRAINTS;
    1. 시퀀스 생성 (알파벳순 정렬)
 -- ----------------------------------------------------------------- */
 CREATE SEQUENCE ADDR_SEQ        START WITH 1 INCREMENT BY 1 NOCACHE; -- [ADDRESS]
+CREATE SEQUENCE ALERT_SEQ;											 -- [ALERT]										
 CREATE SEQUENCE BOARD_SEQ       START WITH 1 INCREMENT BY 1 NOCACHE; -- [BOARD]
 CREATE SEQUENCE CART_SEQ        START WITH 1 INCREMENT BY 1 NOCACHE; -- [CART]
 CREATE SEQUENCE CLAIM_SEQ       START WITH 1 INCREMENT BY 1 NOCACHE; -- [CLAIMS]
@@ -399,6 +400,17 @@ CREATE TABLE reviews (
     reg_date        DATE            DEFAULT SYSDATE,-- 작성일
      ENABLED        NUMBER(1,0)     DEFAULT 1       -- 리뷰 삭제 0 삭제 1노출
 );
+
+-- 29. 알림
+CREATE TABLE alert (
+    alertIdx        NUMBER          PRIMARY KEY,          -- 알람 고유 번호
+    memberIdx   	NUMBER 			NOT NULL,             -- 알람을 받을 사람 (관리자)
+    content     	VARCHAR2(500) 	NOT NULL,      		  -- 알람 내용
+    isRead      	NUMBER(1) 		DEFAULT 0,         	  -- 읽음 여부 (0:안읽음, 1:읽음)
+    regDate     	DATE 			DEFAULT SYSDATE,      -- 알람 발생 시간
+    dataIdx     	NUMBER                      		  -- 클릭 시 이동할 게시글 번호 (문의번호 등)
+);
+
 
 /* -- -----------------------------------------------------------------
    3. PK 설정 (Primary Key Constraints)

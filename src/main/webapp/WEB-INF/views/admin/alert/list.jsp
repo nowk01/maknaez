@@ -1,125 +1,71 @@
 <%@ page contentType="text/html; charset=UTF-8"%>
 <%@ taglib prefix="c" uri="jakarta.tags.core"%>
-<%@ taglib prefix="fmt" uri="jakarta.tags.fmt"%>
 
 <style>
-    #alertListContainer {
-        background: #fff;
+    /* 안 읽은 알림: 주황색 포인트 + 밝은 배경 + 선명함 */
+    .noti-item.unread {
+        background-color: #fff9f5 !important;
+        border-left: 4px solid #ff4e00 !important;
+        opacity: 1 !important; /* 무조건 선명하게 */
     }
-
+    .noti-item.unread .msg {
+        color: #000 !important;
+        font-weight: 700 !important;
+    }
+    
+    /* 기본(읽은) 알림: 흐리게 처리 */
     .noti-item {
         padding: 16px 20px;
         display: flex;
         align-items: center;
-        gap: 16px;
-        border-bottom: 1px solid #f5f5f5;
+        gap: 15px;
+        border-bottom: 1px solid #f0f0f0;
         cursor: pointer;
-        transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
-        position: relative;
+        transition: all 0.2s;
         background: #fff;
+        opacity: 0.5; /* 읽은 건 기본적으로 흐림 */
     }
-    
     .noti-item:hover {
-        background: #f8f9fc;
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-        z-index: 10;
-    }
-
-    .noti-icon {
-        width: 48px;
-        height: 48px;
-        border-radius: 14px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: #fff;
-        font-size: 20px;
-        flex-shrink: 0;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-    }
-
-    .bg-order {
-        background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-    }
-    
-    .bg-inquiry {
-        background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
-    }
-
-    .noti-text {
-        flex-grow: 1;
-        overflow: hidden;
-    }
-    
-    .noti-text .msg {
-        font-size: 14px;
-        font-weight: 600;
-        color: #333;
-        margin: 0 0 5px 0;
-        line-height: 1.4;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-    
-    .noti-text .time {
-        font-size: 12px;
-        color: #888;
-        font-weight: 500;
-        display: flex;
-        align-items: center;
-        gap: 4px;
-    }
-    
-    .noti-text .time::before {
-        content: '';
-        display: block;
-        width: 4px;
-        height: 4px;
-        background-color: #ddd;
-        border-radius: 50%;
-    }
-
-    .empty-noti {
-        padding: 60px 0;
-        text-align: center;
-        color: #ccc;
-    }
-    .empty-noti i {
-        font-size: 48px;
-        margin-bottom: 12px;
-        color: #e0e0e0;
-    }
-    .empty-noti p {
-        font-size: 14px;
-        margin: 0;
+        background-color: #f8f9fa !important;
+        opacity: 1;
     }
 </style>
 
-
 <c:choose>
     <c:when test="${empty list}">
-        <div class="empty-noti">
-            <i class="fas fa-bell-slash"></i>
+        <div class="empty-noti" style="padding: 40px 0; text-align: center; color: #ccc;">
+            <i class="fas fa-bell-slash" style="font-size: 30px; margin-bottom: 10px;"></i>
             <p>새로운 알림이 없습니다.</p>
         </div>
         <input type="hidden" id="ajaxAlertCount" value="0">
     </c:when>
-
     <c:otherwise>
         <input type="hidden" id="ajaxAlertCount" value="${list.size()}">
-
         <c:forEach var="dto" items="${list}">
-            <div class="noti-item" onclick="location.href='${pageContext.request.contextPath}${dto.URL}'">
-                
-                <div class="noti-icon ${dto.TYPE == 'order' ? 'bg-order' : 'bg-inquiry'}">
-                    <i class="fas ${dto.TYPE == 'order' ? 'fa-box' : 'fa-comment-dots'}"></i>
+            <c:set var="idx" value="${not empty dto.ALERTIDX ? dto.ALERTIDX : dto.alertIdx}" />
+            <c:set var="isRead" value="${not empty dto.ISREAD ? dto.ISREAD : (not empty dto.isRead ? dto.isRead : 0)}" />
+            <c:set var="type" value="${not empty dto.TYPE ? dto.TYPE : dto.type}" />
+            <c:set var="dataIdx" value="${not empty dto.DATAIDX ? dto.DATAIDX : dto.dataIdx}" />
+            
+            <c:set var="moveUrl" value="${pageContext.request.contextPath}/admin/cs/inquiry_list?num=${dataIdx}" />
+            <c:if test="${type == 'order'}">
+                <c:set var="moveUrl" value="${pageContext.request.contextPath}/admin/order/order_list?orderNum=${dataIdx}" />
+            </c:if>
+
+            <div class="noti-item ${isRead == 0 ? 'unread' : ''}" 
+                 data-alert-idx="${idx}" 
+                 data-url="${moveUrl}">      
+                <div class="noti-icon ${type == 'order' ? 'bg-order' : 'bg-inquiry'}" 
+                     style="width:40px; height:40px; border-radius:12px; display:flex; align-items:center; justify-content:center; color:#fff; flex-shrink:0;">
+                    <i class="fas ${type == 'order' ? 'fa-shopping-cart' : 'fa-comment-dots'}"></i>
                 </div>
-                
-                <div class="noti-text">
-                    <p class="msg">${dto.CONTENT}</p>
-                    <span class="time">${dto.REG_DATE}</span>
+                <div class="noti-text" style="flex:1; overflow:hidden;">
+                    <p class="msg" style="margin:0 0 3px 0; font-size:13px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                        ${not empty dto.CONTENT ? dto.CONTENT : dto.content}
+                    </p>
+                    <span class="time" style="font-size:11px; color:#999;">
+                        ${not empty dto.REG_DATE ? dto.REG_DATE : dto.regDate}
+                    </span>
                 </div>
             </div>
         </c:forEach>

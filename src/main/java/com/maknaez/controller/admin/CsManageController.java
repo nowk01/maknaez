@@ -42,14 +42,14 @@ public class CsManageController {
 	private FileManager fileManager = new FileManager();
 	private ReviewService reviewService = new ReviewServiceImpl();
 
-	// 1:1 문의 리스트 (관리자용)
+	// 1:1 문의 리스트
 	@GetMapping("inquiry_list")
 	public ModelAndView inquiryList(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		ModelAndView mav = new ModelAndView("admin/cs/inquiry_list");
 
 		try {
-			String status = req.getParameter("status"); // all, wait, done
+			String status = req.getParameter("status");
 			String keyword = req.getParameter("keyword");
 			if (status == null)
 				status = "all";
@@ -65,7 +65,7 @@ public class CsManageController {
 			map.put("keyword", keyword);
 			map.put("condition", "all");
 			map.put("offset", 0);
-			map.put("size", 1000); // 관리자용이므로 넉넉하게 설정
+			map.put("size", 1000);
 
 			map.put("userId", "");
 
@@ -82,7 +82,7 @@ public class CsManageController {
 		return mav;
 	}
 
-	// 1:1 문의 상세 (AJAX 연동 핵심 코드)
+	// 1:1 문의 상세
 	@ResponseBody
 	@GetMapping("inquiry_detail")
 	public void inquiryDetail(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -93,7 +93,6 @@ public class CsManageController {
 		JSONObject jobj = new JSONObject();
 
 		try {
-			// 1. 관리자 권한 체크 (51 이상)
 			if (info == null || info.getUserLevel() < 51) {
 				jobj.put("status", "permission_denied");
 				resp.getWriter().print(jobj.toString());
@@ -127,7 +126,7 @@ public class CsManageController {
 		out.print(jobj.toString());
 	}
 
-	// 1:1 문의 답변 등록 (AJAX)
+	// 1:1 문의 답변 등록
 	@ResponseBody
 	@PostMapping("inquiry_reply")
 	public void inquiryReply(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -226,19 +225,16 @@ public class CsManageController {
 		HttpSession session = req.getSession();
 		SessionInfo info = (SessionInfo) session.getAttribute("member");
 
-		// 1. 세션 체크 (관리자 확인)
 		if (info == null) {
 			return new ModelAndView("redirect:/admin/login");
 		}
-
-		// 2. 경로 설정 (서버 내 uploads/notice 폴더)
 		String root = session.getServletContext().getRealPath("/");
 		String pathname = root + "uploads" + File.separator + "notice";
 
 		try {
 			File f = new File(pathname);
 			if (!f.exists()) {
-				f.mkdirs(); // 폴더 생성 시도
+				f.mkdirs();
 			}
 
 			BoardDTO dto = new BoardDTO();
@@ -248,7 +244,6 @@ public class CsManageController {
 			dto.setIsNotice(req.getParameter("isNotice") != null ? 1 : 0);
 			dto.setIsShow(req.getParameter("isShow") != null ? 1 : 0);
 
-			// 3. 파일 업로드 처리 (파일이 없거나 에러나도 중단되지 않음)
 			try {
 				Part p = req.getPart("selectFile");
 				if (p != null && p.getSize() > 0) {
@@ -262,7 +257,6 @@ public class CsManageController {
 				System.out.println("파일 업로드 중 오류 발생 (무시하고 진행): " + fe.getMessage());
 			}
 
-			// 4. DB 저장 실행
 			service.insertNotice(dto);
 
 		} catch (Exception e) {
@@ -273,7 +267,6 @@ public class CsManageController {
 		return new ModelAndView("redirect:/admin/cs/notice_list");
 	}
 
-	// 공지사항 상세 보기
 	@GetMapping("notice_article")
 	public ModelAndView noticeArticle(HttpServletRequest req, HttpServletResponse resp) {
 		String numStr = req.getParameter("num");
@@ -292,7 +285,6 @@ public class CsManageController {
 				readList = new ArrayList<>();
 			}
 
-			// 2. 리스트에 현재 게시물 번호가 없으면 조회수 증가시키고 리스트에 추가
 			if (!readList.contains(num)) {
 				readList.add(num);
 				session.setAttribute("readNoticeList", readList);
@@ -345,7 +337,6 @@ public class CsManageController {
 			String keyword = req.getParameter("keyword");
 			int score = 0;
 
-			// 별점 필터링 (파라미터가 1~5인 경우)
 			if (req.getParameter("score") != null && !req.getParameter("score").equals("0")) {
 				try {
 					score = Integer.parseInt(req.getParameter("score"));
@@ -411,10 +402,8 @@ public class CsManageController {
 				return;
 			}
 
-			// JS에서 보낸 파라미터 이름인 reviewId로 받기
 			long reviewId = Long.parseLong(req.getParameter("reviewId"));
 
-			// Service 호출
 			ReviewDTO dto = reviewService.findById(reviewId);
 
 			if (dto != null) {
@@ -429,10 +418,6 @@ public class CsManageController {
 				jobj.put("reviewImg", dto.getReviewImg() != null ? dto.getReviewImg() : "");
 				jobj.put("optionValue", dto.getOptionValue());
 
-				// [중요] 답글 내용도 JSON에 담아 보내야 화면에 뜸
-				// ReviewDTO에 해당 필드가 없다면 DTO에 먼저 추가해야 함
-				// jobj.put("replyContent", dto.getReplyContent());
-				// jobj.put("replyDate", dto.getReplyDate());
 			} else {
 				jobj.put("status", "fail");
 			}
@@ -443,7 +428,6 @@ public class CsManageController {
 		resp.getWriter().print(jobj.toString());
 	}
 
-	// [신규 추가] 리뷰 답글 등록 (AJAX)
 	@ResponseBody
 	@PostMapping("review_reply")
 	public void reviewReply(HttpServletRequest req, HttpServletResponse resp) throws IOException {
@@ -463,7 +447,6 @@ public class CsManageController {
 			long reviewId = Long.parseLong(req.getParameter("reviewId"));
 			String replyContent = req.getParameter("replyContent");
 
-			// [수정] 실제 서비스 호출하여 DB 업데이트 수행
 			reviewService.updateReply(reviewId, replyContent);
 
 			jobj.put("status", "success");
@@ -475,7 +458,6 @@ public class CsManageController {
 		resp.getWriter().print(jobj.toString());
 	}
 
-	// [추가] 리뷰 삭제 (AJAX or Redirect)
 	@GetMapping("review_delete")
 	public ModelAndView reviewDelete(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
@@ -496,7 +478,6 @@ public class CsManageController {
 		return new ModelAndView("redirect:/admin/cs/review_list");
 	}
 
-	// [수정] 리뷰 상태 변경 (AJAX) - 예: 블라인드 처리
 	@ResponseBody
 	@PostMapping("review_status")
 	public void reviewStatus(HttpServletRequest req, HttpServletResponse resp) throws IOException {
@@ -515,15 +496,12 @@ public class CsManageController {
 
 	        long reviewId = Long.parseLong(req.getParameter("reviewId"));
 	        
-	        // [중요 수정 부분] 
-	        // JS에서 보낸 파라미터 이름은 'status'가 아니라 'enabled'입니다.
-	        // 또한 문자열(String)이 아닌 정수(int)로 변환해서 받아야 합니다.
 	        int enabled = Integer.parseInt(req.getParameter("enabled"));
 
-	        // Service 호출 (매개변수 타입을 int로 변경해야 함)
 	        reviewService.updateReviewStatus(reviewId, enabled);
 
 	        jobj.put("status", "success");
+	        
 	    } catch (Exception e) {
 	        e.printStackTrace();
 	        jobj.put("status", "error");
