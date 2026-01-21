@@ -102,6 +102,7 @@ public class ProductController {
         List<ProductDTO> relatedProducts = productService.listRelatedProducts(prodId, dto.getCateCode());
         List<ProductDTO> sizeList 		 = productService.listProductSizes(prodId);
         Map<String, Object> reviewStats  = reviewService.readReviewStats(prodId);
+        List<ProductDTO> listImg 		 = productService.listProductImg(prodId);
 
         ModelAndView mav = new ModelAndView("product/detail");
         mav.addObject("dto", dto); 
@@ -109,6 +110,7 @@ public class ProductController {
         mav.addObject("recentProductIds", idList);
         mav.addObject("relatedProducts", relatedProducts);
         mav.addObject("reviewStats", reviewStats);
+        mav.addObject("listImg", listImg);
 
         HttpSession session = req.getSession();
         SessionInfo info = (SessionInfo) session.getAttribute("member");
