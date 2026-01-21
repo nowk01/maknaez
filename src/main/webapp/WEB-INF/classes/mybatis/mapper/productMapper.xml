@@ -318,7 +318,7 @@
 	
 	    INSERT INTO PRODUCTS (
 	        prod_id, cate_code, prod_name, base_price, 
-	        prod_desc, is_displayed, reg_date, thumb_nail 
+	        prod_desc, is_displayed, shipped_date, thumb_nail 
 	    ) VALUES (
 	        #{prodId}, 
 	        #{cateCode}, 
