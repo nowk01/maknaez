@@ -339,7 +339,7 @@
             COUNT(DISTINCT l.memberIdx) AS "count"
         FROM login_history l
         JOIN member1 m ON l.memberIdx = m.memberIdx
-        WHERE l.log_date >= ADD_MONTHS(TRUNC(SYSDATE, 'MM'), -6)
+        WHERE l.log_date >= ADD_MONTHS(TRUNC(SYSDATE, 'MM'), -11)
           AND m.userLevel &lt; 51
         GROUP BY TO_CHAR(l.log_date, 'YYYY.MM')
         ORDER BY "date"

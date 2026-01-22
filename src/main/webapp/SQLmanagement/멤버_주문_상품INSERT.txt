@@ -1,0 +1,2075 @@
+[Maknaez] Category Data Insert Script
+-- -----------------------------------------------------------
+-- 1. 대분류 (Depth 1) 등록
+-- * 부모 카테고리이므로 CATE_PARENT는 NULL입니다.
+-- -----------------------------------------------------------
+INSERT INTO CATEGORY (CATE_CODE, CATE_NAME, CATE_PARENT, DEPTH, STATUS, ORDER_NO) 
+VALUES ('MEN', '남성', NULL, 1, 1, 1);
+
+INSERT INTO CATEGORY (CATE_CODE, CATE_NAME, CATE_PARENT, DEPTH, STATUS, ORDER_NO) 
+VALUES ('WOMEN', '여성', NULL, 1, 1, 2);
+
+INSERT INTO CATEGORY (CATE_CODE, CATE_NAME, CATE_PARENT, DEPTH, STATUS, ORDER_NO) 
+VALUES ('SPORTSTYLE', '스포츠스타일(Unisex)', NULL, 1, 1, 3);
+
+
+-- -----------------------------------------------------------
+-- 2. 중분류 (Depth 2) - MEN 하위
+-- * CATE_PARENT: 'MEN'
+-- -----------------------------------------------------------
+INSERT INTO CATEGORY (CATE_CODE, CATE_NAME, CATE_PARENT, DEPTH, STATUS, ORDER_NO) 
+VALUES ('MEN_TRAIL', '트레일러닝', 'MEN', 2, 1, 1);
+
+INSERT INTO CATEGORY (CATE_CODE, CATE_NAME, CATE_PARENT, DEPTH, STATUS, ORDER_NO) 
+VALUES ('MEN_OUTDOOR', '아웃도어', 'MEN', 2, 1, 2);
+
+INSERT INTO CATEGORY (CATE_CODE, CATE_NAME, CATE_PARENT, DEPTH, STATUS, ORDER_NO) 
+VALUES ('MEN_ROAD', '로드러닝', 'MEN', 2, 1, 3);
+
+INSERT INTO CATEGORY (CATE_CODE, CATE_NAME, CATE_PARENT, DEPTH, STATUS, ORDER_NO) 
+VALUES ('MEN_SPORTSTYLE', '스포츠스타일', 'MEN', 2, 1, 4);
+
+INSERT INTO CATEGORY (CATE_CODE, CATE_NAME, CATE_PARENT, DEPTH, STATUS, ORDER_NO) 
+VALUES ('MEN_RECOVERY', '리커버리', 'MEN', 2, 1, 5);
+
+INSERT INTO CATEGORY (CATE_CODE, CATE_NAME, CATE_PARENT, DEPTH, STATUS, ORDER_NO) 
+VALUES ('MEN_SANDAL', '샌들&워터슈즈', 'MEN', 2, 1, 6);
+
+
+-- -----------------------------------------------------------
+-- 3. 중분류 (Depth 2) - WOMEN 하위
+-- * CATE_PARENT: 'WOMEN'
+-- -----------------------------------------------------------
+INSERT INTO CATEGORY (CATE_CODE, CATE_NAME, CATE_PARENT, DEPTH, STATUS, ORDER_NO) 
+VALUES ('WOMEN_TRAIL', '트레일러닝', 'WOMEN', 2, 1, 1);
+
+INSERT INTO CATEGORY (CATE_CODE, CATE_NAME, CATE_PARENT, DEPTH, STATUS, ORDER_NO) 
+VALUES ('WOMEN_OUTDOOR', '아웃도어', 'WOMEN', 2, 1, 2);
+
+INSERT INTO CATEGORY (CATE_CODE, CATE_NAME, CATE_PARENT, DEPTH, STATUS, ORDER_NO) 
+VALUES ('WOMEN_ROAD', '로드러닝', 'WOMEN', 2, 1, 3);
+
+INSERT INTO CATEGORY (CATE_CODE, CATE_NAME, CATE_PARENT, DEPTH, STATUS, ORDER_NO) 
+VALUES ('WOMEN_SPORTSTYLE', '스포츠스타일', 'WOMEN', 2, 1, 4);
+
+INSERT INTO CATEGORY (CATE_CODE, CATE_NAME, CATE_PARENT, DEPTH, STATUS, ORDER_NO) 
+VALUES ('WOMEN_RECOVERY', '리커버리', 'WOMEN', 2, 1, 5);
+
+INSERT INTO CATEGORY (CATE_CODE, CATE_NAME, CATE_PARENT, DEPTH, STATUS, ORDER_NO) 
+VALUES ('WOMEN_SANDAL', '샌들&워터슈즈', 'WOMEN', 2, 1, 6);
+
+
+-- -----------------------------------------------------------
+-- 4. 중분류 (Depth 2) - SPORTSTYLE 하위
+-- * CATE_PARENT: 'SPORTSTYLE'
+-- -----------------------------------------------------------
+INSERT INTO CATEGORY (CATE_CODE, CATE_NAME, CATE_PARENT, DEPTH, STATUS, ORDER_NO) 
+VALUES ('SPORTSTYLE_SNEAKERS', '스니커즈', 'SPORTSTYLE', 2, 1, 1);
+
+INSERT INTO CATEGORY (CATE_CODE, CATE_NAME, CATE_PARENT, DEPTH, STATUS, ORDER_NO) 
+VALUES ('SPORTSTYLE_ADVANCED', '어드밴스드', 'SPORTSTYLE', 2, 1, 2);
+
+INSERT INTO CATEGORY (CATE_CODE, CATE_NAME, CATE_PARENT, DEPTH, STATUS, ORDER_NO) 
+VALUES ('SPORTSTYLE_INTERSECTION', '인터섹션', 'SPORTSTYLE', 2, 1, 3);
+
+-- -----------------------------------------------------------
+-- 최종 반영
+-- -----------------------------------------------------------
+COMMIT;
+
+-- ================================================================
+[Maknaez] Products & Images Insert Script (MEN_ROAD)
+-- ================================================================
+-- -----------------------------------------------------------
+-- M_Aeroblaze 3_BK (m_aeroblaze3_bk)
+-- -----------------------------------------------------------
+INSERT INTO PRODUCTS (PROD_ID, CATE_CODE, PROD_NAME, PROD_DESC, BASE_PRICE, IS_DISPLAYED, THUMB_NAIL, PROD_DATE, SHIPPED_DATE, STATUS)
+VALUES (PRODUCT_SEQ.NEXTVAL, 'MEN_ROAD', 'M_Aeroblaze 3_BK', '최고의 퍼포먼스를 위한 M_Aeroblaze 3_BK. 로드 러닝에 최적화된 설계와 감각적인 디자인을 경험해보세요.', 239000, 1, 'm_aeroblaze3_bk_thumbnail.jpg', SYSDATE, SYSDATE, 1);
+
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_aeroblaze3_bk_1.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_aeroblaze3_bk_2.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_aeroblaze3_bk_3.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_aeroblaze3_bk_4.jpg');
+
+-- -----------------------------------------------------------
+-- M_Aeroblaze 3_GR (m_aeroblaze3_gr)
+-- -----------------------------------------------------------
+INSERT INTO PRODUCTS (PROD_ID, CATE_CODE, PROD_NAME, PROD_DESC, BASE_PRICE, IS_DISPLAYED, THUMB_NAIL, PROD_DATE, SHIPPED_DATE, STATUS)
+VALUES (PRODUCT_SEQ.NEXTVAL, 'MEN_ROAD', 'M_Aeroblaze 3_GR', '최고의 퍼포먼스를 위한 M_Aeroblaze 3_GR. 로드 러닝에 최적화된 설계와 감각적인 디자인을 경험해보세요.', 239000, 1, 'm_aeroblaze3_gr_thumbnail.jpg', SYSDATE, SYSDATE, 1);
+
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_aeroblaze3_gr_1.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_aeroblaze3_gr_2.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_aeroblaze3_gr_3.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_aeroblaze3_gr_4.jpg');
+
+-- -----------------------------------------------------------
+-- M_Aeroblaze_GY (m_aeroblaze_gy)
+-- -----------------------------------------------------------
+INSERT INTO PRODUCTS (PROD_ID, CATE_CODE, PROD_NAME, PROD_DESC, BASE_PRICE, IS_DISPLAYED, THUMB_NAIL, PROD_DATE, SHIPPED_DATE, STATUS)
+VALUES (PRODUCT_SEQ.NEXTVAL, 'MEN_ROAD', 'M_Aeroblaze_GY', '최고의 퍼포먼스를 위한 M_Aeroblaze_GY. 로드 러닝에 최적화된 설계와 감각적인 디자인을 경험해보세요.', 219000, 1, 'm_aeroblaze_gy_thumbnail.jpg', SYSDATE, SYSDATE, 1);
+
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_aeroblaze_gy_1.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_aeroblaze_gy_2.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_aeroblaze_gy_3.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_aeroblaze_gy_4.jpg');
+
+-- -----------------------------------------------------------
+-- M_Aeroglide 3_RD (m_aeroglide3_rd)
+-- -----------------------------------------------------------
+INSERT INTO PRODUCTS (PROD_ID, CATE_CODE, PROD_NAME, PROD_DESC, BASE_PRICE, IS_DISPLAYED, THUMB_NAIL, PROD_DATE, SHIPPED_DATE, STATUS)
+VALUES (PRODUCT_SEQ.NEXTVAL, 'MEN_ROAD', 'M_Aeroglide 3_RD', '최고의 퍼포먼스를 위한 M_Aeroglide 3_RD. 로드 러닝에 최적화된 설계와 감각적인 디자인을 경험해보세요.', 249000, 1, 'm_aeroglide3_rd_thumbnail.jpg', SYSDATE, SYSDATE, 1);
+
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_aeroglide3_rd_1.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_aeroglide3_rd_2.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_aeroglide3_rd_3.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_aeroglide3_rd_4.jpg');
+
+-- -----------------------------------------------------------
+-- M_Aeroglide 4_BE (m_aeroglide4_be)
+-- -----------------------------------------------------------
+INSERT INTO PRODUCTS (PROD_ID, CATE_CODE, PROD_NAME, PROD_DESC, BASE_PRICE, IS_DISPLAYED, THUMB_NAIL, PROD_DATE, SHIPPED_DATE, STATUS)
+VALUES (PRODUCT_SEQ.NEXTVAL, 'MEN_ROAD', 'M_Aeroglide 4_BE', '최고의 퍼포먼스를 위한 M_Aeroglide 4_BE. 로드 러닝에 최적화된 설계와 감각적인 디자인을 경험해보세요.', 259000, 1, 'm_aeroglide4_be_thumbnail.jpg', SYSDATE, SYSDATE, 1);
+
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_aeroglide4_be_1.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_aeroglide4_be_2.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_aeroglide4_be_3.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_aeroglide4_be_4.jpg');
+
+-- -----------------------------------------------------------
+-- M_Aeroglide 4_BK (m_aeroglide4_bk)
+-- -----------------------------------------------------------
+INSERT INTO PRODUCTS (PROD_ID, CATE_CODE, PROD_NAME, PROD_DESC, BASE_PRICE, IS_DISPLAYED, THUMB_NAIL, PROD_DATE, SHIPPED_DATE, STATUS)
+VALUES (PRODUCT_SEQ.NEXTVAL, 'MEN_ROAD', 'M_Aeroglide 4_BK', '최고의 퍼포먼스를 위한 M_Aeroglide 4_BK. 로드 러닝에 최적화된 설계와 감각적인 디자인을 경험해보세요.', 259000, 1, 'm_aeroglide4_bk_thumbnail.jpg', SYSDATE, SYSDATE, 1);
+
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_aeroglide4_bk_1.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_aeroglide4_bk_2.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_aeroglide4_bk_3.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_aeroglide4_bk_4.jpg');
+
+-- -----------------------------------------------------------
+-- M_S-LAB Phantasm 2_WH (m_slabphantasm2_wh)
+-- -----------------------------------------------------------
+INSERT INTO PRODUCTS (PROD_ID, CATE_CODE, PROD_NAME, PROD_DESC, BASE_PRICE, IS_DISPLAYED, THUMB_NAIL, PROD_DATE, SHIPPED_DATE, STATUS)
+VALUES (PRODUCT_SEQ.NEXTVAL, 'MEN_ROAD', 'M_S-LAB Phantasm 2_WH', '최고의 퍼포먼스를 위한 M_S-LAB Phantasm 2_WH. 로드 러닝에 최적화된 설계와 감각적인 디자인을 경험해보세요.', 320000, 1, 'm_slabphantasm2_wh_thumbnail.jpg', SYSDATE, SYSDATE, 1);
+
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_slabphantasm2_wh_1.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_slabphantasm2_wh_2.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_slabphantasm2_wh_3.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_slabphantasm2_wh_4.jpg');
+
+-- -----------------------------------------------------------
+-- M_S-LAB Phantasm_OR (m_slabphantasm_or)
+-- -----------------------------------------------------------
+INSERT INTO PRODUCTS (PROD_ID, CATE_CODE, PROD_NAME, PROD_DESC, BASE_PRICE, IS_DISPLAYED, THUMB_NAIL, PROD_DATE, SHIPPED_DATE, STATUS)
+VALUES (PRODUCT_SEQ.NEXTVAL, 'MEN_ROAD', 'M_S-LAB Phantasm_OR', '최고의 퍼포먼스를 위한 M_S-LAB Phantasm_OR. 로드 러닝에 최적화된 설계와 감각적인 디자인을 경험해보세요.', 320000, 1, 'm_slabphantasm_or_thumbnail.jpg', SYSDATE, SYSDATE, 1);
+
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_slabphantasm_or_1.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_slabphantasm_or_2.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_slabphantasm_or_3.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_slabphantasm_or_4.jpg');
+
+-- -----------------------------------------------------------
+-- M_S-LAB Spectur_WH (m_slabspectur_wh)
+-- -----------------------------------------------------------
+INSERT INTO PRODUCTS (PROD_ID, CATE_CODE, PROD_NAME, PROD_DESC, BASE_PRICE, IS_DISPLAYED, THUMB_NAIL, PROD_DATE, SHIPPED_DATE, STATUS)
+VALUES (PRODUCT_SEQ.NEXTVAL, 'MEN_ROAD', 'M_S-LAB Spectur_WH', '최고의 퍼포먼스를 위한 M_S-LAB Spectur_WH. 로드 러닝에 최적화된 설계와 감각적인 디자인을 경험해보세요.', 350000, 1, 'm_slabspectur_wh_thumbnail.jpg', SYSDATE, SYSDATE, 1);
+
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_slabspectur_wh_1.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_slabspectur_wh_2.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_slabspectur_wh_3.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_slabspectur_wh_4.jpg');
+
+COMMIT;
+
+
+-- =============================================================================
+[Maknaez] Products & Images Insert Script (MEN_RECOVERY)
+-- =============================================================================
+-- -----------------------------------------------------------
+-- M_Reelax Break 6_NV (m_reelaxbreak6_nv)
+-- -----------------------------------------------------------
+INSERT INTO PRODUCTS (PROD_ID, CATE_CODE, PROD_NAME, PROD_DESC, BASE_PRICE, IS_DISPLAYED, THUMB_NAIL, PROD_DATE, SHIPPED_DATE, STATUS)
+VALUES (PRODUCT_SEQ.NEXTVAL, 'MEN_RECOVERY', 'M_Reelax Break 6_NV', '지친 발에 휴식을 주는 M_Reelax Break 6_NV. 운동 전후 리커버리를 위한 최적의 선택입니다.', 129000, 1, 'm_reelaxbreak6_nv_thumbnail.jpg', SYSDATE, SYSDATE, 1);
+
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_reelaxbreak6_nv_1.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_reelaxbreak6_nv_2.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_reelaxbreak6_nv_3.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_reelaxbreak6_nv_4.jpg');
+
+-- -----------------------------------------------------------
+-- M_Reelax Moc 6_BK (m_reelaxmoc6_bk)
+-- -----------------------------------------------------------
+INSERT INTO PRODUCTS (PROD_ID, CATE_CODE, PROD_NAME, PROD_DESC, BASE_PRICE, IS_DISPLAYED, THUMB_NAIL, PROD_DATE, SHIPPED_DATE, STATUS)
+VALUES (PRODUCT_SEQ.NEXTVAL, 'MEN_RECOVERY', 'M_Reelax Moc 6_BK', '지친 발에 휴식을 주는 M_Reelax Moc 6_BK. 운동 전후 리커버리를 위한 최적의 선택입니다.', 129000, 1, 'm_reelaxmoc6_bk_thumbnail.jpg', SYSDATE, SYSDATE, 1);
+
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_reelaxmoc6_bk_1.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_reelaxmoc6_bk_2.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_reelaxmoc6_bk_3.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_reelaxmoc6_bk_4.jpg');
+
+-- -----------------------------------------------------------
+-- M_Reelax Slide 6_BK (m_reelaxslide6_bk)
+-- -----------------------------------------------------------
+INSERT INTO PRODUCTS (PROD_ID, CATE_CODE, PROD_NAME, PROD_DESC, BASE_PRICE, IS_DISPLAYED, THUMB_NAIL, PROD_DATE, SHIPPED_DATE, STATUS)
+VALUES (PRODUCT_SEQ.NEXTVAL, 'MEN_RECOVERY', 'M_Reelax Slide 6_BK', '지친 발에 휴식을 주는 M_Reelax Slide 6_BK. 운동 전후 리커버리를 위한 최적의 선택입니다.', 119000, 1, 'm_reelaxslide6_bk_thumbnail.jpg', SYSDATE, SYSDATE, 1);
+
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_reelaxslide6_bk_1.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_reelaxslide6_bk_2.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_reelaxslide6_bk_3.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_reelaxslide6_bk_4.jpg');
+
+-- -----------------------------------------------------------
+-- M_Reelax Slide 6_NV (m_reelaxslide6_nv)
+-- -----------------------------------------------------------
+INSERT INTO PRODUCTS (PROD_ID, CATE_CODE, PROD_NAME, PROD_DESC, BASE_PRICE, IS_DISPLAYED, THUMB_NAIL, PROD_DATE, SHIPPED_DATE, STATUS)
+VALUES (PRODUCT_SEQ.NEXTVAL, 'MEN_RECOVERY', 'M_Reelax Slide 6_NV', '지친 발에 휴식을 주는 M_Reelax Slide 6_NV. 운동 전후 리커버리를 위한 최적의 선택입니다.', 119000, 1, 'm_reelaxslide6_nv_thumbnail.jpg', SYSDATE, SYSDATE, 1);
+
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_reelaxslide6_nv_1.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_reelaxslide6_nv_2.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_reelaxslide6_nv_3.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_reelaxslide6_nv_4.jpg');
+
+COMMIT;
+
+-- =============================================================================
+[Maknaez] Products & Images Insert Script (MEN_SANDAL)
+-- =============================================================================
+-- -----------------------------------------------------------
+-- M_RX Marie_WH (m_rxmarie_wh)
+-- -----------------------------------------------------------
+INSERT INTO PRODUCTS (PROD_ID, CATE_CODE, PROD_NAME, PROD_DESC, BASE_PRICE, IS_DISPLAYED, THUMB_NAIL, PROD_DATE, SHIPPED_DATE, STATUS)
+VALUES (PRODUCT_SEQ.NEXTVAL, 'MEN_SANDAL', 'M_RX Marie_WH', '여름철 아웃도어 활동을 위한 완벽한 선택, M_RX Marie_WH. 통기성과 편안함을 동시에 제공합니다.', 119000, 1, 'm_rxmarie_wh_thumbnail.jpg', SYSDATE, SYSDATE, 1);
+
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_rxmarie_wh_1.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_rxmarie_wh_2.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_rxmarie_wh_3.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_rxmarie_wh_4.jpg');
+
+-- -----------------------------------------------------------
+-- M_RX MOC 3.0 ATQ_BE (m_RXMOC3-0ATQ_be)
+-- -----------------------------------------------------------
+INSERT INTO PRODUCTS (PROD_ID, CATE_CODE, PROD_NAME, PROD_DESC, BASE_PRICE, IS_DISPLAYED, THUMB_NAIL, PROD_DATE, SHIPPED_DATE, STATUS)
+VALUES (PRODUCT_SEQ.NEXTVAL, 'MEN_SANDAL', 'M_RX MOC 3.0 ATQ_BE', '여름철 아웃도어 활동을 위한 완벽한 선택, M_RX MOC 3.0 ATQ_BE. 통기성과 편안함을 동시에 제공합니다.', 119000, 1, 'm_RXMOC3-0ATQ_be_thumbnail.jpg', SYSDATE, SYSDATE, 1);
+
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_RXMOC3-0ATQ_be_1.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_RXMOC3-0ATQ_be_2.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_RXMOC3-0ATQ_be_3.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_RXMOC3-0ATQ_be_4.jpg');
+
+-- -----------------------------------------------------------
+-- M_RX MOC 3.0 ATQ_BK (m_RXMOC3-0ATQ_bk)
+-- -----------------------------------------------------------
+INSERT INTO PRODUCTS (PROD_ID, CATE_CODE, PROD_NAME, PROD_DESC, BASE_PRICE, IS_DISPLAYED, THUMB_NAIL, PROD_DATE, SHIPPED_DATE, STATUS)
+VALUES (PRODUCT_SEQ.NEXTVAL, 'MEN_SANDAL', 'M_RX MOC 3.0 ATQ_BK', '여름철 아웃도어 활동을 위한 완벽한 선택, M_RX MOC 3.0 ATQ_BK. 통기성과 편안함을 동시에 제공합니다.', 119000, 1, 'm_RXMOC3-0ATQ_bk_thumbnail.jpg', SYSDATE, SYSDATE, 1);
+
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_RXMOC3-0ATQ_bk_1.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_RXMOC3-0ATQ_bk_2.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_RXMOC3-0ATQ_bk_3.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_RXMOC3-0ATQ_bk_4.jpg');
+
+-- -----------------------------------------------------------
+-- M_RX MOC 3.0 Glacier_SV (m_rxmoc3glacier_sv)
+-- -----------------------------------------------------------
+INSERT INTO PRODUCTS (PROD_ID, CATE_CODE, PROD_NAME, PROD_DESC, BASE_PRICE, IS_DISPLAYED, THUMB_NAIL, PROD_DATE, SHIPPED_DATE, STATUS)
+VALUES (PRODUCT_SEQ.NEXTVAL, 'MEN_SANDAL', 'M_RX MOC 3.0 Glacier_SV', '여름철 아웃도어 활동을 위한 완벽한 선택, M_RX MOC 3.0 Glacier_SV. 통기성과 편안함을 동시에 제공합니다.', 119000, 1, 'm_rxmoc3glacier_ sv_thumbnail.jpg', SYSDATE, SYSDATE, 1);
+
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_rxmoc3glacier_ sv_1.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_rxmoc3glacier_ sv_2.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_rxmoc3glacier_ sv_3.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_rxmoc3glacier_ sv_4.jpg');
+
+-- -----------------------------------------------------------
+-- M_RX MOC 3.0_NV (m_rxmoc3_nv)
+-- -----------------------------------------------------------
+INSERT INTO PRODUCTS (PROD_ID, CATE_CODE, PROD_NAME, PROD_DESC, BASE_PRICE, IS_DISPLAYED, THUMB_NAIL, PROD_DATE, SHIPPED_DATE, STATUS)
+VALUES (PRODUCT_SEQ.NEXTVAL, 'MEN_SANDAL', 'M_RX MOC 3.0_NV', '여름철 아웃도어 활동을 위한 완벽한 선택, M_RX MOC 3.0_NV. 통기성과 편안함을 동시에 제공합니다.', 119000, 1, 'm_rxmoc3_nv_thumbnail.jpg', SYSDATE, SYSDATE, 1);
+
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_rxmoc3_nv_1.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_rxmoc3_nv_2.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_rxmoc3_nv_3.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_rxmoc3_nv_4.jpg');
+
+-- -----------------------------------------------------------
+-- M_RX Slide 3.0_BE (m_rxslide3_be)
+-- -----------------------------------------------------------
+INSERT INTO PRODUCTS (PROD_ID, CATE_CODE, PROD_NAME, PROD_DESC, BASE_PRICE, IS_DISPLAYED, THUMB_NAIL, PROD_DATE, SHIPPED_DATE, STATUS)
+VALUES (PRODUCT_SEQ.NEXTVAL, 'MEN_SANDAL', 'M_RX Slide 3.0_BE', '여름철 아웃도어 활동을 위한 완벽한 선택, M_RX Slide 3.0_BE. 통기성과 편안함을 동시에 제공합니다.', 99000, 1, 'm_rxslide3_be_thumbnail.jpg', SYSDATE, SYSDATE, 1);
+
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_rxslide3_be_1.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_rxslide3_be_2.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_rxslide3_be_3.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_rxslide3_be_4.jpg');
+
+-- -----------------------------------------------------------
+-- M_RX Slide 3.0_GR (m_rxslide3_gr)
+-- -----------------------------------------------------------
+INSERT INTO PRODUCTS (PROD_ID, CATE_CODE, PROD_NAME, PROD_DESC, BASE_PRICE, IS_DISPLAYED, THUMB_NAIL, PROD_DATE, SHIPPED_DATE, STATUS)
+VALUES (PRODUCT_SEQ.NEXTVAL, 'MEN_SANDAL', 'M_RX Slide 3.0_GR', '여름철 아웃도어 활동을 위한 완벽한 선택, M_RX Slide 3.0_GR. 통기성과 편안함을 동시에 제공합니다.', 99000, 1, 'm_rxslide3_gr_thumbnail.jpg', SYSDATE, SYSDATE, 1);
+
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_rxslide3_gr_1.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_rxslide3_gr_2.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_rxslide3_gr_3.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_rxslide3_gr_4.jpg');
+
+-- -----------------------------------------------------------
+-- M_XA PRO 3D Amphib_BK (m_xapro3damphib_bk)
+-- -----------------------------------------------------------
+INSERT INTO PRODUCTS (PROD_ID, CATE_CODE, PROD_NAME, PROD_DESC, BASE_PRICE, IS_DISPLAYED, THUMB_NAIL, PROD_DATE, SHIPPED_DATE, STATUS)
+VALUES (PRODUCT_SEQ.NEXTVAL, 'MEN_SANDAL', 'M_XA PRO 3D Amphib_BK', '여름철 아웃도어 활동을 위한 완벽한 선택, M_XA PRO 3D Amphib_BK. 통기성과 편안함을 동시에 제공합니다.', 169000, 1, 'm_xapro3damphib_bk_thumbnail.jpg', SYSDATE, SYSDATE, 1);
+
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_xapro3damphib_bk_1.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_xapro3damphib_bk_2.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_xapro3damphib_bk_3.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_xapro3damphib_bk_4.jpg');
+
+-- -----------------------------------------------------------
+-- M_XA PRO 3D Amphib_GR (m_xapro3damphib_gr)
+-- -----------------------------------------------------------
+INSERT INTO PRODUCTS (PROD_ID, CATE_CODE, PROD_NAME, PROD_DESC, BASE_PRICE, IS_DISPLAYED, THUMB_NAIL, PROD_DATE, SHIPPED_DATE, STATUS)
+VALUES (PRODUCT_SEQ.NEXTVAL, 'MEN_SANDAL', 'M_XA PRO 3D Amphib_GR', '여름철 아웃도어 활동을 위한 완벽한 선택, M_XA PRO 3D Amphib_GR. 통기성과 편안함을 동시에 제공합니다.', 169000, 1, 'm_xapro3damphib_gr_thumbnail.jpg', SYSDATE, SYSDATE, 1);
+
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_xapro3damphib_gr_1.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_xapro3damphib_gr_2.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_xapro3damphib_gr_3.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_xapro3damphib_gr_4.jpg');
+
+-- -----------------------------------------------------------
+-- M_XA PRO 3D Amphib_WH (m_xapro3damphib_wh)
+-- -----------------------------------------------------------
+INSERT INTO PRODUCTS (PROD_ID, CATE_CODE, PROD_NAME, PROD_DESC, BASE_PRICE, IS_DISPLAYED, THUMB_NAIL, PROD_DATE, SHIPPED_DATE, STATUS)
+VALUES (PRODUCT_SEQ.NEXTVAL, 'MEN_SANDAL', 'M_XA PRO 3D Amphib_WH', '여름철 아웃도어 활동을 위한 완벽한 선택, M_XA PRO 3D Amphib_WH. 통기성과 편안함을 동시에 제공합니다.', 169000, 1, 'm_xapro3damphib_wh_thumbnail.jpg', SYSDATE, SYSDATE, 1);
+
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_xapro3damphib_wh_1.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_xapro3damphib_wh_2.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_xapro3damphib_wh_3.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_xapro3damphib_wh_4.jpg');
+
+COMMIT;
+
+-- =============================================================================
+[Maknaez] Products & Images Insert Script (MEN_SPORTSTYLE)
+-- =============================================================================
+-- -----------------------------------------------------------
+-- M_Neuvaadvanced_BK (m_neuvaadvanced_bk)
+-- -----------------------------------------------------------
+INSERT INTO PRODUCTS (PROD_ID, CATE_CODE, PROD_NAME, PROD_DESC, BASE_PRICE, IS_DISPLAYED, THUMB_NAIL, PROD_DATE, SHIPPED_DATE, STATUS)
+VALUES (PRODUCT_SEQ.NEXTVAL, 'MEN_SPORTSTYLE', 'M_Neuvaadvanced_BK', '도시와 아웃도어를 아우르는 스타일, M_Neuvaadvanced_BK. 독창적인 디자인과 최상의 기능을 경험해보세요.', 200000, 1, 'm_neuvaadvanced_bk_thumbnail.jpg', SYSDATE, SYSDATE, 1);
+
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_neuvaadvanced_bk_1.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_neuvaadvanced_bk_2.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_neuvaadvanced_bk_3.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_neuvaadvanced_bk_4.jpg');
+
+-- -----------------------------------------------------------
+-- M_Oravaadvanced_GY (m_oravaadvanced_gy)
+-- -----------------------------------------------------------
+INSERT INTO PRODUCTS (PROD_ID, CATE_CODE, PROD_NAME, PROD_DESC, BASE_PRICE, IS_DISPLAYED, THUMB_NAIL, PROD_DATE, SHIPPED_DATE, STATUS)
+VALUES (PRODUCT_SEQ.NEXTVAL, 'MEN_SPORTSTYLE', 'M_Oravaadvanced_GY', '도시와 아웃도어를 아우르는 스타일, M_Oravaadvanced_GY. 독창적인 디자인과 최상의 기능을 경험해보세요.', 200000, 1, 'm_oravaadvanced_gy_thumbnail.jpg', SYSDATE, SYSDATE, 1);
+
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_oravaadvanced_gy_1.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_oravaadvanced_gy_2.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_oravaadvanced_gy_3.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_oravaadvanced_gy_4.jpg');
+
+-- -----------------------------------------------------------
+-- M_Snowclog Corduroy_PK (m_snowclogcorduroy_pk)
+-- -----------------------------------------------------------
+INSERT INTO PRODUCTS (PROD_ID, CATE_CODE, PROD_NAME, PROD_DESC, BASE_PRICE, IS_DISPLAYED, THUMB_NAIL, PROD_DATE, SHIPPED_DATE, STATUS)
+VALUES (PRODUCT_SEQ.NEXTVAL, 'MEN_SPORTSTYLE', 'M_Snowclog Corduroy_PK', '도시와 아웃도어를 아우르는 스타일, M_Snowclog Corduroy_PK. 독창적인 디자인과 최상의 기능을 경험해보세요.', 140000, 1, 'm_snowclogcorduroy_pk_thumbnail.jpg', SYSDATE, SYSDATE, 1);
+
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_snowclogcorduroy_pk_1.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_snowclogcorduroy_pk_2.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_snowclogcorduroy_pk_3.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_snowclogcorduroy_pk_4.jpg');
+
+-- -----------------------------------------------------------
+-- M_Tepiazadvanced_BK (m_tepiazadvanced_bk)
+-- -----------------------------------------------------------
+INSERT INTO PRODUCTS (PROD_ID, CATE_CODE, PROD_NAME, PROD_DESC, BASE_PRICE, IS_DISPLAYED, THUMB_NAIL, PROD_DATE, SHIPPED_DATE, STATUS)
+VALUES (PRODUCT_SEQ.NEXTVAL, 'MEN_SPORTSTYLE', 'M_Tepiazadvanced_BK', '도시와 아웃도어를 아우르는 스타일, M_Tepiazadvanced_BK. 독창적인 디자인과 최상의 기능을 경험해보세요.', 200000, 1, 'm_tepiazadvanced_bk_thumbnail.jpg', SYSDATE, SYSDATE, 1);
+
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_tepiazadvanced_bk_1.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_tepiazadvanced_bk_2.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_tepiazadvanced_bk_3.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_tepiazadvanced_bk_4.jpg');
+
+-- -----------------------------------------------------------
+-- M_XT-6_BE (m_xt6_be)
+-- -----------------------------------------------------------
+INSERT INTO PRODUCTS (PROD_ID, CATE_CODE, PROD_NAME, PROD_DESC, BASE_PRICE, IS_DISPLAYED, THUMB_NAIL, PROD_DATE, SHIPPED_DATE, STATUS)
+VALUES (PRODUCT_SEQ.NEXTVAL, 'MEN_SPORTSTYLE', 'M_XT-6_BE', '도시와 아웃도어를 아우르는 스타일, M_XT-6_BE. 독창적인 디자인과 최상의 기능을 경험해보세요.', 260000, 1, 'm_xt6_be_thumbnail.jpg', SYSDATE, SYSDATE, 1);
+
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_xt6_be_1.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_xt6_be_2.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_xt6_be_3.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_xt6_be_4.jpg');
+
+-- -----------------------------------------------------------
+-- M_XT-6_BK (m_xt6_bk)
+-- -----------------------------------------------------------
+INSERT INTO PRODUCTS (PROD_ID, CATE_CODE, PROD_NAME, PROD_DESC, BASE_PRICE, IS_DISPLAYED, THUMB_NAIL, PROD_DATE, SHIPPED_DATE, STATUS)
+VALUES (PRODUCT_SEQ.NEXTVAL, 'MEN_SPORTSTYLE', 'M_XT-6_BK', '도시와 아웃도어를 아우르는 스타일, M_XT-6_BK. 독창적인 디자인과 최상의 기능을 경험해보세요.', 260000, 1, 'm_xt6_bk_thumbnail.jpg', SYSDATE, SYSDATE, 1);
+
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_xt6_bk_1.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_xt6_bk_2.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_xt6_bk_3.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_xt6_bk_4.jpg');
+
+-- -----------------------------------------------------------
+-- M_XT-Quest_BK (m_xtquest_bk)
+-- -----------------------------------------------------------
+INSERT INTO PRODUCTS (PROD_ID, CATE_CODE, PROD_NAME, PROD_DESC, BASE_PRICE, IS_DISPLAYED, THUMB_NAIL, PROD_DATE, SHIPPED_DATE, STATUS)
+VALUES (PRODUCT_SEQ.NEXTVAL, 'MEN_SPORTSTYLE', 'M_XT-Quest_BK', '도시와 아웃도어를 아우르는 스타일, M_XT-Quest_BK. 독창적인 디자인과 최상의 기능을 경험해보세요.', 260000, 1, 'm_xtquest_bk_thumbnail.jpg', SYSDATE, SYSDATE, 1);
+
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_xtquest_bk_1.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_xtquest_bk_2.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_xtquest_bk_3.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_xtquest_bk_4.jpg');
+
+-- -----------------------------------------------------------
+-- M_XT-Quest_SV (m_xtquest_sv)
+-- -----------------------------------------------------------
+INSERT INTO PRODUCTS (PROD_ID, CATE_CODE, PROD_NAME, PROD_DESC, BASE_PRICE, IS_DISPLAYED, THUMB_NAIL, PROD_DATE, SHIPPED_DATE, STATUS)
+VALUES (PRODUCT_SEQ.NEXTVAL, 'MEN_SPORTSTYLE', 'M_XT-Quest_SV', '도시와 아웃도어를 아우르는 스타일, M_XT-Quest_SV. 독창적인 디자인과 최상의 기능을 경험해보세요.', 260000, 1, 'm_xtquest_sv_thumbnail.jpg', SYSDATE, SYSDATE, 1);
+
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_xtquest_sv_1.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_xtquest_sv_2.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_xtquest_sv_3.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_xtquest_sv_4.jpg');
+
+-- -----------------------------------------------------------
+-- M_XT-Whisper_BK (m_xtwhisper_bk)
+-- -----------------------------------------------------------
+INSERT INTO PRODUCTS (PROD_ID, CATE_CODE, PROD_NAME, PROD_DESC, BASE_PRICE, IS_DISPLAYED, THUMB_NAIL, PROD_DATE, SHIPPED_DATE, STATUS)
+VALUES (PRODUCT_SEQ.NEXTVAL, 'MEN_SPORTSTYLE', 'M_XT-Whisper_BK', '도시와 아웃도어를 아우르는 스타일, M_XT-Whisper_BK. 독창적인 디자인과 최상의 기능을 경험해보세요.', 260000, 1, 'm_xtwhisper_bk_thumbnail.jpg', SYSDATE, SYSDATE, 1);
+
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_xtwhisper_bk_1.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_xtwhisper_bk_2.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_xtwhisper_bk_3.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_xtwhisper_bk_4.jpg');
+
+-- -----------------------------------------------------------
+-- M_XT-Whisper_SV (m_xtwhisper_sv)
+-- -----------------------------------------------------------
+INSERT INTO PRODUCTS (PROD_ID, CATE_CODE, PROD_NAME, PROD_DESC, BASE_PRICE, IS_DISPLAYED, THUMB_NAIL, PROD_DATE, SHIPPED_DATE, STATUS)
+VALUES (PRODUCT_SEQ.NEXTVAL, 'MEN_SPORTSTYLE', 'M_XT-Whisper_SV', '도시와 아웃도어를 아우르는 스타일, M_XT-Whisper_SV. 독창적인 디자인과 최상의 기능을 경험해보세요.', 260000, 1, 'm_xtwhisper_sv_thumbnail.jpg', SYSDATE, SYSDATE, 1);
+
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_xtwhisper_sv_1.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_xtwhisper_sv_2.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_xtwhisper_sv_3.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_xtwhisper_sv_4.jpg');
+
+COMMIT;
+
+-- =============================================================================
+[Maknaez] Products & Images Insert Script (MEN_OUTDOOR)
+-- =============================================================================
+-- -----------------------------------------------------------
+-- M_Genesis Forces Mid GTX_BK (m_genesisforcesmidgrx_bk)
+-- -----------------------------------------------------------
+INSERT INTO PRODUCTS (PROD_ID, CATE_CODE, PROD_NAME, PROD_DESC, BASE_PRICE, IS_DISPLAYED, THUMB_NAIL, PROD_DATE, SHIPPED_DATE, STATUS)
+VALUES (PRODUCT_SEQ.NEXTVAL, 'MEN_OUTDOOR', 'M_Genesis Forces Mid GTX_BK', '거친 자연 환경에서도 완벽한 퍼포먼스, M_Genesis Forces Mid GTX_BK. 뛰어난 내구성과 방수 기능을 자랑하는 아웃도어 전문 슈즈입니다.', 259000, 1, 'm_genesisforcesmidgrx_bk_thumbnail.jpg', SYSDATE, SYSDATE, 1);
+
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_genesisforcesmidgrx_bk_1.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_genesisforcesmidgrx_bk_2.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_genesisforcesmidgrx_bk_3.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_genesisforcesmidgrx_bk_4.jpg');
+
+-- -----------------------------------------------------------
+-- M_S-LAB Waterway_RD (m_slabwaterway_rd)
+-- -----------------------------------------------------------
+INSERT INTO PRODUCTS (PROD_ID, CATE_CODE, PROD_NAME, PROD_DESC, BASE_PRICE, IS_DISPLAYED, THUMB_NAIL, PROD_DATE, SHIPPED_DATE, STATUS)
+VALUES (PRODUCT_SEQ.NEXTVAL, 'MEN_OUTDOOR', 'M_S-LAB Waterway_RD', '거친 자연 환경에서도 완벽한 퍼포먼스, M_S-LAB Waterway_RD. 뛰어난 내구성과 방수 기능을 자랑하는 아웃도어 전문 슈즈입니다.', 289000, 1, 'm_slabwaterway_rd_thumbnail.jpg', SYSDATE, SYSDATE, 1);
+
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_slabwaterway_rd_1.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_slabwaterway_rd_2.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_slabwaterway_rd_3.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_slabwaterway_rd_4.jpg');
+
+-- -----------------------------------------------------------
+-- M_Techamphibian 5_BK (m_techamphibian5_bk)
+-- -----------------------------------------------------------
+INSERT INTO PRODUCTS (PROD_ID, CATE_CODE, PROD_NAME, PROD_DESC, BASE_PRICE, IS_DISPLAYED, THUMB_NAIL, PROD_DATE, SHIPPED_DATE, STATUS)
+VALUES (PRODUCT_SEQ.NEXTVAL, 'MEN_OUTDOOR', 'M_Techamphibian 5_BK', '거친 자연 환경에서도 완벽한 퍼포먼스, M_Techamphibian 5_BK. 뛰어난 내구성과 방수 기능을 자랑하는 아웃도어 전문 슈즈입니다.', 169000, 1, 'm_techamphibian5_bk_thumbnail.jpg', SYSDATE, SYSDATE, 1);
+
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_techamphibian5_bk_1.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_techamphibian5_bk_2.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_techamphibian5_bk_3.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_techamphibian5_bk_4.jpg');
+
+-- -----------------------------------------------------------
+-- M_XA Forces Mid GTX_BE (m_xaforcesmidgtx_be)
+-- -----------------------------------------------------------
+INSERT INTO PRODUCTS (PROD_ID, CATE_CODE, PROD_NAME, PROD_DESC, BASE_PRICE, IS_DISPLAYED, THUMB_NAIL, PROD_DATE, SHIPPED_DATE, STATUS)
+VALUES (PRODUCT_SEQ.NEXTVAL, 'MEN_OUTDOOR', 'M_XA Forces Mid GTX_BE', '거친 자연 환경에서도 완벽한 퍼포먼스, M_XA Forces Mid GTX_BE. 뛰어난 내구성과 방수 기능을 자랑하는 아웃도어 전문 슈즈입니다.', 259000, 1, 'm_xaforcesmidgtx_be_thumbnail.jpg', SYSDATE, SYSDATE, 1);
+
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_xaforcesmidgtx_be_1.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_xaforcesmidgtx_be_2.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_xaforcesmidgtx_be_3.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_xaforcesmidgtx_be_4.jpg');
+
+-- -----------------------------------------------------------
+-- M_XA PRO 3D v9 Wide_BK (m_xapro3dv9wide_bk)
+-- -----------------------------------------------------------
+INSERT INTO PRODUCTS (PROD_ID, CATE_CODE, PROD_NAME, PROD_DESC, BASE_PRICE, IS_DISPLAYED, THUMB_NAIL, PROD_DATE, SHIPPED_DATE, STATUS)
+VALUES (PRODUCT_SEQ.NEXTVAL, 'MEN_OUTDOOR', 'M_XA PRO 3D v9 Wide_BK', '거친 자연 환경에서도 완벽한 퍼포먼스, M_XA PRO 3D v9 Wide_BK. 뛰어난 내구성과 방수 기능을 자랑하는 아웃도어 전문 슈즈입니다.', 219000, 1, 'm_xapro3dv9wide_bk_thumbnail.jpg', SYSDATE, SYSDATE, 1);
+
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_xapro3dv9wide_bk_1.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_xapro3dv9wide_bk_2.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_xapro3dv9wide_bk_3.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_xapro3dv9wide_bk_4.jpg');
+
+-- -----------------------------------------------------------
+-- M_X Ultra 360 GTX_BK (m_xultra360gtx_bk)
+-- -----------------------------------------------------------
+INSERT INTO PRODUCTS (PROD_ID, CATE_CODE, PROD_NAME, PROD_DESC, BASE_PRICE, IS_DISPLAYED, THUMB_NAIL, PROD_DATE, SHIPPED_DATE, STATUS)
+VALUES (PRODUCT_SEQ.NEXTVAL, 'MEN_OUTDOOR', 'M_X Ultra 360 GTX_BK', '거친 자연 환경에서도 완벽한 퍼포먼스, M_X Ultra 360 GTX_BK. 뛰어난 내구성과 방수 기능을 자랑하는 아웃도어 전문 슈즈입니다.', 239000, 1, 'm_xultra360gtx_bk_thumbnail.jpg', SYSDATE, SYSDATE, 1);
+
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_xultra360gtx_bk_1.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_xultra360gtx_bk_2.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_xultra360gtx_bk_3.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_xultra360gtx_bk_4.jpg');
+
+-- -----------------------------------------------------------
+-- M_X Ultra 360 Mid GTX_BK (m_xultra360midgrx_bk)
+-- -----------------------------------------------------------
+INSERT INTO PRODUCTS (PROD_ID, CATE_CODE, PROD_NAME, PROD_DESC, BASE_PRICE, IS_DISPLAYED, THUMB_NAIL, PROD_DATE, SHIPPED_DATE, STATUS)
+VALUES (PRODUCT_SEQ.NEXTVAL, 'MEN_OUTDOOR', 'M_X Ultra 360 Mid GTX_BK', '거친 자연 환경에서도 완벽한 퍼포먼스, M_X Ultra 360 Mid GTX_BK. 뛰어난 내구성과 방수 기능을 자랑하는 아웃도어 전문 슈즈입니다.', 239000, 1, 'm_xultra360midgrx_bk_thumbnail.jpg', SYSDATE, SYSDATE, 1);
+
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_xultra360midgrx_bk_1.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_xultra360midgrx_bk_2.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_xultra360midgrx_bk_3.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_xultra360midgrx_bk_4.jpg');
+
+-- -----------------------------------------------------------
+-- M_X Ultra 5 GTX_GR (m_xultra5gtx_gr)
+-- -----------------------------------------------------------
+INSERT INTO PRODUCTS (PROD_ID, CATE_CODE, PROD_NAME, PROD_DESC, BASE_PRICE, IS_DISPLAYED, THUMB_NAIL, PROD_DATE, SHIPPED_DATE, STATUS)
+VALUES (PRODUCT_SEQ.NEXTVAL, 'MEN_OUTDOOR', 'M_X Ultra 5 GTX_GR', '거친 자연 환경에서도 완벽한 퍼포먼스, M_X Ultra 5 GTX_GR. 뛰어난 내구성과 방수 기능을 자랑하는 아웃도어 전문 슈즈입니다.', 239000, 1, 'm_xultra5gtx_gr_thumbnail.jpg', SYSDATE, SYSDATE, 1);
+
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_xultra5gtx_gr_1.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_xultra5gtx_gr_2.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_xultra5gtx_gr_3.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_xultra5gtx_gr_4.jpg');
+
+-- -----------------------------------------------------------
+-- M_X Ultra 5 Mid GTX_GR (m_xultra5midgtx_gr)
+-- -----------------------------------------------------------
+INSERT INTO PRODUCTS (PROD_ID, CATE_CODE, PROD_NAME, PROD_DESC, BASE_PRICE, IS_DISPLAYED, THUMB_NAIL, PROD_DATE, SHIPPED_DATE, STATUS)
+VALUES (PRODUCT_SEQ.NEXTVAL, 'MEN_OUTDOOR', 'M_X Ultra 5 Mid GTX_GR', '거친 자연 환경에서도 완벽한 퍼포먼스, M_X Ultra 5 Mid GTX_GR. 뛰어난 내구성과 방수 기능을 자랑하는 아웃도어 전문 슈즈입니다.', 239000, 1, 'm_xultra5midgtx_gr_thumbnail.jpg', SYSDATE, SYSDATE, 1);
+
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_xultra5midgtx_gr_1.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_xultra5midgtx_gr_2.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_xultra5midgtx_gr_3.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_xultra5midgtx_gr_4.jpg');
+
+-- -----------------------------------------------------------
+-- M_X Ultra 5 Mid GTX_SV (m_xultra5midgtx_sv)
+-- -----------------------------------------------------------
+INSERT INTO PRODUCTS (PROD_ID, CATE_CODE, PROD_NAME, PROD_DESC, BASE_PRICE, IS_DISPLAYED, THUMB_NAIL, PROD_DATE, SHIPPED_DATE, STATUS)
+VALUES (PRODUCT_SEQ.NEXTVAL, 'MEN_OUTDOOR', 'M_X Ultra 5 Mid GTX_SV', '거친 자연 환경에서도 완벽한 퍼포먼스, M_X Ultra 5 Mid GTX_SV. 뛰어난 내구성과 방수 기능을 자랑하는 아웃도어 전문 슈즈입니다.', 239000, 1, 'm_xultra5midgtx_sv_thumbnail.jpg', SYSDATE, SYSDATE, 1);
+
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_xultra5midgtx_sv_1.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_xultra5midgtx_sv_2.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_xultra5midgtx_sv_3.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_xultra5midgtx_sv_4.jpg');
+
+COMMIT;
+
+-- =============================================================================
+[Maknaez] Products & Images Insert Script (MEN_TRAIL - Additional)
+-- =============================================================================
+-- -----------------------------------------------------------
+-- M_Genesis_BK (m_genesis_bk)
+-- -----------------------------------------------------------
+INSERT INTO PRODUCTS (PROD_ID, CATE_CODE, PROD_NAME, PROD_DESC, BASE_PRICE, IS_DISPLAYED, THUMB_NAIL, PROD_DATE, SHIPPED_DATE, STATUS)
+VALUES (PRODUCT_SEQ.NEXTVAL, 'MEN_TRAIL', 'M_Genesis_BK', '거친 지형을 압도하는 내구성, M_Genesis_BK. 바위와 자갈이 많은 트레일에서도 최상의 보호력을 제공합니다.', 240000, 1, 'm_genesis_bk_thumbnail.jpg', SYSDATE, SYSDATE, 1);
+
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_genesis_bk_1.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_genesis_bk_2.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_genesis_bk_3.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_genesis_bk_4.jpg');
+
+-- -----------------------------------------------------------
+-- M_Genesis_NV (m_genesis_nv)
+-- -----------------------------------------------------------
+INSERT INTO PRODUCTS (PROD_ID, CATE_CODE, PROD_NAME, PROD_DESC, BASE_PRICE, IS_DISPLAYED, THUMB_NAIL, PROD_DATE, SHIPPED_DATE, STATUS)
+VALUES (PRODUCT_SEQ.NEXTVAL, 'MEN_TRAIL', 'M_Genesis_NV', '신뢰할 수 있는 그립감, M_Genesis_NV. 젖은 노면에서도 미끄러지지 않는 안정성을 경험하세요.', 240000, 1, 'm_genesis_nv_thumbnail.jpg', SYSDATE, SYSDATE, 1);
+
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_genesis_nv_1.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_genesis_nv_2.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_genesis_nv_3.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_genesis_nv_4.jpg');
+
+-- -----------------------------------------------------------
+-- M_Genesis_WH (m_genesis_wh)
+-- -----------------------------------------------------------
+INSERT INTO PRODUCTS (PROD_ID, CATE_CODE, PROD_NAME, PROD_DESC, BASE_PRICE, IS_DISPLAYED, THUMB_NAIL, PROD_DATE, SHIPPED_DATE, STATUS)
+VALUES (PRODUCT_SEQ.NEXTVAL, 'MEN_TRAIL', 'M_Genesis_WH', '깔끔한 디자인과 강력한 기능, M_Genesis_WH. 어떤 아웃도어 환경에서도 당신을 돋보이게 합니다.', 240000, 1, 'm_genesis_wh_thumbnail.jpg', SYSDATE, SYSDATE, 1);
+
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_genesis_wh_1.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_genesis_wh_2.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_genesis_wh_3.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_genesis_wh_4.jpg');
+
+-- -----------------------------------------------------------
+-- M_S-LAB Dust_WH (m_slabdust_wh)
+-- -----------------------------------------------------------
+INSERT INTO PRODUCTS (PROD_ID, CATE_CODE, PROD_NAME, PROD_DESC, BASE_PRICE, IS_DISPLAYED, THUMB_NAIL, PROD_DATE, SHIPPED_DATE, STATUS)
+VALUES (PRODUCT_SEQ.NEXTVAL, 'MEN_TRAIL', 'M_S-LAB Dust_WH', '엘리트 선수를 위한 경량화, M_S-LAB Dust_WH. 극한의 레이스에서도 최고의 스피드를 유지합니다.', 330000, 1, 'm_slabdust_wh_thumbnail.jpg', SYSDATE, SYSDATE, 1);
+
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_slabdust_wh_1.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_slabdust_wh_2.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_slabdust_wh_3.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_slabdust_wh_4.jpg');
+
+-- -----------------------------------------------------------
+-- M_S-LAB Genesis LTD Edition_WH (m_slabgenesisltdcou_wh)
+-- -----------------------------------------------------------
+INSERT INTO PRODUCTS (PROD_ID, CATE_CODE, PROD_NAME, PROD_DESC, BASE_PRICE, IS_DISPLAYED, THUMB_NAIL, PROD_DATE, SHIPPED_DATE, STATUS)
+VALUES (PRODUCT_SEQ.NEXTVAL, 'MEN_TRAIL', 'M_S-LAB Genesis LTD Edition_WH', '한정판의 가치, M_S-LAB Genesis LTD Edition_WH. 독보적인 디자인과 기술력의 조화를 만나보세요.', 330000, 1, 'm_slabgenesisltdcou_wh_thumbnail.jpg', SYSDATE, SYSDATE, 1);
+
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_slabgenesisltdcou_wh_1.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_slabgenesisltdcou_wh_2.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_slabgenesisltdcou_wh_3.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_slabgenesisltdcou_wh_4.jpg');
+
+-- -----------------------------------------------------------
+-- M_S-LAB Genesis Vanilla Ice_BK (m_slabgenesisvanillalce_bk)
+-- -----------------------------------------------------------
+INSERT INTO PRODUCTS (PROD_ID, CATE_CODE, PROD_NAME, PROD_DESC, BASE_PRICE, IS_DISPLAYED, THUMB_NAIL, PROD_DATE, SHIPPED_DATE, STATUS)
+VALUES (PRODUCT_SEQ.NEXTVAL, 'MEN_TRAIL', 'M_S-LAB Genesis Vanilla Ice_BK', '유니크한 컬러웨이, M_S-LAB Genesis Vanilla Ice_BK. 트레일 위에서 당신의 존재감을 드러냅니다.', 330000, 1, 'm_slabgenesisvanillalce_bk_thumbnail.jpg', SYSDATE, SYSDATE, 1);
+
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_slabgenesisvanillalce_bk_1.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_slabgenesisvanillalce_bk_2.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_slabgenesisvanillalce_bk_3.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_slabgenesisvanillalce_bk_4.jpg');
+
+-- -----------------------------------------------------------
+-- M_S-LAB Pulsar_RD (m_slabpulsa_rd)
+-- -----------------------------------------------------------
+INSERT INTO PRODUCTS (PROD_ID, CATE_CODE, PROD_NAME, PROD_DESC, BASE_PRICE, IS_DISPLAYED, THUMB_NAIL, PROD_DATE, SHIPPED_DATE, STATUS)
+VALUES (PRODUCT_SEQ.NEXTVAL, 'MEN_TRAIL', 'M_S-LAB Pulsar_RD', '킬리안 조넷이 선택한 그 신발, M_S-LAB Pulsar_RD. 기록 단축을 위한 최경량 레이싱화입니다.', 330000, 1, 'm_slabpulsa_rd_thumbnail.jpg', SYSDATE, SYSDATE, 1);
+
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_slabpulsa_rd_1.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_slabpulsa_rd_2.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_slabpulsa_rd_3.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_slabpulsa_rd_4.jpg');
+
+-- -----------------------------------------------------------
+-- M_S-LAB Ultra Glide_RD (m_slabultraglide_rd)
+-- -----------------------------------------------------------
+INSERT INTO PRODUCTS (PROD_ID, CATE_CODE, PROD_NAME, PROD_DESC, BASE_PRICE, IS_DISPLAYED, THUMB_NAIL, PROD_DATE, SHIPPED_DATE, STATUS)
+VALUES (PRODUCT_SEQ.NEXTVAL, 'MEN_TRAIL', 'M_S-LAB Ultra Glide_RD', '장거리를 위한 최적의 쿠셔닝, M_S-LAB Ultra Glide_RD. 구름 위를 달리는 듯한 편안함을 제공합니다.', 330000, 1, 'm_slabultraglide_rd_thumbnail.jpg', SYSDATE, SYSDATE, 1);
+
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_slabultraglide_rd_1.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_slabultraglide_rd_2.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_slabultraglide_rd_3.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_slabultraglide_rd_4.jpg');
+
+-- -----------------------------------------------------------
+-- M_S-LAB Ultra v2_RD (m_slabultrav2_rd)
+-- -----------------------------------------------------------
+INSERT INTO PRODUCTS (PROD_ID, CATE_CODE, PROD_NAME, PROD_DESC, BASE_PRICE, IS_DISPLAYED, THUMB_NAIL, PROD_DATE, SHIPPED_DATE, STATUS)
+VALUES (PRODUCT_SEQ.NEXTVAL, 'MEN_TRAIL', 'M_S-LAB Ultra v2_RD', '울트라 러닝을 위한 완벽한 솔루션, M_S-LAB Ultra v2_RD. 극한의 거리에서도 발을 보호합니다.', 330000, 1, 'm_slabultrav2_rd_thumbnail.jpg', SYSDATE, SYSDATE, 1);
+
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_slabultrav2_rd_1.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_slabultrav2_rd_2.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_slabultrav2_rd_3.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_slabultrav2_rd_4.jpg');
+
+-- -----------------------------------------------------------
+-- M_XA PRO 3D v9_BK (m_xapro3dv9_bk)
+-- -----------------------------------------------------------
+INSERT INTO PRODUCTS (PROD_ID, CATE_CODE, PROD_NAME, PROD_DESC, BASE_PRICE, IS_DISPLAYED, THUMB_NAIL, PROD_DATE, SHIPPED_DATE, STATUS)
+VALUES (PRODUCT_SEQ.NEXTVAL, 'MEN_TRAIL', 'M_XA PRO 3D v9_BK', '트레일 러닝화의 아이콘, M_XA PRO 3D v9_BK. 더욱 향상된 안정성과 그립력으로 돌아왔습니다.', 220000, 1, 'm_xapro3dv9_bk_thumbnail.jpg', SYSDATE, SYSDATE, 1);
+
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_xapro3dv9_bk_1.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_xapro3dv9_bk_2.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_xapro3dv9_bk_3.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'm_xapro3dv9_bk_4.jpg');
+
+COMMIT;
+
+-- ==============================================================================================
+-- ==============================================================================================
+-- ==============================================================================================
+[여자]
+-- ==============================================================================================
+-- ==============================================================================================
+-- ==============================================================================================
+
+
+-- -- =============================================================================
+[Maknaez] Products & Images Insert Script (WOMEN_ROAD)
+-- -- =============================================================================
+-- -----------------------------------------------------------
+-- F_S-LAB Spectur_WH
+-- -----------------------------------------------------------
+INSERT INTO PRODUCTS (PROD_ID, CATE_CODE, PROD_NAME, PROD_DESC, BASE_PRICE, IS_DISPLAYED, THUMB_NAIL, PROD_DATE, SHIPPED_DATE, STATUS)
+VALUES (PRODUCT_SEQ.NEXTVAL, 'WOMEN_ROAD', 'F_S-LAB Spectur_WH', '여성 러너를 위한 최적의 로드 러닝화, F_S-LAB Spectur_WH. 가벼운 무게와 뛰어난 반발력을 경험해보세요.', 290000, 1, 'F_SLAB 스펙터_WH_thumbnail.jpg', SYSDATE, SYSDATE, 1);
+
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_SLAB 스펙터_WH_1.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_SLAB 스펙터_WH_2.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_SLAB 스펙터_WH_3.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_SLAB 스펙터_WH_4.jpg');
+
+-- -----------------------------------------------------------
+-- F_S-LAB Phantasm 2_WH
+-- -----------------------------------------------------------
+INSERT INTO PRODUCTS (PROD_ID, CATE_CODE, PROD_NAME, PROD_DESC, BASE_PRICE, IS_DISPLAYED, THUMB_NAIL, PROD_DATE, SHIPPED_DATE, STATUS)
+VALUES (PRODUCT_SEQ.NEXTVAL, 'WOMEN_ROAD', 'F_S-LAB Phantasm 2_WH', '여성 러너를 위한 최적의 로드 러닝화, F_S-LAB Phantasm 2_WH. 가벼운 무게와 뛰어난 반발력을 경험해보세요.', 290000, 1, 'F_SLAB 판타즘 2_WH_thumbnail.jpg', SYSDATE, SYSDATE, 1);
+
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_SLAB 판타즘 2_WH_1.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_SLAB 판타즘 2_WH_2.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_SLAB 판타즘 2_WH_3.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_SLAB 판타즘 2_WH_4.jpg');
+
+-- -----------------------------------------------------------
+-- F_S-LAB Phantasm 3_WH
+-- -----------------------------------------------------------
+INSERT INTO PRODUCTS (PROD_ID, CATE_CODE, PROD_NAME, PROD_DESC, BASE_PRICE, IS_DISPLAYED, THUMB_NAIL, PROD_DATE, SHIPPED_DATE, STATUS)
+VALUES (PRODUCT_SEQ.NEXTVAL, 'WOMEN_ROAD', 'F_S-LAB Phantasm 3_WH', '여성 러너를 위한 최적의 로드 러닝화, F_S-LAB Phantasm 3_WH. 가벼운 무게와 뛰어난 반발력을 경험해보세요.', 290000, 1, 'F_SLAB판타즘3_WH_thumgnail.jpg', SYSDATE, SYSDATE, 1);
+
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_SLAB판타즘3_WH_1.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_SLAB판타즘3_WH_2.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_SLAB판타즘3_WH_3.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_SLAB판타즘3_WH_4.jpg');
+
+-- -----------------------------------------------------------
+-- F_Aero Glide 3 Gradient W_RD
+-- -----------------------------------------------------------
+INSERT INTO PRODUCTS (PROD_ID, CATE_CODE, PROD_NAME, PROD_DESC, BASE_PRICE, IS_DISPLAYED, THUMB_NAIL, PROD_DATE, SHIPPED_DATE, STATUS)
+VALUES (PRODUCT_SEQ.NEXTVAL, 'WOMEN_ROAD', 'F_Aero Glide 3 Gradient W_RD', '여성 러너를 위한 최적의 로드 러닝화, F_Aero Glide 3 Gradient W_RD. 가벼운 무게와 뛰어난 반발력을 경험해보세요.', 189000, 1, 'F_에어로 글라이드 3 GRADIENT W_RD_thumbnail.jpg', SYSDATE, SYSDATE, 1);
+
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_에어로 글라이드 3 GRADIENT W_RD_1.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_에어로 글라이드 3 GRADIENT W_RD_2.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_에어로 글라이드 3 GRADIENT W_RD_3.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_에어로 글라이드 3 GRADIENT W_RD_4.jpg');
+
+-- -----------------------------------------------------------
+-- F_Aero Glide 4 W_WH
+-- -----------------------------------------------------------
+INSERT INTO PRODUCTS (PROD_ID, CATE_CODE, PROD_NAME, PROD_DESC, BASE_PRICE, IS_DISPLAYED, THUMB_NAIL, PROD_DATE, SHIPPED_DATE, STATUS)
+VALUES (PRODUCT_SEQ.NEXTVAL, 'WOMEN_ROAD', 'F_Aero Glide 4 W_WH', '여성 러너를 위한 최적의 로드 러닝화, F_Aero Glide 4 W_WH. 가벼운 무게와 뛰어난 반발력을 경험해보세요.', 189000, 1, 'F_에어로 글라이드 4 W_WH_thumbnail.jpg', SYSDATE, SYSDATE, 1);
+
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_에어로 글라이드 4 W_WH_1.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_에어로 글라이드 4 W_WH_2.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_에어로 글라이드 4 W_WH_3.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_에어로 글라이드 4 W_WH_4.jpg');
+
+-- -----------------------------------------------------------
+-- F_Aeroblaze 3 W_WH
+-- -----------------------------------------------------------
+INSERT INTO PRODUCTS (PROD_ID, CATE_CODE, PROD_NAME, PROD_DESC, BASE_PRICE, IS_DISPLAYED, THUMB_NAIL, PROD_DATE, SHIPPED_DATE, STATUS)
+VALUES (PRODUCT_SEQ.NEXTVAL, 'WOMEN_ROAD', 'F_Aeroblaze 3 W_WH', '여성 러너를 위한 최적의 로드 러닝화, F_Aeroblaze 3 W_WH. 가벼운 무게와 뛰어난 반발력을 경험해보세요.', 189000, 1, 'F_에어로 블레이즈 3 W_WH_thumbnail.jpg', SYSDATE, SYSDATE, 1);
+
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_에어로 블레이즈 3 W_WH_1.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_에어로 블레이즈 3 W_WH_2.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_에어로 블레이즈 3 W_WH_3.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_에어로 블레이즈 3 W_WH_4.jpg');
+
+-- -----------------------------------------------------------
+-- F_Aeroblaze 3 Gravel GTX W_BE
+-- -----------------------------------------------------------
+INSERT INTO PRODUCTS (PROD_ID, CATE_CODE, PROD_NAME, PROD_DESC, BASE_PRICE, IS_DISPLAYED, THUMB_NAIL, PROD_DATE, SHIPPED_DATE, STATUS)
+VALUES (PRODUCT_SEQ.NEXTVAL, 'WOMEN_ROAD', 'F_Aeroblaze 3 Gravel GTX W_BE', '여성 러너를 위한 최적의 로드 러닝화, F_Aeroblaze 3 Gravel GTX W_BE. 가벼운 무게와 뛰어난 반발력을 경험해보세요.', 230000, 1, 'F_에어로 블레이즈 3 그래블 GTX W_BE_thumbnail.jpg', SYSDATE, SYSDATE, 1);
+
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_에어로 블레이즈 3 그래블 GTX W_BE_1.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_에어로 블레이즈 3 그래블 GTX W_BE_2.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_에어로 블레이즈 3 그래블 GTX W_BE_3.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_에어로 블레이즈 3 그래블 GTX W_BE_4.jpg');
+
+-- -----------------------------------------------------------
+-- F_Aeroblaze 3 Gravel GTX W_BK
+-- -----------------------------------------------------------
+INSERT INTO PRODUCTS (PROD_ID, CATE_CODE, PROD_NAME, PROD_DESC, BASE_PRICE, IS_DISPLAYED, THUMB_NAIL, PROD_DATE, SHIPPED_DATE, STATUS)
+VALUES (PRODUCT_SEQ.NEXTVAL, 'WOMEN_ROAD', 'F_Aeroblaze 3 Gravel GTX W_BK', '여성 러너를 위한 최적의 로드 러닝화, F_Aeroblaze 3 Gravel GTX W_BK. 가벼운 무게와 뛰어난 반발력을 경험해보세요.', 230000, 1, 'F_에어로 블레이즈 3 그래블 GTX W_BK_thumbnail.jpg', SYSDATE, SYSDATE, 1);
+
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_에어로 블레이즈 3 그래블 GTX W_BK_1.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_에어로 블레이즈 3 그래블 GTX W_BK_2.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_에어로 블레이즈 3 그래블 GTX W_BK_3.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_에어로 블레이즈 3 그래블 GTX W_BK_4.jpg');
+
+-- -----------------------------------------------------------
+-- F_Aeroblaze 3 Gravel GTX W_GR
+-- -----------------------------------------------------------
+INSERT INTO PRODUCTS (PROD_ID, CATE_CODE, PROD_NAME, PROD_DESC, BASE_PRICE, IS_DISPLAYED, THUMB_NAIL, PROD_DATE, SHIPPED_DATE, STATUS)
+VALUES (PRODUCT_SEQ.NEXTVAL, 'WOMEN_ROAD', 'F_Aeroblaze 3 Gravel GTX W_GR', '여성 러너를 위한 최적의 로드 러닝화, F_Aeroblaze 3 Gravel GTX W_GR. 가벼운 무게와 뛰어난 반발력을 경험해보세요.', 230000, 1, 'F_에어로 블레이즈 3 그래블 GTX W_GR_thumbnail.jpg', SYSDATE, SYSDATE, 1);
+
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_에어로 블레이즈 3 그래블 GTX W_GR_1.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_에어로 블레이즈 3 그래블 GTX W_GR_2.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_에어로 블레이즈 3 그래블 GTX W_GR_3.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_에어로 블레이즈 3 그래블 GTX W_GR_4.jpg');
+
+COMMIT;
+
+-- -- =============================================================================
+[Maknaez] Products & Images Insert Script (WOMEN_RECOVERY)
+-- -- =============================================================================
+-- -----------------------------------------------------------
+-- F_Reelax Break 6.0 W_BK (F_릴렉스브레이크6.0w_bk)
+-- -----------------------------------------------------------
+INSERT INTO PRODUCTS (PROD_ID, CATE_CODE, PROD_NAME, PROD_DESC, BASE_PRICE, IS_DISPLAYED, THUMB_NAIL, PROD_DATE, SHIPPED_DATE, STATUS)
+VALUES (PRODUCT_SEQ.NEXTVAL, 'WOMEN_RECOVERY', 'F_Reelax Break 6.0 W_BK', '지친 발을 위한 진정한 휴식, F_Reelax Break 6.0 W_BK. 운동 전후 최상의 편안함을 제공하는 여성용 리커버리 슈즈입니다.', 129000, 1, 'F_릴렉스브레이크6.0w_bk_thumbnail.jpg', SYSDATE, SYSDATE, 1);
+
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_릴렉스브레이크6.0w_bk_1.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_릴렉스브레이크6.0w_bk_2.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_릴렉스브레이크6.0w_bk_3.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_릴렉스브레이크6.0w_bk_4.jpg');
+
+-- -----------------------------------------------------------
+-- F_Reelax Slide 6.0 W_BK (F_릴렉스슬라이드6.0W_BK)
+-- -----------------------------------------------------------
+INSERT INTO PRODUCTS (PROD_ID, CATE_CODE, PROD_NAME, PROD_DESC, BASE_PRICE, IS_DISPLAYED, THUMB_NAIL, PROD_DATE, SHIPPED_DATE, STATUS)
+VALUES (PRODUCT_SEQ.NEXTVAL, 'WOMEN_RECOVERY', 'F_Reelax Slide 6.0 W_BK', '간편한 착화감, F_Reelax Slide 6.0 W_BK. 격렬한 활동 후 발의 피로를 풀어주는 뮬 스타일 리커버리 슈즈입니다.', 99000, 1, 'F_릴렉스슬라이드6.0W_BK_thumbnail.jpg', SYSDATE, SYSDATE, 1);
+
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_릴렉스슬라이드6.0W_BK_1.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_릴렉스슬라이드6.0W_BK_2.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_릴렉스슬라이드6.0W_BK_3.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_릴렉스슬라이드6.0W_BK_4.jpg');
+
+-- -----------------------------------------------------------
+-- F_Reelax Slide 6.0 W_WH (F_릴렉스슬라이드6.0W_WH)
+-- -----------------------------------------------------------
+INSERT INTO PRODUCTS (PROD_ID, CATE_CODE, PROD_NAME, PROD_DESC, BASE_PRICE, IS_DISPLAYED, THUMB_NAIL, PROD_DATE, SHIPPED_DATE, STATUS)
+VALUES (PRODUCT_SEQ.NEXTVAL, 'WOMEN_RECOVERY', 'F_Reelax Slide 6.0 W_WH', '깔끔한 화이트 컬러, F_Reelax Slide 6.0 W_WH. 일상에서도 편안하게 신을 수 있는 만능 아이템입니다.', 99000, 1, 'F_릴렉스슬라이드6.0W_WH_thumbnail.jpg', SYSDATE, SYSDATE, 1);
+
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_릴렉스슬라이드6.0W_WH_1.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_릴렉스슬라이드6.0W_WH_2.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_릴렉스슬라이드6.0W_WH_3.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_릴렉스슬라이드6.0W_WH_4.jpg');
+
+COMMIT;
+
+-- -- =============================================================================
+[Maknaez] Products & Images Insert Script (WOMEN_SANDAL)
+-- -- =============================================================================
+-- -----------------------------------------------------------
+-- F_RX Marie_WH (F_rxmarie_wh)
+-- -----------------------------------------------------------
+INSERT INTO PRODUCTS (PROD_ID, CATE_CODE, PROD_NAME, PROD_DESC, BASE_PRICE, IS_DISPLAYED, THUMB_NAIL, PROD_DATE, SHIPPED_DATE, STATUS)
+VALUES (PRODUCT_SEQ.NEXTVAL, 'WOMEN_SANDAL', 'F_RX Marie_WH', '여성스러움과 편안함을 동시에, F_RX Marie_WH. 통기성이 뛰어난 소재로 여름철 데일리 슈즈로 제격입니다.', 119000, 1, 'F_rxmarie_wh_thumbnail.jpg', SYSDATE, SYSDATE, 1);
+
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_rxmarie_wh_1.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_rxmarie_wh_2.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_rxmarie_wh_3.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_rxmarie_wh_4.jpg');
+
+-- -----------------------------------------------------------
+-- F_RX MOC 3.0 ATQ_BE (F_RXMOC3-0ATQ_be)
+-- -----------------------------------------------------------
+INSERT INTO PRODUCTS (PROD_ID, CATE_CODE, PROD_NAME, PROD_DESC, BASE_PRICE, IS_DISPLAYED, THUMB_NAIL, PROD_DATE, SHIPPED_DATE, STATUS)
+VALUES (PRODUCT_SEQ.NEXTVAL, 'WOMEN_SANDAL', 'F_RX MOC 3.0 ATQ_BE', '부드러운 베이지 컬러의 F_RX MOC 3.0 ATQ_BE. 아웃도어 활동 후 지친 발을 포근하게 감싸줍니다.', 119000, 1, 'F_RXMOC3-0ATQ_be_thumbnail.jpg', SYSDATE, SYSDATE, 1);
+
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_RXMOC3-0ATQ_be_1.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_RXMOC3-0ATQ_be_2.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_RXMOC3-0ATQ_be_3.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_RXMOC3-0ATQ_be_4.jpg');
+
+-- -----------------------------------------------------------
+-- F_RX MOC 3.0 ATQ_BK (F_RXMOC3-0ATQ_bk)
+-- -----------------------------------------------------------
+INSERT INTO PRODUCTS (PROD_ID, CATE_CODE, PROD_NAME, PROD_DESC, BASE_PRICE, IS_DISPLAYED, THUMB_NAIL, PROD_DATE, SHIPPED_DATE, STATUS)
+VALUES (PRODUCT_SEQ.NEXTVAL, 'WOMEN_SANDAL', 'F_RX MOC 3.0 ATQ_BK', '모던한 블랙 디자인, F_RX MOC 3.0 ATQ_BK. 어떤 룩에도 자연스럽게 어울리는 리커버리 슈즈입니다.', 119000, 1, 'F_RXMOC3-0ATQ_bk_thumbnail.jpg', SYSDATE, SYSDATE, 1);
+
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_RXMOC3-0ATQ_bk_1.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_RXMOC3-0ATQ_bk_2.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_RXMOC3-0ATQ_bk_3.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_RXMOC3-0ATQ_bk_4.jpg');
+
+-- -----------------------------------------------------------
+-- F_RX MOC 3.0 Glacier_SV (F_rxmoc3glacier_ sv)
+-- -----------------------------------------------------------
+INSERT INTO PRODUCTS (PROD_ID, CATE_CODE, PROD_NAME, PROD_DESC, BASE_PRICE, IS_DISPLAYED, THUMB_NAIL, PROD_DATE, SHIPPED_DATE, STATUS)
+VALUES (PRODUCT_SEQ.NEXTVAL, 'WOMEN_SANDAL', 'F_RX MOC 3.0 Glacier_SV', '시원한 아이스 실버 컬러, F_RX MOC 3.0 Glacier_SV. 여름철 발끝에 산뜻함을 더해줍니다.', 119000, 1, 'F_rxmoc3glacier_ sv_thumbnail.jpg', SYSDATE, SYSDATE, 1);
+
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_rxmoc3glacier_ sv_1.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_rxmoc3glacier_ sv_2.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_rxmoc3glacier_ sv_3.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_rxmoc3glacier_ sv_4.jpg');
+
+-- -----------------------------------------------------------
+-- F_RX MOC 3.0_NV (F_rxmoc3_nv)
+-- -----------------------------------------------------------
+INSERT INTO PRODUCTS (PROD_ID, CATE_CODE, PROD_NAME, PROD_DESC, BASE_PRICE, IS_DISPLAYED, THUMB_NAIL, PROD_DATE, SHIPPED_DATE, STATUS)
+VALUES (PRODUCT_SEQ.NEXTVAL, 'WOMEN_SANDAL', 'F_RX MOC 3.0_NV', '클래식 네이비의 매력, F_RX MOC 3.0_NV. 뛰어난 쿠셔닝으로 하루 종일 편안함을 유지하세요.', 119000, 1, 'F_rxmoc3_nv_thumbnail.jpg', SYSDATE, SYSDATE, 1);
+
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_rxmoc3_nv_1.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_rxmoc3_nv_2.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_rxmoc3_nv_3.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_rxmoc3_nv_4.jpg');
+
+-- -----------------------------------------------------------
+-- F_RX Slide 3.0_BE (F_rxslide3_be)
+-- -----------------------------------------------------------
+INSERT INTO PRODUCTS (PROD_ID, CATE_CODE, PROD_NAME, PROD_DESC, BASE_PRICE, IS_DISPLAYED, THUMB_NAIL, PROD_DATE, SHIPPED_DATE, STATUS)
+VALUES (PRODUCT_SEQ.NEXTVAL, 'WOMEN_SANDAL', 'F_RX Slide 3.0_BE', '간편한 슬라이드 스타일, F_RX Slide 3.0_BE. 부드러운 베이지 컬러로 어디에나 잘 어울립니다.', 99000, 1, 'F_rxslide3_be_thumbnail.jpg', SYSDATE, SYSDATE, 1);
+
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_rxslide3_be_1.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_rxslide3_be_2.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_rxslide3_be_3.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_rxslide3_be_4.jpg');
+
+-- -----------------------------------------------------------
+-- F_RX Slide 3.0_GR (F_rxslide3_gr)
+-- -----------------------------------------------------------
+INSERT INTO PRODUCTS (PROD_ID, CATE_CODE, PROD_NAME, PROD_DESC, BASE_PRICE, IS_DISPLAYED, THUMB_NAIL, PROD_DATE, SHIPPED_DATE, STATUS)
+VALUES (PRODUCT_SEQ.NEXTVAL, 'WOMEN_SANDAL', 'F_RX Slide 3.0_GR', '싱그러운 그린 컬러 포인트, F_RX Slide 3.0_GR. 운동 후 휴식 시간에 최적의 편안함을 제공합니다.', 99000, 1, 'F_rxslide3_gr_thumbnail.jpg', SYSDATE, SYSDATE, 1);
+
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_rxslide3_gr_1.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_rxslide3_gr_2.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_rxslide3_gr_3.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_rxslide3_gr_4.jpg');
+
+-- -----------------------------------------------------------
+-- F_XA PRO 3D Amphib_BK (F_xapro3damphib_bk)
+-- -----------------------------------------------------------
+INSERT INTO PRODUCTS (PROD_ID, CATE_CODE, PROD_NAME, PROD_DESC, BASE_PRICE, IS_DISPLAYED, THUMB_NAIL, PROD_DATE, SHIPPED_DATE, STATUS)
+VALUES (PRODUCT_SEQ.NEXTVAL, 'WOMEN_SANDAL', 'F_XA PRO 3D Amphib_BK', '수륙양용의 끝판왕, F_XA PRO 3D Amphib_BK. 물 빠짐이 좋고 접지력이 우수해 여름철 트레킹에 필수입니다.', 169000, 1, 'F_xapro3damphib_bk_thumbnail.jpg', SYSDATE, SYSDATE, 1);
+
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_xapro3damphib_bk_1.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_xapro3damphib_bk_2.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_xapro3damphib_bk_3.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_xapro3damphib_bk_4.jpg');
+
+-- -----------------------------------------------------------
+-- F_XA PRO 3D Amphib_GR (F_xapro3damphib_gr)
+-- -----------------------------------------------------------
+INSERT INTO PRODUCTS (PROD_ID, CATE_CODE, PROD_NAME, PROD_DESC, BASE_PRICE, IS_DISPLAYED, THUMB_NAIL, PROD_DATE, SHIPPED_DATE, STATUS)
+VALUES (PRODUCT_SEQ.NEXTVAL, 'WOMEN_SANDAL', 'F_XA PRO 3D Amphib_GR', '자연을 닮은 컬러, F_XA PRO 3D Amphib_GR. 계곡과 해변 어디서든 자유롭게 활동하세요.', 169000, 1, 'F_xapro3damphib_gr_thumbnail.jpg', SYSDATE, SYSDATE, 1);
+
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_xapro3damphib_gr_1.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_xapro3damphib_gr_2.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_xapro3damphib_gr_3.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_xapro3damphib_gr_4.jpg');
+
+-- -----------------------------------------------------------
+-- F_XA PRO 3D Amphib_WH (F_xapro3damphib_wh)
+-- -----------------------------------------------------------
+INSERT INTO PRODUCTS (PROD_ID, CATE_CODE, PROD_NAME, PROD_DESC, BASE_PRICE, IS_DISPLAYED, THUMB_NAIL, PROD_DATE, SHIPPED_DATE, STATUS)
+VALUES (PRODUCT_SEQ.NEXTVAL, 'WOMEN_SANDAL', 'F_XA PRO 3D Amphib_WH', '깔끔한 화이트 워터슈즈, F_XA PRO 3D Amphib_WH. 기능성과 스타일을 모두 잡은 여름 필수 아이템입니다.', 169000, 1, 'F_xapro3damphib_wh_thumbnail.jpg', SYSDATE, SYSDATE, 1);
+
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_xapro3damphib_wh_1.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_xapro3damphib_wh_2.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_xapro3damphib_wh_3.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_xapro3damphib_wh_4.jpg');
+
+COMMIT;
+
+-- -- =============================================================================
+[Maknaez] Products & Images Insert Script (WOMEN_SPORTSTYLE)
+-- -- =============================================================================
+-- -----------------------------------------------------------
+-- F_Neuva Advanced_BK (F_neuvaadvanced_bk)
+-- -----------------------------------------------------------
+INSERT INTO PRODUCTS (PROD_ID, CATE_CODE, PROD_NAME, PROD_DESC, BASE_PRICE, IS_DISPLAYED, THUMB_NAIL, PROD_DATE, SHIPPED_DATE, STATUS)
+VALUES (PRODUCT_SEQ.NEXTVAL, 'WOMEN_SPORTSTYLE', 'F_Neuva Advanced_BK', '도시적 감각과 아웃도어 기능의 조화, F_Neuva Advanced_BK. 유니크한 디자인으로 스타일을 완성하세요.', 260000, 1, 'F_neuvaadvanced_bk_thumbnail.jpg', SYSDATE, SYSDATE, 1);
+
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_neuvaadvanced_bk_1.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_neuvaadvanced_bk_2.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_neuvaadvanced_bk_3.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_neuvaadvanced_bk_4.jpg');
+
+-- -----------------------------------------------------------
+-- F_Orava Advanced_GY (F_oravaadvanced_gy)
+-- -----------------------------------------------------------
+INSERT INTO PRODUCTS (PROD_ID, CATE_CODE, PROD_NAME, PROD_DESC, BASE_PRICE, IS_DISPLAYED, THUMB_NAIL, PROD_DATE, SHIPPED_DATE, STATUS)
+VALUES (PRODUCT_SEQ.NEXTVAL, 'WOMEN_SPORTSTYLE', 'F_Orava Advanced_GY', '미래지향적인 실루엣, F_Orava Advanced_GY. 편안한 착화감과 세련된 그레이 컬러가 돋보입니다.', 260000, 1, 'F_oravaadvanced_gy_thumbnail.jpg', SYSDATE, SYSDATE, 1);
+
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_oravaadvanced_gy_1.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_oravaadvanced_gy_2.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_oravaadvanced_gy_3.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_oravaadvanced_gy_4.jpg');
+
+-- -----------------------------------------------------------
+-- F_Snowclog Corduroy_PK (F_snowclogcorduroy_pk)
+-- -----------------------------------------------------------
+INSERT INTO PRODUCTS (PROD_ID, CATE_CODE, PROD_NAME, PROD_DESC, BASE_PRICE, IS_DISPLAYED, THUMB_NAIL, PROD_DATE, SHIPPED_DATE, STATUS)
+VALUES (PRODUCT_SEQ.NEXTVAL, 'WOMEN_SPORTSTYLE', 'F_Snowclog Corduroy_PK', '따뜻한 코듀로이 감성, F_Snowclog Corduroy_PK. 겨울철 데일리 슈즈로 사랑스러운 핑크 컬러를 제안합니다.', 140000, 1, 'F_snowclogcorduroy_pk_thumbnail.jpg', SYSDATE, SYSDATE, 1);
+
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_snowclogcorduroy_pk_1.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_snowclogcorduroy_pk_2.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_snowclogcorduroy_pk_3.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_snowclogcorduroy_pk_4.jpg');
+
+-- -----------------------------------------------------------
+-- F_Tepiaz Advanced_BK (F_tepiazadvanced_bk)
+-- -----------------------------------------------------------
+INSERT INTO PRODUCTS (PROD_ID, CATE_CODE, PROD_NAME, PROD_DESC, BASE_PRICE, IS_DISPLAYED, THUMB_NAIL, PROD_DATE, SHIPPED_DATE, STATUS)
+VALUES (PRODUCT_SEQ.NEXTVAL, 'WOMEN_SPORTSTYLE', 'F_Tepiaz Advanced_BK', '테크웨어 스타일의 정석, F_Tepiaz Advanced_BK. 기능성과 스타일을 모두 잡은 프리미엄 스니커즈입니다.', 260000, 1, 'F_tepiazadvanced_bk_thumbnail.jpg', SYSDATE, SYSDATE, 1);
+
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_tepiazadvanced_bk_1.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_tepiazadvanced_bk_2.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_tepiazadvanced_bk_3.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_tepiazadvanced_bk_4.jpg');
+
+-- -----------------------------------------------------------
+-- F_XT-6 GTX_BK (F_XT-6 GTX_BK)
+-- -----------------------------------------------------------
+INSERT INTO PRODUCTS (PROD_ID, CATE_CODE, PROD_NAME, PROD_DESC, BASE_PRICE, IS_DISPLAYED, THUMB_NAIL, PROD_DATE, SHIPPED_DATE, STATUS)
+VALUES (PRODUCT_SEQ.NEXTVAL, 'WOMEN_SPORTSTYLE', 'F_XT-6 GTX_BK', '비 오는 날에도 거침없이, F_XT-6 GTX_BK. 고어텍스 기술이 적용된 전설적인 트레일 러닝화 모델입니다.', 280000, 1, 'F_XT-6 GTX_BK_thumbnail.jpg', SYSDATE, SYSDATE, 1);
+
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_XT-6 GTX_BK_1.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_XT-6 GTX_BK_2.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_XT-6 GTX_BK_3.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_XT-6 GTX_BK_4.jpg');
+
+-- -----------------------------------------------------------
+-- F_XT-6_BK (F_XT-6_BK)
+-- -----------------------------------------------------------
+INSERT INTO PRODUCTS (PROD_ID, CATE_CODE, PROD_NAME, PROD_DESC, BASE_PRICE, IS_DISPLAYED, THUMB_NAIL, PROD_DATE, SHIPPED_DATE, STATUS)
+VALUES (PRODUCT_SEQ.NEXTVAL, 'WOMEN_SPORTSTYLE', 'F_XT-6_BK', '아이코닉한 디자인, F_XT-6_BK. 장거리 러닝부터 스트릿 패션까지 완벽하게 소화합니다.', 260000, 1, 'F_XT-6_BK_thumbnail.jpg', SYSDATE, SYSDATE, 1);
+
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_XT-6_BK_1.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_XT-6_BK_2.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_XT-6_BK_3.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_XT-6_BK_4.jpg');
+
+-- -----------------------------------------------------------
+-- F_XT-Quest_BK (F_XT-퀘스트_BK)
+-- -----------------------------------------------------------
+INSERT INTO PRODUCTS (PROD_ID, CATE_CODE, PROD_NAME, PROD_DESC, BASE_PRICE, IS_DISPLAYED, THUMB_NAIL, PROD_DATE, SHIPPED_DATE, STATUS)
+VALUES (PRODUCT_SEQ.NEXTVAL, 'WOMEN_SPORTSTYLE', 'F_XT-Quest_BK', '하이브리드 디자인의 정수, F_XT-Quest_BK. 트레킹화의 안정감과 러닝화의 쿠셔닝을 결합했습니다.', 260000, 1, 'F_XT-퀘스트_BK_thumbnail.jpg', SYSDATE, SYSDATE, 1);
+
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_XT-퀘스트_BK_1.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_XT-퀘스트_BK_2.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_XT-퀘스트_BK_3.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_XT-퀘스트_BK_4.jpg');
+
+-- -----------------------------------------------------------
+-- F_XT-Quest_SV (F_XT-퀘스트_SV)
+-- -----------------------------------------------------------
+INSERT INTO PRODUCTS (PROD_ID, CATE_CODE, PROD_NAME, PROD_DESC, BASE_PRICE, IS_DISPLAYED, THUMB_NAIL, PROD_DATE, SHIPPED_DATE, STATUS)
+VALUES (PRODUCT_SEQ.NEXTVAL, 'WOMEN_SPORTSTYLE', 'F_XT-Quest_SV', '세련된 실버 컬러, F_XT-Quest_SV. 도심 속에서도 빛나는 존재감을 드러내는 스포츠스타일 슈즈입니다.', 260000, 1, 'F_XT-퀘스트_SV_thumbnail.jpg', SYSDATE, SYSDATE, 1);
+
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_XT-퀘스트_SV_1.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_XT-퀘스트_SV_2.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_XT-퀘스트_SV_3.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_XT-퀘스트_SV_4.jpg');
+
+COMMIT;
+
+-- -- =============================================================================
+[Maknaez] Products & Images Insert Script (WOMEN_OUTDOOR)
+-- -- =============================================================================
+-- -----------------------------------------------------------
+-- F_Solamphibian_BK (F_solamphibian_bk)
+-- -----------------------------------------------------------
+INSERT INTO PRODUCTS (PROD_ID, CATE_CODE, PROD_NAME, PROD_DESC, BASE_PRICE, IS_DISPLAYED, THUMB_NAIL, PROD_DATE, SHIPPED_DATE, STATUS)
+VALUES (PRODUCT_SEQ.NEXTVAL, 'WOMEN_OUTDOOR', 'F_Solamphibian_BK', '거친 자연 환경에서도 완벽한 퍼포먼스, F_Solamphibian_BK. 여성 아웃도어를 위한 최상의 기술력이 집약된 슈즈입니다.', 159000, 1, 'F_solamphibian_bk_thumbnail.jpg', SYSDATE, SYSDATE, 1);
+
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_solamphibian_bk_1.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_solamphibian_bk_2.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_solamphibian_bk_3.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_solamphibian_bk_4.jpg');
+
+-- -----------------------------------------------------------
+-- F_XA PRO 3D Amphib_GR (F_xapro3damphib_gr)
+-- -----------------------------------------------------------
+INSERT INTO PRODUCTS (PROD_ID, CATE_CODE, PROD_NAME, PROD_DESC, BASE_PRICE, IS_DISPLAYED, THUMB_NAIL, PROD_DATE, SHIPPED_DATE, STATUS)
+VALUES (PRODUCT_SEQ.NEXTVAL, 'WOMEN_OUTDOOR', 'F_XA PRO 3D Amphib_GR', '거친 자연 환경에서도 완벽한 퍼포먼스, F_XA PRO 3D Amphib_GR. 여성 아웃도어를 위한 최상의 기술력이 집약된 슈즈입니다.', 169000, 1, 'F_xapro3damphib_gr_thumbnail.jpg', SYSDATE, SYSDATE, 1);
+
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_xapro3damphib_gr_1.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_xapro3damphib_gr_3.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_xapro3damphib_gr_4.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_xapro3damphib_gr_5.jpg');
+-- Note: 'F_xapro3damphib_gr_허허실실.jpg' is included as an extra image.
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_xapro3damphib_gr_허허실실.jpg');
+
+-- -----------------------------------------------------------
+-- F_XA PRO 3D v9_BK (F_xapro3dv9_bk)
+-- -----------------------------------------------------------
+INSERT INTO PRODUCTS (PROD_ID, CATE_CODE, PROD_NAME, PROD_DESC, BASE_PRICE, IS_DISPLAYED, THUMB_NAIL, PROD_DATE, SHIPPED_DATE, STATUS)
+VALUES (PRODUCT_SEQ.NEXTVAL, 'WOMEN_OUTDOOR', 'F_XA PRO 3D v9_BK', '거친 자연 환경에서도 완벽한 퍼포먼스, F_XA PRO 3D v9_BK. 여성 아웃도어를 위한 최상의 기술력이 집약된 슈즈입니다.', 219000, 1, 'F_xapro3dv9_bk_thumbnail.jpg', SYSDATE, SYSDATE, 1);
+
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_xapro3dv9_bk_1.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_xapro3dv9_bk_2.jpg');
+
+-- -----------------------------------------------------------
+-- F_X Ultra 360 GTX_BK (F_xultra360gtx_bk)
+-- -----------------------------------------------------------
+INSERT INTO PRODUCTS (PROD_ID, CATE_CODE, PROD_NAME, PROD_DESC, BASE_PRICE, IS_DISPLAYED, THUMB_NAIL, PROD_DATE, SHIPPED_DATE, STATUS)
+VALUES (PRODUCT_SEQ.NEXTVAL, 'WOMEN_OUTDOOR', 'F_X Ultra 360 GTX_BK', '거친 자연 환경에서도 완벽한 퍼포먼스, F_X Ultra 360 GTX_BK. 여성 아웃도어를 위한 최상의 기술력이 집약된 슈즈입니다.', 239000, 1, 'F_xultra360gtx_bk_thumbnail.jpg', SYSDATE, SYSDATE, 1);
+
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_xultra360gtx_bk_1.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_xultra360gtx_bk_2.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_xultra360gtx_bk_3.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_xultra360gtx_bk_4.jpg');
+
+-- -----------------------------------------------------------
+-- F_X Ultra 360 GTX_GY (F_xultra360gtx_gy)
+-- -----------------------------------------------------------
+INSERT INTO PRODUCTS (PROD_ID, CATE_CODE, PROD_NAME, PROD_DESC, BASE_PRICE, IS_DISPLAYED, THUMB_NAIL, PROD_DATE, SHIPPED_DATE, STATUS)
+VALUES (PRODUCT_SEQ.NEXTVAL, 'WOMEN_OUTDOOR', 'F_X Ultra 360 GTX_GY', '거친 자연 환경에서도 완벽한 퍼포먼스, F_X Ultra 360 GTX_GY. 여성 아웃도어를 위한 최상의 기술력이 집약된 슈즈입니다.', 239000, 1, 'F_xultra360gtx_gy_thumbnail.jpg', SYSDATE, SYSDATE, 1);
+
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_xultra360gtx_gy_1.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_xultra360gtx_gy_2.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_xultra360gtx_gy_3.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_xultra360gtx_gy_4.jpg');
+
+-- -----------------------------------------------------------
+-- F_X Ultra 360 Mid GTX_GY (F_xultra360midgtx_gy)
+-- -----------------------------------------------------------
+INSERT INTO PRODUCTS (PROD_ID, CATE_CODE, PROD_NAME, PROD_DESC, BASE_PRICE, IS_DISPLAYED, THUMB_NAIL, PROD_DATE, SHIPPED_DATE, STATUS)
+VALUES (PRODUCT_SEQ.NEXTVAL, 'WOMEN_OUTDOOR', 'F_X Ultra 360 Mid GTX_GY', '거친 자연 환경에서도 완벽한 퍼포먼스, F_X Ultra 360 Mid GTX_GY. 여성 아웃도어를 위한 최상의 기술력이 집약된 슈즈입니다.', 249000, 1, 'F_xultra360midgtx_gy_thumbnail.jpg', SYSDATE, SYSDATE, 1);
+
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_xultra360midgtx_gy_1.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_xultra360midgtx_gy_2.jpg');
+
+-- -----------------------------------------------------------
+-- F_X Ultra 5 GTX_GR (F_xultra5gtx_gr)
+-- -----------------------------------------------------------
+INSERT INTO PRODUCTS (PROD_ID, CATE_CODE, PROD_NAME, PROD_DESC, BASE_PRICE, IS_DISPLAYED, THUMB_NAIL, PROD_DATE, SHIPPED_DATE, STATUS)
+VALUES (PRODUCT_SEQ.NEXTVAL, 'WOMEN_OUTDOOR', 'F_X Ultra 5 GTX_GR', '거친 자연 환경에서도 완벽한 퍼포먼스, F_X Ultra 5 GTX_GR. 여성 아웃도어를 위한 최상의 기술력이 집약된 슈즈입니다.', 239000, 1, 'F_xultra5gtx_gr_thumbnail.jpg', SYSDATE, SYSDATE, 1);
+
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_xultra5gtx_gr_1.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_xultra5gtx_gr_2.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_xultra5gtx_gr_3.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_xultra5gtx_gr_4.jpg');
+
+-- -----------------------------------------------------------
+-- F_X Ultra 5 Mid GTX_GY (F_xultra5midgtx_gy)
+-- -----------------------------------------------------------
+INSERT INTO PRODUCTS (PROD_ID, CATE_CODE, PROD_NAME, PROD_DESC, BASE_PRICE, IS_DISPLAYED, THUMB_NAIL, PROD_DATE, SHIPPED_DATE, STATUS)
+VALUES (PRODUCT_SEQ.NEXTVAL, 'WOMEN_OUTDOOR', 'F_X Ultra 5 Mid GTX_GY', '거친 자연 환경에서도 완벽한 퍼포먼스, F_X Ultra 5 Mid GTX_GY. 여성 아웃도어를 위한 최상의 기술력이 집약된 슈즈입니다.', 249000, 1, 'F_xultra5midgtx_gy_thumbnail.jpg', SYSDATE, SYSDATE, 1);
+
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_xultra5midgtx_gy_1.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_xultra5midgtx_gy_2.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_xultra5midgtx_gy_3.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_xultra5midgtx_gy_4.jpg');
+
+-- -----------------------------------------------------------
+-- F_X Ultra 5 Mid GTX_PK (F_xultra5midgtx_pk)
+-- -----------------------------------------------------------
+INSERT INTO PRODUCTS (PROD_ID, CATE_CODE, PROD_NAME, PROD_DESC, BASE_PRICE, IS_DISPLAYED, THUMB_NAIL, PROD_DATE, SHIPPED_DATE, STATUS)
+VALUES (PRODUCT_SEQ.NEXTVAL, 'WOMEN_OUTDOOR', 'F_X Ultra 5 Mid GTX_PK', '거친 자연 환경에서도 완벽한 퍼포먼스, F_X Ultra 5 Mid GTX_PK. 여성 아웃도어를 위한 최상의 기술력이 집약된 슈즈입니다.', 249000, 1, 'F_xultra5midgtx_pk_thumbnail.jpg', SYSDATE, SYSDATE, 1);
+
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_xultra5midgtx_pk_1.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_xultra5midgtx_pk_2.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_xultra5midgtx_pk_3.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_xultra5midgtx_pk_4.jpg');
+
+-- -----------------------------------------------------------
+-- F_S-LAB Waterway_BK (u_slabwaterway_bk)
+-- -----------------------------------------------------------
+INSERT INTO PRODUCTS (PROD_ID, CATE_CODE, PROD_NAME, PROD_DESC, BASE_PRICE, IS_DISPLAYED, THUMB_NAIL, PROD_DATE, SHIPPED_DATE, STATUS)
+VALUES (PRODUCT_SEQ.NEXTVAL, 'WOMEN_OUTDOOR', 'F_S-LAB Waterway_BK', '거친 자연 환경에서도 완벽한 퍼포먼스, F_S-LAB Waterway_BK. 여성 아웃도어를 위한 최상의 기술력이 집약된 슈즈입니다.', 289000, 1, 'u_slabwaterway_bk_thumbnail.jpg', SYSDATE, SYSDATE, 1);
+
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'u_slabwaterway_bk_1.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'u_slabwaterway_bk_2.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'u_slabwaterway_bk_3.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'u_slabwaterway_bk_4.jpg');
+
+COMMIT;
+
+-- -- =============================================================================
+[Maknaez] Products & Images Insert Script (WOMEN_TRAIL)
+-- -- =============================================================================
+
+-- -----------------------------------------------------------
+-- F_S-LAB Ultra Glide 1.5_RD (F_SLAB울트라글라이드1.5_RD)
+-- -----------------------------------------------------------
+INSERT INTO PRODUCTS (PROD_ID, CATE_CODE, PROD_NAME, PROD_DESC, BASE_PRICE, IS_DISPLAYED, THUMB_NAIL, PROD_DATE, SHIPPED_DATE, STATUS)
+VALUES (PRODUCT_SEQ.NEXTVAL, 'WOMEN_TRAIL', 'F_S-LAB Ultra Glide 1.5_RD', '장거리를 위한 최적의 파트너, F_S-LAB Ultra Glide 1.5_RD. 부드러운 쿠셔닝과 경량성으로 트레일을 정복하세요.', 330000, 1, 'F_SLAB울트라글라이드1.5_RD_thumbnail.jpg', SYSDATE, SYSDATE, 1);
+
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_SLAB울트라글라이드1.5_RD_1.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_SLAB울트라글라이드1.5_RD_2.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_SLAB울트라글라이드1.5_RD_3.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_SLAB울트라글라이드1.5_RD_4.jpg');
+
+-- -----------------------------------------------------------
+-- F_S-LAB Ultra Dust_WH (F_SLAB울트라더스트_WH)
+-- -----------------------------------------------------------
+INSERT INTO PRODUCTS (PROD_ID, CATE_CODE, PROD_NAME, PROD_DESC, BASE_PRICE, IS_DISPLAYED, THUMB_NAIL, PROD_DATE, SHIPPED_DATE, STATUS)
+VALUES (PRODUCT_SEQ.NEXTVAL, 'WOMEN_TRAIL', 'F_S-LAB Ultra Dust_WH', '거친 먼지 구름 속에서도 빛나는 성능, F_S-LAB Ultra Dust_WH. 극한의 환경을 견디는 내구성을 자랑합니다.', 330000, 1, 'F_SLAB울트라더스트_WH_thumbnail.jpg', SYSDATE, SYSDATE, 1);
+
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_SLAB울트라더스트_WH_1.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_SLAB울트라더스트_WH_2.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_SLAB울트라더스트_WH_3.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_SLAB울트라더스트_WH_4.jpg');
+
+-- -----------------------------------------------------------
+-- F_S-LAB Genesis_WH (F_SLAB제네시스_WH)
+-- -----------------------------------------------------------
+INSERT INTO PRODUCTS (PROD_ID, CATE_CODE, PROD_NAME, PROD_DESC, BASE_PRICE, IS_DISPLAYED, THUMB_NAIL, PROD_DATE, SHIPPED_DATE, STATUS)
+VALUES (PRODUCT_SEQ.NEXTVAL, 'WOMEN_TRAIL', 'F_S-LAB Genesis_WH', '엘리트 선수를 위한 선택, F_S-LAB Genesis_WH. 바위와 자갈이 많은 테크니컬한 지형에서 최고의 퍼포먼스를 발휘합니다.', 330000, 1, 'F_SLAB제네시스_WH_THUMBNAIL.jpg', SYSDATE, SYSDATE, 1);
+
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_SLAB제네시스_WH_1.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_SLAB제네시스_WH_3.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_SLAB제네시스_WH_4.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_SLAB제네시스_WH_5.jpg');
+
+-- -----------------------------------------------------------
+-- F_S-LAB Pulsar 4_RD (F_SLAB펄사4_RD)
+-- -----------------------------------------------------------
+INSERT INTO PRODUCTS (PROD_ID, CATE_CODE, PROD_NAME, PROD_DESC, BASE_PRICE, IS_DISPLAYED, THUMB_NAIL, PROD_DATE, SHIPPED_DATE, STATUS)
+VALUES (PRODUCT_SEQ.NEXTVAL, 'WOMEN_TRAIL', 'F_S-LAB Pulsar 4_RD', '기록 단축을 위한 초경량 레이싱화, F_S-LAB Pulsar 4_RD. 놀라운 반발력으로 피니시 라인까지 질주하세요.', 350000, 1, 'F_SLAB펄사4_RD_thumbnail.jpg', SYSDATE, SYSDATE, 1);
+
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_SLAB펄사4_RD_1.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_SLAB펄사4_RD_2.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_SLAB펄사4_RD_3.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_SLAB펄사4_RD_4.jpg');
+
+-- -----------------------------------------------------------
+-- F_XA PRO 3D V9 GTX W_BK (F_XA프로3DV9GTXW_BK)
+-- -----------------------------------------------------------
+INSERT INTO PRODUCTS (PROD_ID, CATE_CODE, PROD_NAME, PROD_DESC, BASE_PRICE, IS_DISPLAYED, THUMB_NAIL, PROD_DATE, SHIPPED_DATE, STATUS)
+VALUES (PRODUCT_SEQ.NEXTVAL, 'WOMEN_TRAIL', 'F_XA PRO 3D V9 GTX W_BK', '전설적인 안정성과 방수 기능, F_XA PRO 3D V9 GTX W_BK. 어떤 날씨와 지형에서도 당신의 발을 안전하게 보호합니다.', 240000, 1, 'F_XA프로3DV9GTXW_BK_thumbnail.jpg', SYSDATE, SYSDATE, 1);
+
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_XA프로3DV9GTXW_BK_1.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_XA프로3DV9GTXW_BK_2.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_XA프로3DV9GTXW_BK_3.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_XA프로3DV9GTXW_BK_4.jpg');
+
+-- -----------------------------------------------------------
+-- F_Genesis W_BK (F_제네시스W_BK)
+-- -----------------------------------------------------------
+INSERT INTO PRODUCTS (PROD_ID, CATE_CODE, PROD_NAME, PROD_DESC, BASE_PRICE, IS_DISPLAYED, THUMB_NAIL, PROD_DATE, SHIPPED_DATE, STATUS)
+VALUES (PRODUCT_SEQ.NEXTVAL, 'WOMEN_TRAIL', 'F_Genesis W_BK', '트레일 러닝의 새로운 기준, F_Genesis W_BK. 뛰어난 내구성과 그립력으로 모험의 한계를 넓혀줍니다.', 240000, 1, 'F_제네시스W_BK_thumbnail.jpg', SYSDATE, SYSDATE, 1);
+
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_제네시스W_BK_1.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_제네시스W_BK_2.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_제네시스W_BK_3.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_제네시스W_BK_4.jpg');
+
+-- -----------------------------------------------------------
+-- F_Genesis W_PK (F_제네시스W_PK)
+-- -----------------------------------------------------------
+INSERT INTO PRODUCTS (PROD_ID, CATE_CODE, PROD_NAME, PROD_DESC, BASE_PRICE, IS_DISPLAYED, THUMB_NAIL, PROD_DATE, SHIPPED_DATE, STATUS)
+VALUES (PRODUCT_SEQ.NEXTVAL, 'WOMEN_TRAIL', 'F_Genesis W_PK', '산뜻한 핑크 컬러로 즐기는 트레일, F_Genesis W_PK. 기능성은 물론 스타일까지 놓치지 마세요.', 240000, 1, 'F_제네시스W_PK_thumbnail.jpg', SYSDATE, SYSDATE, 1);
+
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_제네시스W_PK_1.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_제네시스W_PK_2.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_제네시스W_PK_3.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_제네시스W_PK_4.jpg');
+
+-- -----------------------------------------------------------
+-- F_Genesis W_WH (F_제네시스W_WH)
+-- -----------------------------------------------------------
+INSERT INTO PRODUCTS (PROD_ID, CATE_CODE, PROD_NAME, PROD_DESC, BASE_PRICE, IS_DISPLAYED, THUMB_NAIL, PROD_DATE, SHIPPED_DATE, STATUS)
+VALUES (PRODUCT_SEQ.NEXTVAL, 'WOMEN_TRAIL', 'F_Genesis W_WH', '깔끔하고 강력한 화이트, F_Genesis W_WH. 어떤 아웃도어 환경에서도 당신을 돋보이게 합니다.', 240000, 1, 'F_제네시스W_WH_thumbnail.jpg', SYSDATE, SYSDATE, 1);
+
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_제네시스W_WH_1.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_제네시스W_WH_2.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_제네시스W_WH_3.jpg');
+INSERT INTO PRODUCT_IMG (IMG_ID, PROD_ID, IMG) VALUES (IMG_SEQ.NEXTVAL, PRODUCT_SEQ.CURRVAL, 'F_제네시스W_WH_4.jpg');
+
+COMMIT;
+
+
+
+
+-- ===========================================================================================================
+-- ===========================================================================================================
+-- 사이즈 옵션, 재고 관련 쿼리
+-- 1. 기존 데이터 및 시퀀스 초기화
+-- (기존 데이터가 꼬여있을 수 있으므로 삭제 후 다시 적재 권장)
+DELETE FROM STOCK_LOGS;
+DELETE FROM PD_SIZE;
+COMMIT;
+
+BEGIN
+    EXECUTE IMMEDIATE 'DROP SEQUENCE OPT_SEQ';
+EXCEPTION WHEN OTHERS THEN NULL;
+END;
+/
+CREATE SEQUENCE OPT_SEQ START WITH 1 INCREMENT BY 1 NOCACHE;
+
+BEGIN
+    EXECUTE IMMEDIATE 'DROP SEQUENCE STOCK_SEQ';
+EXCEPTION WHEN OTHERS THEN NULL;
+END;
+/
+CREATE SEQUENCE STOCK_SEQ START WITH 1 INCREMENT BY 1 NOCACHE;
+
+
+-- 2. PD_SIZE 데이터 생성 (모든 상품에 대해 사이즈 생성)
+DECLARE
+    CURSOR c_products IS 
+        SELECT PROD_ID, CATE_CODE FROM PRODUCTS ORDER BY PROD_ID;
+        
+    -- 사이즈 배열 (220~290mm)
+    type num_array is varray(20) of number;
+    v_men_sizes   num_array := num_array(250, 255, 260, 265, 270, 275, 280, 285, 290);
+    v_women_sizes num_array := num_array(220, 225, 230, 235, 240, 245, 250, 255);
+    v_sport_sizes num_array := num_array(220, 225, 230, 235, 240, 245, 250, 255, 260, 265, 270, 275, 280, 285, 290);
+    
+    v_selected_size NUMBER;
+    v_random_idx    NUMBER;
+    v_counter       NUMBER := 0;
+BEGIN
+    FOR r_prod IN c_products LOOP
+        -- 모든 상품에 대해 2~3개의 사이즈 옵션 생성 (개수 제한 없음)
+        FOR i IN 1..ROUND(DBMS_RANDOM.VALUE(2, 3)) LOOP
+            
+            -- 카테고리별 사이즈 선택
+            IF r_prod.CATE_CODE LIKE 'MEN_%' THEN
+                v_random_idx := ROUND(DBMS_RANDOM.VALUE(1, 9)); 
+                v_selected_size := v_men_sizes(v_random_idx);
+            ELSIF r_prod.CATE_CODE LIKE 'WOMEN_%' THEN
+                v_random_idx := ROUND(DBMS_RANDOM.VALUE(1, 8)); 
+                v_selected_size := v_women_sizes(v_random_idx);
+            ELSE 
+                v_random_idx := ROUND(DBMS_RANDOM.VALUE(1, 15)); 
+                v_selected_size := v_sport_sizes(v_random_idx);
+            END IF;
+
+            -- 데이터 삽입
+            INSERT INTO PD_SIZE (OPT_ID, PROD_ID, PD_SIZE)
+            VALUES (OPT_SEQ.NEXTVAL, r_prod.PROD_ID, TO_CHAR(v_selected_size));
+            
+            v_counter := v_counter + 1;
+        END LOOP;
+    END LOOP;
+    
+    COMMIT;
+    DBMS_OUTPUT.PUT_LINE('PD_SIZE 생성 완료 (전체 상품 대상): ' || v_counter || '건');
+END;
+/
+
+
+-- 3. STOCK_LOGS 데이터 생성 (모든 옵션에 대해 재고 생성 + 품절 수량 조절)
+DECLARE
+    -- 생성된 모든 옵션 조회
+    CURSOR c_options IS 
+        SELECT OPT_ID, PROD_ID FROM PD_SIZE;
+        
+    v_change_qty  NUMBER;
+    v_change_type VARCHAR2(50);
+    v_log_date    DATE;
+    v_prod_stock  NUMBER; 
+    v_rand_val    NUMBER;
+    v_soldout_cnt NUMBER := 0;
+BEGIN
+    -- 모든 옵션에 대해 최소 1개의 재고 로그를 생성하여 '데이터 없음' 방지
+    FOR r_opt IN c_options LOOP
+        
+        v_rand_val := DBMS_RANDOM.VALUE;
+        
+        -- **[핵심] 품절 확률 설정 (약 12%)**
+        -- 전체 옵션이 약 400개일 때, 12%면 약 48~50개가 품절됨
+        IF v_rand_val < 0.12 THEN
+            v_prod_stock := 0; -- 품절
+            v_change_type := '기타 출고'; -- 전량 소진
+            v_change_qty := ROUND(DBMS_RANDOM.VALUE(1, 5));
+            v_soldout_cnt := v_soldout_cnt + 1;
+        
+        -- 재고 임박 (약 10%)
+        ELSIF v_rand_val < 0.22 THEN
+            v_prod_stock := ROUND(DBMS_RANDOM.VALUE(1, 10));
+            v_change_type := '주문 판매';
+            v_change_qty := ROUND(DBMS_RANDOM.VALUE(1, 3));
+            
+        -- 넉넉한 재고 (나머지 약 78%)
+        ELSE
+            v_prod_stock := ROUND(DBMS_RANDOM.VALUE(11, 100));
+            v_change_type := '입고';
+            v_change_qty := ROUND(DBMS_RANDOM.VALUE(10, 50));
+        END IF;
+
+        -- 날짜: 최근 3개월 이내 (최신 현황처럼 보이게)
+        v_log_date := SYSDATE - DBMS_RANDOM.VALUE(0, 90);
+
+        -- 데이터 삽입
+        INSERT INTO STOCK_LOGS (
+            LOG_ID, PROD_ID, OPT_ID, CHANGE_TYPE, CHANGE_QTY, REG_DATE, PROD_STOCK
+        )
+        VALUES (
+            STOCK_SEQ.NEXTVAL, 
+            r_opt.PROD_ID, 
+            r_opt.OPT_ID, 
+            v_change_type, 
+            v_change_qty, 
+            v_log_date,
+            v_prod_stock
+        );
+        
+        -- (선택) 이력을 풍성하게 하기 위해 30% 확률로 과거 로그 하나 더 추가
+        IF DBMS_RANDOM.VALUE < 0.3 THEN
+            INSERT INTO STOCK_LOGS (
+                LOG_ID, PROD_ID, OPT_ID, CHANGE_TYPE, CHANGE_QTY, REG_DATE, PROD_STOCK
+            )
+            VALUES (
+                STOCK_SEQ.NEXTVAL, 
+                r_opt.PROD_ID, 
+                r_opt.OPT_ID, 
+                '입고', 
+                ROUND(DBMS_RANDOM.VALUE(10, 30)), 
+                v_log_date - DBMS_RANDOM.VALUE(10, 100), -- 더 과거
+                v_prod_stock + ROUND(DBMS_RANDOM.VALUE(1, 10)) -- 과거엔 재고가 달랐음
+            );
+        END IF;
+
+    END LOOP;
+
+    COMMIT;
+    DBMS_OUTPUT.PUT_LINE('STOCK_LOGS 생성 완료');
+    DBMS_OUTPUT.PUT_LINE('생성된 품절(0개) 상품 수: 약 ' || v_soldout_cnt || '개');
+END;
+/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-- -----------------------------------------------------------------------------
+-- [Maknaez] Initial Data Setup Script
+-- 작성일: 2026-01-23
+-- 설명: MEMBER1, MEMBER2, MEMBER3, ADDRESS, LOGIN_HISTORY 초기 데이터 적재
+-- 주의: 기존 시퀀스가 생성되어 있어야 합니다. (addr_seq, member_seq, loginlog_seq 등)
+-- -----------------------------------------------------------------------------
+
+-- ============================================================
+-- [1] 핵심 멤버 & 관리자 (Total: 6명)
+-- ============================================================
+
+-- 1. 관리자 (Admin)
+INSERT INTO MEMBER1 (MEMBERIDX, NICKNAME, USERID, USERPWD, USERLEVEL, ENABLED, MODIFY_DATE, BIRTH, GENDER)
+VALUES (member_seq.NEXTVAL, '관리자', 'admin', 'admin', 99, 1, SYSDATE, TO_DATE('1990-01-01', 'YYYY-MM-DD'), 1);
+
+INSERT INTO MEMBER2 (MEMBERIDX, USERNAME, EMAIL, TEL)
+VALUES (member_seq.CURRVAL, '최고관리자', 'admin@maknaez.com', '010-0000-0000');
+
+INSERT INTO ADDRESS (ADDR_ID, MEMBERIDX, ADDR_NAME, RECEIVER_NAME, RECEIVER_TEL, ZIP_CODE, ADDR1, ADDR2, ISBASIC)
+VALUES (addr_seq.NEXTVAL, member_seq.CURRVAL, '본사', '관리팀', '010-0000-0000', '06234', '서울 마포구 월드컵북로 21', '풍성빌딩 2층', 1);
+
+INSERT INTO ADDRESS (ADDR_ID, MEMBERIDX, ADDR_NAME, RECEIVER_NAME, RECEIVER_TEL, ZIP_CODE, ADDR1, ADDR2, ISBASIC)
+VALUES (addr_seq.NEXTVAL, member_seq.CURRVAL, '물류창고', '물류팀', '010-0000-1111', '12345', '경기 성남시 분당구 판교로 55', 'B1', 0);
+
+-- 2. 서유원 (ssangyoungyuwon@gmail.com)
+INSERT INTO MEMBER1 (MEMBERIDX, NICKNAME, USERID, USERPWD, USERLEVEL, ENABLED, MODIFY_DATE, BIRTH, GENDER)
+VALUES (member_seq.NEXTVAL, '유원', 'seo123', 'seo123', 50, 1, SYSDATE, TO_DATE('1997-05-20', 'YYYY-MM-DD'), 0);
+
+INSERT INTO MEMBER2 (MEMBERIDX, USERNAME, EMAIL, TEL)
+VALUES (member_seq.CURRVAL, '서유원', 'ssangyoungyuwon@gmail.com', '010-1234-5678');
+
+INSERT INTO ADDRESS (ADDR_ID, MEMBERIDX, ADDR_NAME, RECEIVER_NAME, RECEIVER_TEL, ZIP_CODE, ADDR1, ADDR2, ISBASIC)
+VALUES (addr_seq.NEXTVAL, member_seq.CURRVAL, '우리집', '서유원', '010-1234-5678', '04521', '서울 중구 세종대로 110', '101동 202호', 1);
+
+INSERT INTO ADDRESS (ADDR_ID, MEMBERIDX, ADDR_NAME, RECEIVER_NAME, RECEIVER_TEL, ZIP_CODE, ADDR1, ADDR2, ISBASIC)
+VALUES (addr_seq.NEXTVAL, member_seq.CURRVAL, '회사', '서유원', '010-1234-5678', '06123', '서울 강남구 역삼로 99', '개발팀', 0);
+
+INSERT INTO ADDRESS (ADDR_ID, MEMBERIDX, ADDR_NAME, RECEIVER_NAME, RECEIVER_TEL, ZIP_CODE, ADDR1, ADDR2, ISBASIC)
+VALUES (addr_seq.NEXTVAL, member_seq.CURRVAL, '본가', '부모님', '010-9876-5432', '41234', '대구 수성구 달구벌대로 500', '주택', 0);
+
+-- 3. 최하늘 (닉네임: 최자)
+INSERT INTO MEMBER1 (MEMBERIDX, NICKNAME, USERID, USERPWD, USERLEVEL, ENABLED, MODIFY_DATE, BIRTH, GENDER)
+VALUES (member_seq.NEXTVAL, '최자', 'choi123', 'choi123', 40, 1, SYSDATE, TO_DATE('1995-03-15', 'YYYY-MM-DD'), 0);
+
+INSERT INTO MEMBER2 (MEMBERIDX, USERNAME, EMAIL, TEL)
+VALUES (member_seq.CURRVAL, '최하늘', 'choi@maknaez.com', '010-1111-2222');
+
+INSERT INTO ADDRESS (ADDR_ID, MEMBERIDX, ADDR_NAME, RECEIVER_NAME, RECEIVER_TEL, ZIP_CODE, ADDR1, ADDR2, ISBASIC)
+VALUES (addr_seq.NEXTVAL, member_seq.CURRVAL, '자취방', '최하늘', '010-1111-2222', '08234', '서울 구로구 디지털로 32', '305호', 1);
+
+INSERT INTO ADDRESS (ADDR_ID, MEMBERIDX, ADDR_NAME, RECEIVER_NAME, RECEIVER_TEL, ZIP_CODE, ADDR1, ADDR2, ISBASIC)
+VALUES (addr_seq.NEXTVAL, member_seq.CURRVAL, '친구집', '친구', '010-2222-3333', '03333', '서울 은평구 통일로 77', '1층', 0);
+
+-- 4. 이지영 (닉네임: 호랑슨)
+INSERT INTO MEMBER1 (MEMBERIDX, NICKNAME, USERID, USERPWD, USERLEVEL, ENABLED, MODIFY_DATE, BIRTH, GENDER)
+VALUES (member_seq.NEXTVAL, '호랑슨', 'lee123', 'lee123', 40, 1, SYSDATE, TO_DATE('1996-08-08', 'YYYY-MM-DD'), 1);
+
+INSERT INTO MEMBER2 (MEMBERIDX, USERNAME, EMAIL, TEL)
+VALUES (member_seq.CURRVAL, '이지영', 'lee@maknaez.com', '010-3333-4444');
+
+INSERT INTO ADDRESS (ADDR_ID, MEMBERIDX, ADDR_NAME, RECEIVER_NAME, RECEIVER_TEL, ZIP_CODE, ADDR1, ADDR2, ISBASIC)
+VALUES (addr_seq.NEXTVAL, member_seq.CURRVAL, '집', '이지영', '010-3333-4444', '11223', '경기 수원시 팔달구 매산로 1', 'A동 101호', 1);
+
+INSERT INTO ADDRESS (ADDR_ID, MEMBERIDX, ADDR_NAME, RECEIVER_NAME, RECEIVER_TEL, ZIP_CODE, ADDR1, ADDR2, ISBASIC)
+VALUES (addr_seq.NEXTVAL, member_seq.CURRVAL, '회사', '이지영', '010-3333-4444', '06222', '서울 서초구 강남대로 55', '7층', 0);
+
+-- 5. 권혁찬 (닉네임: 리바이병장)
+INSERT INTO MEMBER1 (MEMBERIDX, NICKNAME, USERID, USERPWD, USERLEVEL, ENABLED, MODIFY_DATE, BIRTH, GENDER)
+VALUES (member_seq.NEXTVAL, '리바이병장', 'kwon123', 'kwon123', 40, 1, SYSDATE, TO_DATE('1994-12-25', 'YYYY-MM-DD'), 0);
+
+INSERT INTO MEMBER2 (MEMBERIDX, USERNAME, EMAIL, TEL)
+VALUES (member_seq.CURRVAL, '권혁찬', 'kwon@maknaez.com', '010-5555-6666');
+
+INSERT INTO ADDRESS (ADDR_ID, MEMBERIDX, ADDR_NAME, RECEIVER_NAME, RECEIVER_TEL, ZIP_CODE, ADDR1, ADDR2, ISBASIC)
+VALUES (addr_seq.NEXTVAL, member_seq.CURRVAL, '기숙사', '권혁찬', '010-5555-6666', '54321', '부산 해운대구 해운대해변로 200', '기숙사 A동', 1);
+
+INSERT INTO ADDRESS (ADDR_ID, MEMBERIDX, ADDR_NAME, RECEIVER_NAME, RECEIVER_TEL, ZIP_CODE, ADDR1, ADDR2, ISBASIC)
+VALUES (addr_seq.NEXTVAL, member_seq.CURRVAL, '본가', '권혁찬', '010-5555-6666', '33221', '경남 창원시 성산구 중앙대로 50', '단독주택', 0);
+
+-- 6. 오연화 (닉네임: 피들스틱)
+INSERT INTO MEMBER1 (MEMBERIDX, NICKNAME, USERID, USERPWD, USERLEVEL, ENABLED, MODIFY_DATE, BIRTH, GENDER)
+VALUES (member_seq.NEXTVAL, '피들스틱', 'oh123', 'oh123', 40, 1, SYSDATE, TO_DATE('1998-02-14', 'YYYY-MM-DD'), 1);
+
+INSERT INTO MEMBER2 (MEMBERIDX, USERNAME, EMAIL, TEL)
+VALUES (member_seq.CURRVAL, '오연화', 'oh@maknaez.com', '010-7777-8888');
+
+INSERT INTO ADDRESS (ADDR_ID, MEMBERIDX, ADDR_NAME, RECEIVER_NAME, RECEIVER_TEL, ZIP_CODE, ADDR1, ADDR2, ISBASIC)
+VALUES (addr_seq.NEXTVAL, member_seq.CURRVAL, '자취방', '오연화', '010-7777-8888', '03030', '서울 종로구 대학로 10', '401호', 1);
+
+INSERT INTO ADDRESS (ADDR_ID, MEMBERIDX, ADDR_NAME, RECEIVER_NAME, RECEIVER_TEL, ZIP_CODE, ADDR1, ADDR2, ISBASIC)
+VALUES (addr_seq.NEXTVAL, member_seq.CURRVAL, '사무실', '오연화', '010-7777-8888', '04040', '서울 마포구 양화로 100', '3층 디자인팀', 0);
+
+
+-- ============================================================
+-- [2] 일반 회원 (연예인 데이터 - 약 94명)
+-- ============================================================
+
+-- (1) 유재석
+INSERT INTO MEMBER1 VALUES (member_seq.NEXTVAL, '메뚜기', 'yoo111', 'yoo111', 20, 1, SYSDATE, TO_DATE('1972-08-14','YYYY-MM-DD'), 0);
+INSERT INTO MEMBER2 VALUES (member_seq.CURRVAL, '유재석', 'yoo@running.com', '010-1234-0001');
+INSERT INTO ADDRESS VALUES (addr_seq.NEXTVAL, member_seq.CURRVAL, '집', '유재석', '010-1234-0001', '06001', '서울 강남구 압구정로', '현대아파트', 1);
+
+-- (2) 강호동
+INSERT INTO MEMBER1 VALUES (member_seq.NEXTVAL, '호동', 'kang111', 'kang111', 20, 1, SYSDATE, TO_DATE('1970-06-11','YYYY-MM-DD'), 0);
+INSERT INTO MEMBER2 VALUES (member_seq.CURRVAL, '강호동', 'kang@knowing.com', '010-1234-0002');
+INSERT INTO ADDRESS VALUES (addr_seq.NEXTVAL, member_seq.CURRVAL, '집', '강호동', '010-1234-0002', '06002', '서울 강남구', '아파트', 1);
+
+-- (3) 신동엽
+INSERT INTO MEMBER1 VALUES (member_seq.NEXTVAL, '동엽신', 'shin111', 'shin111', 20, 1, SYSDATE, TO_DATE('1971-02-17','YYYY-MM-DD'), 0);
+INSERT INTO MEMBER2 VALUES (member_seq.CURRVAL, '신동엽', 'shin@animal.com', '010-1234-0003');
+INSERT INTO ADDRESS VALUES (addr_seq.NEXTVAL, member_seq.CURRVAL, '집', '신동엽', '010-1234-0003', '04001', '서울 마포구', '주택', 1);
+
+-- (4) 김구라 (탈퇴 - ENABLED:0)
+INSERT INTO MEMBER1 VALUES (member_seq.NEXTVAL, '독설가', 'kim111', 'kim111', 10, 0, SYSDATE, TO_DATE('1970-10-03','YYYY-MM-DD'), 0);
+INSERT INTO MEMBER2 VALUES (member_seq.CURRVAL, '김구라', 'kim@radio.com', '010-1234-0004');
+INSERT INTO MEMBER3 VALUES (member_seq.CURRVAL, TO_DATE('2025-01-01','YYYY-MM-DD'), SYSDATE, '서비스 불만족');
+INSERT INTO ADDRESS VALUES (addr_seq.NEXTVAL, member_seq.CURRVAL, '집', '김구라', '010-1234-0004', '10001', '경기 김포시', '아파트', 1);
+
+-- (5) 박명수
+INSERT INTO MEMBER1 VALUES (member_seq.NEXTVAL, '거성', 'park111', 'park111', 20, 1, SYSDATE, TO_DATE('1970-08-27','YYYY-MM-DD'), 0);
+INSERT INTO MEMBER2 VALUES (member_seq.CURRVAL, '박명수', 'park@dj.com', '010-1234-0005');
+INSERT INTO ADDRESS VALUES (addr_seq.NEXTVAL, member_seq.CURRVAL, '집', '박명수', '010-1234-0005', '06003', '서울 서초구', '방배동', 1);
+
+-- (6) 정준하
+INSERT INTO MEMBER1 VALUES (member_seq.NEXTVAL, '식신', 'jung111', 'jung111', 20, 1, SYSDATE, TO_DATE('1971-03-18','YYYY-MM-DD'), 0);
+INSERT INTO MEMBER2 VALUES (member_seq.CURRVAL, '정준하', 'jung@food.com', '010-1234-0006');
+INSERT INTO ADDRESS VALUES (addr_seq.NEXTVAL, member_seq.CURRVAL, '가게', '정준하', '010-1234-0006', '06004', '서울 강남구', '횟집', 1);
+
+-- (7) 하하
+INSERT INTO MEMBER1 VALUES (member_seq.NEXTVAL, '하하', 'ha111', 'ha111', 20, 1, SYSDATE, TO_DATE('1979-08-20','YYYY-MM-DD'), 0);
+INSERT INTO MEMBER2 VALUES (member_seq.CURRVAL, '하동훈', 'haha@quan.com', '010-1234-0007');
+INSERT INTO ADDRESS VALUES (addr_seq.NEXTVAL, member_seq.CURRVAL, '집', '하동훈', '010-1234-0007', '04006', '서울 마포구', '아파트', 1);
+
+-- (8) 김종국
+INSERT INTO MEMBER1 VALUES (member_seq.NEXTVAL, '능력자', 'kim222', 'kim222', 20, 1, SYSDATE, TO_DATE('1976-04-25','YYYY-MM-DD'), 0);
+INSERT INTO MEMBER2 VALUES (member_seq.CURRVAL, '김종국', 'gym@jk.com', '010-1234-0008');
+INSERT INTO ADDRESS VALUES (addr_seq.NEXTVAL, member_seq.CURRVAL, '헬스장', '김종국', '010-1234-0008', '06011', '서울 강남구', '논현동', 1);
+
+-- (9) 송지효
+INSERT INTO MEMBER1 VALUES (member_seq.NEXTVAL, '멍지효', 'song111', 'song111', 20, 1, SYSDATE, TO_DATE('1981-08-15','YYYY-MM-DD'), 1);
+INSERT INTO MEMBER2 VALUES (member_seq.CURRVAL, '천수연', 'jihyo@my.com', '010-1234-0009');
+INSERT INTO ADDRESS VALUES (addr_seq.NEXTVAL, member_seq.CURRVAL, '집', '천수연', '010-1234-0009', '10002', '경기 고양시', '일산', 1);
+
+-- (10) 이광수 (탈퇴)
+INSERT INTO MEMBER1 VALUES (member_seq.NEXTVAL, '기린', 'lee222', 'lee222', 10, 0, SYSDATE, TO_DATE('1985-07-14','YYYY-MM-DD'), 0);
+INSERT INTO MEMBER2 VALUES (member_seq.CURRVAL, '이광수', 'ks@run.com', '010-1234-0010');
+INSERT INTO MEMBER3 VALUES (member_seq.CURRVAL, TO_DATE('2024-01-01','YYYY-MM-DD'), SYSDATE, '배신');
+INSERT INTO ADDRESS VALUES (addr_seq.NEXTVAL, member_seq.CURRVAL, '집', '이광수', '010-1234-0010', '06012', '서울 성동구', '옥수동', 1);
+
+-- (11) 지석진
+INSERT INTO MEMBER1 VALUES (member_seq.NEXTVAL, '왕코', 'ji111', 'ji111', 20, 1, SYSDATE, TO_DATE('1966-02-10','YYYY-MM-DD'), 0);
+INSERT INTO MEMBER2 VALUES (member_seq.CURRVAL, '지석진', 'sukjin@run.com', '010-1234-0011');
+INSERT INTO ADDRESS VALUES (addr_seq.NEXTVAL, member_seq.CURRVAL, '집', '지석진', '010-1234-0011', '06000', '서울 서초구', '잠원동', 1);
+
+-- (12) 양세찬
+INSERT INTO MEMBER1 VALUES (member_seq.NEXTVAL, '양세바리', 'yang111', 'yang111', 20, 1, SYSDATE, TO_DATE('1986-12-08','YYYY-MM-DD'), 0);
+INSERT INTO MEMBER2 VALUES (member_seq.CURRVAL, '양세찬', 'sechan@comedy.com', '010-1234-0012');
+INSERT INTO ADDRESS VALUES (addr_seq.NEXTVAL, member_seq.CURRVAL, '집', '양세찬', '010-1234-0012', '03000', '서울', '상암동', 1);
+
+-- (13) 전소민
+INSERT INTO MEMBER1 VALUES (member_seq.NEXTVAL, '돌소민', 'jeon111', 'jeon111', 20, 1, SYSDATE, TO_DATE('1986-04-07','YYYY-MM-DD'), 1);
+INSERT INTO MEMBER2 VALUES (member_seq.CURRVAL, '전소민', 'somin@run.com', '010-1234-0013');
+INSERT INTO ADDRESS VALUES (addr_seq.NEXTVAL, member_seq.CURRVAL, '집', '전소민', '010-1234-0013', '10000', '경기 고양시', '덕양구', 1);
+
+-- (14) 조세호
+INSERT INTO MEMBER1 VALUES (member_seq.NEXTVAL, '양배추', 'cho111', 'cho111', 20, 1, SYSDATE, TO_DATE('1982-08-09','YYYY-MM-DD'), 0);
+INSERT INTO MEMBER2 VALUES (member_seq.CURRVAL, '조세호', 'seho@bot.com', '010-1234-0014');
+INSERT INTO ADDRESS VALUES (addr_seq.NEXTVAL, member_seq.CURRVAL, '집', '조세호', '010-1234-0014', '04000', '서울 마포구', '용강동', 1);
+
+-- (15) 남창희
+INSERT INTO MEMBER1 VALUES (member_seq.NEXTVAL, '남창', 'nam111', 'nam111', 20, 1, SYSDATE, TO_DATE('1982-07-27','YYYY-MM-DD'), 0);
+INSERT INTO MEMBER2 VALUES (member_seq.CURRVAL, '남창희', 'changhee@bot.com', '010-1234-0015');
+INSERT INTO ADDRESS VALUES (addr_seq.NEXTVAL, member_seq.CURRVAL, '집', '남창희', '010-1234-0015', '04000', '서울 마포구', '상암동', 1);
+
+-- (16) 아이유 (이지은)
+INSERT INTO MEMBER1 VALUES (member_seq.NEXTVAL, '아이유', 'lee333', 'lee333', 40, 1, SYSDATE, TO_DATE('1993-05-16','YYYY-MM-DD'), 1);
+INSERT INTO MEMBER2 VALUES (member_seq.CURRVAL, '이지은', 'iu@edam.com', '010-1234-0016');
+INSERT INTO ADDRESS VALUES (addr_seq.NEXTVAL, member_seq.CURRVAL, '집', '이지은', '010-1234-0016', '04002', '서울 용산구', '이촌동', 1);
+
+-- (17) 수지 (배수지)
+INSERT INTO MEMBER1 VALUES (member_seq.NEXTVAL, '국민첫사랑', 'bae111', 'bae111', 30, 1, SYSDATE, TO_DATE('1994-10-10','YYYY-MM-DD'), 1);
+INSERT INTO MEMBER2 VALUES (member_seq.CURRVAL, '배수지', 'suzy@soop.com', '010-1234-0017');
+INSERT INTO ADDRESS VALUES (addr_seq.NEXTVAL, member_seq.CURRVAL, '집', '배수지', '010-1234-0017', '06000', '서울 강남구', '삼성동', 1);
+
+-- (18) 제니
+INSERT INTO MEMBER1 VALUES (member_seq.NEXTVAL, '젠득이', 'kim333', 'kim333', 30, 1, SYSDATE, TO_DATE('1996-01-16','YYYY-MM-DD'), 1);
+INSERT INTO MEMBER2 VALUES (member_seq.CURRVAL, '김제니', 'jennie@oa.com', '010-1234-0018');
+INSERT INTO ADDRESS VALUES (addr_seq.NEXTVAL, member_seq.CURRVAL, '집', '김제니', '010-1234-0018', '04000', '서울 용산구', '한남동', 1);
+
+-- (19) 지수
+INSERT INTO MEMBER1 VALUES (member_seq.NEXTVAL, '지슈', 'kim444', 'kim444', 30, 1, SYSDATE, TO_DATE('1995-01-03','YYYY-MM-DD'), 1);
+INSERT INTO MEMBER2 VALUES (member_seq.CURRVAL, '김지수', 'jisoo@blissoo.com', '010-1234-0019');
+INSERT INTO ADDRESS VALUES (addr_seq.NEXTVAL, member_seq.CURRVAL, '집', '김지수', '010-1234-0019', '04000', '서울 용산구', '한남동', 1);
+
+-- (20) 로제
+INSERT INTO MEMBER1 VALUES (member_seq.NEXTVAL, '로지', 'park222', 'park222', 30, 1, SYSDATE, TO_DATE('1997-02-11','YYYY-MM-DD'), 1);
+INSERT INTO MEMBER2 VALUES (member_seq.CURRVAL, '박채영', 'rose@theblack.com', '010-1234-0020');
+INSERT INTO ADDRESS VALUES (addr_seq.NEXTVAL, member_seq.CURRVAL, '집', '박채영', '010-1234-0020', '04000', '서울 용산구', '한남동', 1);
+
+-- (21) 리사
+INSERT INTO MEMBER1 VALUES (member_seq.NEXTVAL, '라리사', 'manoban111', 'manoban111', 30, 1, SYSDATE, TO_DATE('1997-03-27','YYYY-MM-DD'), 1);
+INSERT INTO MEMBER2 VALUES (member_seq.CURRVAL, '리사', 'lisa@lloud.com', '010-1234-0021');
+INSERT INTO ADDRESS VALUES (addr_seq.NEXTVAL, member_seq.CURRVAL, '집', '리사', '010-1234-0021', '06000', '서울 강남구', '성북동', 1);
+
+-- (22) 카리나
+INSERT INTO MEMBER1 VALUES (member_seq.NEXTVAL, '리나', 'yoo222', 'yoo222', 30, 1, SYSDATE, TO_DATE('2000-04-11','YYYY-MM-DD'), 1);
+INSERT INTO MEMBER2 VALUES (member_seq.CURRVAL, '유지민', 'karina@sm.com', '010-1234-0022');
+INSERT INTO ADDRESS VALUES (addr_seq.NEXTVAL, member_seq.CURRVAL, '숙소', '유지민', '010-1234-0022', '04000', '서울 성동구', '성수동', 1);
+
+-- (23) 윈터
+INSERT INTO MEMBER1 VALUES (member_seq.NEXTVAL, '민둥이', 'kim555', 'kim555', 30, 1, SYSDATE, TO_DATE('2001-01-01','YYYY-MM-DD'), 1);
+INSERT INTO MEMBER2 VALUES (member_seq.CURRVAL, '김민정', 'winter@sm.com', '010-1234-0023');
+INSERT INTO ADDRESS VALUES (addr_seq.NEXTVAL, member_seq.CURRVAL, '숙소', '김민정', '010-1234-0023', '04000', '서울 성동구', '성수동', 1);
+
+-- (24) 장원영
+INSERT INTO MEMBER1 VALUES (member_seq.NEXTVAL, '워녕', 'jang111', 'jang111', 30, 1, SYSDATE, TO_DATE('2004-08-31','YYYY-MM-DD'), 1);
+INSERT INTO MEMBER2 VALUES (member_seq.CURRVAL, '장원영', 'wonyoung@starship.com', '010-1234-0024');
+INSERT INTO ADDRESS VALUES (addr_seq.NEXTVAL, member_seq.CURRVAL, '집', '장원영', '010-1234-0024', '06000', '서울 서초구', '반포동', 1);
+
+-- (25) 안유진
+INSERT INTO MEMBER1 VALUES (member_seq.NEXTVAL, '안댕댕', 'ahn111', 'ahn111', 30, 1, SYSDATE, TO_DATE('2003-09-01','YYYY-MM-DD'), 1);
+INSERT INTO MEMBER2 VALUES (member_seq.CURRVAL, '안유진', 'yujin@starship.com', '010-1234-0025');
+INSERT INTO ADDRESS VALUES (addr_seq.NEXTVAL, member_seq.CURRVAL, '집', '안유진', '010-1234-0025', '06000', '서울 서초구', '반포동', 1);
+
+-- (26) 손흥민
+INSERT INTO MEMBER1 VALUES (member_seq.NEXTVAL, '쏘니', 'son111', 'son111', 50, 1, SYSDATE, TO_DATE('1992-07-08','YYYY-MM-DD'), 0);
+INSERT INTO MEMBER2 VALUES (member_seq.CURRVAL, '손흥민', 'son@spurs.com', '010-1234-0026');
+INSERT INTO ADDRESS VALUES (addr_seq.NEXTVAL, member_seq.CURRVAL, '집', '손흥민', '010-1234-0026', '99999', '영국', '런던', 1);
+
+-- (27) 김민재
+INSERT INTO MEMBER1 VALUES (member_seq.NEXTVAL, '벽', 'kim666', 'kim666', 30, 1, SYSDATE, TO_DATE('1996-11-15','YYYY-MM-DD'), 0);
+INSERT INTO MEMBER2 VALUES (member_seq.CURRVAL, '김민재', 'minjae@bayern.com', '010-1234-0027');
+INSERT INTO ADDRESS VALUES (addr_seq.NEXTVAL, member_seq.CURRVAL, '집', '김민재', '010-1234-0027', '99998', '독일', '뮌헨', 1);
+
+-- (28) 이강인
+INSERT INTO MEMBER1 VALUES (member_seq.NEXTVAL, '슛돌이', 'lee444', 'lee444', 30, 1, SYSDATE, TO_DATE('2001-02-19','YYYY-MM-DD'), 0);
+INSERT INTO MEMBER2 VALUES (member_seq.CURRVAL, '이강인', 'kangin@psg.com', '010-1234-0028');
+INSERT INTO ADDRESS VALUES (addr_seq.NEXTVAL, member_seq.CURRVAL, '집', '이강인', '010-1234-0028', '99997', '프랑스', '파리', 1);
+
+-- (29) 페이커 (이상혁)
+INSERT INTO MEMBER1 VALUES (member_seq.NEXTVAL, '대상혁', 'lee555', 'lee555', 50, 1, SYSDATE, TO_DATE('1996-05-07','YYYY-MM-DD'), 0);
+INSERT INTO MEMBER2 VALUES (member_seq.CURRVAL, '이상혁', 'faker@t1.com', '010-1234-0029');
+INSERT INTO ADDRESS VALUES (addr_seq.NEXTVAL, member_seq.CURRVAL, '숙소', '이상혁', '010-1234-0029', '06000', '서울 강남구', 'T1사옥', 1);
+
+-- (30) 김연아
+INSERT INTO MEMBER1 VALUES (member_seq.NEXTVAL, '퀸연아', 'kim777', 'kim777', 50, 1, SYSDATE, TO_DATE('1990-09-05','YYYY-MM-DD'), 1);
+INSERT INTO MEMBER2 VALUES (member_seq.CURRVAL, '김연아', 'yuna@queen.com', '010-1234-0030');
+INSERT INTO ADDRESS VALUES (addr_seq.NEXTVAL, member_seq.CURRVAL, '집', '김연아', '010-1234-0030', '06000', '서울 동작구', '흑석동', 1);
+
+-- (31) 류현진
+INSERT INTO MEMBER1 VALUES (member_seq.NEXTVAL, '괴물', 'ryu111', 'ryu111', 30, 1, SYSDATE, TO_DATE('1987-03-25','YYYY-MM-DD'), 0);
+INSERT INTO MEMBER2 VALUES (member_seq.CURRVAL, '류현진', 'ryu@hanwha.com', '010-1234-0031');
+INSERT INTO ADDRESS VALUES (addr_seq.NEXTVAL, member_seq.CURRVAL, '집', '류현진', '010-1234-0031', '35000', '대전 중구', '부사동', 1);
+
+-- (32) 박찬호 (탈퇴)
+INSERT INTO MEMBER1 VALUES (member_seq.NEXTVAL, '투머치토커', 'park333', 'park333', 10, 0, SYSDATE, TO_DATE('1973-07-28','YYYY-MM-DD'), 0);
+INSERT INTO MEMBER2 VALUES (member_seq.CURRVAL, '박찬호', 'chanho@la.com', '010-1234-0032');
+INSERT INTO MEMBER3 VALUES (member_seq.CURRVAL, TO_DATE('2023-05-05','YYYY-MM-DD'), SYSDATE, '말이 너무 많아서 탈퇴');
+INSERT INTO ADDRESS VALUES (addr_seq.NEXTVAL, member_seq.CURRVAL, '집', '박찬호', '010-1234-0032', '06000', '서울 강남구', '신사동', 1);
+
+-- (33) 이정후
+INSERT INTO MEMBER1 VALUES (member_seq.NEXTVAL, '바람의손자', 'lee666', 'lee666', 30, 1, SYSDATE, TO_DATE('1998-08-20','YYYY-MM-DD'), 0);
+INSERT INTO MEMBER2 VALUES (member_seq.CURRVAL, '이정후', 'hoo@giants.com', '010-1234-0033');
+INSERT INTO ADDRESS VALUES (addr_seq.NEXTVAL, member_seq.CURRVAL, '집', '이정후', '010-1234-0033', '99996', '미국', '샌프란시스코', 1);
+
+-- (34) 오타니
+INSERT INTO MEMBER1 VALUES (member_seq.NEXTVAL, '쇼헤이', 'otani111', 'otani111', 50, 1, SYSDATE, TO_DATE('1994-07-05','YYYY-MM-DD'), 0);
+INSERT INTO MEMBER2 VALUES (member_seq.CURRVAL, '오타니 쇼헤이', 'shohei@dodgers.com', '010-1234-0034');
+INSERT INTO ADDRESS VALUES (addr_seq.NEXTVAL, member_seq.CURRVAL, '집', '오타니', '010-1234-0034', '99995', '미국', 'LA', 1);
+
+-- (35) 박지성
+INSERT INTO MEMBER1 VALUES (member_seq.NEXTVAL, '해버지', 'park444', 'park444', 50, 1, SYSDATE, TO_DATE('1981-02-25','YYYY-MM-DD'), 0);
+INSERT INTO MEMBER2 VALUES (member_seq.CURRVAL, '박지성', 'js@jisung.com', '010-1234-0035');
+INSERT INTO ADDRESS VALUES (addr_seq.NEXTVAL, member_seq.CURRVAL, '집', '박지성', '010-1234-0035', '06000', '서울', '평창동', 1);
+
+-- (36) 안정환
+INSERT INTO MEMBER1 VALUES (member_seq.NEXTVAL, '반지의제왕', 'ahn222', 'ahn222', 30, 1, SYSDATE, TO_DATE('1976-01-27','YYYY-MM-DD'), 0);
+INSERT INTO MEMBER2 VALUES (member_seq.CURRVAL, '안정환', 'ahn@soccer.com', '010-1234-0036');
+INSERT INTO ADDRESS VALUES (addr_seq.NEXTVAL, member_seq.CURRVAL, '집', '안정환', '010-1234-0036', '06000', '서울 강남구', '청담동', 1);
+
+-- (37) 이영표
+INSERT INTO MEMBER1 VALUES (member_seq.NEXTVAL, '초롱이', 'lee777', 'lee777', 30, 1, SYSDATE, TO_DATE('1977-04-23','YYYY-MM-DD'), 0);
+INSERT INTO MEMBER2 VALUES (member_seq.CURRVAL, '이영표', 'yp@soccer.com', '010-1234-0037');
+INSERT INTO ADDRESS VALUES (addr_seq.NEXTVAL, member_seq.CURRVAL, '집', '이영표', '010-1234-0037', '06000', '서울 서초구', '반포동', 1);
+
+-- (38) 이동국
+INSERT INTO MEMBER1 VALUES (member_seq.NEXTVAL, '라이언킹', 'lee888', 'lee888', 30, 1, SYSDATE, TO_DATE('1979-04-29','YYYY-MM-DD'), 0);
+INSERT INTO MEMBER2 VALUES (member_seq.CURRVAL, '이동국', 'dg@soccer.com', '010-1234-0038');
+INSERT INTO ADDRESS VALUES (addr_seq.NEXTVAL, member_seq.CURRVAL, '집', '이동국', '010-1234-0038', '22000', '인천 연수구', '송도', 1);
+
+-- (39) 추성훈
+INSERT INTO MEMBER1 VALUES (member_seq.NEXTVAL, '섹시야마', 'choo111', 'choo111', 30, 1, SYSDATE, TO_DATE('1975-07-29','YYYY-MM-DD'), 0);
+INSERT INTO MEMBER2 VALUES (member_seq.CURRVAL, '추성훈', 'choo@fight.com', '010-1234-0039');
+INSERT INTO ADDRESS VALUES (addr_seq.NEXTVAL, member_seq.CURRVAL, '집', '추성훈', '010-1234-0039', '99994', '일본', '도쿄', 1);
+
+-- (40) 김동현
+INSERT INTO MEMBER1 VALUES (member_seq.NEXTVAL, '매미', 'kim888', 'kim888', 30, 1, SYSDATE, TO_DATE('1981-11-17','YYYY-MM-DD'), 0);
+INSERT INTO MEMBER2 VALUES (member_seq.CURRVAL, '김동현', 'stun@gun.com', '010-1234-0040');
+INSERT INTO ADDRESS VALUES (addr_seq.NEXTVAL, member_seq.CURRVAL, '체육관', '김동현', '010-1234-0040', '06000', '서울 강남구', '압구정동', 1);
+
+-- (41) 강동원
+INSERT INTO MEMBER1 VALUES (member_seq.NEXTVAL, '참치', 'kang222', 'kang222', 30, 1, SYSDATE, TO_DATE('1981-01-18','YYYY-MM-DD'), 0);
+INSERT INTO MEMBER2 VALUES (member_seq.CURRVAL, '강동원', 'tuna@actor.com', '010-1234-0041');
+INSERT INTO ADDRESS VALUES (addr_seq.NEXTVAL, member_seq.CURRVAL, '집', '강동원', '010-1234-0041', '04000', '서울 용산구', '한남동', 1);
+
+-- (42) 원빈 (탈퇴)
+INSERT INTO MEMBER1 VALUES (member_seq.NEXTVAL, '아저씨', 'won111', 'won111', 10, 0, SYSDATE, TO_DATE('1977-11-10','YYYY-MM-DD'), 0);
+INSERT INTO MEMBER2 VALUES (member_seq.CURRVAL, '김도진', 'wonbin@actor.com', '010-1234-0042');
+INSERT INTO MEMBER3 VALUES (member_seq.CURRVAL, TO_DATE('2020-01-01','YYYY-MM-DD'), SYSDATE, '은둔 생활');
+INSERT INTO ADDRESS VALUES (addr_seq.NEXTVAL, member_seq.CURRVAL, '집', '김도진', '010-1234-0042', '06000', '서울 강남구', '삼성동', 1);
+
+-- (43) 현빈
+INSERT INTO MEMBER1 VALUES (member_seq.NEXTVAL, '김태평', 'hyun111', 'hyun111', 30, 1, SYSDATE, TO_DATE('1982-09-25','YYYY-MM-DD'), 0);
+INSERT INTO MEMBER2 VALUES (member_seq.CURRVAL, '현빈', 'bin@vast.com', '010-1234-0043');
+INSERT INTO ADDRESS VALUES (addr_seq.NEXTVAL, member_seq.CURRVAL, '집', '현빈', '010-1234-0043', '11000', '경기 구리시', '아치울마을', 1);
+
+-- (44) 손예진
+INSERT INTO MEMBER1 VALUES (member_seq.NEXTVAL, '예진핸드', 'son222', 'son222', 30, 1, SYSDATE, TO_DATE('1982-01-11','YYYY-MM-DD'), 1);
+INSERT INTO MEMBER2 VALUES (member_seq.CURRVAL, '손예진', 'yejin@msteam.com', '010-1234-0044');
+INSERT INTO ADDRESS VALUES (addr_seq.NEXTVAL, member_seq.CURRVAL, '집', '손예진', '010-1234-0044', '11000', '경기 구리시', '아치울마을', 1);
+
+-- (45) 공유
+INSERT INTO MEMBER1 VALUES (member_seq.NEXTVAL, '도깨비', 'gong111', 'gong111', 30, 1, SYSDATE, TO_DATE('1979-07-10','YYYY-MM-DD'), 0);
+INSERT INTO MEMBER2 VALUES (member_seq.CURRVAL, '공지철', 'gong@soop.com', '010-1234-0045');
+INSERT INTO ADDRESS VALUES (addr_seq.NEXTVAL, member_seq.CURRVAL, '집', '공지철', '010-1234-0045', '04000', '서울 용산구', '이태원동', 1);
+
+-- (46) 이동욱
+INSERT INTO MEMBER1 VALUES (member_seq.NEXTVAL, '저승이', 'lee999', 'lee999', 30, 1, SYSDATE, TO_DATE('1981-11-06','YYYY-MM-DD'), 0);
+INSERT INTO MEMBER2 VALUES (member_seq.CURRVAL, '이동욱', 'wook@kingkong.com', '010-1234-0046');
+INSERT INTO ADDRESS VALUES (addr_seq.NEXTVAL, member_seq.CURRVAL, '집', '이동욱', '010-1234-0046', '06000', '서울 서초구', '방배동', 1);
+
+-- (47) 김고은
+INSERT INTO MEMBER1 VALUES (member_seq.NEXTVAL, '은탁', 'kim999', 'kim999', 30, 1, SYSDATE, TO_DATE('1991-07-02','YYYY-MM-DD'), 1);
+INSERT INTO MEMBER2 VALUES (member_seq.CURRVAL, '김고은', 'goeun@bh.com', '010-1234-0047');
+INSERT INTO ADDRESS VALUES (addr_seq.NEXTVAL, member_seq.CURRVAL, '집', '김고은', '010-1234-0047', '06000', '서울 강남구', '청담동', 1);
+
+-- (48) 김태리
+INSERT INTO MEMBER1 VALUES (member_seq.NEXTVAL, '애기씨', 'kim000', 'kim000', 30, 1, SYSDATE, TO_DATE('1990-04-24','YYYY-MM-DD'), 1);
+INSERT INTO MEMBER2 VALUES (member_seq.CURRVAL, '김태리', 'taeri@mmm.com', '010-1234-0048');
+INSERT INTO ADDRESS VALUES (addr_seq.NEXTVAL, member_seq.CURRVAL, '집', '김태리', '010-1234-0048', '06000', '서울 강남구', '삼성동', 1);
+
+-- (49) 송혜교 (탈퇴)
+INSERT INTO MEMBER1 VALUES (member_seq.NEXTVAL, '동은', 'song222', 'song222', 10, 0, SYSDATE, TO_DATE('1981-11-22','YYYY-MM-DD'), 1);
+INSERT INTO MEMBER2 VALUES (member_seq.CURRVAL, '송혜교', 'kyo@uua.com', '010-1234-0049');
+INSERT INTO MEMBER3 VALUES (member_seq.CURRVAL, TO_DATE('2024-12-01','YYYY-MM-DD'), SYSDATE, '개인사정');
+INSERT INTO ADDRESS VALUES (addr_seq.NEXTVAL, member_seq.CURRVAL, '집', '송혜교', '010-1234-0049', '04000', '서울 용산구', '이태원동', 1);
+
+-- (50) 전지현
+INSERT INTO MEMBER1 VALUES (member_seq.NEXTVAL, '천송이', 'jeon222', 'jeon222', 30, 1, SYSDATE, TO_DATE('1981-10-30','YYYY-MM-DD'), 1);
+INSERT INTO MEMBER2 VALUES (member_seq.CURRVAL, '전지현', 'gianna@ieum.com', '010-1234-0050');
+INSERT INTO ADDRESS VALUES (addr_seq.NEXTVAL, member_seq.CURRVAL, '집', '전지현', '010-1234-0050', '06000', '서울 강남구', '삼성동', 1);
+
+-- (51~60) 아이돌 (뉴진스, 르세라핌 등)
+INSERT INTO MEMBER1 VALUES (member_seq.NEXTVAL, '민지', 'kim_minji', 'kim_minji', 20, 1, SYSDATE, TO_DATE('2004-05-07','YYYY-MM-DD'), 1);
+INSERT INTO MEMBER2 VALUES (member_seq.CURRVAL, '김민지', 'minji@newjeans.com', '010-1234-0051');
+INSERT INTO ADDRESS VALUES (addr_seq.NEXTVAL, member_seq.CURRVAL, '숙소', '김민지', '010-1234-0051', '04000', '서울 용산구', '하이브', 1);
+
+INSERT INTO MEMBER1 VALUES (member_seq.NEXTVAL, '하니', 'hanni', 'hanni', 20, 1, SYSDATE, TO_DATE('2004-10-06','YYYY-MM-DD'), 1);
+INSERT INTO MEMBER2 VALUES (member_seq.CURRVAL, '팜하니', 'hanni@newjeans.com', '010-1234-0052');
+INSERT INTO ADDRESS VALUES (addr_seq.NEXTVAL, member_seq.CURRVAL, '숙소', '팜하니', '010-1234-0052', '04000', '서울 용산구', '하이브', 1);
+
+INSERT INTO MEMBER1 VALUES (member_seq.NEXTVAL, '다니엘', 'dani', 'dani', 20, 1, SYSDATE, TO_DATE('2005-04-11','YYYY-MM-DD'), 1);
+INSERT INTO MEMBER2 VALUES (member_seq.CURRVAL, '다니엘', 'dani@newjeans.com', '010-1234-0053');
+INSERT INTO ADDRESS VALUES (addr_seq.NEXTVAL, member_seq.CURRVAL, '숙소', '다니엘', '010-1234-0053', '04000', '서울 용산구', '하이브', 1);
+
+INSERT INTO MEMBER1 VALUES (member_seq.NEXTVAL, '해린', 'haerin', 'haerin', 20, 1, SYSDATE, TO_DATE('2006-05-15','YYYY-MM-DD'), 1);
+INSERT INTO MEMBER2 VALUES (member_seq.CURRVAL, '강해린', 'haerin@newjeans.com', '010-1234-0054');
+INSERT INTO ADDRESS VALUES (addr_seq.NEXTVAL, member_seq.CURRVAL, '숙소', '강해린', '010-1234-0054', '04000', '서울 용산구', '하이브', 1);
+
+INSERT INTO MEMBER1 VALUES (member_seq.NEXTVAL, '혜인', 'hyein', 'hyein', 20, 1, SYSDATE, TO_DATE('2008-04-21','YYYY-MM-DD'), 1);
+INSERT INTO MEMBER2 VALUES (member_seq.CURRVAL, '이혜인', 'hyein@newjeans.com', '010-1234-0055');
+INSERT INTO ADDRESS VALUES (addr_seq.NEXTVAL, member_seq.CURRVAL, '숙소', '이혜인', '010-1234-0055', '04000', '서울 용산구', '하이브', 1);
+
+INSERT INTO MEMBER1 VALUES (member_seq.NEXTVAL, '사쿠라', 'sakura', 'sakura', 20, 1, SYSDATE, TO_DATE('1998-03-19','YYYY-MM-DD'), 1);
+INSERT INTO MEMBER2 VALUES (member_seq.CURRVAL, '미야와키 사쿠라', 'sakura@source.com', '010-1234-0056');
+INSERT INTO ADDRESS VALUES (addr_seq.NEXTVAL, member_seq.CURRVAL, '숙소', '사쿠라', '010-1234-0056', '04000', '서울 용산구', '하이브', 1);
+
+INSERT INTO MEMBER1 VALUES (member_seq.NEXTVAL, '채원', 'chaewon', 'chaewon', 20, 1, SYSDATE, TO_DATE('2000-08-01','YYYY-MM-DD'), 1);
+INSERT INTO MEMBER2 VALUES (member_seq.CURRVAL, '김채원', 'chaewon@source.com', '010-1234-0057');
+INSERT INTO ADDRESS VALUES (addr_seq.NEXTVAL, member_seq.CURRVAL, '숙소', '김채원', '010-1234-0057', '04000', '서울 용산구', '하이브', 1);
+
+INSERT INTO MEMBER1 VALUES (member_seq.NEXTVAL, '윤진', 'yunjin', 'yunjin', 20, 1, SYSDATE, TO_DATE('2001-10-08','YYYY-MM-DD'), 1);
+INSERT INTO MEMBER2 VALUES (member_seq.CURRVAL, '허윤진', 'yunjin@source.com', '010-1234-0058');
+INSERT INTO ADDRESS VALUES (addr_seq.NEXTVAL, member_seq.CURRVAL, '숙소', '허윤진', '010-1234-0058', '04000', '서울 용산구', '하이브', 1);
+
+INSERT INTO MEMBER1 VALUES (member_seq.NEXTVAL, '카즈하', 'kazuha', 'kazuha', 20, 1, SYSDATE, TO_DATE('2003-08-09','YYYY-MM-DD'), 1);
+INSERT INTO MEMBER2 VALUES (member_seq.CURRVAL, '나카무라 카즈하', 'kazuha@source.com', '010-1234-0059');
+INSERT INTO ADDRESS VALUES (addr_seq.NEXTVAL, member_seq.CURRVAL, '숙소', '카즈하', '010-1234-0059', '04000', '서울 용산구', '하이브', 1);
+
+INSERT INTO MEMBER1 VALUES (member_seq.NEXTVAL, '은채', 'eunchae', 'eunchae', 20, 1, SYSDATE, TO_DATE('2006-11-10','YYYY-MM-DD'), 1);
+INSERT INTO MEMBER2 VALUES (member_seq.CURRVAL, '홍은채', 'eunchae@source.com', '010-1234-0060');
+INSERT INTO ADDRESS VALUES (addr_seq.NEXTVAL, member_seq.CURRVAL, '숙소', '홍은채', '010-1234-0060', '04000', '서울 용산구', '하이브', 1);
+
+-- (61~70) 배우들
+INSERT INTO MEMBER1 VALUES (member_seq.NEXTVAL, '박서준', 'park_sj', 'park_sj', 30, 1, SYSDATE, TO_DATE('1988-12-16','YYYY-MM-DD'), 0);
+INSERT INTO MEMBER2 VALUES (member_seq.CURRVAL, '박서준', 'sj@awesome.com', '010-1234-0061');
+INSERT INTO ADDRESS VALUES (addr_seq.NEXTVAL, member_seq.CURRVAL, '집', '박서준', '010-1234-0061', '06000', '서울 강남구', '청담동', 1);
+
+INSERT INTO MEMBER1 VALUES (member_seq.NEXTVAL, '최우식', 'choi_ws', 'choi_ws', 30, 1, SYSDATE, TO_DATE('1990-03-26','YYYY-MM-DD'), 0);
+INSERT INTO MEMBER2 VALUES (member_seq.CURRVAL, '최우식', 'ws@fable.com', '010-1234-0062');
+INSERT INTO ADDRESS VALUES (addr_seq.NEXTVAL, member_seq.CURRVAL, '집', '최우식', '010-1234-0062', '06000', '서울 서초구', '방배동', 1);
+
+INSERT INTO MEMBER1 VALUES (member_seq.NEXTVAL, '뷔', 'v123', 'v123', 30, 1, SYSDATE, TO_DATE('1995-12-30','YYYY-MM-DD'), 0);
+INSERT INTO MEMBER2 VALUES (member_seq.CURRVAL, '김태형', 'v@bts.com', '010-1234-0063');
+INSERT INTO ADDRESS VALUES (addr_seq.NEXTVAL, member_seq.CURRVAL, '집', '김태형', '010-1234-0063', '06000', '서울 강남구', '삼성동', 1);
+
+INSERT INTO MEMBER1 VALUES (member_seq.NEXTVAL, '정국', 'jk123', 'jk123', 30, 1, SYSDATE, TO_DATE('1997-09-01','YYYY-MM-DD'), 0);
+INSERT INTO MEMBER2 VALUES (member_seq.CURRVAL, '전정국', 'jk@bts.com', '010-1234-0064');
+INSERT INTO ADDRESS VALUES (addr_seq.NEXTVAL, member_seq.CURRVAL, '집', '전정국', '010-1234-0064', '04000', '서울 용산구', '이태원동', 1);
+
+INSERT INTO MEMBER1 VALUES (member_seq.NEXTVAL, '지민', 'jm123', 'jm123', 30, 1, SYSDATE, TO_DATE('1995-10-13','YYYY-MM-DD'), 0);
+INSERT INTO MEMBER2 VALUES (member_seq.CURRVAL, '박지민', 'jm@bts.com', '010-1234-0065');
+INSERT INTO ADDRESS VALUES (addr_seq.NEXTVAL, member_seq.CURRVAL, '집', '박지민', '010-1234-0065', '06000', '서울 강남구', '반포동', 1);
+
+INSERT INTO MEMBER1 VALUES (member_seq.NEXTVAL, 'RM', 'rm123', 'rm123', 30, 1, SYSDATE, TO_DATE('1994-09-12','YYYY-MM-DD'), 0);
+INSERT INTO MEMBER2 VALUES (member_seq.CURRVAL, '김남준', 'rm@bts.com', '010-1234-0066');
+INSERT INTO ADDRESS VALUES (addr_seq.NEXTVAL, member_seq.CURRVAL, '집', '김남준', '010-1234-0066', '04000', '서울 용산구', '한남동', 1);
+
+INSERT INTO MEMBER1 VALUES (member_seq.NEXTVAL, '제이홉', 'jh123', 'jh123', 30, 1, SYSDATE, TO_DATE('1994-02-18','YYYY-MM-DD'), 0);
+INSERT INTO MEMBER2 VALUES (member_seq.CURRVAL, '정호석', 'jh@bts.com', '010-1234-0067');
+INSERT INTO ADDRESS VALUES (addr_seq.NEXTVAL, member_seq.CURRVAL, '집', '정호석', '010-1234-0067', '04000', '서울 성동구', '성수동', 1);
+
+INSERT INTO MEMBER1 VALUES (member_seq.NEXTVAL, '슈가', 'suga123', 'suga123', 30, 1, SYSDATE, TO_DATE('1993-03-09','YYYY-MM-DD'), 0);
+INSERT INTO MEMBER2 VALUES (member_seq.CURRVAL, '민윤기', 'suga@bts.com', '010-1234-0068');
+INSERT INTO ADDRESS VALUES (addr_seq.NEXTVAL, member_seq.CURRVAL, '집', '민윤기', '010-1234-0068', '04000', '서울 용산구', '한남동', 1);
+
+INSERT INTO MEMBER1 VALUES (member_seq.NEXTVAL, '진', 'jin123', 'jin123', 30, 1, SYSDATE, TO_DATE('1992-12-04','YYYY-MM-DD'), 0);
+INSERT INTO MEMBER2 VALUES (member_seq.CURRVAL, '김석진', 'jin@bts.com', '010-1234-0069');
+INSERT INTO ADDRESS VALUES (addr_seq.NEXTVAL, member_seq.CURRVAL, '집', '김석진', '010-1234-0069', '04000', '서울 용산구', '한남동', 1);
+
+INSERT INTO MEMBER1 VALUES (member_seq.NEXTVAL, '싸이', 'psy123', 'psy123', 40, 1, SYSDATE, TO_DATE('1977-12-31','YYYY-MM-DD'), 0);
+INSERT INTO MEMBER2 VALUES (member_seq.CURRVAL, '박재상', 'psy@pnation.com', '010-1234-0070');
+INSERT INTO ADDRESS VALUES (addr_seq.NEXTVAL, member_seq.CURRVAL, '회사', '박재상', '010-1234-0070', '06000', '서울 강남구', '논현동', 1);
+
+-- (71~80) 기타 연예인
+INSERT INTO MEMBER1 VALUES (member_seq.NEXTVAL, '성시경', 'sung123', 'sung123', 30, 1, SYSDATE, TO_DATE('1979-04-17','YYYY-MM-DD'), 0);
+INSERT INTO MEMBER2 VALUES (member_seq.CURRVAL, '성시경', 'sung@ballad.com', '010-1234-0071');
+INSERT INTO ADDRESS VALUES (addr_seq.NEXTVAL, member_seq.CURRVAL, '집', '성시경', '010-1234-0071', '06000', '서울 서초구', '반포동', 1);
+
+INSERT INTO MEMBER1 VALUES (member_seq.NEXTVAL, '박효신', 'park_hs', 'park_hs', 30, 1, SYSDATE, TO_DATE('1981-12-01','YYYY-MM-DD'), 0);
+INSERT INTO MEMBER2 VALUES (member_seq.CURRVAL, '박효신', 'hs@glove.com', '010-1234-0072');
+INSERT INTO ADDRESS VALUES (addr_seq.NEXTVAL, member_seq.CURRVAL, '집', '박효신', '010-1234-0072', '04000', '서울 용산구', '한남동', 1);
+
+INSERT INTO MEMBER1 VALUES (member_seq.NEXTVAL, '나얼', 'naul123', 'naul123', 30, 1, SYSDATE, TO_DATE('1978-09-23','YYYY-MM-DD'), 0);
+INSERT INTO MEMBER2 VALUES (member_seq.CURRVAL, '유나얼', 'naul@brown.com', '010-1234-0073');
+INSERT INTO ADDRESS VALUES (addr_seq.NEXTVAL, member_seq.CURRVAL, '작업실', '유나얼', '010-1234-0073', '06000', '서울 강남구', '신사동', 1);
+
+INSERT INTO MEMBER1 VALUES (member_seq.NEXTVAL, '이수', 'isu123', 'isu123', 30, 1, SYSDATE, TO_DATE('1981-04-22','YYYY-MM-DD'), 0);
+INSERT INTO MEMBER2 VALUES (member_seq.CURRVAL, '전광철', 'isu@mcthemax.com', '010-1234-0074');
+INSERT INTO ADDRESS VALUES (addr_seq.NEXTVAL, member_seq.CURRVAL, '집', '전광철', '010-1234-0074', '06000', '서울 마포구', '서교동', 1);
+
+INSERT INTO MEMBER1 VALUES (member_seq.NEXTVAL, '임영웅', 'hero123', 'hero123', 40, 1, SYSDATE, TO_DATE('1991-06-16','YYYY-MM-DD'), 0);
+INSERT INTO MEMBER2 VALUES (member_seq.CURRVAL, '임영웅', 'hero@trot.com', '010-1234-0075');
+INSERT INTO ADDRESS VALUES (addr_seq.NEXTVAL, member_seq.CURRVAL, '집', '임영웅', '010-1234-0075', '04000', '서울 마포구', '메세나폴리스', 1);
+
+INSERT INTO MEMBER1 VALUES (member_seq.NEXTVAL, '영탁', 'tak123', 'tak123', 20, 1, SYSDATE, TO_DATE('1983-05-13','YYYY-MM-DD'), 0);
+INSERT INTO MEMBER2 VALUES (member_seq.CURRVAL, '박영탁', 'tak@trot.com', '010-1234-0076');
+INSERT INTO ADDRESS VALUES (addr_seq.NEXTVAL, member_seq.CURRVAL, '집', '박영탁', '010-1234-0076', '06000', '서울 광진구', '자양동', 1);
+
+INSERT INTO MEMBER1 VALUES (member_seq.NEXTVAL, '이찬원', 'chan123', 'chan123', 20, 1, SYSDATE, TO_DATE('1996-11-01','YYYY-MM-DD'), 0);
+INSERT INTO MEMBER2 VALUES (member_seq.CURRVAL, '이찬원', 'chan@trot.com', '010-1234-0077');
+INSERT INTO ADDRESS VALUES (addr_seq.NEXTVAL, member_seq.CURRVAL, '집', '이찬원', '010-1234-0077', '06000', '서울 강서구', '마곡동', 1);
+
+INSERT INTO MEMBER1 VALUES (member_seq.NEXTVAL, '김호중 (탈퇴)', 'ho123', 'ho123', 10, 0, SYSDATE, TO_DATE('1991-10-02','YYYY-MM-DD'), 0);
+INSERT INTO MEMBER2 VALUES (member_seq.CURRVAL, '김호중', 'ho@trot.com', '010-1234-0078');
+INSERT INTO MEMBER3 VALUES (member_seq.CURRVAL, TO_DATE('2024-06-01','YYYY-MM-DD'), SYSDATE, '사회적 물의');
+INSERT INTO ADDRESS VALUES (addr_seq.NEXTVAL, member_seq.CURRVAL, '집', '김호중', '010-1234-0078', '06000', '서울 서초구', '서초동', 1);
+
+INSERT INTO MEMBER1 VALUES (member_seq.NEXTVAL, '정동원', 'dong123', 'dong123', 20, 1, SYSDATE, TO_DATE('2007-03-19','YYYY-MM-DD'), 0);
+INSERT INTO MEMBER2 VALUES (member_seq.CURRVAL, '정동원', 'dong@trot.com', '010-1234-0079');
+INSERT INTO ADDRESS VALUES (addr_seq.NEXTVAL, member_seq.CURRVAL, '집', '정동원', '010-1234-0079', '04000', '서울 마포구', '합정동', 1);
+
+INSERT INTO MEMBER1 VALUES (member_seq.NEXTVAL, '장민호', 'minho123', 'minho123', 20, 1, SYSDATE, TO_DATE('1977-09-11','YYYY-MM-DD'), 0);
+INSERT INTO MEMBER2 VALUES (member_seq.CURRVAL, '장민호', 'minho@trot.com', '010-1234-0080');
+INSERT INTO ADDRESS VALUES (addr_seq.NEXTVAL, member_seq.CURRVAL, '집', '장민호', '010-1234-0080', '22000', '인천 연수구', '송도', 1);
+
+-- (81~90) 기타 셀럽
+INSERT INTO MEMBER1 VALUES (member_seq.NEXTVAL, '침착맨', 'chim123', 'chim123', 30, 1, SYSDATE, TO_DATE('1983-12-05','YYYY-MM-DD'), 0);
+INSERT INTO MEMBER2 VALUES (member_seq.CURRVAL, '이병건', 'chim@tube.com', '010-1234-0081');
+INSERT INTO ADDRESS VALUES (addr_seq.NEXTVAL, member_seq.CURRVAL, '스튜디오', '이병건', '010-1234-0081', '06000', '서울 송파구', '문정동', 1);
+
+INSERT INTO MEMBER1 VALUES (member_seq.NEXTVAL, '기안84', 'kian123', 'kian123', 30, 1, SYSDATE, TO_DATE('1984-10-22','YYYY-MM-DD'), 0);
+INSERT INTO MEMBER2 VALUES (member_seq.CURRVAL, '김희민', 'kian@webtoon.com', '010-1234-0082');
+INSERT INTO ADDRESS VALUES (addr_seq.NEXTVAL, member_seq.CURRVAL, '작업실', '김희민', '010-1234-0082', '13000', '경기 과천시', '갈현동', 1);
+
+INSERT INTO MEMBER1 VALUES (member_seq.NEXTVAL, '주호민', 'joo123', 'joo123', 30, 1, SYSDATE, TO_DATE('1981-09-26','YYYY-MM-DD'), 0);
+INSERT INTO MEMBER2 VALUES (member_seq.CURRVAL, '주호민', 'joo@webtoon.com', '010-1234-0083');
+INSERT INTO ADDRESS VALUES (addr_seq.NEXTVAL, member_seq.CURRVAL, '집', '주호민', '010-1234-0083', '10000', '경기 용인시', '수지구', 1);
+
+INSERT INTO MEMBER1 VALUES (member_seq.NEXTVAL, '백종원', 'baek123', 'baek123', 40, 1, SYSDATE, TO_DATE('1966-09-04','YYYY-MM-DD'), 0);
+INSERT INTO MEMBER2 VALUES (member_seq.CURRVAL, '백종원', 'baek@theborn.com', '010-1234-0084');
+INSERT INTO ADDRESS VALUES (addr_seq.NEXTVAL, member_seq.CURRVAL, '본사', '백종원', '010-1234-0084', '06000', '서울 강남구', '논현동', 1);
+
+INSERT INTO MEMBER1 VALUES (member_seq.NEXTVAL, '강형욱', 'kang_dog', 'kang_dog', 30, 1, SYSDATE, TO_DATE('1985-05-27','YYYY-MM-DD'), 0);
+INSERT INTO MEMBER2 VALUES (member_seq.CURRVAL, '강형욱', 'kang@dog.com', '010-1234-0085');
+INSERT INTO ADDRESS VALUES (addr_seq.NEXTVAL, member_seq.CURRVAL, '훈련소', '강형욱', '010-1234-0085', '12000', '경기 남양주시', '오남읍', 1);
+
+INSERT INTO MEMBER1 VALUES (member_seq.NEXTVAL, '오은영', 'oh_doc', 'oh_doc', 40, 1, SYSDATE, TO_DATE('1965-09-09','YYYY-MM-DD'), 0);
+INSERT INTO MEMBER2 VALUES (member_seq.CURRVAL, '오은영', 'oh@clinic.com', '010-1234-0086');
+INSERT INTO ADDRESS VALUES (addr_seq.NEXTVAL, member_seq.CURRVAL, '병원', '오은영', '010-1234-0086', '06000', '경기 수원시', '영통구', 1);
+
+INSERT INTO MEMBER1 VALUES (member_seq.NEXTVAL, '김연경', 'kim_vol', 'kim_vol', 40, 1, SYSDATE, TO_DATE('1988-02-26','YYYY-MM-DD'), 0);
+INSERT INTO MEMBER2 VALUES (member_seq.CURRVAL, '김연경', 'kim@volleyball.com', '010-1234-0087');
+INSERT INTO ADDRESS VALUES (addr_seq.NEXTVAL, member_seq.CURRVAL, '집', '김연경', '010-1234-0087', '16000', '경기 용인시', '기흥구', 1);
+
+INSERT INTO MEMBER1 VALUES (member_seq.NEXTVAL, '박세리', 'seri123', 'seri123', 40, 1, SYSDATE, TO_DATE('1977-09-28','YYYY-MM-DD'), 0);
+INSERT INTO MEMBER2 VALUES (member_seq.CURRVAL, '박세리', 'seri@golf.com', '010-1234-0088');
+INSERT INTO ADDRESS VALUES (addr_seq.NEXTVAL, member_seq.CURRVAL, '집', '박세리', '010-1234-0088', '34000', '대전 유성구', '구암동', 1);
+
+INSERT INTO MEMBER1 VALUES (member_seq.NEXTVAL, '서장훈', 'seo_tall', 'seo_tall', 30, 1, SYSDATE, TO_DATE('1974-06-03','YYYY-MM-DD'), 0);
+INSERT INTO MEMBER2 VALUES (member_seq.CURRVAL, '서장훈', 'seo@basket.com', '010-1234-0089');
+INSERT INTO ADDRESS VALUES (addr_seq.NEXTVAL, member_seq.CURRVAL, '빌딩', '서장훈', '010-1234-0089', '06000', '서울 서초구', '서초동', 1);
+
+INSERT INTO MEMBER1 VALUES (member_seq.NEXTVAL, '허재', 'hur123', 'hur123', 30, 1, SYSDATE, TO_DATE('1965-09-28','YYYY-MM-DD'), 0);
+INSERT INTO MEMBER2 VALUES (member_seq.CURRVAL, '허재', 'hur@basket.com', '010-1234-0090');
+INSERT INTO ADDRESS VALUES (addr_seq.NEXTVAL, member_seq.CURRVAL, '집', '허재', '010-1234-0090', '04000', '서울 용산구', '한남동', 1);
+
+-- (91~100) 막바지 추가
+INSERT INTO MEMBER1 VALUES (member_seq.NEXTVAL, '이동휘', 'lee_dh', 'lee_dh', 20, 1, SYSDATE, TO_DATE('1985-07-22','YYYY-MM-DD'), 0);
+INSERT INTO MEMBER2 VALUES (member_seq.CURRVAL, '이동휘', 'dh@actor.com', '010-1234-0091');
+INSERT INTO ADDRESS VALUES (addr_seq.NEXTVAL, member_seq.CURRVAL, '집', '이동휘', '010-1234-0091', '04000', '서울 마포구', '망원동', 1);
+
+INSERT INTO MEMBER1 VALUES (member_seq.NEXTVAL, '류준열', 'ryu_jy', 'ryu_jy', 20, 1, SYSDATE, TO_DATE('1986-09-25','YYYY-MM-DD'), 0);
+INSERT INTO MEMBER2 VALUES (member_seq.CURRVAL, '류준열', 'jy@actor.com', '010-1234-0092');
+INSERT INTO ADDRESS VALUES (addr_seq.NEXTVAL, member_seq.CURRVAL, '집', '류준열', '010-1234-0092', '06000', '서울 강남구', '역삼동', 1);
+
+INSERT INTO MEMBER1 VALUES (member_seq.NEXTVAL, '혜리', 'hyeri', 'hyeri', 20, 1, SYSDATE, TO_DATE('1994-06-09','YYYY-MM-DD'), 0);
+INSERT INTO MEMBER2 VALUES (member_seq.CURRVAL, '이혜리', 'hyeri@girls.com', '010-1234-0093');
+INSERT INTO ADDRESS VALUES (addr_seq.NEXTVAL, member_seq.CURRVAL, '집', '이혜리', '010-1234-0093', '06000', '서울 송파구', '잠실동', 1);
+
+INSERT INTO MEMBER1 VALUES (member_seq.NEXTVAL, '박보영', 'park_by', 'park_by', 30, 1, SYSDATE, TO_DATE('1990-02-12','YYYY-MM-DD'), 0);
+INSERT INTO MEMBER2 VALUES (member_seq.CURRVAL, '박보영', 'by@actor.com', '010-1234-0094');
+INSERT INTO ADDRESS VALUES (addr_seq.NEXTVAL, member_seq.CURRVAL, '집', '박보영', '010-1234-0094', '04000', '서울', '모처', 1);
+
+INSERT INTO MEMBER1 VALUES (member_seq.NEXTVAL, '조정석', 'cho_js', 'cho_js', 30, 1, SYSDATE, TO_DATE('1980-12-26','YYYY-MM-DD'), 0);
+INSERT INTO MEMBER2 VALUES (member_seq.CURRVAL, '조정석', 'js@actor.com', '010-1234-0095');
+INSERT INTO ADDRESS VALUES (addr_seq.NEXTVAL, member_seq.CURRVAL, '집', '조정석', '010-1234-0095', '06000', '서울 강서구', '방화동', 1);
+
+INSERT INTO MEMBER1 VALUES (member_seq.NEXTVAL, '거미', 'gummy', 'gummy', 30, 1, SYSDATE, TO_DATE('1981-04-08','YYYY-MM-DD'), 0);
+INSERT INTO MEMBER2 VALUES (member_seq.CURRVAL, '박지연', 'gummy@soul.com', '010-1234-0096');
+INSERT INTO ADDRESS VALUES (addr_seq.NEXTVAL, member_seq.CURRVAL, '집', '박지연', '010-1234-0096', '06000', '서울 강서구', '방화동', 1);
+
+INSERT INTO MEMBER1 VALUES (member_seq.NEXTVAL, '크러쉬', 'crush', 'crush', 20, 1, SYSDATE, TO_DATE('1992-05-03','YYYY-MM-DD'), 0);
+INSERT INTO MEMBER2 VALUES (member_seq.CURRVAL, '신효섭', 'crush@pnation.com', '010-1234-0097');
+INSERT INTO ADDRESS VALUES (addr_seq.NEXTVAL, member_seq.CURRVAL, '집', '신효섭', '010-1234-0097', '04000', '서울 용산구', '이촌동', 1);
+
+INSERT INTO MEMBER1 VALUES (member_seq.NEXTVAL, '지코', 'zico', 'zico', 20, 1, SYSDATE, TO_DATE('1992-09-14','YYYY-MM-DD'), 0);
+INSERT INTO MEMBER2 VALUES (member_seq.CURRVAL, '우지호', 'zico@koz.com', '010-1234-0098');
+INSERT INTO ADDRESS VALUES (addr_seq.NEXTVAL, member_seq.CURRVAL, '작업실', '우지호', '010-1234-0098', '04000', '서울 마포구', '연남동', 1);
+
+INSERT INTO MEMBER1 VALUES (member_seq.NEXTVAL, '딘', 'dean', 'dean', 20, 1, SYSDATE, TO_DATE('1992-11-10','YYYY-MM-DD'), 0);
+INSERT INTO MEMBER2 VALUES (member_seq.CURRVAL, '권혁', 'dean@rnb.com', '010-1234-0099');
+INSERT INTO ADDRESS VALUES (addr_seq.NEXTVAL, member_seq.CURRVAL, '작업실', '권혁', '010-1234-0099', '06000', '서울 강남구', '신사동', 1);
+
+INSERT INTO MEMBER1 VALUES (member_seq.NEXTVAL, '비비', 'bibi', 'bibi', 20, 1, SYSDATE, TO_DATE('1998-09-27','YYYY-MM-DD'), 0);
+INSERT INTO MEMBER2 VALUES (member_seq.CURRVAL, '김형서', 'bibi@feelghood.com', '010-1234-0100');
+INSERT INTO ADDRESS VALUES (addr_seq.NEXTVAL, member_seq.CURRVAL, '집', '김형서', '010-1234-0100', '03000', '경기 의정부시', '신곡동', 1);
+
+
+-- ============================================================
+-- [3] LOGIN_HISTORY (2026.01.01 ~ 2026.01.23)
+-- IP Range: 192.168.0.70 ~ 192.168.0.94
+-- LOG_ID는 loginlog_seq.NEXTVAL (숫자만 사용, VARCHAR2 타입에 자동 형변환)
+-- ============================================================
+
+-- 1. 관리자(admin)
+INSERT INTO LOGIN_HISTORY (LOG_ID, LOG_DATE, IP_INFO, MEMBERIDX) 
+VALUES (loginlog_seq.NEXTVAL, TO_DATE('2026-01-01 09:00:00', 'YYYY-MM-DD HH24:MI:SS'), '192.168.0.70', (SELECT MEMBERIDX FROM MEMBER1 WHERE USERID='admin'));
+
+INSERT INTO LOGIN_HISTORY (LOG_ID, LOG_DATE, IP_INFO, MEMBERIDX)
+VALUES (loginlog_seq.NEXTVAL, TO_DATE('2026-01-05 10:30:00', 'YYYY-MM-DD HH24:MI:SS'), '192.168.0.70', (SELECT MEMBERIDX FROM MEMBER1 WHERE USERID='admin'));
+
+INSERT INTO LOGIN_HISTORY (LOG_ID, LOG_DATE, IP_INFO, MEMBERIDX)
+VALUES (loginlog_seq.NEXTVAL, TO_DATE('2026-01-15 14:00:00', 'YYYY-MM-DD HH24:MI:SS'), '192.168.0.71', (SELECT MEMBERIDX FROM MEMBER1 WHERE USERID='admin'));
+
+INSERT INTO LOGIN_HISTORY (LOG_ID, LOG_DATE, IP_INFO, MEMBERIDX)
+VALUES (loginlog_seq.NEXTVAL, TO_DATE('2026-01-23 18:00:00', 'YYYY-MM-DD HH24:MI:SS'), '192.168.0.70', (SELECT MEMBERIDX FROM MEMBER1 WHERE USERID='admin'));
+
+-- 2. 서유원(seo123)
+INSERT INTO LOGIN_HISTORY (LOG_ID, LOG_DATE, IP_INFO, MEMBERIDX)
+VALUES (loginlog_seq.NEXTVAL, TO_DATE('2026-01-02 12:00:00', 'YYYY-MM-DD HH24:MI:SS'), '192.168.0.72', (SELECT MEMBERIDX FROM MEMBER1 WHERE USERID='seo123'));
+
+INSERT INTO LOGIN_HISTORY (LOG_ID, LOG_DATE, IP_INFO, MEMBERIDX)
+VALUES (loginlog_seq.NEXTVAL, TO_DATE('2026-01-10 20:00:00', 'YYYY-MM-DD HH24:MI:SS'), '192.168.0.73', (SELECT MEMBERIDX FROM MEMBER1 WHERE USERID='seo123'));
+
+INSERT INTO LOGIN_HISTORY (LOG_ID, LOG_DATE, IP_INFO, MEMBERIDX)
+VALUES (loginlog_seq.NEXTVAL, TO_DATE('2026-01-20 08:30:00', 'YYYY-MM-DD HH24:MI:SS'), '192.168.0.72', (SELECT MEMBERIDX FROM MEMBER1 WHERE USERID='seo123'));
+
+-- 3. 최하늘(choi123)
+INSERT INTO LOGIN_HISTORY (LOG_ID, LOG_DATE, IP_INFO, MEMBERIDX)
+VALUES (loginlog_seq.NEXTVAL, TO_DATE('2026-01-03 15:45:00', 'YYYY-MM-DD HH24:MI:SS'), '192.168.0.80', (SELECT MEMBERIDX FROM MEMBER1 WHERE USERID='choi123'));
+
+INSERT INTO LOGIN_HISTORY (LOG_ID, LOG_DATE, IP_INFO, MEMBERIDX)
+VALUES (loginlog_seq.NEXTVAL, TO_DATE('2026-01-18 23:10:00', 'YYYY-MM-DD HH24:MI:SS'), '192.168.0.81', (SELECT MEMBERIDX FROM MEMBER1 WHERE USERID='choi123'));
+
+-- 4. 이지영(lee123)
+INSERT INTO LOGIN_HISTORY (LOG_ID, LOG_DATE, IP_INFO, MEMBERIDX)
+VALUES (loginlog_seq.NEXTVAL, TO_DATE('2026-01-04 09:20:00', 'YYYY-MM-DD HH24:MI:SS'), '192.168.0.85', (SELECT MEMBERIDX FROM MEMBER1 WHERE USERID='lee123'));
+
+INSERT INTO LOGIN_HISTORY (LOG_ID, LOG_DATE, IP_INFO, MEMBERIDX)
+VALUES (loginlog_seq.NEXTVAL, TO_DATE('2026-01-19 19:30:00', 'YYYY-MM-DD HH24:MI:SS'), '192.168.0.85', (SELECT MEMBERIDX FROM MEMBER1 WHERE USERID='lee123'));
+
+-- 5. 권혁찬(kwon123)
+INSERT INTO LOGIN_HISTORY (LOG_ID, LOG_DATE, IP_INFO, MEMBERIDX)
+VALUES (loginlog_seq.NEXTVAL, TO_DATE('2026-01-05 11:11:00', 'YYYY-MM-DD HH24:MI:SS'), '192.168.0.90', (SELECT MEMBERIDX FROM MEMBER1 WHERE USERID='kwon123'));
+
+INSERT INTO LOGIN_HISTORY (LOG_ID, LOG_DATE, IP_INFO, MEMBERIDX)
+VALUES (loginlog_seq.NEXTVAL, TO_DATE('2026-01-22 15:00:00', 'YYYY-MM-DD HH24:MI:SS'), '192.168.0.90', (SELECT MEMBERIDX FROM MEMBER1 WHERE USERID='kwon123'));
+
+-- 6. 오연화(oh123)
+INSERT INTO LOGIN_HISTORY (LOG_ID, LOG_DATE, IP_INFO, MEMBERIDX)
+VALUES (loginlog_seq.NEXTVAL, TO_DATE('2026-01-06 14:14:00', 'YYYY-MM-DD HH24:MI:SS'), '192.168.0.94', (SELECT MEMBERIDX FROM MEMBER1 WHERE USERID='oh123'));
+
+INSERT INTO LOGIN_HISTORY (LOG_ID, LOG_DATE, IP_INFO, MEMBERIDX)
+VALUES (loginlog_seq.NEXTVAL, TO_DATE('2026-01-21 16:20:00', 'YYYY-MM-DD HH24:MI:SS'), '192.168.0.94', (SELECT MEMBERIDX FROM MEMBER1 WHERE USERID='oh123'));
+
+-- 7. 일반 회원들 랜덤 접속 (유재석, 손흥민 등)
+INSERT INTO LOGIN_HISTORY VALUES (loginlog_seq.NEXTVAL, TO_DATE('2026-01-02 16:20:00', 'YYYY-MM-DD HH24:MI:SS'), '192.168.0.75', (SELECT MEMBERIDX FROM MEMBER1 WHERE USERID='yoo111'));
+INSERT INTO LOGIN_HISTORY VALUES (loginlog_seq.NEXTVAL, TO_DATE('2026-01-04 10:00:00', 'YYYY-MM-DD HH24:MI:SS'), '192.168.0.88', (SELECT MEMBERIDX FROM MEMBER1 WHERE USERID='son111'));
+INSERT INTO LOGIN_HISTORY VALUES (loginlog_seq.NEXTVAL, TO_DATE('2026-01-06 22:00:00', 'YYYY-MM-DD HH24:MI:SS'), '192.168.0.92', (SELECT MEMBERIDX FROM MEMBER1 WHERE USERID='lee555')); -- 페이커
+INSERT INTO LOGIN_HISTORY VALUES (loginlog_seq.NEXTVAL, TO_DATE('2026-01-09 13:30:00', 'YYYY-MM-DD HH24:MI:SS'), '192.168.0.78', (SELECT MEMBERIDX FROM MEMBER1 WHERE USERID='lee333')); -- 아이유
+INSERT INTO LOGIN_HISTORY VALUES (loginlog_seq.NEXTVAL, TO_DATE('2026-01-11 17:40:00', 'YYYY-MM-DD HH24:MI:SS'), '192.168.0.93', (SELECT MEMBERIDX FROM MEMBER1 WHERE USERID='yoo222')); -- 카리나
+INSERT INTO LOGIN_HISTORY VALUES (loginlog_seq.NEXTVAL, TO_DATE('2026-01-12 09:50:00', 'YYYY-MM-DD HH24:MI:SS'), '192.168.0.82', (SELECT MEMBERIDX FROM MEMBER1 WHERE USERID='jang111')); -- 장원영
+INSERT INTO LOGIN_HISTORY VALUES (loginlog_seq.NEXTVAL, TO_DATE('2026-01-14 11:20:00', 'YYYY-MM-DD HH24:MI:SS'), '192.168.0.89', (SELECT MEMBERIDX FROM MEMBER1 WHERE USERID='kim555')); -- 윈터
+INSERT INTO LOGIN_HISTORY VALUES (loginlog_seq.NEXTVAL, TO_DATE('2026-01-16 19:00:00', 'YYYY-MM-DD HH24:MI:SS'), '192.168.0.76', (SELECT MEMBERIDX FROM MEMBER1 WHERE USERID='kang111'));
+INSERT INTO LOGIN_HISTORY VALUES (loginlog_seq.NEXTVAL, TO_DATE('2026-01-17 21:30:00', 'YYYY-MM-DD HH24:MI:SS'), '192.168.0.77', (SELECT MEMBERIDX FROM MEMBER1 WHERE USERID='shin111'));
+INSERT INTO LOGIN_HISTORY VALUES (loginlog_seq.NEXTVAL, TO_DATE('2026-01-23 10:10:00', 'YYYY-MM-DD HH24:MI:SS'), '192.168.0.83', (SELECT MEMBERIDX FROM MEMBER1 WHERE USERID='ahn111')); -- 안유진
+
+COMMIT;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
