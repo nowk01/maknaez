@@ -23,53 +23,52 @@
 
 	<jsp:include page="/WEB-INF/views/layout/header.jsp" />
 
-	<div class="mypage-wrapper">
+	<div class="mypage-container">
 
-		<aside class="account-sidebar">
-			<h2 class="sidebar-heading">마이페이지</h2>
+		<aside class="sidebar">
+			<h2>마이페이지</h2>
 
-			<div class="sidebar-menu-list">
-				<div class="menu-card">
-					<h3 class="menu-title">구매내역</h3>
-					<a
-						href="${pageContext.request.contextPath}/member/mypage/orderList"
-						class="menu-link">주문/배송조회</a> <a
-						href="${pageContext.request.contextPath}/member/mypage/cancelList"
-						class="menu-link">취소/반품조회</a>
-				</div>
+			<div class="menu-group">
+				<span class="menu-title">구매내역</span>
+				<ul>
+					<li><a href="${pageContext.request.contextPath}/member/mypage/orderList">주문/배송조회</a></li>
+					<li><a href="${pageContext.request.contextPath}/member/mypage/cancelList">취소상품조회</a></li>
+				</ul>
+			</div>
 
-				<div class="menu-card">
-					<h3 class="menu-title">혜택내역</h3>
-					<a href="${pageContext.request.contextPath}/member/mypage/review"
-						class="menu-link active">상품 리뷰</a> <a
-						href="${pageContext.request.contextPath}/member/mypage/membership"
-						class="menu-link">포인트/쿠폰</a>
-				</div>
+			<div class="menu-group">
+				<span class="menu-title">혜택내역</span>
+				<ul>
+					<li><a href="${pageContext.request.contextPath}/member/mypage/review" class="active">상품 리뷰</a></li>
+					<li><a href="${pageContext.request.contextPath}/member/mypage/membership">포인트/쿠폰</a></li>
+				</ul>
+			</div>
 
-				<div class="menu-card">
-					<h3 class="menu-title">상품내역</h3>
-					<a href="${pageContext.request.contextPath}/member/mypage/recent"
-						class="menu-link">최근 본 상품</a> <a
-						href="${pageContext.request.contextPath}/member/mypage/wishList"
-						class="menu-link">관심 상품</a>
-				</div>
+			<div class="menu-group">
+				<span class="menu-title">상품내역</span>
+				<ul>
+					<li><a href="${pageContext.request.contextPath}/member/mypage/recent">최근 본 상품</a></li>
+					<li><a href="${pageContext.request.contextPath}/member/mypage/wishList">관심 상품</a></li>
+				</ul>
+			</div>
 
-				<div class="menu-card">
-					<h3 class="menu-title">회원정보</h3>
-					<a href="${pageContext.request.contextPath}/member/mypage/myInfo"
-						class="menu-link">내 정보 관리</a> <a
-						href="${pageContext.request.contextPath}/member/mypage/addr"
-						class="menu-link">배송지 관리</a> <a
-						href="${pageContext.request.contextPath}/member/mypage/level_benefit"
-						class="menu-link">회원등급</a>
-				</div>
-
-				<a href="${pageContext.request.contextPath}/member/logout"
-					class="menu-link logout-link">로그아웃</a>
+			<div class="menu-group">
+				<span class="menu-title">회원정보</span>
+				<ul>
+					<li><a href="${pageContext.request.contextPath}/member/mypage/myInfo">내 정보 관리</a></li>
+					<li><a href="${pageContext.request.contextPath}/member/mypage/addr">배송지 관리</a></li>
+					<li><a href="${pageContext.request.contextPath}/member/mypage/level_benefit">회원등급</a></li>
+				</ul>
+			</div>
+			
+			<div class="menu-group">
+				 <ul>
+					<li><a href="${pageContext.request.contextPath}/member/logout" style="color:#999;">로그아웃</a></li>
+				 </ul>
 			</div>
 		</aside>
 
-		<main class="account-main customer-review-wrap">
+		<main class="main-content">
 			<h2 class="page-header feature-header">상품 리뷰</h2>
 
 			<div class="review-tabs">

@@ -15,11 +15,9 @@
 	<select id="dataCountAdmin" parameterType="map" resultType="int">
 		SELECT COUNT(*)
 		FROM reviews r
-		JOIN order_items oi ON r.item_id =
-		oi.item_id
+		JOIN order_items oi ON r.item_id = oi.item_id
 		JOIN pd_size sz ON oi.opt_id = sz.opt_id
-		JOIN products p ON
-		sz.prod_id = p.prod_id
+		JOIN products p ON sz.prod_id = p.prod_id
 		<where>
 			<if test="keyword != null and keyword != ''">
 				AND INSTR(p.prod_name, #{keyword}) &gt; 0
@@ -50,7 +48,6 @@
                 END AS writerName,
                 m.userid AS writerId,
                 
-                /* [수정 완료] 중복 제거함 */
                 r.reply_content AS replyContent,
                 TO_CHAR(r.reply_date, 'YYYY-MM-DD') AS replyDate
 
@@ -71,29 +68,23 @@
 		SELECT * FROM (
 		SELECT ROWNUM rnum, tb.* FROM (
 		SELECT
-		r.item_id AS
-		reviewId,
+		r.item_id AS reviewId,
 		p.prod_id AS prodId,
 		p.prod_name AS productName,
-		m.memberidx AS
-		memberIdx,
+		m.memberidx AS memberIdx,
 		m.userid AS writerId,
 		m.nickname AS writerName,
-		r.content AS
-		content,
+		r.content AS content,
 		r.rating AS starRating,
 		NVL(r.img_url, '') AS reviewImg,
 		TO_CHAR(r.reg_date, 'YYYY-MM-DD HH24:MI') AS regDate,
-		sz.pd_size AS
-		optionValue,
+		sz.pd_size AS optionValue,
 		NVL(r.enabled, 1) AS enabled
 		FROM reviews r
-		JOIN order_items
-		oi ON r.item_id = oi.item_id
+		JOIN order_items oi ON r.item_id = oi.item_id
 		JOIN pd_size sz ON oi.opt_id = sz.opt_id
 		JOIN products p ON sz.prod_id = p.prod_id
-		JOIN orders o ON oi.order_id
-		= o.items_id
+		JOIN orders o ON oi.order_id = o.items_id
 		JOIN member1 m ON o.memberidx = m.memberidx
 		<where>
 			<if test="keyword != null and keyword != ''">
@@ -119,43 +110,37 @@
 		p.prod_id AS prodId,
 		p.prod_name AS productName,
 		m.memberidx AS memberIdx,
-		m.userid AS
-		writerId,
+		m.userid AS writerId,
 		m.nickname AS writerName,
 		r.content AS content,
-		r.rating AS
-		starRating,
+		r.rating AS starRating,
 		NVL(r.img_url, '') AS reviewImg,
-		TO_CHAR(r.reg_date,
-		'YYYY-MM-DD HH24:MI:SS') AS regDate,
+		TO_CHAR(r.reg_date, 'YYYY-MM-DD HH24:MI:SS') AS regDate,
 		sz.pd_size AS optionValue,
 		NVL(r.enabled, 1) AS enabled
 		FROM reviews r
-		JOIN order_items oi ON
-		r.item_id = oi.item_id
+		JOIN order_items oi ON r.item_id = oi.item_id
 		JOIN pd_size sz ON oi.opt_id = sz.opt_id
-		JOIN
-		products p ON sz.prod_id = p.prod_id
-		JOIN orders o ON oi.order_id =
-		o.items_id
+		JOIN products p ON sz.prod_id = p.prod_id
+		JOIN orders o ON oi.order_id = o.items_id
 		JOIN member1 m ON o.memberidx = m.memberidx
-		WHERE r.item_id =
-		#{reviewId}
+		WHERE r.item_id = #{reviewId}
 	</select>
 
-	<insert id="insertReview"
-		parameterType="com.maknaez.model.ReviewDTO">
-		INSERT INTO reviews (
-		item_id, rating, content, img_url,
-		reg_date
-		) VALUES (
-		(SELECT item_id FROM order_items WHERE order_id =
-		#{orderNum} AND ROWNUM =
-		1),
-		#{starRating}, #{content}, #{reviewImg,
-		jdbcType=VARCHAR}, SYSDATE
-		)
-	</insert>
+	<insert id="insertReview" parameterType="com.maknaez.model.ReviewDTO">
+    INSERT INTO reviews (
+        item_id, rating, content, img_url, reg_date
+    ) VALUES (
+        (
+            SELECT oi.item_id 
+            FROM order_items oi
+            JOIN pd_size sz ON oi.opt_id = sz.opt_id
+            WHERE oi.order_id = #{orderNum} 
+            AND sz.prod_id = #{prodId}
+        ),
+        #{starRating}, #{content}, #{reviewImg, jdbcType=VARCHAR}, SYSDATE
+    )
+</insert>
 
 	<update id="updateReviewStatus" parameterType="map">
 		UPDATE reviews SET
@@ -171,8 +156,7 @@
 		resultType="Integer">
 		SELECT COUNT(*)
 		FROM reviews r
-		JOIN order_items oi ON
-		r.item_id = oi.item_id
+		JOIN order_items oi ON r.item_id = oi.item_id
 		WHERE oi.order_id = #{orderNum}
 	</select>
 
@@ -180,11 +164,9 @@
 		resultType="int">
 		SELECT COUNT(*)
 		FROM reviews r
-		JOIN order_items oi ON
-		r.item_id = oi.item_id
+		JOIN order_items oi ON r.item_id = oi.item_id
 		JOIN orders o ON oi.order_id = o.items_id
-		WHERE
-		o.memberidx = #{memberIdx}
+		WHERE o.memberidx = #{memberIdx}
 	</select>
 
 	<select id="selectMyReviews" parameterType="map"
@@ -197,25 +179,19 @@
 		o.items_id AS orderNum,
 		r.content AS content,
 		r.rating AS starRating,
-		NVL(r.img_url, '') AS
-		reviewImg,
+		NVL(r.img_url, '') AS reviewImg,
 		TO_CHAR(r.reg_date, 'YYYY-MM-DD') AS regDate,
-		ps.prod_name AS
-		productName,
+		ps.prod_name AS productName,
 		ps.thumb_nail AS thumbNail
 		FROM reviews r
-		JOIN order_items
-		oi ON r.item_id = oi.item_id
+		JOIN order_items oi ON r.item_id = oi.item_id
 		JOIN pd_size sz ON oi.opt_id = sz.opt_id
 		JOIN products ps ON sz.prod_id = ps.prod_id
-		JOIN orders o ON
-		oi.order_id = o.items_id
+		JOIN orders o ON oi.order_id = o.items_id
 		WHERE o.memberidx = #{memberIdx}
-		ORDER BY
-		r.reg_date DESC
+		ORDER BY r.reg_date DESC
 		) tb WHERE ROWNUM &lt;= #{end}
-		) WHERE rnum &gt;=
-		#{start}
+		) WHERE rnum &gt;= #{start}
 	</select>
 
 	<select id="selectProductReviewStats" parameterType="long"
@@ -224,13 +200,9 @@
 		NVL(ROUND(AVG(r.rating), 1), 0) AS avgRating,
 		COUNT(r.item_id) AS totalCount
 		FROM reviews r
-		JOIN order_items oi ON
-		r.item_id =
-		oi.item_id
+		JOIN order_items oi ON r.item_id = oi.item_id
 		JOIN pd_size sz ON oi.opt_id = sz.opt_id
-		WHERE
-		sz.prod_id =
-		#{prodId}
+		WHERE sz.prod_id = #{prodId}
 	</select>
 	
 	<update id="updateReply" parameterType="map">

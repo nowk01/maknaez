@@ -305,10 +305,8 @@ body {
 			<div class="menu-group">
 				<span class="menu-title">상품내역</span>
 				<ul>
-					<li><a href="#">최근 본 상품</a></li>
-					<li><a
-						href="${pageContext.request.contextPath}/member/mypage/wishList">관심
-							상품</a></li>
+					<li><a href="${pageContext.request.contextPath}/member/mypage/recent">최근 본 상품</a></li>
+					<li><a href="${pageContext.request.contextPath}/member/mypage/wishList">관심 상품</a></li>
 				</ul>
 			</div>
 			<div class="menu-group">
@@ -324,6 +322,12 @@ body {
 						href="${pageContext.request.contextPath}/member/mypage/level_benefit">회원등급</a></li>
 				</ul>
 			</div>
+			
+			<div class="menu-group">
+             <ul>
+                <li><a href="${pageContext.request.contextPath}/member/logout" style="color:#999;">로그아웃</a></li>
+             </ul>
+        	</div>
 		</aside>
 
 		<main class="main-content">
