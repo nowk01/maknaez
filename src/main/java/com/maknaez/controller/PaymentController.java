@@ -177,7 +177,7 @@ public class PaymentController {
             PaymentDTO payment = new PaymentDTO();
             String payMethod = req.getParameter("pay_method"); 
             payment.setPayMethod(payMethod);
-            payment.setPayStatus("결제완료");
+            payment.setPayStatus("PAID");
             
             if ("card".equals(payMethod)) {
                 String cardName = req.getParameter("card_name");
