@@ -72,7 +72,7 @@ html, body { height: 100vh; overflow: hidden; background-color: #f5f6f8; font-fa
 .chart-canvas-wrapper { flex-grow: 1; position: relative; width: 100%; height: 100%; }
 .side-stack { grid-column: 2 / 3; grid-row: 1 / 3; display: flex; flex-direction: column; gap: 25px; height: 100%; }
 
-.calendar-card { flex: 1.35; padding: 0; border-radius: 20px; overflow: hidden; }
+.calendar-card { flex: 1.15; padding: 0; border-radius: 20px; overflow: hidden; }
 .cal-header { padding: 18px 24px 12px; background: #fff; border-bottom: 1px solid #f1f3f5; }
 .cal-header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
 .cal-nav { display: flex; align-items: center; gap: 14px; }
@@ -82,7 +82,7 @@ html, body { height: 100vh; overflow: hidden; background-color: #f5f6f8; font-fa
 .memo-btn { background: #ff4e00; color: #fff; border: none; width: 34px; height: 34px; border-radius: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s; box-shadow: 0 4px 10px rgba(255,78,0,0.25); }
 .memo-btn:hover { background: #e04400; transform: scale(1.05); }
 .cal-weekdays { display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; color: #adb5bd; font-size: 0.7rem; font-weight: 700; margin-bottom: 8px; }
-.cal-body { padding: 8px 14px 14px; background: #fff; display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
+.cal-body { padding: 12px 16px 16px; background: #fff; display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
 .cal-cell { min-height: 38px; background: #fafafa; border-radius: 12px; padding: 6px; font-size: 0.75rem; font-weight: 700; color: #495057; position: relative; cursor: pointer; transition: 0.2s; border: 1px solid transparent; }
 .cal-cell:hover { background: #fff; border-color: #f1f3f5; box-shadow: 0 4px 12px rgba(0,0,0,0.04); transform: translateY(-2px); }
 .cal-cell.other-month { background: #fdfdfd; color: #ced4da; }
@@ -91,7 +91,7 @@ html, body { height: 100vh; overflow: hidden; background-color: #f5f6f8; font-fa
 .memo-preview { margin-top: 4px; background: #fff5f0; color: #ff4e00; font-size: 0.6rem; font-weight: 700; border-radius: 6px; padding: 2px 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .memo-dot { position: absolute; bottom: 6px; right: 6px; width: 6px; height: 6px; border-radius: 50%; background: #ff4e00; }
 
-.todo-card { flex: 0.65; border-radius: 20px; height: 300px; overflow: hidden; display: flex; flex-direction: column;}
+.todo-card { flex: 0.85; border-radius: 20px; height: 300px; overflow: hidden; display: flex; flex-direction: column;}
 .todo-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
 .todo-title { font-size: 0.95rem; font-weight: 800; color: #495057; }
 .todo-add-btn { background: #ff4e00; color: #fff; border: none; border-radius: 10px; padding: 6px 12px; font-size: 0.7rem; font-weight: 700; cursor: pointer; transition: 0.2s; }
