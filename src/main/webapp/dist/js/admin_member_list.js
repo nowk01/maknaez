@@ -57,9 +57,29 @@ function openMemberModal(mode, memberIdx) {
                 document.getElementById("nickName").value = d.nickName || "";
                 document.getElementById("email").value = d.email || "";
                 document.getElementById("tel").value = d.tel || "";
-                document.getElementById("modalUserLevel").value = d.userLevel;
                 document.getElementById("enabled").value = d.enabled;
+				
+				let levelValue = "1"; // 기본값 IRON
+				const level = d.userLevel;
 
+				if (level >= 99) {
+				    levelValue = "99"; // MASTER
+				} else if (level >= 51) {
+				    levelValue = "51"; // ADMIN
+				} else if (level >= 41) {
+				    levelValue = "41"; // PLATINUM
+				} else if (level >= 31) {
+				    levelValue = "31"; // GOLD
+				} else if (level >= 21) {
+				    levelValue = "21"; // SILVER
+				} else if (level >= 11) {
+				    levelValue = "11"; // BRONZE
+				} else {
+				    levelValue = "1";  // IRON
+				}
+				
+				document.getElementById("modalUserLevel").value = levelValue;
+				
                 // 성별 세팅 (0: 남자, 1: 여자) 
                 if (d.gender !== undefined) {
                     document.getElementById("gender").value = d.gender;

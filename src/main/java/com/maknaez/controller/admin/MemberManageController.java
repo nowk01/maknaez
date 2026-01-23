@@ -432,7 +432,18 @@ public class MemberManageController {
             if (memberIdxsStr != null && memberIdxsStr.length > 0 && amount != 0) {
                 List<Long> list = new ArrayList<>();
                 for (String idx : memberIdxsStr) {
-                    list.add(Long.parseLong(idx));
+                    if (idx.contains(",")) {
+                        String[] splitIdx = idx.split(",");
+                        for (String s : splitIdx) {
+                            if (s != null && !s.trim().isEmpty()) {
+                                list.add(Long.parseLong(s.trim()));
+                            }
+                        }
+                    } else {
+                        if (idx != null && !idx.trim().isEmpty()) {
+                            list.add(Long.parseLong(idx.trim()));
+                        }
+                    }
                 }
                 
                 // PointService를 통해 DB 저장

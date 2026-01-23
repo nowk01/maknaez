@@ -295,10 +295,10 @@ public class ProductManageController {
 	        dto.setCateCode(req.getParameter("cateCode"));
 	        dto.setProdName(req.getParameter("prodName"));
 	        dto.setColorCode(req.getParameter("colorCode"));
-	        dto.setDescription(req.getParameter("description")); // 스마트에디터 내용
+	        dto.setDescription(req.getParameter("prodDesc")); // 스마트에디터 내용
 	        
 	        // 숫자형 변환 처리
-	        String priceStr = req.getParameter("price");
+	        String priceStr = req.getParameter("base_price");
 	        if(priceStr != null && !priceStr.isEmpty()) {
 	            dto.setPrice(Integer.parseInt(priceStr));
 	        }

@@ -335,13 +335,13 @@
 
     <select id="getMonthlyDau" resultType="map">
         SELECT 
-            TO_CHAR(l.log_date, 'YYYY.MM') AS "date",
+            TO_CHAR(l.log_date, 'YYYY-MM') AS "date",
             COUNT(DISTINCT l.memberIdx) AS "count"
         FROM login_history l
         JOIN member1 m ON l.memberIdx = m.memberIdx
         WHERE l.log_date >= ADD_MONTHS(TRUNC(SYSDATE, 'MM'), -11)
           AND m.userLevel &lt; 51
-        GROUP BY TO_CHAR(l.log_date, 'YYYY.MM')
+        GROUP BY TO_CHAR(l.log_date, 'YYYY-MM')
         ORDER BY "date"
     </select>
 
