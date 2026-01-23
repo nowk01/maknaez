@@ -389,7 +389,9 @@ body {
 			<div class="menu-group">
 				<span class="menu-title">상품내역</span>
 				<ul>
-					<li><a href="${pageContext.request.contextPath}/member/mypage/recent">최근 본 상품</a></li>
+					<li><a
+						href="${pageContext.request.contextPath}/member/mypage/recent">최근
+							본 상품</a></li>
 					<li><a
 						href="${pageContext.request.contextPath}/member/mypage/wishList">관심
 							상품</a></li>
@@ -409,12 +411,13 @@ body {
 						href="${pageContext.request.contextPath}/member/mypage/level_benefit">회원등급</a></li>
 				</ul>
 			</div>
-			
+
 			<div class="menu-group">
-             <ul>
-                <li><a href="${pageContext.request.contextPath}/member/logout" style="color:#999;">로그아웃</a></li>
-             </ul>
-        	</div>
+				<ul>
+					<li><a href="${pageContext.request.contextPath}/member/logout"
+						style="color: #999;">로그아웃</a></li>
+				</ul>
+			</div>
 		</aside>
 
 
@@ -504,6 +507,8 @@ body {
 											<c:when test="${dto.orderState == '배송완료'}">
 												<button type="button" class="btn-action-mini"
 													onclick="confirmOrder('${dto.orderNum}')">구매확정</button>
+												<button type="button" class="btn-action-mini"
+													onclick="openReturnModal('${dto.orderNum}')">반품신청</button>
 											</c:when>
 										</c:choose>
 									</div>
@@ -630,6 +635,12 @@ body {
 
         function openCancelModal(orderNum) { if(confirm("주문을 취소하시겠습니까?")) location.href = "${pageContext.request.contextPath}/member/mypage/claimForm?order_id=" + orderNum + "&type=CANCEL"; }
         function confirmOrder(orderNum) { if(confirm("상품을 잘 받으셨나요? 구매확정 시 포인트가 적립되며 반품이 불가능합니다.")) { location.href = "${pageContext.request.contextPath}/member/mypage/confirmOrder?orderNum=" + orderNum; } }
+        function openReturnModal(orderNum) { 
+            if(confirm("상품을 반품하시겠습니까?")) {
+                // 클레임 폼으로 이동하며 타입을 'RETURN'으로 전송
+                location.href = "${pageContext.request.contextPath}/member/mypage/claimForm?order_id=" + orderNum + "&type=RETURN"; 
+            } 
+        }
     </script>
 </body>
 </html>
