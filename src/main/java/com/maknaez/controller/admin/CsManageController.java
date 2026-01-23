@@ -61,7 +61,7 @@ public class CsManageController {
 			}
 
 			Map<String, Object> map = new HashMap<>();
-			map.put("status", "all");
+			map.put("status", status);
 			map.put("keyword", keyword);
 			map.put("condition", "all");
 			map.put("offset", 0);
