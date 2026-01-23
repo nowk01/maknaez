@@ -46,23 +46,32 @@ to {
 	letter-spacing: 1px;
 }
 
-/* 메인 그리드: 슬림 리스트 + 와이드 채팅창 밀착형 */
 .chat-main-grid {
-	display: grid;
-	grid-template-columns: 320px 1fr;
-	gap: 0;
-	height: 850px;
-	border: 1px solid #eee;
-	background: #fff;
-	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    height: 850px;    
+    overflow: hidden; 
+    border: 1px solid #eee;
+    background: #fff;
 }
 
-/* [LEFT] 리스트 사이드바 */
 .chat-sidebar {
-	border-right: 1px solid #eee;
-	display: flex;
-	flex-direction: column;
-	background: #fff;
+    height: 850px;  
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid #eee;
+}
+
+.inquiry-list-wrapper {
+    flex: 1;
+    overflow-y: auto; 
+    min-height: 0; 
+}
+
+.chat-window {
+    height: 850px;    
+    display: flex;
+    flex-direction: column;
 }
 
 .inquiry-list-header {
@@ -104,11 +113,6 @@ to {
 	cursor: pointer;
 }
 
-.inquiry-list-wrapper {
-	flex: 1;
-	overflow-y: auto;
-	background: #fff;
-}
 
 .inquiry-item {
 	padding: 20px;
@@ -141,13 +145,6 @@ to {
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
-}
-
-/* [RIGHT] 와이드 채팅창 */
-.chat-window {
-	display: flex;
-	flex-direction: column;
-	background: #fdfdfd;
 }
 
 .chat-header {
