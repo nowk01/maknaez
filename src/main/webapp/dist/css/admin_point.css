@@ -325,3 +325,63 @@ to {
     font-weight: 700;
     padding: 0 20px;
 }
+
+/* 1. 페이징 컨테이너: 확실하게 가로 전체를 쓰고 자식을 중앙으로 */
+.custom-paging-wrapper {
+    width: 100% !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    margin-top: 40px !important;
+    padding: 20px 0 !important;
+}
+
+/* 2. 내부 모든 요소 (링크, 숫자, 화살표) 공통 스타일 */
+.custom-paging-wrapper a, 
+.custom-paging-wrapper span, 
+.custom-paging-wrapper b {
+    display: inline-flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    min-width: 32px !important;
+    height: 32px !important;
+    margin: 0 3px !important;
+    padding: 0 6px !important;
+    text-decoration: none !important; /* 파란 밑줄 제거 */
+    color: #666 !important; /* 기본 글자색 */
+    font-size: 14px !important;
+    font-family: 'Pretendard', sans-serif !important;
+    transition: all 0.2s ease !important;
+    border-radius: 4px !important;
+}
+
+/* 3. 현재 페이지 (강조될 숫자) */
+.custom-paging-wrapper b, 
+.custom-paging-wrapper strong {
+    background-color: #ff4e00 !important; /* MAKNAEZ 오렌지 */
+    color: #ffffff !important;
+    font-weight: 800 !important;
+    box-shadow: 0 4px 10px rgba(255, 78, 0, 0.2) !important;
+}
+
+/* 4. 마우스 올렸을 때 (Hover) */
+.custom-paging-wrapper a:hover {
+    background-color: #f1f1f1 !important;
+    color: #000 !important;
+    transform: translateY(-1px) !important;
+}
+
+/* 5. 화살표(처음, 이전, 다음, 끝) 특수 스타일 */
+.custom-paging-wrapper a[title] {
+    background-color: #fafafa !important;
+    border: 1px solid #eee !important;
+    font-weight: bold !important;
+}
+
+/* 6. 부트스트랩 pagination 클래스 간섭 방지 */
+.custom-paging-wrapper .pagination {
+    display: flex !important;
+    padding-left: 0 !important;
+    margin-bottom: 0 !important;
+    list-style: none !important;
+}

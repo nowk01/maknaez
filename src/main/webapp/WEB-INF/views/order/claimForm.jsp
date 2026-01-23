@@ -114,7 +114,7 @@
                 </div>
             </div>
 
-            <form id="claimForm" action="${pageContext.request.contextPath}/order/claimRequest" method="post">
+            <form id="claimForm" action="${pageContext.request.contextPath}/member/mypage/claimRequest" method="post">
                 <input type="hidden" name="orderNum" value="${dto.orderNum}">
                 <input type="hidden" name="productNum" value="${dto.productNum}">
                 <input type="hidden" name="pdSize" value="${dto.pdSize}">

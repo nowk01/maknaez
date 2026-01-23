@@ -577,39 +577,42 @@ public class MyPageController {
 
 	// 14. 취소/교환 신청 처리 (POST)
 	@PostMapping("claimRequest")
-	public ModelAndView claimRequest(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
-		HttpSession session = req.getSession();
-		SessionInfo info = (SessionInfo) session.getAttribute("member");
-		if (info == null)
-			return new ModelAndView("redirect:/member/login");
+	public ModelAndView claimRequest(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	    HttpSession session = req.getSession();
+	    SessionInfo info = (SessionInfo) session.getAttribute("member");
+	    if (info == null) return new ModelAndView("redirect:/member/login");
 
-		try {
-			// 파라미터 수집
-			String orderId = req.getParameter("order_id");
-			String type = req.getParameter("type");
-			String reasonCategory = req.getParameter("reason_category");
-			String reasonDetail = req.getParameter("reason");
-			String fullReason = "[" + reasonCategory + "] " + reasonDetail;
+	    try {
+	        OrderMapper mapper = MapperContainer.get(OrderMapper.class);
+	        
+	        String orderNum = req.getParameter("orderNum");
+	        String type = req.getParameter("type"); 
+	        String reasonCategory = req.getParameter("reasonCategory");
+	        String reasonDetail = req.getParameter("reason"); 
+	        String fullReason = "[" + reasonCategory + "] " + reasonDetail;
 
-			// 콘솔 확인
-			System.out.println("----- 클레임 신청 접수 -----");
-			System.out.println("주문번호: " + orderId);
-			System.out.println("유형: " + type);
-			System.out.println("사유: " + fullReason);
+	        Map<String, Object> claimMap = new HashMap<>();
+	        claimMap.put("orderId", orderNum);
+	        claimMap.put("claimType", type);
+	        claimMap.put("reason", fullReason); 
+	        claimMap.put("claimStatus", "접수완료"); 
 
-			OrderMapper mapper = MapperContainer.get(OrderMapper.class);
-			Map<String, Object> map = new HashMap<>(); map.put("orderId", orderId);
-			 map.put("type", type); map.put("reason", fullReason); //
-			 mapper.insertClaim(map);
+	        mapper.insertClaim(claimMap);
 
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+	        Map<String, Object> stateMap = new HashMap<>();
+	        stateMap.put("orderNum", orderNum); 
+	        
+	        String nextStatus = (type != null && type.equalsIgnoreCase("CANCEL")) ? "취소완료" : "반품신청";
+	        stateMap.put("status", nextStatus);
+	        
+	        mapper.updateOrderState(stateMap);
 
-		return new ModelAndView("redirect:/member/mypage/cancelList");
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+
+	    return new ModelAndView("redirect:/member/mypage/cancelList");
 	}
-
 
     @GetMapping("recent")
     public ModelAndView recentList(HttpServletRequest req, HttpServletResponse resp)

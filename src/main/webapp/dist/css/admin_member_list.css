@@ -320,23 +320,50 @@ to {
 	background-color: #feb2b2 !important;
 	color: #c53030 !important;
 }
-/* 8. 페이징 */
-.page-navigation-wrap {
-	margin-top: 40px;
-	display: flex;
-	justify-content: center;
+/* 페이징 전체 컨테이너 */
+.custom-paging-wrapper {
+    width: 100% !important;
+    text-align: center !important; /* 인라인 요소들을 중앙으로 */
+    margin-top: 50px !important;
+    margin-bottom: 20px !important;
+    display: block !important; /* flex 대신 block으로 선언 (인라인 정렬용) */
 }
 
-.page-navigation-wrap .page-link {
-	color: #111;
-	border: none;
-	font-weight: 700;
-	padding: 8px 16px;
-	background: none;
+/* 페이징 내부의 모든 텍스트 및 링크 요소 */
+.custom-paging-wrapper a, 
+.custom-paging-wrapper span, 
+.custom-paging-wrapper b {
+    display: inline-flex !important; /* 개별 요소를 버튼처럼 */
+    align-items: center;
+    justify-content: center;
+    min-width: 32px;
+    height: 32px;
+    padding: 0 8px;
+    margin: 0 2px;
+    color: #666 !important;
+    font-size: 14px;
+    text-decoration: none !important;
+    transition: all 0.2s;
+    vertical-align: middle;
 }
 
-.page-item.active .page-link {
-	background-color: #111 !important;
-	color: #fff !important;
-	border-radius: 0 !important;
+/* 현재 페이지 숫자 (이미지의 검은색 '1' 부분) */
+.custom-paging-wrapper b,
+.custom-paging-wrapper strong {
+    color: #ff4e00 !important; /* 시그니처 오렌지 */
+    font-weight: 800 !important;
+    border-bottom: 2px solid #ff4e00 !important;
+    border-radius: 0 !important;
+}
+
+/* 숫자 링크 호버 시 */
+.custom-paging-wrapper a:hover {
+    background-color: #f5f5f5 !important;
+    color: #111 !important;
+    border-radius: 4px;
+}
+
+/* 화살표 버튼 ( > >> ) */
+.custom-paging-wrapper a[href*="page="] {
+    font-family: "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
 }

@@ -164,7 +164,9 @@
 							</c:choose>
 						</tbody>
 					</table>
-					<div class="page-navigation-wrap">${paging}</div>
+					<div
+						class="mt-4 d-flex justify-content-center custom-paging-wrapper">
+						${paging}</div>
 				</div>
 			</div>
 		</div>
@@ -273,7 +275,9 @@
 	</div>
 
 	<jsp:include page="/WEB-INF/views/admin/layout/footerResources.jsp" />
-	<script>const contextPath = "${pageContext.request.contextPath}";</script>
+	<script>
+		const contextPath = "${pageContext.request.contextPath}";
+	</script>
 	<script
 		src="${pageContext.request.contextPath}/dist/js/admin_member_list.js"></script>
 </body>
