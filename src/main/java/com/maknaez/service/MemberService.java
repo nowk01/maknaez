@@ -19,7 +19,6 @@ public interface MemberService {
 	public MemberDTO findById(String userId);
 	public MemberDTO findByNickName(String nickName);
 	public MemberDTO findByIdx(Long memberIdx);	
-	public List<Map<String, Object>> listAgeSection();
 	
 	public Integer dataCount(Map<String, Object> map);
 	public List<MemberDTO> listMember(Map<String, Object> map);

@@ -5,7 +5,6 @@ public class StatsDTO {
     private long monthSales;
     private int todayOrderCount;
 
-    // 그래프 및 리스트용
     private String statsDate;   // 날짜 (MM-DD)
     private long totalRevenue;  // 해당 날짜 매출액
     

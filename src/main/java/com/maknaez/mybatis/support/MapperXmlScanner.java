@@ -18,7 +18,6 @@ public class MapperXmlScanner {
 		List<MapperXmlInfo> result = new ArrayList<>();
 
 		try {
-			// classpath 기준 리소스 나열
 			var urls = Thread.currentThread().getContextClassLoader().getResources(basePath);
 
 			while (urls.hasMoreElements()) {

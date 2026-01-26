@@ -17,9 +17,9 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-@MultipartConfig(fileSizeThreshold = 1024 * 1024, // 업로드된 파일이 임시로 서버에 저장되지 않고 메모리에서 스트림으로 바로 전달되는 크기
-		maxFileSize = 1024 * 1024 * 10, // 업로드된 하나의 파일 크기. 기본 용량 제한 없음 10메가
-		maxRequestSize = 1024 * 1024 * 50 // 폼 전체 용량 50메가
+@MultipartConfig(fileSizeThreshold = 1024 * 1024, 
+		maxFileSize = 1024 * 1024 * 10, 
+		maxRequestSize = 1024 * 1024 * 50 
 )
 
 @WebServlet(urlPatterns = { "/", "*.do" }, loadOnStartup = 1)

@@ -343,7 +343,7 @@ public class CsManageController {
 				current_page = Integer.parseInt(page);
 			}
 
-			String sort = req.getParameter("sort"); // latest(기본), score
+			String sort = req.getParameter("sort"); 
 			String keyword = req.getParameter("keyword");
 			int score = 0;
 
@@ -497,7 +497,6 @@ public class CsManageController {
 	    try {
 	        HttpSession session = req.getSession();
 	        SessionInfo info = (SessionInfo) session.getAttribute("member");
-	        // 관리자 권한 체크
 	        if (info == null || info.getUserLevel() < 51) {
 	            jobj.put("status", "permission_denied");
 	            resp.getWriter().print(jobj.toString());

@@ -40,7 +40,6 @@ public interface MemberMapper {
 	public void deleteAddress(long addrId) throws SQLException;
 	public void updateAddressBasicReset(long memberIdx) throws SQLException;
 	
-	// 기존 코드들 사이에 추가하세요
 	public void updateAddress(AddressDTO dto) throws SQLException;
 	public void updateAddressReset(long memberIdx) throws SQLException;
 }

@@ -11,7 +11,6 @@ import com.maknaez.mybatis.support.MapperContainer;
 public class BoardServiceImpl implements BoardService {
 	private BoardMapper mapper = MapperContainer.get(BoardMapper.class);
 
-	// 1:1 문의
 	@Override
 	public void insertBoard(BoardDTO dto) throws Exception {
 		try {
@@ -99,7 +98,6 @@ public class BoardServiceImpl implements BoardService {
 		}
 	}
 
-	// 공지사항
 	@Override
 	public void insertNotice(BoardDTO dto) throws Exception {
 		try {
@@ -168,7 +166,6 @@ public class BoardServiceImpl implements BoardService {
 	}
 
 
-	// FAQ
 	@Override
 	public List<FaqDTO> listFaq(Map<String, Object> map) {
 		try {

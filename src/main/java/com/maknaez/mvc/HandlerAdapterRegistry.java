@@ -21,7 +21,6 @@ public class HandlerAdapterRegistry {
 		return handlerAdapters.stream()
 				.filter(it -> it.supports(handler))
 				.findFirst()
-				// .orElseThrow(() -> new IllegalArgumentException("지원하지 않는 핸들러입니다."));
 				.orElseThrow(() -> new NotFoundHandlerAdapterException("핸들러 어댑터를 찾을 수 없습니다."));
 	}
 }

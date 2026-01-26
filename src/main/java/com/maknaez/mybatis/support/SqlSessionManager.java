@@ -3,14 +3,8 @@ package com.maknaez.mybatis.support;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 
-/*
-  - Spring의 SqlSessionTemplate 역할
-  - 요청(Thread)마다 SqlSession 1개
-  - 트랜잭션 제어
-*/
 public class SqlSessionManager {
 	private static SqlSessionFactory factory;
-	// ThreadLocal : 스레드 단위로 독립적인 변수를 가질 수 있게 해주는 클래스
 	private static final ThreadLocal<SqlSession> local = new ThreadLocal<>();
 	private static final ThreadLocal<Boolean> rollbackOnly = new ThreadLocal<>();
 
@@ -23,13 +17,12 @@ public class SqlSessionManager {
 		if (session == null) {
 			session = factory.openSession(false);
 			local.set(session);
-			rollbackOnly.set(false); // 초기화
+			rollbackOnly.set(false); 
 		}
 
 		return session;
 	}
 
-	// Spring의 setRollbackOnly 역할
 	public static void setRollbackOnly() {
 		rollbackOnly.set(true);
 	}

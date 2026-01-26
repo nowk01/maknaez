@@ -1,6 +1,5 @@
 @charset "UTF-8";
 
-/* [MAKNAEZ] Customer Stats Style */
 html, body {
     height: auto !important;
     min-height: 100% !important;
@@ -48,14 +47,13 @@ html, body {
 /* VIP 테이블 스타일 */
 .table-responsive {
     width: 100%;
-    /* [수정] 높이 제한 추가: 약 10~12명 정도 보이고 그 이상은 스크롤 */
     max-height: 600px; 
-    overflow-y: auto; /* 세로 스크롤 자동 생성 */
-    overflow-x: hidden; /* 가로 스크롤 방지 */
+    overflow-y: auto; 
+    overflow-x: hidden;/
     border-bottom: 1px solid #eee;
 }
 
-/* 스크롤바 디자인 (크롬, 사파리 등) */
+/* 스크롤바 디자인 */
 .table-responsive::-webkit-scrollbar {
     width: 8px;
 }
@@ -130,7 +128,7 @@ html, body {
 
 @keyframes spin {
     0% { transform: rotate(0deg); }
-    100% { transform: rotate(-360deg); } /* -360deg: 왼쪽 회전 */
+    100% { transform: rotate(-360deg); }
 }
 
 /* 모바일 대응 */

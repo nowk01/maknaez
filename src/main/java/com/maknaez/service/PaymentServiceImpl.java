@@ -82,7 +82,6 @@ public class PaymentServiceImpl implements PaymentService {
         int usedPoint = (order.getPoint() != null) ? order.getPoint() : 0; 
         long totalAmount = order.getTotalAmount(); 
 
-        // [포인트 사용 유효성 검사]
         if (usedPoint > 0) {
             int currentPoint = pointService.findCurrentPoint(memberIdx);
             if (usedPoint > currentPoint) {
@@ -97,15 +96,12 @@ public class PaymentServiceImpl implements PaymentService {
             }
         }
 
-        // 실 결제 금액 계산
         long realPayAmount = totalAmount - usedPoint;
         order.setRealTotalAmount((int)realPayAmount);
 
-        // 1. 주문 번호 생성
         String orderId = generateOrderId();
         order.setOrderNum(orderId); 
 
-        // 2. 배송 번호 생성 및 저장
         if (!items.isEmpty()) {
             OrderItemDTO info = items.get(0);
             
@@ -115,7 +111,6 @@ public class PaymentServiceImpl implements PaymentService {
             shipmentMap.put("deliveryNumber", deliveryNumber);
             shipmentMap.put("addrId", null);
             
-            // [수정] DTO getter 수정 (snake_case)
             shipmentMap.put("receiverName", info.getReceiver_name());
             shipmentMap.put("receiverTel", info.getReceiver_tel());
             shipmentMap.put("zipCode", info.getZip_code());
@@ -130,10 +125,8 @@ public class PaymentServiceImpl implements PaymentService {
             order.setDeliveryNumber(deliveryNumber);
         }
 
-        // 3. 주문 마스터 저장
         orderMapper.insertOrder(order);
 
-        // 4. 결제 정보 저장
         payment.setOrderId(orderId);
         if (payment.getPayStatus() == null || payment.getPayStatus().isEmpty()) {
             payment.setPayStatus("결제완료");
@@ -141,10 +134,9 @@ public class PaymentServiceImpl implements PaymentService {
         if (payment.getPgTid() == null || payment.getPgTid().isEmpty()) {
             payment.setPgTid("IMP_" + System.currentTimeMillis()); 
         }
-        payment.setPayAmount(realPayAmount); // 실 결제액 저장
+        payment.setPayAmount(realPayAmount); 
         orderMapper.insertPayment(payment);
 
-        // 5. 주문 상세 저장 및 재고 차감
         for (OrderItemDTO item : items) {
             item.setOrder_id(orderId);
             orderMapper.insertOrderItem(item);
@@ -169,7 +161,6 @@ public class PaymentServiceImpl implements PaymentService {
             productMapper.insertStockUpdateLog(logMap);
         }
 
-        // 6. 장바구니 비우기
         if (cartIds != null && cartIds.length > 0) {
             try {
                 List<Long> cartIdList = new ArrayList<>();
@@ -187,19 +178,16 @@ public class PaymentServiceImpl implements PaymentService {
             }
         }
 
-        // [포인트 사용 처리]
         if (usedPoint > 0) {
             PointDTO useDto = new PointDTO();
             useDto.setMemberIdx(memberIdx);
             useDto.setOrder_id(orderId);
             useDto.setReason("상품 구매 사용");
-            useDto.setPoint_amount(-usedPoint); // 차감
+            useDto.setPoint_amount(-usedPoint);
             pointService.insertPoint(useDto);
         }
 
-        // [포인트 적립 처리]
-        // MemberMapper.findById(String userId) 호출
-        MemberDTO member = memberMapper.findById(order.getUserId()); // 수정됨: userId로 조회
+        MemberDTO member = memberMapper.findById(order.getUserId()); 
         if (member != null) {
             int userLevel = member.getUserLevel();
             double saveRate = 0.01;

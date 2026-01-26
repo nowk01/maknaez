@@ -8,7 +8,6 @@ import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSessionFactory;
 
-// 자동 스캔 및 Mapper 등록
 public class MapperAutoLoader {
 	public static void loadAll(SqlSessionFactory factory, String mapperBasePath) {
 

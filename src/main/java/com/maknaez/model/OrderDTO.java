@@ -1,7 +1,6 @@
 package com.maknaez.model;
 
 public class OrderDTO {
-    // DB 컬럼 매핑
     private String orderNum;      // 주문번호 (order_id)
     private long memberIdx;       // 회원번호
     private String userId;  	  // 회원 아이디
@@ -23,12 +22,12 @@ public class OrderDTO {
     private String historyStartDate;
     private String historyEndDate;
     
-    private Integer realTotalAmount; // 실 결제 금액 -> ORDERS.REAL_TOTAL_AMOUNT
-    private Integer point;           // 포인트 -> ORDERS.POINT
-    private Long deliveryNumber;     // 운송장 번호 -> ORDERS.DELIVERY_NUMBER
-    private String memo;             // 배송 요청사항 (payment.jsp)
-    private String receiverName;     // 받는 사람 이름 (payment.jsp)
-    private String receiverTel;      // 받는 사람 전화번호 (payment.jsp)
+    private Integer realTotalAmount; // 실 결제 금액
+    private Integer point;           // 포인트
+    private Long deliveryNumber;     // 운송장 번호
+    private String memo;             // 배송 요청사항
+    private String receiverName;     // 받는 사람 이름
+    private String receiverTel;      // 받는 사람 전화번호
 
     public String getHistoryStartDate() {
 		return historyStartDate;
@@ -90,7 +89,6 @@ public class OrderDTO {
 	public void setAddr2(String addr2) {
 		this.addr2 = addr2;
 	}
-	// Getter & Setter
     public String getOrderNum() { return orderNum; }
     public void setOrderNum(String orderNum) { this.orderNum = orderNum; }
     

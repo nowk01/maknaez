@@ -1,11 +1,11 @@
 package com.maknaez.model;
 
 public class OrderItemDTO {
-    private long item_id;      // ITEM_ID (PK)
-    private String order_id;   // ORDER_ID (FK)
-    private long opt_id;       // OPT_ID (FK) - PD_SIZE 테이블 참조
-    private int count;         // COUNT (수량)
-    private long price;        // PRICE (가격)
+    private long item_id;      
+    private String order_id;   
+    private long opt_id;      
+    private int count;         
+    private long price;       
 
     private long prod_id;      // 상품 ID
     private String prod_name;  // 상품명
@@ -23,7 +23,6 @@ public class OrderItemDTO {
     private String tracking_no;      // 운송장 번호
     private String delivery_company; // 택배사
 
-    // Getters and Setters
     public long getItem_id() { return item_id; }
     public void setItem_id(long item_id) { this.item_id = item_id; }
 

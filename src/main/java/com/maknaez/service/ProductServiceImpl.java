@@ -76,8 +76,8 @@ public class ProductServiceImpl implements ProductService {
                 
                 if(sizeList != null) {
                     for(ProductDTO s : sizeList) {
-                        sizes.add(s.getProdSize());   // 사이즈 명
-                        stocks.add(s.getStockQty());  // 재고 수량
+                        sizes.add(s.getProdSize());   
+                        stocks.add(s.getStockQty());  
                     }
                 }
                 dto.setSizes(sizes);
@@ -158,26 +158,19 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
-    public void insertProduct(ProductDTO dto) throws Exception { // pathname 파라미터 제거됨
+    public void insertProduct(ProductDTO dto) throws Exception {
         try {
-            // 1. 썸네일 파일명 추출 및 DB 세팅
-            // GuestServiceImpl 처럼 DTO에 있는 파일 객체 확인
             if (dto.getThumbnailImg() != null) {
-                // 저장된 파일명을 꺼내서 DB 컬럼용 필드에 세팅
                 String saveFilename = dto.getThumbnailImg().getSaveFilename();
                 dto.setThumbnail(saveFilename); 
             }
 
-            // 2. 상품 정보 DB 저장 (먼저 실행하여 prodId 생성)
             mapper.insertProduct(dto);
             long prodId = dto.getProdId();
 
-            // 3. 추가 이미지 파일명 추출 및 DB 저장
-            // GuestServiceImpl의 listFile 처리 방식과 동일
             List<MyMultipartFile> listFile = dto.getListFile();
             if (listFile != null && !listFile.isEmpty()) {
                 for (MyMultipartFile mf : listFile) {
-                    // 저장된 파일명만 꺼내옴 (이미지 이름이 중요!)
                     String saveImg = mf.getSaveFilename();
                     
                     Map<String, Object> imgMap = new HashMap<>();
@@ -188,7 +181,6 @@ public class ProductServiceImpl implements ProductService {
                 }
             }
 
-            // 4. 옵션(사이즈) 및 재고 저장 (기존 로직 유지)
             List<String> sizes = dto.getSizes();
             List<Integer> stocks = dto.getStocks();
 
@@ -217,7 +209,7 @@ public class ProductServiceImpl implements ProductService {
 	@Override
 	public List<CategoryDTO> listCategorySelect() {
 	    try {
-	        return mapper.listCategorySelect(); // 새로 만든 쿼리 호출
+	        return mapper.listCategorySelect(); 
 	    } catch (Exception e) {
 	        e.printStackTrace();
 	        return null;
@@ -308,7 +300,7 @@ public class ProductServiceImpl implements ProductService {
     public void reserveStock(long optId, int quantity) throws Exception {
         Map<String, Object> map = new HashMap<>();
         map.put("opt_id", optId);
-        map.put("quantity", -quantity); // 차감을 위해 음수 전달
+        map.put("quantity", -quantity); 
         map.put("remarks", "BUY_NOW_RESERVATION");
         
         mapper.insertStockLog(map);
@@ -322,16 +314,13 @@ public class ProductServiceImpl implements ProductService {
 	@Override
 	public void updateProduct(ProductDTO dto) throws Exception {
 	    try {
-	        // 1. 썸네일 이미지 파일명 처리
 	        if (dto.getThumbnailImg() != null) {
 	            String saveFilename = dto.getThumbnailImg().getSaveFilename();
 	            dto.setThumbnail(saveFilename);
 	        }
 
-	        // 2. 기본 정보 업데이트 (PRODUCTS 테이블)
 	        mapper.updateProduct(dto);
 
-	        // 3. 추가 이미지 등록 (수정 시 새로 업로드한 파일만 INSERT)
 	        List<MyMultipartFile> listFile = dto.getListFile();
 	        if (listFile != null && !listFile.isEmpty()) {
 	            for (MyMultipartFile mf : listFile) {
@@ -351,41 +340,32 @@ public class ProductServiceImpl implements ProductService {
 	                String sizeName = sizes.get(i);
 	                int newStockQty = stocks.get(i);
 
-	                // 파라미터 맵 생성
 	                Map<String, Object> paramMap = new HashMap<>();
 	                paramMap.put("prodId", dto.getProdId());
 	                paramMap.put("pdSize", sizeName);
 
-	                // [핵심] 이미 존재하는 사이즈인지 확인
 	                Long existingOptId = mapper.getOptId(paramMap);
 	                long optId;
 
 	                if (existingOptId == null) {
-	                    // (1) 존재하지 않으면 -> INSERT (새 옵션 생성)
 	                    ProductDTO optDto = new ProductDTO();
 	                    optDto.setProdId(dto.getProdId());
 	                    optDto.setPdSize(sizeName);
 	                    
 	                    mapper.insertPdSize(optDto);
-	                    optId = optDto.getOptId(); // 새로 생성된 키값
+	                    optId = optDto.getOptId(); 
 	                } else {
-	                    // (2) 존재하면 -> 기존 opt_id 사용 (pd_size 테이블은 건드리지 않음)
 	                    optId = existingOptId;
 	                }
 
-	                // 3. 재고 로그 업데이트 (값이 변경되었거나 새로 등록된 경우)
-	                // 현재 재고 조회
 	                Integer currentStock = mapper.getLastStock(optId);
 	                if (currentStock == null) currentStock = 0;
 
-	                // 재고 수량에 차이가 있을 때만 로그 insert (선택 사항, 모든 변경 시 기록하려면 조건문 제거)
 	                if (existingOptId == null || currentStock != newStockQty) {
 	                    Map<String, Object> stockMap = new HashMap<>();
 	                    stockMap.put("prodId", dto.getProdId());
 	                    stockMap.put("optId", optId);
 	                    
-	                    // 현재 작성된 insertStockLog 쿼리는 'qty'를 prod_stock(잔여량)으로 바로 세팅하므로
-	                    // 관리자가 입력한 최종 수량(newStockQty)을 그대로 넘겨주면 됩니다.
 	                    stockMap.put("qty", newStockQty); 
 	                    
 	                    mapper.insertStockLog(stockMap);
@@ -400,14 +380,12 @@ public class ProductServiceImpl implements ProductService {
 	
 	@Override
     public List<ProductDTO> listProductByIds(List<String> ids) {
-        // 1. null 체크
         if (ids == null || ids.isEmpty()) {
             return new ArrayList<>();
         }
 
         List<ProductDTO> list = null;
         try {
-            // 2. DB에서 상품 목록 조회
             list = mapper.listProductByIds(ids);
         } catch (Exception e) {
             e.printStackTrace();
@@ -417,11 +395,9 @@ public class ProductServiceImpl implements ProductService {
             return new ArrayList<>();
         }
 
-        // 3. 쿠키에 저장된 순서(최신순)대로 정렬
         List<ProductDTO> sortedList = new ArrayList<>();
         for (String id : ids) {
             for (ProductDTO dto : list) {
-                // dto.getProdId()는 long 타입이므로 문자열로 변환하여 비교
                 if (String.valueOf(dto.getProdId()).equals(id)) {
                     sortedList.add(dto);
                     break;
@@ -435,7 +411,6 @@ public class ProductServiceImpl implements ProductService {
 	public List<ProductDTO> listProductImg(long prodId) {
 	    List<ProductDTO> list = null;
 	    try {
-	        // Mapper에 정의된 listProductImg 쿼리 호출
 	        list = mapper.listProductImg(prodId);
 	    } catch (Exception e) {
 	        e.printStackTrace();
@@ -468,23 +443,20 @@ public class ProductServiceImpl implements ProductService {
 	public void updateStock(long[] prodIds, long[] optIds, int qty, String reason) throws Exception {
 	    try {
 	        for (int i=0; i<optIds.length; i++) {	        	
-	            // 1. 현재 재고 조회
 	            Integer currentStock = mapper.getLastStock(optIds[i]);
 	            if (currentStock == null) currentStock = 0;
 
-	            // 2. 최종 재고 계산
 	            int finalStock = currentStock + qty;
 	            if (finalStock < 0) finalStock = 0;
 
-	            // 3. 로그 기록 (신규 메서드 호출!)
 	            Map<String, Object> map = new HashMap<>();
 	            map.put("prodId", prodIds[i]);
 	            map.put("optId", optIds[i]);
 	            map.put("qty", qty);
-	            map.put("finalStock", finalStock); // 계산된 잔고
+	            map.put("finalStock", finalStock);
 	            map.put("reason", reason);
 
-	            mapper.insertStockUpdateLog(map); // <-- 이걸 호출합니다
+	            mapper.insertStockUpdateLog(map);
 	            
 
                 if (currentStock <= 0 && finalStock > 0 && qty > 0) {
@@ -499,7 +471,6 @@ public class ProductServiceImpl implements ProductService {
 	
 	public void sendRestockNotification(long prodId, long optId) {
 		try {
-			// 1. 상품 및 사이즈 정보 조회
 			ProductDTO pDto = mapper.getOptionInfoForAlarm(optId);
 			if (pDto == null) {
 				return;
@@ -508,10 +479,6 @@ public class ProductServiceImpl implements ProductService {
 			String prodName = pDto.getProdName();
 			String sizeName = pDto.getProdSize(); 
 
-            // 2. 썸네일 이미지 URL 생성
-            // [중요] localhost 주소는 Gmail, Naver 등 외부 메일 서비스에서 접근할 수 없습니다.
-            // 로컬 테스트 시에는 이미지가 깨져 보이는(엑스박스) 것이 정상 동작입니다.
-            // 실제 서비스 배포 시에는 외부에서 접속 가능한 도메인 주소로 변경해야 합니다.
             String imgBaseUrl = "http://61.73.115.26:9090/maknaez/uploads/product/"; 
             String thumbnail = pDto.getThumbnail(); 
             
@@ -520,17 +487,14 @@ public class ProductServiceImpl implements ProductService {
             	prodImgUrl = imgBaseUrl + thumbnail;
             }
             
-            // [디버깅] 콘솔에서 생성된 URL이 올바른지 확인 (복사해서 브라우저 주소창에 넣어보세요)
             System.out.println(">> [재입고알림] 생성된 썸네일 URL: " + prodImgUrl);
 
-			// 3. 대상자 이메일 조회 (위시리스트 기준)
 			List<String> emailList = mapper.listWishListUserEmails(prodId);
 			
 			if (emailList == null || emailList.isEmpty()) {
 				return;
 			}
 
-			// 4. 메일 발송 설정
 			MailSender sender = new MailSender();
 			Mail mail = new Mail();
 			
@@ -538,7 +502,6 @@ public class ProductServiceImpl implements ProductService {
 			mail.setSenderName("막내즈");
 			mail.setSubject("[Maknaez] 재입고 알림 : " + prodName);
 			
-            // [수정] 내부 헬퍼 메서드를 호출하여 HTML 본문 생성
 			String htmlContent = generateRestockEmail(prodName, sizeName, String.valueOf(prodId), prodImgUrl);
 			mail.setContent(htmlContent);
 
@@ -549,7 +512,6 @@ public class ProductServiceImpl implements ProductService {
 					boolean isSent = sender.mailSend(mail);
 					if(isSent) successCount++;
 					
-					// 메일 서버 부하 방지용 딜레이 (선택사항)
 					try { Thread.sleep(100); } catch(Exception e) {}
 				}
 			}

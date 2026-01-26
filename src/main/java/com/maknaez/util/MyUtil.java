@@ -41,24 +41,20 @@ public class MyUtil {
 			return "";
 		}
 
-		// list_url += list_url.indexOf("?") != -1 ? "&" : "?";
 		list_url += list_url.contains("?") ? "&" : "?";
 
-		// currentPageSetup : 표시할첫페이지-1
 		currentPageSetup = (current_page / numPerBlock) * numPerBlock;
 		if (current_page % numPerBlock == 0) {
 			currentPageSetup = currentPageSetup - numPerBlock;
 		}
 
 		sb.append("<div class='paginate'>");
-		// 처음페이지, 이전(10페이지 전)
 		n = current_page - numPerBlock;
 		if (total_page > numPerBlock && currentPageSetup > 0) {
 			sb.append(createLinkUrl(list_url, 1, "&#x226A"));
 			sb.append(createLinkUrl(list_url, n, "&#x003C"));
 		}
 
-		// 페이징
 		page = currentPageSetup + 1;
 		while (page <= total_page && page <= (currentPageSetup + numPerBlock)) {
 			if (page == current_page) {
@@ -69,7 +65,6 @@ public class MyUtil {
 			page++;
 		}
 
-		// 다음(10페이지 후), 마지막페이지
 		n = current_page + numPerBlock;
 		if (n > total_page) {
 			n = total_page;
@@ -94,7 +89,7 @@ public class MyUtil {
 	public String pagingMethod(int current_page, int total_page, String methodName) {
 		StringBuilder sb = new StringBuilder();
 
-		int numPerBlock = 10; // 리스트에 나타낼 페이지 수
+		int numPerBlock = 10; 
 		int currentPageSetUp;
 		int n, page;
 
@@ -102,7 +97,6 @@ public class MyUtil {
 			return "";
 		}
 
-		// currentPageSetup : 표시할첫페이지-1
 		currentPageSetUp = (current_page / numPerBlock) * numPerBlock;
 		if (current_page % numPerBlock == 0) {
 			currentPageSetUp = currentPageSetUp - numPerBlock;
@@ -110,14 +104,12 @@ public class MyUtil {
 
 		sb.append("<div class='paginate'>");
 
-		// 처음페이지, 이전(10페이지 전)
 		n = current_page - numPerBlock;
 		if ((total_page > numPerBlock) && (currentPageSetUp > 0)) {
 			sb.append(createLinkClick(methodName, 1, "&#x226A"));
 			sb.append(createLinkClick(methodName, n, "&#x003C"));
 		}
 
-		// 페이지징
 		page = currentPageSetUp + 1;
 		while ((page <= total_page) && (page <= currentPageSetUp + numPerBlock)) {
 			if (page == current_page) {
@@ -128,7 +120,6 @@ public class MyUtil {
 			page++;
 		}
 
-		// 다음(10페이지 후), 마지막 페이지
 		n = current_page + numPerBlock;
 		if (n > total_page)
 			n = total_page;
@@ -141,7 +132,6 @@ public class MyUtil {
 		return sb.toString();
 	}
 
-	// 화면에 표시할 페이지를 중앙에 출력
 	public String pagingUrl(int current_page, int total_page, String list_url) {
 		StringBuilder sb = new StringBuilder();
 
@@ -154,7 +144,7 @@ public class MyUtil {
 
 		list_url += list_url.contains("?") ? "&" : "?";
 
-		page = 1; // 출력할 시작 페이지
+		page = 1; 
 		if (current_page > (numPerBlock / 2) + 1) {
 			page = current_page - (numPerBlock / 2);
 
@@ -169,12 +159,10 @@ public class MyUtil {
 
 		sb.append("<div class='paginate'>");
 
-		// 처음페이지
 		if (page > 1) {
 			sb.append(createLinkUrl(list_url, 1, "&#x226A"));
 		}
 
-		// 이전(한페이지 전)
 		n = current_page - 1;
 		if (current_page > 1) {
 			sb.append(createLinkUrl(list_url, n, "&#x003C"));
@@ -190,13 +178,11 @@ public class MyUtil {
 			page++;
 		}
 
-		// 다음(한페이지 다음)
 		n = current_page + 1;
 		if (current_page < total_page) {
 			sb.append(createLinkUrl(list_url, n, "&#x003E"));
 		}
 
-		// 마지막페이지
 		if (page <= total_page) {
 			sb.append(createLinkUrl(list_url, total_page, "&#x226B"));
 		}
@@ -206,7 +192,6 @@ public class MyUtil {
 		return sb.toString();
 	}
 
-	// 화면에 표시할 페이지를 중앙에 출력 : javascript 함수 호출
 	public String pagingFunc(int current_page, int total_page, String methodName) {
 		StringBuilder sb = new StringBuilder();
 
@@ -217,7 +202,7 @@ public class MyUtil {
 			return "";
 		}
 
-		page = 1; // 출력할 시작 페이지
+		page = 1; 
 		if (current_page > (numPerBlock / 2) + 1) {
 			page = current_page - (numPerBlock / 2);
 
@@ -232,12 +217,10 @@ public class MyUtil {
 
 		sb.append("<div class='paginate'>");
 
-		// 처음페이지
 		if (page > 1) {
 			sb.append(createLinkClick(methodName, 1, "&#x226A"));
 		}
 
-		// 이전(한페이지 전)
 		n = current_page - 1;
 		if (current_page > 1) {
 			sb.append(createLinkClick(methodName, n, "&#x003C"));
@@ -254,13 +237,11 @@ public class MyUtil {
 			page++;
 		}
 
-		// 다음(한페이지 다음)
 		n = current_page + 1;
 		if (current_page < total_page) {
 			sb.append(createLinkClick(methodName, n, "&#x003E"));
 		}
 
-		// 마지막페이지
 		if (page <= total_page) {
 			sb.append(createLinkClick(methodName, total_page, "&#x226B"));
 		}
@@ -309,16 +290,14 @@ public class MyUtil {
 		 }
 		 
 		 try {
-			  if (! str.contains("%")) { // % 가 없으면 디코딩하지 않아도 됨
+			  if (! str.contains("%")) {
 				  return str;
 			  }
 			  
-			   // 인코딩 패턴이 유효한 경우만 디코딩 시도
 			  if (pattern.matcher(str).matches()) {
 				  return URLDecoder.decode(str, StandardCharsets.UTF_8.name());
 			  }
 		} catch (IllegalArgumentException e) {
-			// 잘못된 % 인코딩 형식(%가 있지만 2자리 16진수가 아닌 경우)이 존재하는 경우
 		} catch (UnsupportedEncodingException e) {
 		}
 		
@@ -342,7 +321,7 @@ public class MyUtil {
 		str = str.replaceAll("<", "&lt;");
 
 		str = str.replaceAll("\n", "<br>");
-		str = str.replaceAll("\\s", "&nbsp;"); // \\s가 엔터도 변경하므로 \n보다 뒤에
+		str = str.replaceAll("\\s", "&nbsp;"); 
 
 		return str;
 	}

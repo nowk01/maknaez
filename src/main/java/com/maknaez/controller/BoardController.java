@@ -50,7 +50,7 @@ public class BoardController {
 		ModelAndView mav = new ModelAndView("cs/inquiry_list");
 
 		try {
-			// [수정] 페이지 번호 파라미터 처리 및 offset 계산 적용
+			// 페이지 번호 파라미터 처리 및 offset 계산 적용
 			String pageStr = req.getParameter("page");
 			int current_page = (pageStr != null) ? Integer.parseInt(pageStr) : 1;
 			int size = 10;
@@ -91,9 +91,7 @@ public class BoardController {
 		return mav;
 	}
 
-	// ==========================================
 	// [AJAX] 무한 스크롤용 데이터 반환
-	// ==========================================
 	@ResponseBody
 	@GetMapping("listData")
 	public void listData(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -133,7 +131,7 @@ public class BoardController {
 				jo.put("userName", dto.getUserName());
 				jo.put("reg_date", dto.getReg_date().substring(0, 10));
 
-				// [핵심수정] isEmpty() 호출 제거하여 NullPointerException 방지
+				// isEmpty() 호출 제거 => NullPointerException 방지
 				boolean isAnswered = (dto.getReplyDate() != null && !dto.getReplyDate().equals(""));
 				jo.put("isAnswered", isAnswered);
 
@@ -373,9 +371,7 @@ public class BoardController {
 		return new ModelAndView("redirect:/cs/list");
 	}
 
-	// ==========================================
 	// 공지사항 (Notice)
-	// ==========================================
 	@GetMapping("notice")
 	public ModelAndView notice(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		ModelAndView mav = new ModelAndView("cs/notice_list");
@@ -457,9 +453,7 @@ public class BoardController {
 		return mav;
 	}
 
-	// ==========================================
 	// FAQ
-	// ==========================================
 	@GetMapping("faq")
 	public ModelAndView faq(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		ModelAndView mav = new ModelAndView("cs/faq");

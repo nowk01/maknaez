@@ -9,7 +9,6 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 
 public class HandlerMappingRegistry {
-	// HandlerMapping이 두개 이상 존재할 수 있으므로
 	private final List<HandlerMapping> handlerMappings;
 
 	public HandlerMappingRegistry() {
@@ -24,6 +23,6 @@ public class HandlerMappingRegistry {
 	public Optional<Object> getHandler(final HttpServletRequest req) {
 		return handlerMappings.stream().map(handlerMapping -> handlerMapping.getHandler(req))
 				.filter(Objects::nonNull)
-				.findFirst(); // .findAny();
+				.findFirst();
 	}
 }

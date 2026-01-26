@@ -44,7 +44,7 @@ public class AlertServiceImpl implements AlertService {
 	        
 	        if (result == 0) {
 	            Map<String, Object> map = new HashMap<>();
-	            map.put("memberIdx", 1); // 관리자
+	            map.put("memberIdx", 1); 
 	            map.put("content", "읽음 처리된 알림");
 	            map.put("dataIdx", alertIdx); 
 	            

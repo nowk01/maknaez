@@ -100,9 +100,8 @@ public class PaymentController {
                 totalQuantity += qty;
             }
 
-            // [추가] 등급별 적립 예정 포인트 계산
             int userLevel = member.getUserLevel();
-            double saveRate = 0.01; // 기본 1%
+            double saveRate = 0.01; 
 
             if (userLevel >= 1 && userLevel <= 10) saveRate = 0.01;
             else if (userLevel >= 11 && userLevel <= 20) saveRate = 0.015;
@@ -117,7 +116,6 @@ public class PaymentController {
             mav.addObject("totalPrice", totalPrice);
             mav.addObject("totalQuantity", totalQuantity);
             
-            // View로 전달
             mav.addObject("saveRate", saveRate);
             mav.addObject("expectedPoint", expectedPoint);
 

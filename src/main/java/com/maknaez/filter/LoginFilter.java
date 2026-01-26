@@ -51,7 +51,6 @@ public class LoginFilter implements Filter {
 
 		SessionInfo info = (SessionInfo) session.getAttribute("member");
 
-		// 1. 로그인이 필요한 페이지인데 로그인을 안 한 경우
 		if (info == null && !isExcludeUri(req)) {
 			if (isAjaxRequest(req)) {
 				resp.sendError(403);
@@ -65,7 +64,6 @@ public class LoginFilter implements Filter {
 					session.setAttribute("preLoginURI", returnUri);
 				}
 
-				// 관리자 페이지(/admin) 접근 시도였다면 관리자 로그인으로 이동
 				if (path.startsWith("/admin")) {
 					resp.sendRedirect(cp + "/admin/login");
 				} else {
@@ -75,15 +73,12 @@ public class LoginFilter implements Filter {
 			return;
 		}
 
-		// 2. 로그인은 했으나 관리자 페이지(/admin)에 권한 없이 접근하는 경우
 		else if (info != null && path.startsWith("/admin")) {
-			// 관리자 로그인 페이지나 로그아웃은 통과
 			if (path.equals("/admin/login") || path.equals("/member/logout")) {
 				chain.doFilter(request, response);
 				return;
 			}
 
-			// 권한 체크 (레벨 51 미만은 접근 불가)
 			if (info.getUserLevel() < 51) {
 				resp.sendRedirect(cp + "/member/noAuthorized");
 				return;

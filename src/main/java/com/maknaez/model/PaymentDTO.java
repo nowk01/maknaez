@@ -4,16 +4,14 @@ package com.maknaez.model;
  * 설명: 결제 정보를 담는 객체
  */
 public class PaymentDTO {
-    private long payId;   	     // PAY_ID (PK)
-    private String orderId;      // ORDER_ID (FK -> ORDERS.ITEMS_ID)
-    private String payMethod;    // PAY_METHOD (카드, 무통장 등)
-    private long payAmount;      // PAY_AMOUNT (결제 금액)
-    private String pgTid; 		 // PG_TID (PG사 거래 번호, 테스트용 임의값)
-    private String payStatus;    // PAY_STATUS (결제완료, 취소 등)
-    private String cardName;     // CARD_NAME
-    private String cardNum;      // CARD_NUM
-
-    public PaymentDTO() {}
+    private long payId;   	     
+    private String orderId;      
+    private String payMethod;    
+    private long payAmount;     
+    private String pgTid; 		
+    private String payStatus;    
+    private String cardName;     
+    private String cardNum;     
 
     public long getPayId() { return payId; }
     public void setPayId(long payId) { this.payId = payId; }

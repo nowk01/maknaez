@@ -24,7 +24,7 @@ import jakarta.servlet.http.HttpSession;
 public class AdminLoginController {
 	private MemberService service = new MemberServiceImpl();
 
-	// 관리자 로그인 화면 (주소: /admin/login)
+	// 관리자 로그인 화면
 	@GetMapping("/login")
 	public ModelAndView loginForm(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		HttpSession session = req.getSession();
@@ -94,7 +94,6 @@ public class AdminLoginController {
 			e.printStackTrace();
 		}
 
-		// 오류 발생 시 다시 로그인 페이지로
 		return new ModelAndView("redirect:/admin/login");
 	}
 	

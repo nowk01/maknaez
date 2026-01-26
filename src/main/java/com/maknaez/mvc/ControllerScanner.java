@@ -33,7 +33,6 @@ public class ControllerScanner {
 		}
 	}
 
-	// Controller Scan 시작 --
 	private Set<Class<?>> getAllControllers(final String[] basePackages) {
 		Set<Class<?>> set = new LinkedHashSet<Class<?>>();
 
@@ -45,7 +44,6 @@ public class ControllerScanner {
 	}
 
 	private Set<Class<?>> scan(String basePackage) {
-		// 현재 실행 중인 쓰레드의 클래스 로더 반환
 		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 		String path = basePackage.replace('.', '/');
 
@@ -84,9 +82,6 @@ public class ControllerScanner {
 				String className = basePackage + '.' + file.getName().substring(0, file.getName().length() - 6);
 				ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 				try {
-					// forName(String className, boolean initialize, ClassLoader classLoader)
-					// initialize : 클래스 초기화 여부(기본:true-static 초기화블럭이실행됨)
-					// classLoader : 현재의 클래스를 정의하는 클래스 로더
 					Class<?> cls = Class.forName(className, false, classLoader);
 					if (cls.isAnnotationPresent(Controller.class)) {
 						classes.add(Class.forName(className, false, classLoader));
@@ -99,5 +94,4 @@ public class ControllerScanner {
 
 		return classes;
 	}
-	// Controller Scan 종료 --
 }

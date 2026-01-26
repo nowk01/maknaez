@@ -38,7 +38,6 @@ public class SmartEditorUploadServlet extends HttpServlet {
 
 			String cp = req.getContextPath();
 
-			// 이미지 파일 받기
 			if (!"OPTIONS".equals(req.getMethod().toUpperCase())) {
 				String filename = req.getHeader("file-name");
 
@@ -50,14 +49,12 @@ public class SmartEditorUploadServlet extends HttpServlet {
 				imageSaveInfo += "&sFileURL=" + cp + webPath + "/" + saveFilename;
 			}
 		} catch (Exception e) {
-			// e.printStackTrace();
 		}
 
 		PrintWriter out = resp.getWriter();
 		out.print(imageSaveInfo);
 	}
 
-	// 서버에 저장할 파일 이름
 	protected String generateFilename(String originalFilename) {
 		String filename = null;
 
@@ -71,17 +68,14 @@ public class SmartEditorUploadServlet extends HttpServlet {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmssSSS");
 		String formattedDate = sdf.format(new Date(System.currentTimeMillis()));
 
-		// 파일 이름 생성(현재 시간 + nanoTime + 확장자)
 		filename = formattedDate + nanoTime + extension;
 
 		return filename;
 	}
 
-	// 파일 업로드
 	protected String doFileUpload(InputStream is, String originalFilename, String pathString) throws Exception {
 		String saveFilename = null;
 
-		// 서버에 저장할 새로운 파일명을 만든다.
 		saveFilename = generateFilename(originalFilename);
 		if (saveFilename == null) {
 			return null;

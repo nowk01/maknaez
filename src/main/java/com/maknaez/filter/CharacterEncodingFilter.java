@@ -31,8 +31,6 @@ public class CharacterEncodingFilter implements Filter {
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
 		
-		// 서블릿 6.0은 request characterEncoding 의 기본은 utf-8 이다.
-		// POST 방식에서 파라미터 인코딩
 		if(request instanceof HttpServletRequest) {
 			HttpServletRequest req = (HttpServletRequest)request;
 			if(req.getMethod().equalsIgnoreCase("POST")) {

@@ -1,17 +1,16 @@
 package com.maknaez.model;
 
 public class AddressDTO {
-    private long addrId;        // DB: addr_id (PK)
-    private long memberIdx;     // DB: memberIdx (FK)
-    private String addrName;    // DB: addr_name (배송지명: 집, 회사 등) - 현재 JSP엔 입력칸 없음(Null 처리)
-    private String receiverName;// DB: receiver_name (받는 사람)
-    private String receiverTel; // DB: receiver_tel (전화번호)
-    private String zipCode;     // DB: zip_code (우편번호)
-    private String addr1;       // DB: addr1
-    private String addr2;       // DB: addr2
-    private int isBasic;        // DB: isbasic (0:일반, 1:기본)
+    private long addrId;        
+    private long memberIdx;     
+    private String addrName;    
+    private String receiverName;
+    private String receiverTel; 
+    private String zipCode;     
+    private String addr1;       
+    private String addr2;      
+    private int isBasic;       
     
-    // Getter & Setter
     public long getAddrId() { return addrId; }
     public void setAddrId(long addrId) { this.addrId = addrId; }
     
@@ -44,7 +43,7 @@ public class AddressDTO {
 			return "";
 		}
 		
-		String tel = receiverTel.replaceAll("[^0-9]", ""); // 숫자만 남김
+		String tel = receiverTel.replaceAll("[^0-9]", ""); 
 		return tel.replaceAll("^(02|0505|1[0-9]{3}|0[0-9]{2})([0-9]+)([0-9]{4})$", "$1 - $2 - $3");
 	}
 }

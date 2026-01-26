@@ -1,6 +1,5 @@
 @charset "UTF-8";
 
-/* [MAKNAEZ ADMIN] 공지사항 상세 - 스타일 통합 */
 body {
     background-color: #fcfcfd;
     color: #202224;
@@ -18,7 +17,7 @@ body {
     to { opacity: 1; transform: translateY(0); }
 }
 
-/* 상단 헤더: 리스트와 동일한 포인트 */
+/* 상단 헤더 */
 .page-header {
     margin-bottom: 35px;
     border-left: 5px solid #ff4e00;
@@ -45,7 +44,7 @@ body {
 .article-header {
     padding-bottom: 25px;
     margin-bottom: 30px;
-    border-bottom: 2px solid #1a1c1e; /* 리스트 테이블 헤더와 통일감 */
+    border-bottom: 2px solid #1a1c1e;
 }
 
 .article-title {
@@ -58,7 +57,7 @@ body {
     gap: 12px;
 }
 
-/* 중요공지 배지: 리스트 배지 스타일 계승 */
+/* 중요공지 */
 .badge-pin {
     background: #ff4e00;
     color: #fff;
@@ -93,7 +92,7 @@ body {
     padding: 20px 0;
 }
 
-/* 첨부파일 영역: 리스트 검색바 같은 직각형 디자인 */
+/* 첨부파일 영역*/
 .file-box {
     margin-top: 50px;
     padding: 20px;
@@ -132,7 +131,7 @@ body {
     text-align: right;
 }
 
-/* [1] 목록으로 버튼: 리스트 SEARCH 버튼 스타일 계승 */
+/* 목록으로 버튼 */
 .btn-list {
     background: #ff4e00 !important;
     color: #fff !important;
@@ -145,5 +144,5 @@ body {
 }
 
 .btn-list:hover {
-    background: #000 !important; /* 주황색 -> 검정 호버 효과 */
+    background: #000 !important; 
 }

@@ -5,7 +5,7 @@ public class SessionInfo {
 	private String userId;
 	private String userName;
 	private int userLevel;
-	private String avatar; // profile photo
+	private String avatar; 
 	
 	public Long getMemberIdx() {
 		return memberIdx;

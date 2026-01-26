@@ -18,8 +18,8 @@ public class StatsServiceImpl implements StatsService{
         long todaySales = mapper.getTodaySales();
         long yesterdaySales = mapper.getYesterdaySales();
         resultMap.put("todaySales", todaySales);
-        resultMap.put("todaySalesDiff", calculateGrowth(todaySales, yesterdaySales)); // 증감률 문자열 (+ 5.0%)
-        resultMap.put("todaySalesColor", getGrowthColor(todaySales, yesterdaySales)); // 색상 클래스
+        resultMap.put("todaySalesDiff", calculateGrowth(todaySales, yesterdaySales)); 
+        resultMap.put("todaySalesColor", getGrowthColor(todaySales, yesterdaySales)); 
 
         long monthSales = mapper.getMonthSales();
         long lastMonthSales = mapper.getLastMonthSales();
@@ -30,17 +30,17 @@ public class StatsServiceImpl implements StatsService{
         int todayOrders = mapper.getTodayOrderCount();
         int yesterdayOrders = mapper.getYesterdayOrderCount();
         int diffOrders = todayOrders - yesterdayOrders;
-        String diffOrderStr = (diffOrders >= 0 ? "+ " : "") + diffOrders; // "+ 5" or "- 3"
+        String diffOrderStr = (diffOrders >= 0 ? "+ " : "") + diffOrders; 
         
         resultMap.put("todayOrderCount", todayOrders);
         resultMap.put("orderDiffStr", diffOrderStr + " 건");
-        resultMap.put("orderDiffColor", (diffOrders >= 0) ? "text-success" : "text-danger"); // Green : Red
+        resultMap.put("orderDiffColor", (diffOrders >= 0) ? "text-success" : "text-danger");
 
         List<Map<String, Object>> salesTrend;
         if ("monthly".equals(mode)) {
-            salesTrend = mapper.getMonthlySalesTrend(); // 최근 1년
+            salesTrend = mapper.getMonthlySalesTrend(); 
         } else {
-            salesTrend = mapper.getRecentSales();       // 최근 7일 (기본)
+            salesTrend = mapper.getRecentSales();   
         }
         resultMap.put("salesTrend", salesTrend);
         
@@ -71,12 +71,11 @@ public class StatsServiceImpl implements StatsService{
         map.put("soldOutCount", mapper.getSoldOutCount());
         map.put("lowStockCount", mapper.getLowStockCount());
 
-        // 2. 차트 데이터
-        map.put("orderStatus", mapper.getOrderStatusDistribution()); // 주문 상태
-        map.put("categoryShare", mapper.getCategoryShare());         // 카테고리 비중
-        map.put("bestSellers", mapper.getBestSellers());             // 베스트 셀러
-        map.put("topWishlist", mapper.getTopWishlist());             // 찜 순위
-        map.put("topCart", mapper.getTopCart());                     // 장바구니 순위
+        map.put("orderStatus", mapper.getOrderStatusDistribution());
+        map.put("categoryShare", mapper.getCategoryShare());         
+        map.put("bestSellers", mapper.getBestSellers());             
+        map.put("topWishlist", mapper.getTopWishlist());             
+        map.put("topCart", mapper.getTopCart());                  
 
         return map;
     }
@@ -86,7 +85,6 @@ public class StatsServiceImpl implements StatsService{
         StatsMapper mapper = SqlSessionManager.getSession().getMapper(StatsMapper.class);
         Map<String, Object> map = new HashMap<>();
 
-        // 1. 요약 및 차트 데이터
         map.put("totalMemberCount", mapper.getTotalMemberCount());
         map.put("vipRatio", mapper.getVipRatio());
         map.put("newMemberTrend", mapper.getNewMemberTrend());
@@ -96,7 +94,6 @@ public class StatsServiceImpl implements StatsService{
         map.put("dormantCount", mapper.getDormantMemberCount());     
         map.put("withdrawnCount", mapper.getWithdrawnMemberCount()); 
         
-        // 2. VIP 리스트 (전체 데이터를 가져와서 JS에서 정렬)
         map.put("vipList", mapper.getVipRanking());
 
         return map;

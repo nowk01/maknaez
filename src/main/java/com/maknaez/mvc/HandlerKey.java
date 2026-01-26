@@ -16,7 +16,6 @@ public class HandlerKey {
 		uri = uri.substring(cp.length());
 
 		this.url = uri;
-		// this.url = request.getRequestURI();
 		this.requestMethod = RequestMethod.valueOf(req.getMethod()); // 지정된 이름의 열거형 반환
 	}
 
@@ -32,7 +31,6 @@ public class HandlerKey {
 
 	@Override
 	public int hashCode() {
-		// hashCode() 함수가 존재해야 검색 가능
 		return Objects.hash(url, requestMethod);
 	}
 

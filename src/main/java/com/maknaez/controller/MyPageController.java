@@ -132,7 +132,7 @@ public class MyPageController {
 		return mav;
 	}
 
-	// 3. 취소/반품 내역
+	// 취소/반품 내역
 	@GetMapping("cancelList")
 	public ModelAndView cancelList(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		ModelAndView mav = new ModelAndView("mypage/cancelList");
@@ -207,50 +207,48 @@ public class MyPageController {
 		return mav;
 	}
 
-	// 4. 리뷰 작성 가능 목록 및 작성한 리뷰 목록
-		@GetMapping("review")
-		public ModelAndView review(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-			ModelAndView mav = new ModelAndView("mypage/review");
-			HttpSession session = req.getSession();
-			SessionInfo info = (SessionInfo) session.getAttribute("member");
-			if (info == null)
-				return new ModelAndView("redirect:/member/login");
+	// 리뷰 작성 가능 목록 및 작성한 리뷰 목록
+	@GetMapping("review")
+	public ModelAndView review(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		ModelAndView mav = new ModelAndView("mypage/review");
+		HttpSession session = req.getSession();
+		SessionInfo info = (SessionInfo) session.getAttribute("member");
+		if (info == null)
+			return new ModelAndView("redirect:/member/login");
 
-			OrderMapper mapper = MapperContainer.get(OrderMapper.class);
+		OrderMapper mapper = MapperContainer.get(OrderMapper.class);
 
-			try {
-				// 1. 작성 가능한 리뷰 목록 (기존 로직)
-				Map<String, Object> map = new HashMap<>();
-				map.put("memberIdx", info.getMemberIdx());
-				map.put("orderState", "배송완료");
-				map.put("mode", "writable");  
-				map.put("start", 1);
-				map.put("end", 100);
+		try {
+			Map<String, Object> map = new HashMap<>();
+			map.put("memberIdx", info.getMemberIdx());
+			map.put("orderState", "배송완료");
+			map.put("mode", "writable");  
+			map.put("start", 1);
+			map.put("end", 100);
 
-				List<OrderDTO> list = mapper.listOrder(map);
-				int dataCount = mapper.dataCount(map);
+			List<OrderDTO> list = mapper.listOrder(map);
+			int dataCount = mapper.dataCount(map);
 
-				mav.addObject("list", list);
-				mav.addObject("dataCount", dataCount);
-				
-				// 2. [추가] 작성한 리뷰 목록
-				Map<String, Object> map2 = new HashMap<>();
-				map2.put("memberIdx", info.getMemberIdx());
-				map2.put("start", 1);
-				map2.put("end", 100); // 필요 시 페이징 로직 추가
-				
-				
-				int writtenDataCount = reviewService.dataCountMyReviews(info.getMemberIdx());
-				List<ReviewDTO> writtenList = reviewService.listMyReviews(map2);
-				
-				mav.addObject("writtenList", writtenList);
-				mav.addObject("writtenDataCount", writtenDataCount);
+			mav.addObject("list", list);
+			mav.addObject("dataCount", dataCount);
+			
+			Map<String, Object> map2 = new HashMap<>();
+			map2.put("memberIdx", info.getMemberIdx());
+			map2.put("start", 1);
+			map2.put("end", 100);
+			
+			
+			int writtenDataCount = reviewService.dataCountMyReviews(info.getMemberIdx());
+			List<ReviewDTO> writtenList = reviewService.listMyReviews(map2);
+			
+			mav.addObject("writtenList", writtenList);
+			mav.addObject("writtenDataCount", writtenDataCount);
 
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			return mav;
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
+		return mav;
+	}
 
 	@GetMapping("wishList")
 	public ModelAndView wishList(HttpServletRequest req, HttpServletResponse resp) {
@@ -306,7 +304,7 @@ public class MyPageController {
 		return mav;
 	}
 
-	// 6. 내 정보 관리
+	// 내 정보 관리
 	@GetMapping("myInfo")
 	public ModelAndView myInfo(HttpServletRequest req, HttpServletResponse resp) {
 		HttpSession session = req.getSession(false);
@@ -333,7 +331,7 @@ public class MyPageController {
 		return mav;
 	}
 
-	// 7. 회원 정보 수정 처리
+	// 회원 정보 수정 처리
 	@PostMapping("update")
 	public ModelAndView updateSubmit(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
@@ -368,10 +366,8 @@ public class MyPageController {
 			String receiveEmail = req.getParameter("receiveEmail");
 			dto.setReceiveEmail(receiveEmail != null ? 1 : 0);
 
-			// 회원 정보 업데이트 실행
 			service.updateMember(dto);
 
-			// 세션 정보 갱신
 			info.setUserName(dto.getUserName());
 			session.setAttribute("member", info);
 
@@ -382,7 +378,7 @@ public class MyPageController {
 		return new ModelAndView("redirect:/member/mypage/myInfo");
 	}
 
-	// 8. 배송지 관리 목록
+	// 배송지 관리 목록
 	@GetMapping("addr")
 	public ModelAndView addressList(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
@@ -401,7 +397,7 @@ public class MyPageController {
 		return mav;
 	}
 
-	// 9. 배송지 추가
+	// 배송지 추가
 	@PostMapping("addr/write")
 	public ModelAndView addressWrite(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
@@ -429,7 +425,7 @@ public class MyPageController {
 		return new ModelAndView("redirect:/member/mypage/addr");
 	}
 
-	// 10. 배송지 수정
+	// 배송지 수정
 	@PostMapping("addr/update")
 	public ModelAndView addressUpdate(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
@@ -461,7 +457,7 @@ public class MyPageController {
 		return new ModelAndView("redirect:/member/mypage/addr");
 	}
 
-	// 11. 배송지 삭제
+	// 배송지 삭제
 	@GetMapping("addr/delete")
 	public ModelAndView addressDelete(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
@@ -479,7 +475,7 @@ public class MyPageController {
 		return new ModelAndView("redirect:/member/mypage/addr");
 	}
 
-	// 12. 포인트/멤버십
+	// 포인트/멤버십
 	@GetMapping("membership")
 	public ModelAndView membership(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
@@ -575,7 +571,7 @@ public class MyPageController {
 		return mav;
 	}
 
-	// 14. 취소/교환 신청 처리 (POST)
+	// 취소/교환 신청 처리
 	@PostMapping("claimRequest")
 	public ModelAndView claimRequest(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 	    HttpSession session = req.getSession();
@@ -677,7 +673,6 @@ public class MyPageController {
 	        map.put("memberIdx", info.getMemberIdx());
 	        map.put("orderNum", orderNum);
 	        
-	        // listOrder 쿼리 필수 파라미터 세팅
 	        map.put("start", 1);
 	        map.put("end", 1); 
 
@@ -707,7 +702,6 @@ public class MyPageController {
 	        map.put("orderNum", orderNum);
 	        map.put("status", "구매확정");
 	        
-	        // DB 상태 업데이트 (아래 4번에서 매퍼 쿼리 작성 필요)
 	        mapper.updateOrderState(map);
 	        
 	    } catch (Exception e) {
@@ -732,12 +726,10 @@ public class MyPageController {
 
         FileManager fileManager = new FileManager();
         
-        // 파일 저장 경로 설정
         String root = session.getServletContext().getRealPath("/");
         String pathname = root + "uploads" + java.io.File.separator + "review";
 
         try {
-            // 파일 업로드 처리
             Part part = req.getPart("selectFile");
             String saveFilename = null;
             if(part != null && part.getSize() > 0) {
@@ -747,7 +739,6 @@ public class MyPageController {
                 }
             }
 
-            // DTO 생성 및 데이터 바인딩
             com.maknaez.model.ReviewDTO dto = new com.maknaez.model.ReviewDTO();
             dto.setMemberIdx(info.getMemberIdx());
             dto.setOrderNum(req.getParameter("orderNum"));
@@ -756,7 +747,6 @@ public class MyPageController {
             dto.setStarRating(Integer.parseInt(req.getParameter("rating")));
             dto.setReviewImg(saveFilename);
 
-            // 서비스 호출
             reviewService.insertReview(dto, pathname);
 
         } catch (Exception e) {

@@ -209,7 +209,6 @@ public class MemberController {
 				session.removeAttribute("member");
 				session.invalidate();
 			} else if (mode.equals("update")) {
-				// ★ 수정 페이지 이동 (MyPageController로 넘기기 위해 리다이렉트가 낫지만, 여기선 View 바로 연결)
 				if (dto.getEmail() != null) {
 					String[] emails = dto.getEmail().split("@");
 					if (emails.length > 0) dto.setEmail1(emails[0]);

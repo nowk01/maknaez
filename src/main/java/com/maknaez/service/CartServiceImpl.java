@@ -10,18 +10,14 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public void insertCart(CartDTO dto) throws Exception {
-        // 필터가 세션을 관리하므로 getSession()만 호출
         SqlSession sqlSession = SqlSessionManager.getSession();
         CartMapper mapper = sqlSession.getMapper(CartMapper.class);
         
-        // 1. 이미 담긴 상품인지 확인
         int count = mapper.checkExistingCart(dto);
         
         if (count > 0) {
-            // 2-1. 이미 있으면 수량 증가
             mapper.updateCartQuantity(dto);
         } else {
-            // 2-2. 없으면 새로 추가
             mapper.insertCart(dto);
         }
     }

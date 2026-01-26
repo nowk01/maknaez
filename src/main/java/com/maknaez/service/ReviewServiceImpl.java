@@ -113,7 +113,7 @@ public class ReviewServiceImpl implements ReviewService {
 	        map.put("reviewId", reviewId);
 	        map.put("replyContent", replyContent);
 	        
-	        mapper.updateReply(map); // 방금 만든 Mapper ID 호출
+	        mapper.updateReply(map); 
 	    } catch (Exception e) {
 	        e.printStackTrace();
 	        throw e;

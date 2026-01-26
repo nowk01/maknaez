@@ -35,7 +35,6 @@ public class MemberServiceImpl implements MemberService {
 			mapper.insertMember3(dto);
 			
 		} catch (Exception e) {
-			// 트랜잭션 처리
 			SqlSessionManager.setRollbackOnly();
 			
 			e.printStackTrace();
@@ -146,11 +145,6 @@ public class MemberServiceImpl implements MemberService {
 	    }
 	    return dto;
 	} 
-	@Override
-	public List<Map<String, Object>> listAgeSection() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	@Override
 	public Integer dataCount(Map<String, Object> map) {
@@ -223,17 +217,12 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	public void insertAddress(AddressDTO dto) throws Exception {
 	    try {
-	        // [추가 로직] 만약 '기본 배송지'로 설정(isBasic=1)했다면, 
-	        // 해당 회원의 기존 기본 배송지 설정을 모두 해제(0) 먼저 수행
 	        if (dto.getIsBasic() == 1) {
 	            mapper.updateAddressBasicReset(dto.getMemberIdx());
 	        }
-	        
-	        // 그 다음 새로운 배송지 추가
 	        mapper.insertAddress(dto);
 	        
 	    } catch (Exception e) {
-	        // 에러 발생 시 롤백 처리
 	        SqlSessionManager.setRollbackOnly();
 	        e.printStackTrace();
 	        throw e;
@@ -274,14 +263,10 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	public void updateAddress(AddressDTO dto) throws Exception {
 	    try {
-	        // [중요 로직]
-	        // 만약 이번에 수정하는 배송지를 '기본 배송지(1)'로 설정했다면?
-	        // -> 기존에 있던 다른 기본 배송지를 '일반(0)'으로 바꿔줘야 합니다. (중복 방지)
 	        if (dto.getIsBasic() == 1) {
 	            mapper.updateAddressReset(dto.getMemberIdx()); 
 	        }
 
-	        // 배송지 정보 수정 실행
 	        mapper.updateAddress(dto);
 	        
 	    } catch (Exception e) {

@@ -34,8 +34,6 @@ public class AnnotationHandlerMapping implements HandlerMapping {
 
 	@Override
 	public HandlerExecution getHandler(final HttpServletRequest req) {
-		// HandlerKey 생성자에서 이미 ContextPath(/maknaez)를 제거하므로
-		// 여기서는 단순히 넘겨주기만 하면 됩니다.
 		HandlerKey handlerKey = new HandlerKey(req);
 		return handlerExecutions.get(handlerKey);
 	}
@@ -95,32 +93,23 @@ public class AnnotationHandlerMapping implements HandlerMapping {
 		MappingInfo mappingInfo = extractMappingInfo(method);
 		String methodUrl = mappingInfo.url;
 		String finalUrl;
-
-		// [핵심 수정] URL 조합 로직 변경
-		// 기존 문제: methodUrl이 "/"로 시작하면 classUrl을 무시해버림
-		// 해결: classUrl과 methodUrl을 자연스럽게 이어붙이도록 변경
 		
 		if (methodUrl == null) methodUrl = "";
 		
-		// 1. classUrl 끝에 있는 '/' 제거
 		if (classUrl.endsWith("/")) {
 			classUrl = classUrl.substring(0, classUrl.length() - 1);
 		}
 		
-		// 2. methodUrl 앞에 '/' 추가 (없으면)
 		if (!methodUrl.isEmpty() && !methodUrl.startsWith("/")) {
 			methodUrl = "/" + methodUrl;
 		}
 		
-		// 3. 두 주소 합치기 (/admin + /login = /admin/login)
 		finalUrl = classUrl + methodUrl;
 
-		// 유효성 검사: 둘 다 비어서 최종 URL이 없는 경우
 		if (finalUrl.isEmpty()) {
 			throw new ServletException("클래스 URL과 메서드 URL이 모두 없습니다: " + method.getName());
 		}
 		
-		// 중복 메서드 체크 (메서드 URL이 빈 경우)
 		if (methodUrl.isEmpty() && emptyMethodUrlCount > 1) {
 			throw new ServletException("클래스 URL [" + classUrl + "] 에 매핑된 메서드가 둘 이상 존재합니다.");
 		}

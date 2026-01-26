@@ -1,6 +1,5 @@
 @charset "UTF-8";
 
-/* [MAKNAEZ] Premium Claim List - Shoes Mall Professional */
 body { 
     background-color: #fcfcfd; 
     color: #202224; 
@@ -60,38 +59,37 @@ body {
 .date-text { font-family: 'Inter'; font-weight: 500; color: #444; }
 .order-link { color: #1a1c1e; font-weight: 800; text-decoration: underline; text-underline-offset: 3px; }
 
-/* [디자인 변경] 포인트 관리 페이지 스타일 배지 */
+/* 포인트 관리 페이지 스타일 배지 */
 .badge-luxury {
     font-size: 11px;
     font-weight: 700;
     padding: 5px 12px;
     border: 1px solid #eee;
     display: inline-block;
-    /* border-radius: 2px; 네모난 느낌 유지 */
 }
 
-/* 1. 접수 대기 (포인트 적립 스타일: 오렌지 톤) */
+/* 접수 대기 */
 .st-wait {
     border-color: #ff4e00 !important;
     color: #ff4e00 !important;
     background: #fffaf7 !important;
 }
 
-/* 2. 처리 완료 (포인트 차감 스타일: 다크 톤) */
+/* 처리 완료 */
 .st-complete {
     border-color: #1a1c1e !important;
     color: #1a1c1e !important;
     background: #f9fafb !important;
 }
 
-/* 3. 취소/반품 라벨 (기본) */
+/* 3. 취소/반품 라벨 */
 .st-label {
     border-color: #ddd;
     color: #666;
     background: #fff;
 }
 
-/* 관리 버튼 (3번 스타일: 흰색 + 테두리) */
+/* 관리 버튼 */
 .btn-approve {
     background: #fff; border: 1px solid #333; color: #333; width: 100%; padding: 6px 0;
     font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.2s; border-radius: 2px;

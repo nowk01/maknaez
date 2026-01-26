@@ -24,7 +24,7 @@ public class CartController {
     
     private CartService service = new CartServiceImpl();
 
-    // 1. 장바구니 담기 (Ajax)
+    // 장바구니 담기 (Ajax)
     @ResponseBody
     @RequestMapping(value = "/cart/insert", method = RequestMethod.POST)
     public Map<String, Object> insert(HttpServletRequest req, HttpServletResponse resp) {
@@ -39,7 +39,6 @@ public class CartController {
 
         try {
             long prodId = Long.parseLong(req.getParameter("prodId"));
-            // optId 파라미터 처리 (옵션이 없는 경우 0 또는 예외처리)
             String optIdStr = req.getParameter("optId");
             long optId = (optIdStr != null && !optIdStr.isEmpty()) ? Long.parseLong(optIdStr) : 0; 
             
@@ -63,17 +62,14 @@ public class CartController {
         return model;
     }
 
-    // 2. 장바구니 목록 페이지 (URL 수정: /cart/list -> /order/cart)
-    // 에러 원인 해결: 사용자가 접근하는 URL(/order/cart)과 매핑을 일치시킴
+    // 장바구니 목록 페이지
     @RequestMapping(value = "/order/cart", method = RequestMethod.GET)
     public ModelAndView list(HttpServletRequest req, HttpServletResponse resp) {
-        // View 경로: /WEB-INF/views/order/cart.jsp
         ModelAndView mav = new ModelAndView("order/cart");
         
         HttpSession session = req.getSession();
         SessionInfo info = (SessionInfo) session.getAttribute("member");
 
-        // 비로그인 상태면 로그인 페이지로 리다이렉트
         if (info == null) {
             return new ModelAndView("redirect:/member/login");
         }
@@ -93,12 +89,12 @@ public class CartController {
         mav.addObject("list", list);
         mav.addObject("count", list != null ? list.size() : 0);
         mav.addObject("totalProdPrice", totalProdPrice);
-        mav.addObject("deliveryFee", 0); // 무료배송
+        mav.addObject("deliveryFee", 0);
 
         return mav;
     }
     
- // 3. 장바구니 삭제 (Ajax)
+    // 장바구니 삭제 (Ajax)
     @ResponseBody
     @RequestMapping(value = "/cart/delete", method = RequestMethod.POST)
     public Map<String, Object> delete(HttpServletRequest req, HttpServletResponse resp) {
@@ -112,17 +108,14 @@ public class CartController {
         }
         
         try {
-            // [수정] JS에서 traditional: true로 보낼 경우 "cartIds"로 받음
             String[] ids = req.getParameterValues("cartIds");
             
-            // 만약 JS에서 traditional 옵션 없이 보냈다면 "cartIds[]"로 받아야 함 (호환성 유지)
             if (ids == null) {
                 ids = req.getParameterValues("cartIds[]");
             }
             
-            // 단일 삭제의 경우 (deleteItem 함수는 cartId 파라미터를 보냄)
             if(ids == null) {
-                String id = req.getParameter("cartId"); // 단일 값
+                String id = req.getParameter("cartId"); 
                 if(id != null) ids = new String[]{id};
             }
             
@@ -143,7 +136,7 @@ public class CartController {
         return model;
     }
     
-    // 4. 수량 변경 (Ajax)
+    // 수량 변경 (Ajax)
     @ResponseBody
     @RequestMapping(value = "/cart/updateQty", method = RequestMethod.POST)
     public Map<String, Object> updateQty(HttpServletRequest req, HttpServletResponse resp) {

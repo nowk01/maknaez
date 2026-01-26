@@ -1,6 +1,5 @@
 @charset "UTF-8";
 
-/* [MAKNAEZ] Premium Admin - Squared & Interactive Final Theme */
 body {
 	background-color: #fcfcfd;
 	color: #202224;
@@ -9,7 +8,7 @@ body {
 	overflow-y: auto !important;
 }
 
-/* 1. 레이아웃 애니메이션 */
+/* 레이아웃 애니메이션 */
 .content-container {
 	padding: 50px 60px;
 	min-height: 100vh;
@@ -27,7 +26,7 @@ to {
 
 }
 
-/* 2. 헤더 스타일 */
+/* 헤더 스타일 */
 .page-header {
 	margin-bottom: 45px;
 	border-left: 6px solid #ff4e00;
@@ -48,7 +47,7 @@ to {
 	margin-top: 4px;
 }
 
-/* 3. 카드 박스 */
+/* 카드 박스 */
 .card-box {
 	background: #fff;
 	border: 1px solid #eee;
@@ -58,7 +57,7 @@ to {
 	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
 }
 
-/* 4. SEARCH 영역 */
+/* SEARCH 영역 */
 .search-grid {
 	display: grid;
 	grid-template-columns: 1.2fr 0.8fr 1.5fr auto;
@@ -107,7 +106,7 @@ to {
 	background: #ff4e00 !important;
 }
 
-/* 5. 리스트 상단 컨트롤 */
+/* 리스트 상단 컨트롤 */
 .list-ctrl {
 	display: flex;
 	justify-content: space-between;
@@ -143,7 +142,7 @@ to {
 	color: #ff4e00 !important;
 }
 
-/* 6. 테이블 디자인 */
+/* 테이블 디자인 */
 .custom-table {
 	width: 100%;
 	border-collapse: collapse;
@@ -186,7 +185,7 @@ to {
 	color: #fff !important;
 }
 
-/* 7. 모달 디자인 (문제 수정 부분) */
+/* 모달 디자인 */
 .modal-content {
 	border-radius: 0 !important;
 	border: none;
@@ -205,7 +204,7 @@ to {
 	background: #f8fafc;
 }
 
-/* 섹션 카드: 호버 시 킹받는 그림자와 붕 뜨는 효과 제거/완화 */
+/* 섹션 카드 */
 .modal-section-card {
 	background: #fff;
 	border: 1px solid #e2e8f0;
@@ -213,13 +212,13 @@ to {
 	margin-bottom: 25px;
 	position: relative;
 	border-radius: 0 !important;
-	transition: border-color 0.2s ease; /* 애니메이션 축소 */
+	transition: border-color 0.2s ease;
 }
 
 .modal-section-card:hover {
-	border-color: #ff4e00; /* 테두리 색만 변경 */
-	transform: none; /* 위로 띄우는 효과 제거 */
-	box-shadow: none; /* 킹받는 그림자 제거 */
+	border-color: #ff4e00; 
+	transform: none; 
+	box-shadow: none; 
 }
 
 .card-tag {
@@ -233,25 +232,25 @@ to {
 	padding: 2px 12px;
 }
 
-/* 모달 하단 버튼 높이 통일 및 스타일 수정 */
+
 .modal-footer {
 	padding: 20px 30px;
 	border-top: 1px solid #eee;
 	display: flex;
-	gap: 10px; /* 버튼 사이 간격 */
+	gap: 10px; 
 }
 
 .btn-modal-close, .btn-orange-main {
-	height: 45px !important; /* 높이 고정 */
-	width: 120px !important; /* 너비 고정 */
+	height: 45px !important; 
+	width: 120px !important; 
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	font-size: 14px !important;
 	font-weight: 700 !important;
 	border-radius: 0 !important;
-	margin: 0 !important; /* 기본 마진 제거 */
-	padding: 0 !important; /* 패딩 대신 높이/너비로 제어 */
+	margin: 0 !important; 
+	padding: 0 !important; 
 	transition: all 0.2s ease;
 }
 
@@ -278,13 +277,13 @@ to {
 	background: #e64600 !important;
 	border-color: #e64600 !important;
 }
-/* 9. 회원 등급 뱃지 (Mapper 체계 반영) */
+/* 회원 등급 뱃지 */
 .k-badge {
 	padding: 4px 10px;
 	font-size: 11px;
 	font-weight: 800;
 	color: #fff;
-	border-radius: 0 !important; /* 전체 테마에 맞춰 각진 스타일 */
+	border-radius: 0 !important;
 	display: inline-block;
 	min-width: 70px;
 	text-align: center;
@@ -293,27 +292,27 @@ to {
 
 .level-iron {
 	background-color: #a0aec0 !important;
-} /* Lv.1~10: 회색 */
+} 
 .level-bronze {
 	background-color: #cd7f32 !important;
-} /* Lv.11~20: 동색 */
+} 
 .level-silver {
 	background-color: #cbd5e0 !important;
 	color: #4a5568 !important;
-} /* Lv.21~30: 은색 */
+} 
 .level-gold {
 	background-color: #ecc94b !important;
 	color: #744210 !important;
-} /* Lv.31~40: 금색 */
+} 
 .level-platinum {
 	background-color: #4fd1c5 !important;
-} /* Lv.41~50: 청록색 */
+} 
 .level-admin {
 	background-color: #3182ce !important;
-} /* Lv.51~: 파란색 */
+} 
 .level-99 {
 	background-color: #e53e3e !important;
-} /* Lv.99: 빨간색 */
+} 
 
 /* 휴면/잠금 상태 뱃지 */
 .k-badge.dormant {
@@ -323,17 +322,17 @@ to {
 /* 페이징 전체 컨테이너 */
 .custom-paging-wrapper {
     width: 100% !important;
-    text-align: center !important; /* 인라인 요소들을 중앙으로 */
+    text-align: center !important; 
     margin-top: 50px !important;
     margin-bottom: 20px !important;
-    display: block !important; /* flex 대신 block으로 선언 (인라인 정렬용) */
+    display: block !important; 
 }
 
 /* 페이징 내부의 모든 텍스트 및 링크 요소 */
 .custom-paging-wrapper a, 
 .custom-paging-wrapper span, 
 .custom-paging-wrapper b {
-    display: inline-flex !important; /* 개별 요소를 버튼처럼 */
+    display: inline-flex !important; 
     align-items: center;
     justify-content: center;
     min-width: 32px;
@@ -347,7 +346,7 @@ to {
     vertical-align: middle;
 }
 
-/* 현재 페이지 숫자 (이미지의 검은색 '1' 부분) */
+/* 현재 페이지 숫자 */
 .custom-paging-wrapper b,
 .custom-paging-wrapper strong {
     color: #ff4e00 !important; /* 시그니처 오렌지 */
@@ -363,7 +362,7 @@ to {
     border-radius: 4px;
 }
 
-/* 화살표 버튼 ( > >> ) */
+/* 화살표 버튼 */
 .custom-paging-wrapper a[href*="page="] {
     font-family: "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
 }

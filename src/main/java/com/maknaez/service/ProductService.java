@@ -8,13 +8,13 @@ import com.maknaez.model.ProductDTO;
 public interface ProductService {
     
     public List<ProductDTO> listProduct(Map<String, Object> map); // 상품 목록 조회
-    public int dataCount(Map<String, Object> map); // 상품 개수 조회(페이징을 위햐)
+    public int dataCount(Map<String, Object> map); // 상품 개수 조회
     public List<String> listCategoryNames(String categoryCode); // 사이드바 필터용 카테고리 이름 목록 조회
     public List<String> listSaleCategoryNames(); // 세일 카태고리
-    public ProductDTO readProduct(long prodId); // 제품 조회 detail
+    public ProductDTO readProduct(long prodId); // 제품 조회 
     
     public List<ProductDTO> listProductSizes(long prodId); // 상품의 사이즈별 재고 목록 조회
-    public void reserveStock(long optId, int quantity) throws Exception; // 재고 선점 (구매하기 클릭 시 - 처리)
+    public void reserveStock(long optId, int quantity) throws Exception; // 재고 선점 
     public int getOptionStock(long optId);
     public void insertStockLog(Map<String, Object> map) throws Exception;
     
@@ -22,7 +22,7 @@ public interface ProductService {
     public List<ProductDTO> listRelatedProducts(long prodId, String cateCode); // 추천상품
 
     
-    // (기존 관리자용 메소드 유지)
+    // 관리자용 메소드
     public List<CategoryDTO> listCategory();
     public void insertCategory(CategoryDTO dto) throws Exception;
     public void updateCategory(CategoryDTO dto) throws Exception;

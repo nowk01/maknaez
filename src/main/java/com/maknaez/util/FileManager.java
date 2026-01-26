@@ -33,7 +33,6 @@ public class FileManager {
 		OutputStream os = null;
 
 		try {
-			// originalFilename = new String(originalFilename.getBytes("euc-kr"), "8859_1");
 			originalFilename = new String(originalFilename.getBytes("utf-8"), "8859_1");
 			pathname = pathname + File.separator + saveFilename;
 			File f = new File(pathname);
@@ -41,17 +40,13 @@ public class FileManager {
 				return flag;
 			}
 
-			// 클라이언트에게 전송 할 문서타입을 스트림으로 설정
 			resp.setContentType("application/octet-stream");
 
-			// 파일명은 헤더에 실어서 전송
 			resp.setHeader("Content-disposition", "attachment;filename=" + originalFilename);
 
-			// 클라이언트에게 파일의 내용을 전송
 			byte[] b = new byte[BUFFER_SIZE];
 			bis = new BufferedInputStream(new FileInputStream(f));
 
-			// 클라이언트에게 전송할 출력 스트림
 			os = resp.getOutputStream();
 
 			int n;
@@ -94,7 +89,7 @@ public class FileManager {
 
 		try {
 			File f = new File(pathname);
-			if (!f.exists()) { // 폴더가 존재하지 않으면
+			if (!f.exists()) {
 				f.mkdirs();
 			}
 
@@ -124,7 +119,7 @@ public class FileManager {
 
 		try {
 			File f = new File(pathname);
-			if (! f.exists()) { // 폴더가 존재하지 않으면
+			if (! f.exists()) {
 				f.mkdirs();
 			}
 
@@ -132,8 +127,7 @@ public class FileManager {
 			for (Part part : parts) {
 				String contentType = part.getContentType();
 
-				// contentType 가 null 인 경우는 파일이 아닌 경우이다.(<input type="text"... 등)
-				if (contentType != null) { // 파일이면
+				if (contentType != null) {
 					originalFilename = getOriginalFilename(part);
 					if (originalFilename == null || part.getSize() == 0) {
 						continue;
@@ -230,7 +224,7 @@ public class FileManager {
 		try {
 			File f = new File(pathname);
 
-			if (! f.exists()) { // 파일이 없으면
+			if (! f.exists()) { 
 				return false;
 			}
 

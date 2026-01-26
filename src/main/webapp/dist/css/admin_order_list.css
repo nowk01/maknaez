@@ -1,6 +1,5 @@
 @charset "UTF-8";
 
-/* [Design Strategy] Orange Minimal Luxury - Order List Unified */
 body {
 	background-color: #fcfcfd;
 	color: #202224;
@@ -24,7 +23,6 @@ to {
 
 }
 
-/* 1번 스타일의 시크한 헤더 */
 .page-header {
 	margin-bottom: 35px;
 	border-left: 5px solid #ff4e00;
@@ -46,7 +44,6 @@ to {
 	letter-spacing: 1px;
 }
 
-/* 각진 미니멀 카드 UI */
 .card-box {
 	background: #ffffff;
 	border-radius: 2px;
@@ -56,7 +53,6 @@ to {
 	margin-bottom: 30px;
 }
 
-/* 오렌지 포인트 검색 폼 */
 .search-grid {
 	display: grid;
 	grid-template-columns: 1.2fr 0.8fr 0.8fr 1.5fr auto;
@@ -141,7 +137,6 @@ to {
 	color: #ff4e00;
 }
 
-/* 프리미엄 테이블 */
 .table {
 	width: 100%;
 	border-top: 1px solid #1a1c1e;

@@ -22,7 +22,7 @@ public interface BoardService {
 	public void updateNotice(BoardDTO dto) throws Exception; // 공지 수정
 	public void deleteNotice(long num) throws Exception;     // 공지 삭제
 	public List<BoardDTO> listNotice(Map<String, Object> map);
-	public int dataCountNotice(Map<String, Object> map); // 파라미터 추가됨
+	public int dataCountNotice(Map<String, Object> map); 
 	public BoardDTO findByIdNotice(long num);
 	public void updateHitCountNotice(long num) throws Exception;
 	

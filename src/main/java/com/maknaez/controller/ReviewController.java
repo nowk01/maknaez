@@ -45,10 +45,9 @@ public class ReviewController {
                     current_page = Integer.parseInt(pageNoStr);
                 }
                 
-                int rows = 5; // ★ 5개씩 출력 설정
+                int rows = 5; 
                 int dataCount = reviewService.dataCount(prodId);
                 
-                // MyUtil을 사용하여 전체 페이지 수 계산
                 int total_page = myUtil.pageCount(dataCount, rows);
                 
                 if(current_page > total_page) current_page = total_page;

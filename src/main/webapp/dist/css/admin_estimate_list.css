@@ -1,6 +1,5 @@
 @charset "UTF-8";
 
-/* [MAKNAEZ] Premium Estimate List - Shoes Mall Professional */
 body {
 	background-color: #fcfcfd;
 	color: #202224;
@@ -144,7 +143,7 @@ to {
 	background: #fffaf7 !important;
 }
 
-/* 페이징 - 주황색 밑줄 */
+/* 페이징  */
 .pagination {
 	margin-top: 40px;
 	display: flex;

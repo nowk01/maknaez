@@ -142,14 +142,12 @@ public class ProductController {
             boolean isLiked = wishlistService.isLiked(info.getMemberIdx(), prod_id);
             
             if (isLiked) {
-                // 위시리스트 삭제 로직
                 Map<String, Object> param = new HashMap<>();
                 param.put("memberIdx", info.getMemberIdx());
                 param.put("prodId", prod_id);
                 wishlistService.deleteWish(param);
                 model.put("state", "false"); 
             } else {
-                // 위시리스트 추가 로직
                 WishlistDTO dto = new WishlistDTO();
                 dto.setMemberIdx(info.getMemberIdx());
                 dto.setProdId(prod_id);

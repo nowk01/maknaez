@@ -10,7 +10,6 @@ import com.maknaez.mybatis.support.MapperContainer;
 
 public class WishlistServiceImpl implements WishlistService {
     
-    // [중요] MapperContainer를 통해 가져옵니다.
     private WishlistMapper mapper = MapperContainer.get(WishlistMapper.class);
 
     @Override
@@ -63,7 +62,6 @@ public class WishlistServiceImpl implements WishlistService {
             map.put("memberIdx", memberIdx);
             map.put("prodId", prodId);
             
-            // 찜 개수가 1개 이상이면 true
             result = mapper.checkWish(map) > 0;
         } catch (Exception e) {
             e.printStackTrace();
