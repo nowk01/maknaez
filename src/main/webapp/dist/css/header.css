@@ -1,6 +1,5 @@
 @charset "UTF-8";
 
-/* [HEADER LAYOUT] */
 header {
 	position: fixed;
 	top: 0;
@@ -26,7 +25,6 @@ header {
 	text-transform: uppercase;
 }
 
-/* [NAVIGATION] */
 .gnb {
 	display: flex;
 	height: 100%;
@@ -72,7 +70,6 @@ header {
 	background-color: #000;
 }
 
-/* [MEGA MENU - FINAL 2-IMAGE STYLE] */
 .mega-menu {
 	position: fixed;
 	top: 80px;
@@ -99,17 +96,15 @@ header {
 	margin: 0 auto;
 	padding: 30px 40px;
 	display: grid;
-	/* 왼쪽 이미지 영역(500px) / 오른쪽 링크 영역 */
 	grid-template-columns: 500px 1fr;
 	gap: 80px;
 }
 
-/* 왼쪽: 이미지 2장 (1x2 그리드) */
 .mega-promo {
 	display: grid;
-	grid-template-columns: 1fr 1fr; /* 2개를 나란히 */
+	grid-template-columns: 1fr 1fr; 
 	gap: 15px;
-	height: 280px; /* 높이 고정으로 깔끔하게 */
+	height: 280px; 
 }
 
 .promo-item {
@@ -131,7 +126,6 @@ header {
 	transform: scale(1.05);
 }
 
-/* 텍스트 스타일: 잘 보이게 */
 .promo-text {
 	position: absolute;
 	bottom: 15px;
@@ -143,7 +137,6 @@ header {
 	z-index: 2;
 }
 
-/* 오른쪽: 링크 리스트 */
 .mega-links.reduced-col {
 	display: flex;
 	gap: 80px;
@@ -182,7 +175,6 @@ header {
 	font-weight: 700;
 }
 
-/* [UTILITY ICONS] */
 .user-actions {
 	display: flex;
 	gap: 20px;
@@ -194,10 +186,9 @@ header {
 	cursor: pointer;
 }
 
-/* --- Layout Container --- */
 .best-category-container {
 	display: grid;
-	grid-template-columns: 1fr 1fr; /* 1:1 비율 분할 */
+	grid-template-columns: 1fr 1fr; 
 	gap: 40px;
 	max-width: 1200px;
 	margin: 80px auto;
@@ -205,15 +196,14 @@ header {
 	align-items: center;
 }
 
-/* --- Left: Best Item Card --- */
 .best-card {
 	position: relative;
 	border-radius: 12px;
 	overflow: hidden;
-	background-color: #f4f4f4; /* 은은한 회색 배경 */
+	background-color: #f4f4f4; 
 	box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
 	transition: transform 0.3s ease;
-	aspect-ratio: 1/1; /* 정사각형 비율 유지 */
+	aspect-ratio: 1/1; 
 }
 
 .best-card:hover {
@@ -229,10 +219,9 @@ header {
 }
 
 .best-card:hover img {
-	transform: scale(1.05); /* 호버 시 살짝 확대 */
+	transform: scale(1.05); 
 }
 
-/* 이미지 왼쪽 하단 텍스트 ('이번 주 베스트') */
 .best-badge {
 	position: absolute;
 	bottom: 20px;
@@ -244,7 +233,6 @@ header {
 	z-index: 2;
 }
 
-/* 텍스트 가독성을 위한 하단 그라데이션 */
 .best-card::after {
 	content: '';
 	position: absolute;
@@ -256,7 +244,6 @@ header {
 	z-index: 1;
 }
 
-/* --- Right: Category List --- */
 .category-list-wrapper {
 	padding-left: 20px;
 }
@@ -271,7 +258,7 @@ header {
 	color: #111;
 	display: inline-block;
 	padding-bottom: 10px;
-	border-bottom: 4px solid #111; /* 두꺼운 밑줄 포인트 */
+	border-bottom: 4px solid #111; 
 }
 
 .category-nav ul {
@@ -294,10 +281,9 @@ header {
 	position: relative;
 }
 
-/* 카테고리 링크 호버 효과 */
 .category-nav a:hover {
 	color: #111;
-	transform: translateX(5px); /* 오른쪽으로 살짝 이동 */
+	transform: translateX(5px); 
 }
 
 .category-nav a.active {
@@ -317,7 +303,7 @@ header {
 		display: grid;
 		grid-template-columns: 1fr 1fr;
 		gap: 8px;
-		height: 280px; /* 높이 고정 */
+		height: 280px; 
 	}
 	.promo-item {
 		position: relative;

@@ -1,16 +1,12 @@
-/* */
 @charset "UTF-8";
 
-/* [MAKNAEZ] Admin Product Stats - Full Width & Natural Scroll */
-
-/* 1. 이중 스크롤바 원천 제거 (기본 브라우저 스크롤 사용) */
 html, body {
     height: auto !important; 
     min-height: 100% !important;
     margin: 0;
     padding: 0;
     overflow-y: auto !important; 
-    overflow-x: hidden; /* 가로 스크롤 방지 */
+    overflow-x: hidden;
     background-color: #f5f6f8;
     color: #1a1c1e;
     font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
@@ -18,42 +14,40 @@ html, body {
 
 #wrapper {
     height: auto !important;
-    min-height: 100vh; /* 최소한 화면만큼은 차지 */
-    overflow: visible !important; /* 내부 스크롤 제거 */
+    min-height: 100vh; 
+    overflow: visible !important; 
 }
 
-/* 2. 컨텐츠 영역이 화면에 꽉 차도록 설정 */
 #page-content-wrapper {
     height: auto !important;
-    max-height: none !important; /* 높이 제한이 있다면 해제 */
+    max-height: none !important; 
     overflow-y: visible !important; 
     flex: 1;
 }
 
 .content-container {
-    width: 100%;       /* 가로 꽉 차게 */
-    max-width: none;   /* 너비 제한 해제 */
-    padding: 30px;     /* 여백 조금만 둠 */
+    width: 100%;       
+    max-width: none;  
+    padding: 30px;     
     box-sizing: border-box;
 }
 
 /* 페이지 헤더 */
 .page-header {
     display: flex;
-    justify-content: space-between; /* 제목은 왼쪽, 버튼은 오른쪽 */
-    align-items: center;            /* 수직 중앙 정렬 */
+    justify-content: space-between; 
+    align-items: center;           
     margin-bottom: 20px;
     border-left: 5px solid #ff4e00;
     padding-left: 15px;
-    padding-right: 5px; /* 우측 여백 살짝 */
+    padding-right: 5px; 
 }
 .page-title { font-weight: 800; font-size: 24px; color: #1a1c1e; margin: 0; }
 .page-desc { color: #999; font-size: 13px; margin-top: 5px; text-transform: uppercase; }
 
-/* 3. 요약 카드 (꽉 찬 화면에 맞춰 비율 조정) */
 .stat-card-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr); /* 3등분 꽉 차게 */
+    grid-template-columns: repeat(3, 1fr); 
     gap: 20px;
     margin-bottom: 20px;
 }
@@ -68,7 +62,6 @@ html, body {
 .stat-label { font-size: 12px; font-weight: 700; color: #888; display: block; margin-bottom: 10px; }
 .stat-value { font-size: 32px; font-weight: 800; color: #1a1c1e; }
 
-/* 4. 차트 박스 (꽉 찬 화면) */
 .card-box {
     background: #fff;
     padding: 25px;
@@ -76,7 +69,7 @@ html, body {
     box-shadow: 0 2px 5px rgba(0,0,0,0.03);
     border: 1px solid #e1e1e1;
     margin-bottom: 20px;
-    width: 100%; /* 박스 자체도 꽉 차게 */
+    width: 100%; 
     box-sizing: border-box;
 }
 
@@ -85,7 +78,6 @@ html, body {
     border-bottom: 2px solid #f0f0f0; padding-bottom: 10px;
 }
 
-/* 2열 레이아웃 (5:5 비율로 꽉 차게) */
 .chart-row-2 {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -93,26 +85,24 @@ html, body {
     margin-bottom: 20px;
 }
 
-/* 5. 차트 높이 설정 (화면이 넓어진 만큼 높이도 시원하게) */
 .chart-container-sm {
     position: relative;
-    height: 350px; /* 도넛/파이 차트 */
+    height: 350px; 
     width: 100%;
 }
 
 .chart-container-md {
     position: relative;
-    height: 400px; /* 가로 막대 차트 */
+    height: 400px; 
     width: 100%;
 }
 
 .chart-container-lg {
     position: relative;
-    height: 500px; /* 메인 막대 차트 (높이 증가) */
+    height: 500px; 
     width: 100%;
 }
 
-/* 반응형 (모바일) */
 @media (max-width: 992px) {
     .stat-card-grid { grid-template-columns: 1fr; }
     .chart-row-2 { grid-template-columns: 1fr; }
@@ -122,16 +112,15 @@ html, body {
     }
 }
 
-/* 2. 새로고침 버튼 스타일 */
 .btn-refresh {
     display: flex;
     align-items: center;
-    gap: 8px; /* 아이콘과 텍스트 사이 간격 */
+    gap: 8px; 
     background-color: #fff;
     border: 1px solid #e1e1e1;
     color: #555;
     padding: 8px 16px;
-    border-radius: 50px; /* 둥근 알약 모양 */
+    border-radius: 50px; 
     font-size: 14px;
     font-weight: 700;
     cursor: pointer;
@@ -140,45 +129,40 @@ html, body {
     outline: none;
 }
 
-/* 3. SVG 아이콘 크기 설정 */
 .btn-refresh svg {
     width: 18px;
     height: 18px;
     transition: transform 0.5s ease;
 }
 
-/* 4. 호버 효과 (브랜드 컬러 적용) */
 .btn-refresh:hover {
     border-color: #ff4e00;
     color: #ff4e00;
-    background-color: #fff4f0; /* 아주 연한 오렌지 배경 */
+    background-color: #fff4f0; 
     box-shadow: 0 4px 8px rgba(255, 78, 0, 0.15);
-    transform: translateY(-2px); /* 살짝 떠오르는 느낌 */
+    transform: translateY(-2px); 
 }
 
-/* 5. 클릭 시(로딩 중) 회전 애니메이션 클래스 */
 .btn-refresh.spinning {
-    pointer-events: none; /* 로딩 중 중복 클릭 방지 */
+    pointer-events: none; 
     opacity: 0.8;
 }
 
 .btn-refresh.spinning svg {
-    animation: spin 1s linear infinite; /* 1초마다 무한 회전 */
+    animation: spin 1s linear infinite; 
 }
 
-/* 회전 키프레임 */
 @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(-360deg); }
 }
 
-/* 모바일 대응 */
 @media (max-width: 576px) {
     .btn-refresh span:last-child {
-        display: none; /* 모바일에서는 '새로고침' 글자 숨기고 아이콘만 */
+        display: none; 
     }
     .btn-refresh {
-        padding: 8px; /* 정사각형에 가깝게 */
+        padding: 8px; 
         border-radius: 50%;
     }
 }

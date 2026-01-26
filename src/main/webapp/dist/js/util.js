@@ -24,7 +24,7 @@ function fileSize(file) {
 // 이메일 형식 검사
 function isValidEmail(data){
     let format = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/;
-    return format.test(data); // true : 올바른 포맷 형식
+    return format.test(data); 
 }
 
 // SQL 문 존재 여부 검사
@@ -59,10 +59,7 @@ function toggleFullScreen(el) {
     }
 }
 
-// -------------------------------------------------
-// 자바스크립트 xss 방지 HTML 특수문자 변환
-// Cross-site Scripting (XSS)
-//   : SQL injection과 함께 웹 상에서 가장 기초적인 취약점 공격 방법의 일종
+
 function symbolHtml(content) {
     if (! content) return content;
 
@@ -96,13 +93,8 @@ function isValidSpecialChar(data) {
     return format.test(data);
 }
 
-// -------------------------------------------------
 // 이벤트 등록
-/* 
-    // 사용 예
-    let func= function() { alert('예제'); }
-    addEvent(window, load, func);
-*/
+
 function addEvent(el, evType, fn) {
     if (el.addEventListener) {
         el.addEventListener(evType, fn, false);
@@ -138,9 +130,7 @@ function winOpen(url, windowName, windowFeatures) {
     window.open(url, windowName, flag);
 }
 
-// -------------------------------------------------
-// 기타 형식 검사
-// 영문, 숫자 인지 확인
+
  function isValidEngNum(str) {
     for(let i = 0; i < str.length; i++) {
         achar = str.charCodeAt(i);                 

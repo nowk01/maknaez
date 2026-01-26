@@ -1,6 +1,3 @@
-/**
- * [MAKNAEZ ADMIN] Estimate List 연동
- */
 document.addEventListener("DOMContentLoaded", function() {
     const checkAll = document.getElementById('checkAll');
     if(checkAll) {

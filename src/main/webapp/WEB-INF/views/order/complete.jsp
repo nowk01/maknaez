@@ -10,7 +10,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>주문 완료 - Maknaez</title>
 
-<!-- 공통 리소스 -->
 <jsp:include page="/WEB-INF/views/layout/headerResources.jsp"/>
 
 <style>
@@ -19,30 +18,25 @@
     body { font-family: 'Noto Sans KR', sans-serif; color: #333; background-color: #f9f9f9; }
     .complete-wrap { max-width: 900px; margin: 0 auto; padding: 80px 20px; }
     
-    /* 상단 메시지 */
     .msg-section { text-align: center; margin-bottom: 60px; }
     .icon-box { margin-bottom: 25px; }
-    .icon-box i { font-size: 4rem; color: #000; } /* FontAwesome 체크 아이콘 */
+    .icon-box i { font-size: 4rem; color: #000; } 
     .check-icon { width: 80px; height: 80px; background: #000; color: #fff; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 2.5rem; margin-bottom: 20px; }
     
     .complete-title { font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 2.2rem; margin-bottom: 15px; color: #000; letter-spacing: -0.5px; }
     .complete-desc { font-size: 1.05rem; color: #666; margin-bottom: 10px; line-height: 1.6; }
     .order-num-highlight { font-family: 'Montserrat', sans-serif; font-weight: 600; color: #000; font-size: 1.1rem; margin-top: 10px; }
 
-    /* 정보 박스 공통 */
     .info-container { background: #fff; border: 1px solid #eee; border-radius: 8px; padding: 40px; margin-bottom: 30px; box-shadow: 0 5px 15px rgba(0,0,0,0.03); }
     .info-title { font-size: 1.2rem; font-weight: 700; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 2px solid #000; }
     
-    /* 테이블 스타일 */
     .info-table { width: 100%; border-collapse: collapse; }
     .info-table th { width: 140px; padding: 12px 0; color: #555; font-weight: 500; text-align: left; vertical-align: top; }
     .info-table td { padding: 12px 0; color: #000; font-weight: 400; }
     
-    /* 결제 금액 강조 */
     .price-row th { color: #000; font-weight: 700; padding-top: 20px; border-top: 1px solid #eee; }
     .price-row td { color: #e02020; font-weight: 700; font-size: 1.2rem; padding-top: 20px; border-top: 1px solid #eee; font-family: 'Montserrat', sans-serif; }
 
-    /* 버튼 그룹 */
     .btn-group-custom { display: flex; justify-content: center; gap: 15px; margin-top: 50px; }
     .btn-custom { padding: 15px 40px; font-size: 1rem; font-weight: 600; min-width: 180px; transition: 0.3s; border-radius: 4px; }
     
@@ -61,7 +55,6 @@
 
 <div class="complete-wrap">
     
-    <!-- 1. 주문 완료 메시지 -->
     <div class="msg-section">
         <div class="check-icon">
             <i class="bi bi-check-lg"></i>
@@ -76,7 +69,6 @@
         </div>
     </div>
 
-    <!-- 2. 배송지 정보 -->
     <div class="info-container">
         <div class="info-title">배송지 정보</div>
         <table class="info-table">
@@ -101,7 +93,6 @@
         </table>
     </div>
 
-    <!-- 3. 결제 정보 -->
     <div class="info-container">
         <div class="info-title">결제 정보</div>
         <table class="info-table">
@@ -134,7 +125,6 @@
         </table>
     </div>
 
-    <!-- 버튼 -->
     <div class="btn-group-custom">
         <button type="button" class="btn btn-custom btn-home" onclick="location.href='${pageContext.request.contextPath}/main'">쇼핑 계속하기</button>
         <button type="button" class="btn btn-custom btn-mypage" onclick="location.href='${pageContext.request.contextPath}/member/mypage/orderList'">주문내역 확인</button>

@@ -334,7 +334,7 @@
 					<div class="rw-divider"></div>
 
 					<div class="rw-agree-box">
-						<label class="checkbox-label"> <input type="checkbox" id="agreeCheck" required> <span class="checkmark"></span> <span
+						<label class="checkbox-label"> <input type="checkbox" id="agreeCheck" required> <span class="checkmark"></span> <span>
 							class="agree-text">작성된 후기는 홍보 콘텐츠로 사용될 수 있습니다. (필수)</span>
 						</label>
 					</div>

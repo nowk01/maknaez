@@ -1,5 +1,4 @@
 document.addEventListener("DOMContentLoaded", function() {
-    // 1. 전체 선택 기능
     const checkAll = document.getElementById('checkAll');
     if(checkAll) {
         checkAll.addEventListener('change', function() {

@@ -38,11 +38,10 @@ const ajaxRequest = function(url, method, requestParams, responseType, callback,
 	};
 	
 	if(file) {
-		settings.processData = false;  // file 전송시 필수. 서버로전송할 데이터를 쿼리문자열로 변환여부
-		settings.contentType = false;  // file 전송시 필수. 서버에전송할 데이터의 Content-Type. 기본:application/x-www-urlencoded
+		settings.processData = false;  
+		settings.contentType = false; 
 	}
 	
-	// 전송방식 : json 으로 전송하는 경우
 	if(contentType.toLowerCase() === 'json') {
 		settings.contentType = 'application/json; charset=utf-8';
 	}
@@ -50,19 +49,17 @@ const ajaxRequest = function(url, method, requestParams, responseType, callback,
 	$.ajax(url, settings);
 };
 
-// AJAX 시작과 종료
 $(function(){
 	$(document)
-	   .ajaxStart(function(){ // AJAX 시작
+	   .ajaxStart(function(){ 
 		   $('#loadingLayout .loader').center();
 		   $('#loadingLayout').fadeTo('slow', 0.5);
 	   })
-	   .ajaxComplete(function(){ // AJAX 종료
+	   .ajaxComplete(function(){ 
 		   $('#loadingLayout').hide();
 	   });
 });
 
-// 모달이 닫힐 때 모든 button, input, select, textarea 요소에서 포커스를 제거
 $(function(){
 	$('.modal').on('hide.bs.modal', function() {
 		$('button, input, select, textarea').each(function(){
@@ -71,7 +68,6 @@ $(function(){
 	});
 });
 
-// 엔터 처리
 $(function(){
 	$('input').not($(':button')).keydown(function (evt) {
 		let key = evt.key || evt.keyCode;
@@ -87,7 +83,6 @@ $(function(){
 	});
 });
 
-// 스크롤바 존재 여부를 확인하는 함수
 function checkScrollBar() {
 	let hContent = $('body').height();
 	let hWindow = $(window).height();
@@ -98,7 +93,6 @@ function checkScrollBar() {
 	return false;
 }
 
-// jQuery 함수 구현 : 개체를 화면 중앙에 위치하는 함수
 jQuery.fn.center = function () {
     this.css('position', 'absolute');
     this.css('top', Math.max(0, (($(window).height() - $(this).outerHeight()) / 2) + 

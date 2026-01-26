@@ -9,9 +9,6 @@
 <jsp:include page="/WEB-INF/views/layout/headerResources.jsp"/>
 
 <style>
-    /* =========================================
-       MAKNAEZ FINAL INTEGRATION (FIXED)
-       ========================================= */
     @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,500;0,700;0,900;1,900&family=Syncopate:wght@400;700&display=swap');
 
     :root {
@@ -29,7 +26,6 @@
         margin: 0; padding: 0;
     }
 
-    /* [1. 로딩: 네온 게이지] */
     #preloader {
         position: fixed; inset: 0;
         background: #000; z-index: 9999;
@@ -54,11 +50,9 @@
     }
     body.loaded #preloader { transform: translateY(-100%); }
 
-    /* [유틸리티] */
     .fade-up { opacity: 0; transform: translateY(50px); transition: all 1s ease; }
     .fade-up.active { opacity: 1; transform: translateY(0); }
 
-    /* [2. 히어로 섹션] */
     .hero-wrap {
         height: 100vh; width: 100%;
         position: relative; overflow: hidden;
@@ -88,9 +82,8 @@
         text-align: right; 
     }
 
-    /* [3. 마키 텍스트 (수정됨: 배경 주황색)] */
     .marquee-rail {
-        background: var(--accent-orange); /* ★ 요청하신 주황색 변경 완료 ★ */
+        background: var(--accent-orange); 
         color: #000;
         padding: 20px 0;
         overflow: hidden;
@@ -105,7 +98,6 @@
     }
     @keyframes scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
 
-    /* [4. 브랜드 스토리] */
     .brand-story {
         max-width: 1600px;
         margin: 0 auto;
@@ -248,7 +240,6 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        // 로딩 바
         const loaderBar = document.getElementById('loaderBar');
         setTimeout(() => { loaderBar.style.width = '100%'; }, 100);
         
@@ -259,7 +250,6 @@
             }, 500);
         }, 1300);
 
-        // 스크롤 옵저버
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -270,7 +260,6 @@
 
         document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
 
-        // 히어로 패럴랙스
         const hero = document.getElementById('hero');
         const heroBg = document.getElementById('heroBg');
         hero.addEventListener('mousemove', (e) => {

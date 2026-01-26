@@ -1,6 +1,5 @@
 @charset "UTF-8";
 
-/* [List Page Layout] */
 .page-header {
     margin-bottom: 40px;
 }
@@ -14,11 +13,10 @@
     font-size: 16px; font-weight: 400; color: #888; margin-left: 5px;
 }
 
-/* [Placeholder Box - Screenshot Style] */
 .placeholder-div {
     width: 100%;
-    padding-bottom: 100%; /* 1:1 정사각형 비율 */
-    background-color: #eee; /* 회색 배경 */
+    padding-bottom: 100%; 
+    background-color: #eee; 
     position: relative;
     overflow: hidden;
     margin-bottom: 15px;
@@ -42,7 +40,6 @@
     padding: 4px 8px; z-index: 10;
 }
 
-/* [Product Card Info] */
 .product-card {
     cursor: pointer;
     transition: transform 0.2s;
@@ -62,7 +59,6 @@
     font-size: 15px; font-weight: 700;
 }
 
-/* [Sidebar Filter] */
 .sidebar-container { padding-right: 40px; }
 .sidebar-header {
     display: flex; justify-content: space-between; align-items: center;
@@ -81,14 +77,12 @@
 .filter-group summary::after { content: '+'; font-weight: 300; }
 .filter-group[open] summary::after { content: '-'; }
 
-/* Custom Checkbox */
 .custom-check {
     display: flex; align-items: center; margin-bottom: 8px;
     font-size: 14px; color: #444; cursor: pointer;
 }
 .custom-check input { margin-right: 8px; accent-color: #111; }
 
-/* Size Grid */
 .size-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
 .size-btn input { position: absolute; opacity: 0; cursor: pointer; }
 .size-btn span {
@@ -97,7 +91,6 @@
 }
 .size-btn input:checked + span { border-color: #111; background-color: #111; color: #fff; }
 
-/* Color Swatch */
 .color-list { display: flex; flex-wrap: wrap; gap: 10px; }
 .color-swatch input { position: absolute; opacity: 0; cursor: pointer; }
 .color-swatch span {
@@ -106,7 +99,6 @@
 }
 .color-swatch input:checked + span { outline: 2px solid #111; outline-offset: 2px; }
 
-/* Price Slider */
 .price-slider { position: relative; height: 3px; background: #ddd; border-radius: 5px; margin: 20px 0; }
 .slider-fill { position: absolute; height: 100%; background: #111; border-radius: 5px; }
 .price-slider input[type="range"] {
@@ -128,18 +120,14 @@
 }
 .sort-select { border: none; font-size: 14px; font-weight: 500; color: #333; outline: none; cursor: pointer; }
 
-/* [List Page Layout] 등 기존 CSS 아래에 추가하세요 */
-
-/* Scroll Animation - Premium Smooth Ease */
 .product-item-wrap {
     opacity: 0;
-    transform: translateY(50px); /* 아래에서 시작 */
+    transform: translateY(50px); 
     transition: opacity 1.0s cubic-bezier(0.23, 1, 0.32, 1), 
-                transform 1.0s cubic-bezier(0.23, 1, 0.32, 1); /* 살로몬 스타일의 부드러운 감속 */
+                transform 1.0s cubic-bezier(0.23, 1, 0.32, 1); 
     will-change: opacity, transform;
 }
 
-/* 화면에 나타날 때 붙을 클래스 */
 .product-item-wrap.is-visible {
     opacity: 1;
     transform: translateY(0);

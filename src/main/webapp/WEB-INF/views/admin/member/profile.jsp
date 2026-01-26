@@ -407,12 +407,12 @@ to {
 
 			if (navigator.onLine) {
 				statusText.innerText = "System Online";
-				statusText.style.color = "#23a55a"; // 초록색 텍스트
-				statusIcon.className = "fas fa-satellite-dish status-dot"; // 초록불 깜빡임
+				statusText.style.color = "#23a55a"; 
+				statusIcon.className = "fas fa-satellite-dish status-dot"; 
 			} else {
 				statusText.innerText = "Connection Lost";
-				statusText.style.color = "#ff0000"; // 빨간색 텍스트
-				statusIcon.className = "fas fa-satellite-dish status-dot offline"; // 빨간불 정지
+				statusText.style.color = "#ff0000"; 
+				statusIcon.className = "fas fa-satellite-dish status-dot offline"; 
 			}
 		}
 

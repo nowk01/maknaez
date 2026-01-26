@@ -10,7 +10,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>주문/결제 - Maknaez</title>
 
-<!-- 공통 리소스 & Bootstrap 5 -->
 <jsp:include page="/WEB-INF/views/layout/headerResources.jsp"/>
 
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
@@ -37,8 +36,6 @@
     .form-label { font-weight: 500; font-size: 14px; margin-top: 10px; }
     .form-control, .form-select { border-radius: 0; border: 1px solid #ddd; padding: 10px 15px; font-size: 14px; }
     .form-control:focus, .form-select:focus { border-color: #000; box-shadow: none; }
-    
-    /* 읽기 전용 필드 스타일 (회색 배경) */
     .form-control[readonly] { background-color: #f8f9fa; cursor: default; }
 
     .sticky-summary { position: sticky; top: 80px; background: #fdfdfd; border: 1px solid #000; padding: 30px; }
@@ -61,32 +58,26 @@
         font-weight: 500;
     }
     .btn-change-addr:hover { border-color: #000; background: #f9f9f9; }
-
-    /* 포인트 입력 영역 스타일 */
     .point-box { background: #fff; border: 1px solid #ddd; padding: 15px; margin: 15px 0; border-radius: 4px; }
     .point-input-group { display: flex; gap: 5px; margin-bottom: 5px; }
     .point-input-group input { text-align: right; font-weight: 600; }
     .btn-use-point { background: #555; color: #fff; border: 1px solid #555; font-size: 12px; padding: 0 10px; white-space: nowrap; cursor: pointer; }
     .point-desc { font-size: 12px; color: #888; text-align: right; line-height: 1.4; }
     .point-avail { color: #000; font-weight: 600; }
-
-    /* [수정] 오버레이 스타일 (강력한 z-index 및 flex 중앙 정렬) */
     #payment-loading-overlay {
-        display: none; /* JS로 flex 변경 */
+        display: none;
         position: fixed;
         top: 0;
         left: 0;
         width: 100vw;
         height: 100vh;
-        background-color: rgba(0, 0, 0, 0.85); /* 더 어둡게 */
+        background-color: rgba(0, 0, 0, 0.85); 
         z-index: 10000; /* 최상단 보장 */
         flex-direction: column;
         justify-content: center;
         align-items: center;
         color: #fff;
     }
-
-    /* 로딩 스피너 (Bootstrap spinner-border 활용 또는 커스텀) */
     .custom-spinner {
         width: 60px;
         height: 60px;
@@ -127,10 +118,7 @@
         <input type="hidden" name="total_amount" value="${totalPrice}">
 
         <div class="row">
-            <!-- 왼쪽: 정보 입력 영역 -->
             <div class="col-lg-8">
-                
-                <!-- 1. 주문 상품 -->
                 <div class="section-title">주문 상품 정보</div>
                 <table class="tbl-order">
                     <colgroup>
@@ -171,7 +159,6 @@
                     </tbody>
                 </table>
 
-                <!-- 2. 주문자 정보 -->
                 <div class="section-title">주문자 정보</div>
                 <div class="row mb-3">
                     <div class="col-md-6">
@@ -187,8 +174,6 @@
                         <input type="text" class="form-control" value="${member.email}" readonly>
                     </div>
                 </div>
-
-                <!-- 3. 배송지 정보 -->
                 <div class="d-flex align-items-center mt-5 mb-3 border-bottom border-dark pb-3">
                     <div class="h5 fw-bold m-0">배송지 정보</div>
                     <button type="button" class="btn-change-addr ms-auto" onclick="openAddressPopup()">[배송지 변경]</button>
@@ -233,7 +218,6 @@
                 </div>
             </div>
 
-            <!-- 오른쪽: 결제 요약 (Sticky) -->
             <div class="col-lg-4">
                 <div class="sticky-summary">
                     <div class="h5 fw-bold mb-4">결제 상세</div>
@@ -251,7 +235,6 @@
                         <span>0원</span> 
                     </div>
 
-                    <!-- 포인트 입력 영역 -->
                     <div class="point-box">
                         <div class="d-flex justify-content-between mb-2">
                             <span style="font-size:14px; font-weight:600;">포인트 사용</span>
@@ -272,7 +255,6 @@
                         <span class="price" id="finalPriceDisplay"><fmt:formatNumber value="${totalPrice}" pattern="#,###"/>원</span>
                     </div>
                     
-                    <!-- [추가] 적립 예정 포인트 표시 영역 -->
                     <div class="text-end" style="font-size: 12px; color: #888; margin-top: -10px; margin-bottom: 20px;">
                         * <span id="expectedPointDisplay"><fmt:formatNumber value="${expectedPoint}" pattern="#,###"/></span> 포인트 적립 예정
                     </div>
@@ -300,7 +282,6 @@
     </form>
 </div>
 
-<!-- [수정] 결제 로딩 오버레이 (구조 변경 및 스타일 강화) -->
 <div id="payment-loading-overlay">
     <div class="custom-spinner"></div>
     <div class="loading-text">결제가 진행중입니다...</div>
@@ -313,12 +294,9 @@
 <jsp:include page="/WEB-INF/views/layout/footerResources.jsp"/>
 
 <script>
-// 전역 변수
 const totalPrice = ${totalPrice};
 const availPoint = ${currentPoint};
-const saveRate = ${saveRate}; // 적립률
-
-// 배송메모 직접입력 토글
+const saveRate = ${saveRate}; 
 function changeMemo(select) {
     const $direct = $("#memoDirect");
     if(select.value === "direct") {
@@ -332,7 +310,6 @@ function changeMemo(select) {
     }
 }
 
-// 다음 주소 API
 function daumPostcode() {
     new daum.Postcode({
         oncomplete: function(data) {
@@ -378,13 +355,12 @@ window.setShippingAddress = function(data) {
     $("#addr2").val(data.addr2);
 };
 
-// [포인트 유효성 검사 및 계산]
 function validatePoint(input) {
-    let val = input.value.replace(/[^0-9]/g, ""); // 숫자만
+    let val = input.value.replace(/[^0-9]/g, ""); 
     if(val === "") val = 0;
     val = parseInt(val);
 
-    const maxLimit = Math.floor(totalPrice * 0.3); // 30% 제한
+    const maxLimit = Math.floor(totalPrice * 0.3); 
 
     if (val > availPoint) {
         alert("보유 포인트를 초과하여 사용할 수 없습니다.");
@@ -418,17 +394,14 @@ function useAllPoints() {
     updateFinalPrice(useAmount);
 }
 
-// [최종 금액 및 적립금 업데이트]
 function updateFinalPrice(usePoint) {
     const finalPrice = totalPrice - usePoint;
     $("#finalPriceDisplay").text(finalPrice.toLocaleString() + "원");
     
-    // 적립 예정 포인트 업데이트 (실결제 금액 기준)
     const newExpected = Math.floor(finalPrice * saveRate);
     $("#expectedPointDisplay").text(newExpected.toLocaleString());
 }
 
-// [결제 요청]
 function processPayment() {
     const f = document.paymentForm;
 
@@ -452,8 +425,6 @@ function processPayment() {
     }
 
     if(!confirm("결제를 진행하시겠습니까?")) return;
-
-    // [수정] 오버레이 노출 및 flex 설정
     $("#payment-loading-overlay").css("display", "flex");
 
     setTimeout(function() {

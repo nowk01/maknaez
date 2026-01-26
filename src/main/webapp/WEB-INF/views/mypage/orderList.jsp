@@ -21,7 +21,6 @@ body {
 	color: #000;
 }
 
-/* 1. 상단 상태 대시보드 */
 .status-dashboard-container {
 	display: flex;
 	justify-content: space-between;
@@ -65,7 +64,6 @@ body {
 	background-color: #eee;
 }
 
-/* 2. 필터 영역 */
 .filter-section-row {
 	display: flex;
 	justify-content: space-between;
@@ -128,7 +126,6 @@ body {
 	transition: opacity 0.2s;
 }
 
-/* 3. 게시판 UI */
 .order-list-board {
 	border-top: 1px solid #000;
 	margin-top: 10px;
@@ -539,7 +536,7 @@ body {
 
 	<script>
         document.addEventListener("DOMContentLoaded", function() {
-            // 1. 기간 선택 버튼 이벤트 (active 클래스 유지하며 AJAX 호출)
+            // 기간 선택 버튼 이벤트 
             const pills = document.querySelectorAll('.custom-pill-btn');
             pills.forEach(pill => {
                 pill.addEventListener('click', function() {
@@ -549,7 +546,7 @@ body {
                 });
             });
 
-            // 2. 달력 초기값 세팅
+            // 달력 초기값 세팅
             const f = document.searchForm;
             if(f.historyStartDate.value) document.getElementById("sDate").value = f.historyStartDate.value;
             if(f.historyEndDate.value) document.getElementById("eDate").value = f.historyEndDate.value;
@@ -637,7 +634,6 @@ body {
         function confirmOrder(orderNum) { if(confirm("상품을 잘 받으셨나요? 구매확정 시 포인트가 적립되며 반품이 불가능합니다.")) { location.href = "${pageContext.request.contextPath}/member/mypage/confirmOrder?orderNum=" + orderNum; } }
         function openReturnModal(orderNum) { 
             if(confirm("상품을 반품하시겠습니까?")) {
-                // 클레임 폼으로 이동하며 타입을 'RETURN'으로 전송
                 location.href = "${pageContext.request.contextPath}/member/mypage/claimForm?order_id=" + orderNum + "&type=RETURN"; 
             } 
         }

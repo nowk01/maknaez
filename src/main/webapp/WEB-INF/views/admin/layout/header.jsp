@@ -115,7 +115,6 @@ body.header-wide .top-navbar {
 	box-shadow: 0 0 0 1.5px #fff;
 }
 
-/* 알림 드롭다운  */
 .noti-dropdown {
 	display: none;
 	position: absolute;
@@ -203,7 +202,6 @@ body.header-wide .top-navbar {
 	display: block;
 }
 
-/* 프로필 & 관리자 드롭다운 */
 .profile-wrapper {
 	position: relative;
 }

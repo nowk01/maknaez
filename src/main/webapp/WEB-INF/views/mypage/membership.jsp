@@ -46,7 +46,6 @@
 <script>
     // 탭 전환 스크립트
     function selectTab(mode) {
-        // 기존 활성 상태 제거
         document.querySelectorAll('.benefit-tabs li').forEach(li => li.classList.remove('active'));
         document.querySelectorAll('.tab-pane').forEach(div => div.classList.remove('active'));
 
@@ -54,7 +53,7 @@
         document.getElementById('tab-' + mode).classList.add('active');
         document.getElementById('content-' + mode).classList.add('active');
         
-        // URL 파라미터 업데이트 (새로고침 없이)
+        // URL 파라미터 업데이트
         const url = new URL(window.location);
         url.searchParams.set('mode', mode);
         window.history.pushState({}, '', url);

@@ -161,7 +161,6 @@
     </nav>
 
     <div class="user-actions">
-        <!-- [Modified] 로그인/마이페이지 분기 처리가 먼저 오도록 위치 이동 -->
         <c:choose>
             <c:when test="${not empty sessionScope.member}">
                 <c:if test="${sessionScope.member.userId == 'admin'}">
@@ -183,8 +182,7 @@
                 </a>
             </c:otherwise>
         </c:choose>
-
-        <!-- [Modified] 장바구니 아이콘을 가장 오른쪽으로 이동 -->
+        
         <a href="${pageContext.request.contextPath}/order/cart" class="icon-btn" title="Cart">
             <i class="ph ph-shopping-cart"></i>
         </a>

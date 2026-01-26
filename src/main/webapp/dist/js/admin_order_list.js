@@ -1,8 +1,5 @@
-/**
- * MAKNAEZ Admin Order List Logic
- */
+
 document.addEventListener("DOMContentLoaded", function() {
-	// 전체 선택 체크박스
 	const checkAll = document.getElementById('checkAll');
 	if (checkAll) {
 		checkAll.addEventListener('change', function() {

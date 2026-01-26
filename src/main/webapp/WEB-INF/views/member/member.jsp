@@ -6,7 +6,6 @@
 <title>CREATE ACCOUNT | MAKNAEZ</title>
 <jsp:include page="/WEB-INF/views/layout/headerResources.jsp" />
 <style>
-/* 1. 글로벌 스타일: 살로몬 특유의 묵직하고 강렬한 무드 */
 .signup-container {
 	max-width: 440px;
 	margin: 120px auto 100px;
@@ -17,7 +16,7 @@
 
 .signup-header {
 	margin-bottom: 60px;
-	border-left: 6px solid #000; /* 살로몬 포인트 라인 */
+	border-left: 6px solid #000;
 	padding-left: 20px;
 }
 
@@ -29,7 +28,6 @@
 	line-height: 1;
 }
 
-/* 2. 필드 레이아웃: 장식을 뺀 테크니컬 구조 */
 .form-group {
 	margin-bottom: 35px;
 	position: relative;
@@ -52,7 +50,6 @@
 	background: #eee;
 }
 
-/* 3. 입력창 스타일: 면이 아닌 선의 미학 */
 .input-row {
 	display: flex;
 	align-items: center;
@@ -77,7 +74,6 @@
 	color: #000;
 }
 
-/* 4. 중복확인 / 주소검색 버튼: 살로몬의 유틸리티 버튼 감성 */
 .btn-utility {
 	background: #000;
 	color: #fff;
@@ -97,7 +93,6 @@
 	background: #333;
 }
 
-/* 5. 전화번호: 3칸 분할 & 묵직한 하이픈 */
 .tel-wrap {
 	display: flex;
 	align-items: center;
@@ -117,7 +112,6 @@
 	font-weight: 300;
 }
 
-/* 6. 성별 선택: 강렬한 대비 */
 .gender-wrap {
 	display: flex;
 	gap: 20px;
@@ -150,7 +144,6 @@
 	border-color: #000;
 }
 
-/* 7. 최종 제출 버튼: 압도적 볼드함 */
 .btn-submit-all {
 	width: 100%;
 	height: 65px;
@@ -178,7 +171,7 @@
 	font-weight: 600;
 	margin-top: 6px;
 	position: absolute;
-	display: none; /* 기본적으로 숨김 */
+	display: none; 
 }
 </style>
 </head>
@@ -406,14 +399,14 @@
     function submitForm() {
         const f = document.memberForm;
 
-        // 1. 아이디 및 닉네임 중복 확인 체크
+        // 아이디 및 닉네임 중복 확인 체크
         if(!isIdChecked) { alert("아이디 중복확인을 완료해주세요."); return; }
         if(!isNickChecked) { alert("닉네임 중복확인을 완료해주세요."); return; }
         
-        // 2. 비밀번호 체크
+        // 비밀번호 체크
         if(!f.userPwd.value.trim()) { alert("비밀번호를 입력하세요."); f.userPwd.focus(); return; }
         
-        // 3. 성별 체크
+        // 성별 체크
         const gender = f.gender;
         let genderChecked = false;
         for(let i=0; i<gender.length; i++) {
@@ -428,10 +421,10 @@
             return;
         }
 
-        // 4. 이름 체크
+        // 이름 체크
         if(!f.userName.value.trim()) { alert("이름을 입력하세요."); f.userName.focus(); return; }
 
-        // 5. 생년월일 체크
+        // 생년월일 체크
         if(!f.birth.value.trim()) { 
             alert("생년월일을 입력하세요."); 
             f.birth.focus(); 
@@ -443,14 +436,14 @@
             return;
         }
 
-        // 6. 이메일 체크
+        // 이메일 체크
         if(!f.email1.value.trim() || !f.email2.value.trim()) {
             alert("이메일을 입력하세요.");
             f.email1.focus();
             return;
         }
         
-    	// 7. 전화번호 체크 추가
+    	// 전화번호 체크 추가
         if(!f.tel1.value.trim() || !f.tel2.value.trim() || !f.tel3.value.trim()) {
             alert("전화번호를 모두 입력해주세요.");
             if(!f.tel1.value.trim()) f.tel1.focus();
@@ -466,7 +459,7 @@
             return;
         }
         
-        // 8. 주소 체크
+        // 주소 체크
         if(!f.zip.value || !f.addr1.value) {
     	alert("주소 찾기를 통해 주소를 입력해주세요.");
     	return;

@@ -19,8 +19,6 @@
 <script type="text/javascript">
 	function updateMember() {
 		const f = document.memberForm;
-
-		// 1. 이름 병합: 성 + 이름 -> hidden 필드 'userName'에 할당
 		const lastName = document.getElementById("last_name_customer").value
 				.trim();
 		const firstName = document.getElementById("first_name_customer").value
@@ -30,9 +28,7 @@
 			alert("이름을 모두 입력해주세요.");
 			return;
 		}
-		f.userName.value = lastName + firstName; //
-
-		// 2. 이메일 분리: 화면의 한 줄 입력을 email1, email2로 쪼개기 (백엔드 구조에 맞춤)
+		f.userName.value = lastName + firstName; 
 		const emailFull = document.getElementById("email_customer").value
 				.trim();
 		if (emailFull.includes("@")) {
@@ -44,14 +40,14 @@
 			return;
 		}
 
-		// 3. 비밀번호 확인: 컨트롤러에서 업데이트를 위해 필수적으로 체크함
+		// 비밀번호 확인
 		if (!f.userPwd.value) {
 			alert("정보 수정을 위해 현재 비밀번호를 입력해주세요.");
 			f.userPwd.focus();
 			return;
 		}
 
-		// 4. 전송
+		// 전송
 		f.action = "${pageContext.request.contextPath}/member/update";
 		f.submit();
 	}
@@ -123,11 +119,9 @@
 
 				<div class="customer__detailsForm">
 					<form name="memberForm" method="post">
-						<!-- 기존 hidden -->
 						<input type="hidden" name="userName"> <input type="hidden"
 							name="userId" value="${dto.userId}">
 
-						<!-- ★ 추가: 이메일 분리용 hidden -->
 						<input type="hidden" name="email1"> <input type="hidden"
 							name="email2">
 
@@ -154,7 +148,6 @@
 
 						<div class="input-row">
 							<label class="info-label">이메일주소</label>
-							<!-- name="email" 없음 → JS에서 hidden(email1, email2)로 분해 -->
 							<input aria-label="이메일" placeholder="이메일" type="email"
 								id="email_customer" value="${dto.email}" size="40">
 						</div>

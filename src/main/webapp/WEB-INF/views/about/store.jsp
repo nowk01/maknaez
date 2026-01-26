@@ -11,9 +11,6 @@
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=카카오API키"></script>
 
 <style>
-    /* =========================================
-       MAKNAEZ TECH THEME - STORE (Orange Ver.)
-       ========================================= */
     @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;700;900&family=Syncopate:wght@700&display=swap');
 
     :root {
@@ -21,7 +18,7 @@
         --text-white: #ffffff;
         --text-gray: #888888;
         --line-color: #333333;
-        --accent-color: #FF3B00; /* 인트로와 동일한 주황색 */
+        --accent-color: #FF3B00; 
     }
 
     body {
@@ -32,15 +29,13 @@
         margin: 0; padding: 0;
     }
 
-    /* 레이아웃 */
     .store-container {
         display: flex;
         flex-wrap: wrap;
         min-height: 100vh;
-        padding-top: 60px; /* 헤더 공간 */
+        padding-top: 60px; 
     }
 
-    /* [LEFT] 정보 영역 */
     .info-section {
         flex: 1;
         min-width: 450px;
@@ -53,7 +48,6 @@
         position: relative;
     }
 
-    /* 타이틀 디자인 */
     .page-header {
         margin-bottom: 60px;
     }
@@ -80,7 +74,6 @@
         -webkit-text-stroke: 0;
     }
 
-    /* 정보 리스트 */
     .info-list {
         display: flex;
         flex-direction: column;
@@ -117,7 +110,6 @@
         margin-top: 5px;
     }
 
-    /* 버튼 스타일 */
     .map-link-btn {
         margin-top: 40px;
         display: inline-block;
@@ -138,7 +130,6 @@
         color: #fff;
     }
 
-    /* [RIGHT] 지도 영역 */
     .map-section {
         flex: 1.5;
         min-width: 500px;
@@ -149,15 +140,12 @@
 
     #map {
         width: 100%; height: 100%;
-        /* ★ 핵심: 지도를 흑백 반전시켜 다크모드처럼 보이게 함 ★ */
         filter: grayscale(100%) invert(92%) contrast(1.1);
         opacity: 0.9;
     }
 
-    /* 지도 로딩 실패 시 보여줄 대체 이미지 (폴백) */
     .map-fallback {
         position: absolute; inset: 0;
-        /* 멋진 흑백 지도 이미지 */
         background: url('https://images.unsplash.com/photo-1524661135-423995f22d0b?q=80&w=2674&auto=format&fit=crop') center/cover;
         display: flex;
         justify-content: center;
@@ -166,7 +154,7 @@
     }
     .map-fallback::after {
         content: ''; position: absolute; inset: 0;
-        background: rgba(0,0,0,0.5); /* 어둡게 처리 */
+        background: rgba(0,0,0,0.5);
     }
 
     .fallback-content {
@@ -186,7 +174,6 @@
         color: #fff; font-size: 0.9rem; margin: 0;
     }
 
-    /* 장식 요소 (Crosshair) */
     .crosshair {
         position: absolute; width: 20px; height: 20px;
         border: 1px solid var(--accent-color);
@@ -200,7 +187,6 @@
     .crosshair::before { top: 9px; left: -5px; width: 30px; height: 1px; }
     .crosshair::after { left: 9px; top: -5px; height: 30px; width: 1px; }
 
-    /* 애니메이션 */
     .reveal {
         opacity: 0; transform: translateX(-30px);
         transition: 1s cubic-bezier(0.165, 0.84, 0.44, 1);
@@ -280,12 +266,9 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        // 텍스트 등장 애니메이션
         setTimeout(() => {
             document.querySelectorAll('.reveal').forEach(el => el.classList.add('active'));
         }, 100);
-
-        // 카카오맵 설정
         const container = document.getElementById('map');
         const fallback = document.getElementById('mapFallback');
         
@@ -298,12 +281,10 @@
                 const options = { center: new kakao.maps.LatLng(lat, lng), level: 3 };
                 const map = new kakao.maps.Map(container, options);
                 
-                // 마커 커스텀 (기본 마커 말고 커스텀 오버레이나 이미지 가능하지만 심플하게 기본으로)
                 const markerPosition  = new kakao.maps.LatLng(lat, lng); 
                 const marker = new kakao.maps.Marker({ position: markerPosition });
                 marker.setMap(map);
 
-                // 마커 위에 검은색/주황색 라벨 표시
                 const content = `
                     <div style="
                         padding: 8px 15px; 
@@ -331,7 +312,6 @@
                 throw new Error("Kakao SDK not loaded");
             }
         } catch (e) {
-            // API 키가 없거나 로드 실패시 -> 멋진 대체 이미지 표시
             console.log("Map Load Failed. Switching to Fallback Mode.");
             container.style.display = 'none';
             fallback.style.display = 'flex';

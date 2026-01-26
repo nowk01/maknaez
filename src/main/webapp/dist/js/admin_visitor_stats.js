@@ -1,9 +1,4 @@
-/**
- * MAKNAEZ Admin Visitor Stats Logic
- * - DAU(Daily/Monthly), Hourly Traffic, Referral
- */
 
-// 전역 차트 객체 (업데이트 시 파괴 후 재생성 위해)
 let dauChartInstance = null;
 let hourlyChartInstance = null;
 let referralChartInstance = null;
@@ -18,14 +13,11 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     });
 
-    // 3. 유입 경로 차트 초기화
-    initReferralChart();
+	    initReferralChart();
     
-    // 4. [추가] 새로고침 버튼 로직
     const btnRefresh = document.getElementById('btnRefresh');
     if(btnRefresh) {
         btnRefresh.addEventListener('click', function() {
-            // 현재 선택된 모드(일별/월별) 확인
             const currentMode = document.querySelector('input[name="dauMode"]:checked').value;
             
             this.classList.add('spinning');
@@ -41,7 +33,6 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 });
 
-// 데이터 가져오기 및 렌더링
 function loadVisitorStats(mode, callback) {
     $.ajax({
         url: 'visitor_stats_api',
@@ -71,15 +62,12 @@ function updateSummaryCards(data) {
     }
 }
 
-// 1. DAU 차트 렌더링 (Line Chart)
 function renderDauChart(statsData, mode) {
     const ctx = document.getElementById('dauChart').getContext('2d');
     
-    // 데이터 가공
     const labels = statsData.map(item => item.date);
     const counts = statsData.map(item => item.count);
     
-    // 기존 차트 파괴
     if (dauChartInstance) {
         dauChartInstance.destroy();
     }
@@ -91,7 +79,7 @@ function renderDauChart(statsData, mode) {
             datasets: [{
                 label: (mode === 'daily' ? '일별' : '월별') + ' 접속자 수(명)',
                 data: counts,
-                borderColor: '#ff4e00', // 포인트 컬러 사용
+                borderColor: '#ff4e00',
                 backgroundColor: 'rgba(255, 78, 0, 0.1)',
                 borderWidth: 2,
                 fill: true,
@@ -106,7 +94,7 @@ function renderDauChart(statsData, mode) {
             responsive: true,
             maintainAspectRatio: false,
             plugins: {
-                legend: { display: false }, // 범례 숨김
+                legend: { display: false }, 
                 tooltip: {
                     mode: 'index',
                     intersect: false,
@@ -126,7 +114,6 @@ function renderDauChart(statsData, mode) {
     });
 }
 
-// 1. DAU 차트
 function renderDauChart(statsData, mode) {
     const ctx = document.getElementById('dauChart').getContext('2d');
     
@@ -164,7 +151,6 @@ function renderDauChart(statsData, mode) {
     });
 }
 
-// 2. 시간대별 차트
 function renderHourlyChart(statsData) {
     const ctx = document.getElementById('hourlyChart').getContext('2d');
     
@@ -207,7 +193,6 @@ function renderHourlyChart(statsData) {
     });
 }
 
-// 3. 유입 경로 차트
 function initReferralChart() {
     const ctx = document.getElementById('referralChart').getContext('2d');
     

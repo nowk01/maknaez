@@ -14,34 +14,27 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/mypage.css">
 
 <style>
-    /* [Salomon Tech-Mix Theme] */
     .main-content { flex: 1; padding-left: 60px; font-family: 'Inter', 'Pretendard', sans-serif; color: #000; }
     
     .membership-header { margin-bottom: 40px; border-bottom: 2px solid #000; padding-bottom: 10px; display: flex; justify-content: space-between; align-items: flex-end; }
     .membership-header h3 { font-size: 28px; font-weight: 900; text-transform: uppercase; letter-spacing: -1.5px; margin: 0; }
     .membership-header .serial { font-size: 10px; font-family: monospace; color: #aaa; }
-
-    /* 현재 등급 히어로 섹션 */
     .grade-display { display: flex; gap: 2px; margin-bottom: 60px; background: #000; border: 1px solid #000; }
     
     .current-rank-box { background: #000; color: #fff; padding: 50px; flex: 1.5; }
     .current-rank-box .label { font-size: 11px; text-transform: uppercase; letter-spacing: 3px; opacity: 0.5; display: block; margin-bottom: 15px; }
     .current-rank-box .tier-name { font-size: 72px; font-weight: 950; text-transform: uppercase; line-height: 0.8; letter-spacing: -3px; }
     
-    /* 스펙 스타일 정보창 (우측 블랙박스) */
     .rank-spec-box { background: #000; color: #fff; padding: 50px; flex: 1; border-left: 1px solid rgba(255,255,255,0.1); display: flex; flex-direction: column; justify-content: space-between; }
     .spec-item { display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.1); padding: 10px 0; font-size: 13px; }
     .spec-item span:first-child { font-weight: 700; text-transform: uppercase; color: #666; font-size: 10px; letter-spacing: 1px; }
-    
-    /* 진행도 바 */
+
     .gauge-wrapper { margin-top: 25px; }
     .gauge-bg { height: 2px; background: rgba(255,255,255,0.2); width: 100%; position: relative; margin-top: 10px; }
     .gauge-fill { 
         height: 2px; background: #fff; position: absolute; top: 0; left: 0;
         width: ${sessionScope.member.userLevel >= 50 ? '100%' : (sessionScope.member.userLevel >= 40 ? '80%' : (sessionScope.member.userLevel >= 30 ? '60%' : (sessionScope.member.userLevel >= 20 ? '40%' : '20%')))};
     }
-
-    /* 혜택 그리드 섹션 */
     .section-title { font-size: 14px; font-weight: 900; text-transform: uppercase; margin-bottom: 30px; letter-spacing: 1px; }
     .benefit-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: #eee; border: 1px solid #eee; margin-bottom: 80px; }
     .benefit-item { background: #fff; padding: 40px 30px; min-height: 200px; display: flex; flex-direction: column; }
@@ -50,7 +43,6 @@
     .benefit-item p { font-size: 13px; color: #666; line-height: 1.6; margin: 0; flex-grow: 1; }
     .benefit-item .status { font-size: 10px; font-weight: 900; margin-top: 25px; text-transform: uppercase; padding: 5px 10px; border: 1px solid #000; width: fit-content; }
 
-    /* 정책 테이블 */
     .tier-table { width: 100%; border-collapse: collapse; }
     .tier-table th { text-align: left; font-size: 11px; text-transform: uppercase; color: #999; padding: 15px 10px; border-bottom: 2px solid #000; }
     .tier-table td { padding: 30px 10px; border-bottom: 1px solid #eee; font-size: 14px; }

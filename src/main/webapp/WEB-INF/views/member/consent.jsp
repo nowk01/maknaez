@@ -247,7 +247,6 @@
     const allChecks = document.querySelectorAll("input[type='checkbox']:not(#checkAll)");
     const btnNext = document.getElementById("btnNext");
 
-    // 살로몬 스타일 아코디언
     function toggleTerms(id) {
         const current = document.getElementById("terms" + id);
         const item = current.closest(".terms-item");

@@ -126,9 +126,7 @@
 <jsp:include page="/WEB-INF/views/layout/footerResources.jsp" />
 
 <script>
-    // [수정 3] deleteWish 함수 로직 변경 (기존 이름 유지)
     function deleteWish(prodId) {
-        // confirm 창 제거 (쿨하게 바로 실행)
         
         $.ajax({
             type: "POST",
@@ -137,28 +135,22 @@
             dataType: "json",
             success: function(data) {
                 if(data.state === "false") {
-                    // 1. 토스트 메시지 표시
                     showToast("ITEM REMOVED");
-                    
-                    // 2. 해당 상품 박스만 부드럽게 삭제
                     const item = document.getElementById("wish-item-" + prodId);
                     if(item) {
-                        item.classList.add('wish-item-removing'); // CSS 애니메이션 시작
+                        item.classList.add('wish-item-removing'); 
                         
                         setTimeout(() => {
-                            item.remove(); // 0.4초 후 DOM 제거
+                            item.remove(); 
                             
-                            // 목록이 다 지워졌으면 새로고침(빈 화면 표시 위해)
                             if(document.querySelectorAll('.as-wishlist__productItem').length === 0) {
                                 location.reload();
                             }
                         }, 400);
                     } else {
-                        // 혹시 DOM을 못 찾으면 그냥 새로고침
                         location.reload();
                     }
                 } else if(data.state === "true") {
-                	// 찜 추가된 경우 (혹시 모를 상황)
                     showToast("ADDED TO WISHLIST");
                     setTimeout(() => location.reload(), 1000);
                 } else if(data.state === "login_required") {
@@ -190,7 +182,6 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {
-        // 기존 스크롤 애니메이션 유지
         const observerOptions = {
             root: null,
             rootMargin: '0px',

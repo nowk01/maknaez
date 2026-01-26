@@ -111,25 +111,22 @@ body {
     margin-bottom: 50px;
 }
 
-/* --- [1] 세로 선 애니메이션 (lineExtend) --- */
 .vertical-point {
     width: 2px;
-    height: 0; /* 처음엔 높이 0 */
+    height: 0;
     background-color: #000;
     margin-bottom: 30px;
     display: block;
-    /* 0.8초 동안 부드럽게 늘어남 */
     animation: lineExtend 0.8s cubic-bezier(0.19, 1, 0.22, 1) forwards;
 }
 
 @keyframes lineExtend {
-    to { height: 40px; } /* 최종 높이 40px */
+    to { height: 40px; } 
 }
 
-/* --- [2] 텍스트 등장 애니메이션 (fadeInUp) --- */
 .animate-up {
     opacity: 0;
-    transform: translateY(20px); /* 살짝 아래에서 시작 */
+    transform: translateY(20px); 
     animation: fadeInUp 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
 }
 
@@ -140,13 +137,10 @@ body {
     }
 }
 
-/* --- [3] 순차적 딜레이 설정 (싸라락 효과 핵심) --- */
-.delay-1 { animation-delay: 0.3s; } /* 제목: 선이 어느 정도 그려질 때쯤 등장 */
-.delay-2 { animation-delay: 0.5s; } /* 설명: 제목 직후 */
-.delay-3 { animation-delay: 0.7s; } /* 본문: 가장 마지막에 */
+.delay-1 { animation-delay: 0.3s; } /* 제목 */
+.delay-2 { animation-delay: 0.5s; } /* 설명 */
+.delay-3 { animation-delay: 0.7s; } /* 본문 */
 
-
-/* --- 기존 스타일 유지 --- */
 .page-title {
     font-size: 48px;
     font-weight: 800;

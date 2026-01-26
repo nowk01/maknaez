@@ -1,17 +1,11 @@
 @charset "UTF-8";
 
-/* =========================================
-   0. 공통 변수 (살로몬 스타일)
-   ========================================= */
 :root {
     --font-primary: "SALOMON Sans", "Noto Sans KR", sans-serif;
     --color-grey-02: #888888;
     --text-uppercase: uppercase;
 }
 
-/* =========================================
-   1. 전체 레이아웃 & 사이드바
-   ========================================= */
 .mypage-container {
     display: flex;
     max-width: 1200px;
@@ -20,7 +14,6 @@
     color: #000;
 }
 
-/* 사이드바 */
 .sidebar {
     width: 200px;
     flex-shrink: 0;
@@ -54,16 +47,12 @@
     color: #000;
 }
 
-/* 메인 콘텐츠 */
 .main-content {
     flex: 1;
     padding-left: 60px;
-    min-width: 0; /* 레이아웃 깨짐 방지 필수 */
+    min-width: 0; 
 }
 
-/* =========================================
-   2. 페이지 타이틀 & 안내
-   ========================================= */
 .page-title {
     font-size: 28px;
     font-weight: bold;
@@ -84,9 +73,6 @@
     line-height: 1.4;
 }
 
-/* =========================================
-   3. 마이페이지 컴포넌트 (등급, 현황판 등)
-   ========================================= */
 .sm-salomon__detailsCustomersTag {
     display: flex;
     width: 100%;
@@ -182,7 +168,6 @@
     margin: 0;
 }
 
-/* 현황판 (Status Bar) */
 .sm-salomon__statusBar {
     display: flex;
     justify-content: center;
@@ -232,9 +217,6 @@
     width: 1px;
 }
 
-/* =========================================
-   4. 필터 및 주문 리스트
-   ========================================= */
 .filter-wrapper {
     display: flex;
     align-items: center;
@@ -270,7 +252,6 @@
 .tilde { margin: 0 5px; color: #888; }
 .btn-search { background: #333; color: #fff; border: 1px solid #333; padding: 0 20px; height: 38px; font-size: 13px; cursor: pointer; }
 
-/* 주문 카드 */
 .order-card { border: 1px solid #eee; border-radius: 10px; margin-bottom: 20px; overflow: hidden; }
 .order-card-header { background: #fdfdfd; padding: 12px 20px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; font-weight: 600; }
 .order-detail-link { font-size: 13px; color: #888; text-decoration: none; }
@@ -341,9 +322,6 @@
 .no-data-msg { padding: 80px 0; text-align: center; color: #666; font-size: 14px; font-weight: 500; border-bottom: 1px solid #eee; }
 .page-navigation { margin-top: 30px; text-align: center; }
 
-/* =========================================
-   5. 사이드바 및 리뷰 관련 (스타일 갱신)
-   ========================================= */
 .sm-salomon__accountSidebar { width: 200px; flex-shrink: 0; text-align: left; }
 .sm-salomon__accountSidebar .h2 { font-size: 24px; font-weight: 700; margin-bottom: 35px; color: #000; }
 .sm-salomon__accountCard { margin-bottom: 24px; }
@@ -399,28 +377,21 @@
 .action-btn:hover { background: #000; color: #fff; }
 .action-btn.write-btn { font-weight: 800; }
 
-/* =========================================
-   6. 관심 상품 (Wishlist)
-   ========================================= */
-
 .as-wishlist__contentWrap { width: 100%; padding: 0 20px; box-sizing: border-box; }
 .as-wishlist__productList { width: 100%; }
 .as-wishlist__productCount { font-size: 14px; color: #666; margin-bottom: 15px; text-align: right; }
 
-/* 플렉스 레이아웃 (Grid 대신 Flex 사용) */
 .as-wishlist__products {
     display: flex;
     flex-wrap: wrap;
-    gap: 52px 24px; /* 세로 52px, 가로 24px */
+    gap: 52px 24px; 
     width: 100%;
     margin-top: 20px;
 }
 
-/* 개별 상품 아이템 (4등분 계산) */
 .as-wishlist__productItem {
     display: flex;
     flex-direction: column;
-    /* (100% - 24px * 3) / 4 */
     width: calc((100% - 72px) / 4);
     max-width: none;
     margin: 0;
@@ -428,7 +399,6 @@
     box-sizing: border-box;
 }
 
-/* 이미지 1:1 비율 */
 .as-wishlist__productImageWrap {
     position: relative;
     width: 100%;
@@ -456,7 +426,6 @@
     cursor: pointer;
 }
 
-/* 텍스트 정보 */
 .as-wishlist__productTitle {
     font-size: 14px;
     font-weight: 700;
@@ -482,24 +451,17 @@
     margin: 0;
 }
 
-/* 데이터 없음 */
 .as-wishlist__productError { text-align: center; padding: 100px 0; background-color: #f9f9f9; }
 .as-wishlist__errorText { font-size: 16px; color: #555; margin-bottom: 5px; }
 .as-wishlist__button { display: inline-block; margin-top: 20px; padding: 12px 30px; background-color: #000; color: #fff; text-decoration: none; font-weight: 600; border-radius: 4px; transition: background-color 0.2s; }
 .as-wishlist__button:hover { background-color: #333; }
 
-/* 유틸리티 */
 .hidden { display: none !important; }
-
-/* =========================================
-   7. 애니메이션 (수정됨)
-   ========================================= */
 @keyframes salomonChaos {
     0% { opacity: 0; transform: translateY(15px) scale(0.99); }
     100% { opacity: 1; transform: translateY(0) scale(1); }
 }
 
-/* 사이드바 클래스는 제거됨 */
 .page-title, .notice-box, .sm-salomon__detailsCustomersTag, 
 .sm-salomon__statusBar, .filter-wrapper, .order-list-area, .no-data-msg, 
 .review-tabs, .PendingReviews__header, 
@@ -508,7 +470,6 @@
     animation: salomonChaos 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
 }
 
-/* 딜레이 설정 */
 .order-list-area, .review-target-card, .as-wishlist__products { animation-delay: 0.1s; }
 .page-title { animation-delay: 0.3s; }
 .review-tabs, .notice-box { animation-delay: 0.4s; }
@@ -518,11 +479,7 @@
 .notice-container { animation-delay: 0.9s; }
 .no-data-msg { animation-delay: 1.0s; }
 
-/* =========================================
-   8. [누락 복구] 반응형 (Media Queries)
-   ========================================= */
 @media (max-width: 1024px) {
-    /* 관심상품: 3열 */
     .as-wishlist__productItem {
         width: calc((100% - 48px) / 3);
     }
@@ -534,13 +491,12 @@
         padding: 30px; 
         gap: 30px; 
         text-align: center; 
-        border: none !important; /* 전체 박스 테두리 제거 확실히 */
+        border: none !important; 
     }
     
     .sm-salomon__detailsCustomersTier--tier { 
         flex-direction: column; 
         border-right: none; 
-        /* ▼▼▼ 여기가 핵심입니다 (아래쪽 회색 선 제거) ▼▼▼ */
         border-bottom: none !important; 
         padding-right: 0; 
         margin-right: 0; 
@@ -553,47 +509,39 @@
     .sm-salomon__statusBar { 
         flex-direction: row; 
         flex-wrap: wrap; 
-        border: none !important; /* 현황판 테두리 제거 확실히 */
+        border: none !important; 
     }
     
     .sm-salomon__statusBarItem { min-width: 50%; margin-bottom: 20px; }
     .sm-salomon__statusBarBorder { display: none; }
-    
     .main-content { padding-left: 0; }
     
-    /* 관심상품: 2열 */
     .as-wishlist__products { gap: 30px 10px; }
     .as-wishlist__productItem { width: calc((100% - 10px) / 2); }
 }
 
-/* =========================================
-   9. [긴급] 사이드바 애니메이션 강제 제거
-   ========================================= */
 .sm-salomon__accountSidebar,
 .sm-salomon__accountSidebar * {
-    animation: none !important;     /* 애니메이션 금지 */
-    opacity: 1 !important;          /* 투명도 100% 강제 (숨기지 마) */
-    transform: none !important;     /* 위치 이동 금지 */
-    transition: none !important;    /* 부드러운 전환 효과 금지 */
+    animation: none !important;    
+    opacity: 1 !important;          
+    transform: none !important;     
+    transition: none !important;    
 }
 
-/* [1] 등장 애니메이션 대상 (제목, 개수, 제품 목록) */
     .page-title,
     .as-wishlist__productCount,
     .as-wishlist__productItem {
-        opacity: 0; /* 처음엔 안 보임 */
-        transform: translateY(30px); /* 아래로 30px 내려가 있음 */
+        opacity: 0; 
+        transform: translateY(30px); 
         transition: opacity 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94); /* 고급스러운 가속도 */
         will-change: opacity, transform;
     }
 
-    /* [2] 등장 활성화 상태 */
     .is-visible {
         opacity: 1 !important;
         transform: translateY(0) !important;
     }
 
-    /* [3] 이미지 호버 효과 (살로몬 스타일: 은은한 확대) */
     .as-wishlist__productImageWrap {
         overflow: hidden;
         position: relative;
@@ -607,12 +555,10 @@
         transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     }
 
-    /* 마우스 올렸을 때 이미지 확대 */
     .as-wishlist__productItem:hover .as-wishlist__productImage {
-        transform: scale(1.05); /* 5% 확대 */
+        transform: scale(1.05);
     }
 
-    /* [4] 그리드 레이아웃 (5열) */
     .as-wishlist__products {
         display: grid;
         grid-template-columns: repeat(5, 1fr);
@@ -630,7 +576,6 @@
         aspect-ratio: 1 / 1;
     }
 
-    /* 반응형 */
     @media (max-width: 1200px) {
         .as-wishlist__products { grid-template-columns: repeat(4, 1fr); }
     }
@@ -638,14 +583,13 @@
         .as-wishlist__products { grid-template-columns: repeat(2, 1fr); }
     }
     
-    /* --- [추가] 테크니컬 토스트 알림 & 애니메이션 --- */
 #toast-notification {
     visibility: hidden;
     min-width: 250px;
-    background-color: #000; /* Deep Black */
+    background-color: #000; 
     color: #fff;
     text-align: center;
-    padding: 16px; /* 넉넉한 여백 */
+    padding: 16px; 
     position: fixed;
     z-index: 9999;
     left: 50%;
@@ -654,7 +598,7 @@
     font-family: 'Helvetica Neue', Arial, sans-serif;
     font-size: 14px;
     font-weight: 700;
-    text-transform: uppercase; /* 대문자 강조 */
+    text-transform: uppercase; 
     letter-spacing: 1px;
     opacity: 0;
     transition: opacity 0.5s, bottom 0.5s;
@@ -664,7 +608,7 @@
 #toast-notification.show {
     visibility: visible;
     opacity: 1;
-    bottom: 50px; /* 위로 살짝 떠오르는 효과 */
+    bottom: 50px; 
 }
 
 .wish-item-removing {

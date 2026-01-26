@@ -20,21 +20,14 @@
     
     <style>
         .loading-spinner { display: none; width: 100%; text-align: center; padding: 20px; }
-        /* 체크박스 디자인 */
         .sidebar-menu input[type="checkbox"] { margin-right: 8px; vertical-align: middle; }
         .sidebar-menu label { cursor: pointer; display: block; margin-bottom: 5px; }
-        
-        /* 색상 칩 스타일 */
         .color-list { display: flex; flex-wrap: wrap; gap: 8px; }
         .color-swatch { position: relative; width: 24px; height: 24px; border-radius: 50%; border: 1px solid #ddd; cursor: pointer; }
         .color-swatch input { position: absolute; opacity: 0; width: 0; height: 0; }
         .color-swatch span { display: block; width: 100%; height: 100%; border-radius: 50%; }
         .color-swatch input:checked + span { box-shadow: 0 0 0 2px #fff, 0 0 0 4px #000; }
-        
-        /* 로딩 오버레이 (필터링 시 깜빡임 방지) */
         .loading-overlay { opacity: 0.5; pointer-events: none; transition: opacity 0.2s; }
-        
-        /* 하트 아이콘 호버 효과 */
         .wish-icon-btn:hover { transform: scale(1.1); }
     </style>
 </head>
@@ -213,38 +206,31 @@
     <jsp:include page="/WEB-INF/views/layout/footerResources.jsp" />
     
     <script>
-        // [Scroll Animation Setup]
-        // 화면에 요소가 나타날 때 감지하는 Observer 설정
         const observerOptions = {
             root: null,
             rootMargin: '0px',
-            threshold: 0.1 // 10% 정도 보이면 애니메이션 시작
+            threshold: 0.1 
         };
 
         const observer = new IntersectionObserver((entries, observer) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
-                    entry.target.classList.add('is-visible'); // CSS 애니메이션 클래스 추가
-                    observer.unobserve(entry.target); // 한 번 실행 후 감시 해제
+                    entry.target.classList.add('is-visible'); 
+                    observer.unobserve(entry.target);
                 }
             });
         }, observerOptions);
 
-        // 상품 요소들을 찾아 Observer에 등록하는 함수
         function observeProducts() {
-            // 아직 .is-visible 클래스가 없는 상품들만 선택
             const items = document.querySelectorAll('.product-item-wrap:not(.is-visible)');
             items.forEach(item => observer.observe(item));
         }
 
         document.addEventListener('DOMContentLoaded', function() {
-            // 초기 슬라이더 UI 설정
             updateSliderUI();
-            // [추가] 초기 로딩된 상품에 애니메이션 적용
             observeProducts();
         });
 
-        // 정렬 변경
         function changeSort(val) {
             document.getElementById('hiddenSort').value = val;
             searchList();
@@ -255,32 +241,25 @@
             location.href = '${pageContext.request.contextPath}/collections/list?category=${categoryCode}';
         }
         
-        // 슬라이더 값 변경 완료 시 (onchange) 호출
         function updatePriceAndSearch() {
             document.getElementById('hiddenMinPrice').value = document.getElementById('rangeMin').value;
             document.getElementById('hiddenMaxPrice').value = document.getElementById('rangeMax').value;
             searchList();
         }
         
-        // 검색 실행 (AJAX로 부드럽게 처리)
         function searchList() {
-            // 페이지를 1로 리셋
             document.getElementById('page').value = 1;
             
-            // 폼 데이터 직렬화
             const f = document.getElementById('searchForm');
             const formData = new FormData(f);
             const params = new URLSearchParams(formData);
             
-            // URL 업데이트 (뒤로가기 지원을 위해)
             const newUrl = '${pageContext.request.contextPath}/collections/list?' + params.toString();
             window.history.pushState({path: newUrl}, '', newUrl);
-
-            // 로딩 효과
+            
             const productListEl = document.getElementById('productList');
             if(productListEl) productListEl.classList.add('loading-overlay');
 
-            // AJAX 요청 (listMore 컨트롤러 재사용하여 HTML 조각만 받아옴)
             $.ajax({
                 url: "${pageContext.request.contextPath}/collections/listMore",
                 type: "GET",
@@ -291,13 +270,11 @@
                             productListEl.innerHTML = '<div class="col-12 text-center py-5"><h4>해당하는 상품이 없습니다.</h4></div>';
                         } else {
                             productListEl.innerHTML = html;
-                            // [추가] 검색 결과로 바뀐 상품들 애니메이션 적용
                             observeProducts();
                         }
                         productListEl.classList.remove('loading-overlay');
                     }
                     
-                    // 무한 스크롤 상태 초기화
                     currentPage = 1;
                     isEnd = false;
                 },
@@ -308,7 +285,6 @@
             });
         }
 
-        // 가격 슬라이더 UI 업데이트 (드래그 시 시각적 효과만 담당)
         function updateSliderUI(e) {
             const rangeMin = document.getElementById('rangeMin');
             const rangeMax = document.getElementById('rangeMax');
@@ -321,7 +297,6 @@
             let minVal = parseInt(rangeMin.value);
             let maxVal = parseInt(rangeMax.value);
 
-            // 교차 방지 로직
             if (maxVal - minVal < minGap) {
                 if (e && e.target.id === "rangeMin") {
                     rangeMin.value = maxVal - minGap;
@@ -331,8 +306,7 @@
                     maxVal = parseInt(rangeMax.value);
                 }
             }
-
-            // 텍스트 및 게이지 업데이트
+            
             inputMin.value = minVal.toLocaleString();
             inputMax.value = maxVal.toLocaleString();
 
@@ -342,7 +316,6 @@
             sliderFill.style.left = percentMin + "%";
             sliderFill.style.width = (percentMax - percentMin) + "%";
             
-            // z-index 조절 (겹칠 때 선택 용이하게)
             if (minVal > parseInt(rangeMax.max) - 100) {
                 rangeMin.style.zIndex = "2";
             } else {
@@ -391,7 +364,6 @@
                 success: function(html) {
                     if ($.trim(html) !== "") {
                          $("#productList").append(html);
-                         // [추가] 더보기로 불러온 상품들 애니메이션 적용
                          observeProducts();
                     }
                     if (currentPage >= totalPage) {

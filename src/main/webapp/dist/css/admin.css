@@ -22,7 +22,6 @@ body {
     transition: all 0.3s ease;
 }
 
-/* --- Sidebar Styles --- */
 #sidebar-wrapper {
     width: var(--sidebar-width);
     background-color: var(--sidebar-bg);
@@ -77,7 +76,6 @@ body {
 .menu-arrow { float: right; transition: transform 0.3s; }
 [aria-expanded="true"] .menu-arrow { transform: rotate(90deg); }
 
-/* --- Main Content Styles --- */
 #page-content-wrapper {
     flex-grow: 1;
     display: flex;
@@ -104,7 +102,6 @@ body {
     overflow-y: auto;
 }
 
-/* --- Utility & Custom --- */
 .card-custom { border: none; box-shadow: 0 2px 10px rgba(0,0,0,0.05); border-radius: 8px; }
 .stat-card-title { font-size: 0.9rem; color: #6c757d; }
 .stat-card-value { font-size: 1.5rem; font-weight: 700; color: #333; }

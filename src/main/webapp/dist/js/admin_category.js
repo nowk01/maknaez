@@ -1,40 +1,27 @@
-/**
- * MAKNAEZ Admin Category Logic
- * - Dependent on util-jquery.js (ajaxRequest)
- * - Features: Manual Code Input, Hierarchical Dropdown, Auto Prefixing
- */
-
 $(document).ready(function() {
-	// 1. 초기 데이터 로드
 	loadCategoryList();
-
-	// 2. 상위 카테고리 변경 시 이벤트 바인딩
+	
 	$('#cateParent').on('change', onChangeParent);
 });
 
-// 전역 변수: 카테고리 데이터 캐싱
 let categoryList = [];
 
-// [READ] 카테고리 목록 불러오기 (트리 & 드롭다운 갱신)
 function loadCategoryList() {
 	let url = "category_list";
 
 	ajaxRequest(url, "get", null, "json", function(data) {
 		if (data && data.list) {
 			categoryList = data.list;
-			renderCategoryTree(data.list);  // 좌측 트리 그리기
-			renderParentOptions(data.list); // 우측 드롭다운 채우기
+			renderCategoryTree(data.list);  
+			renderParentOptions(data.list); 
 		}
 	});
 }
 
-// [UI] Accordion Tree 렌더링 (좌측)
-// [UI] Accordion Tree 렌더링 (좌측) - 숨김 배지 기능 추가됨
 function renderCategoryTree(list) {
 	const $container = $('#categoryAccordion');
 	$container.empty();
 
-	// 1. 대분류(Depth 1) 필터링
 	const parents = list.filter(item => item.depth === 1);
 
 	if (parents.length === 0) {
@@ -43,20 +30,14 @@ function renderCategoryTree(list) {
 	}
 
 	parents.forEach((parent, index) => {
-		// 2. 자식(Depth 2) 필터링
 		const children = list.filter(item => item.cateParent === parent.cateCode);
 
-		// ID 생성
 		const collapseId = `collapse${index}`;
 		const headerId = `heading${index}`;
-
-		// ★ [NEW] 대분류 숨김 배지 로직
-		// status가 0이면 회색 배지 표시
 		const parentBadge = (parent.status == 0)
 			? '<span class="badge bg-secondary ms-2 rounded-pill" style="font-size:0.7em;">숨김</span>'
 			: '';
 
-		// HTML 조립
 		let html = `
             <div class="accordion-item">
                 <h2 class="accordion-header" id="${headerId}">
@@ -73,7 +54,6 @@ function renderCategoryTree(list) {
 
 		if (children.length > 0) {
 			children.forEach(child => {
-				// ★ [NEW] 하위분류 숨김 배지 로직
 				const childBadge = (child.status == 0)
 					? '<span class="badge bg-secondary me-2 rounded-pill" style="font-size:0.7em;">숨김</span>'
 					: '';
@@ -102,21 +82,15 @@ function renderCategoryTree(list) {
 	});
 }
 
-// [UI] 상위 카테고리 드롭다운 옵션 생성 (우측 폼)
 function renderParentOptions(list) {
 	const $select = $('#cateParent');
-	const currentVal = $select.val(); // 현재 선택값 임시 저장 (필요 시 복원)
+	const currentVal = $select.val(); 
 
 	$select.empty();
-
-	// 1. 최상위(ROOT) 옵션
 	$select.append('<option value="" data-depth="0">최상위 (ROOT)</option>');
-
-	// 2. 부모가 될 수 있는 카테고리만 추가 (Depth 1, 2만 허용한다고 가정)
-	// Depth가 3인 항목은 하위를 가질 수 없으면 제외
+	
 	const candidates = list.filter(item => item.depth < 3);
-
-	// 정렬: 대분류 코드순
+	
 	candidates.sort((a, b) => a.cateCode.localeCompare(b.cateCode));
 
 	candidates.forEach(item => {
@@ -134,33 +108,27 @@ function renderParentOptions(list) {
 	});
 }
 
-// [Event] 상위 카테고리 변경 시 동작 (핵심 로직)
 function onChangeParent() {
 	const $selected = $('#cateParent option:selected');
 	const parentCode = $selected.val();
 	const parentDepth = parseInt($selected.data('depth')) || 0;
 
-	// 모드가 'update'일 때는 코드 자동 변경 막기 (안전장치)
 	if ($('#mode').val() === 'update') return;
 
 	if (!parentCode) {
-		// [ROOT 선택 시]
 		$('#cateCode').val('');
 		$('#depth').val(1);
 		$('#codeHelpText').text('대분류 코드는 영문 대문자로 입력하세요. (예: MEN)');
 	} else {
-		// [하위 선택 시] 접두어 자동 입력
 		const prefix = parentCode + "_";
 		$('#cateCode').val(prefix);
 		$('#depth').val(parentDepth + 1);
 		$('#codeHelpText').text(`'${prefix}' 뒤에 상세 코드를 입력하세요.`);
 	}
 
-	// 입력 편의를 위해 포커스 이동
 	$('#cateCode').focus();
 }
 
-// [Action] 신규 등록 모드 초기화 (Reset)
 function resetForm() {
 	$('#mode').val('insert');
 	$('#originCateCode').val('');
@@ -169,33 +137,28 @@ function resetForm() {
 	$('#cateCode').prop('readonly', false).removeClass('bg-light').val('');
 	$('#codeHelpText').text('신규 코드를 입력하세요. (예: MEN)');
 	$('#codeHelpText').removeClass('text-danger').addClass('text-muted');
-
-	// 3. 나머지 필드 초기화
+	
 	$('#cateName').val('');
 	$('#orderNo').val('1');
 	$('#depth').val('1');
 	$('#displayY').prop('checked', true);
 
-	// 4. 버튼 제어
 	$('#btnDelete').hide();
-	$('#btnSubAdd').hide(); // 신규 등록 중에는 하위추가 버튼 불필요
+	$('#btnSubAdd').hide(); 
 
 	$('#cateCode').focus();
 }
 
-// [Action] 트리 클릭 시 상세 정보 보기
 function viewCategory(code, name, parent, depth, orderNo, status) {
 	$('#mode').val('update');
 	$('#originCateCode').val(code);
 
-	// 1. 값 바인딩
-	$('#cateParent').val(parent || ''); // 부모 선택
+	$('#cateParent').val(parent || ''); 
 	$('#cateCode').val(code);
 	$('#cateName').val(name);
 	$('#depth').val(depth);
 	$('#orderNo').val(orderNo);
 
-	// Status (Display)
 	if (String(status) === '1' || status === 'Y') {
 		$('#displayY').prop('checked', true);
 	} else {
@@ -205,24 +168,19 @@ function viewCategory(code, name, parent, depth, orderNo, status) {
 	const hasChildren = categoryList.some(item => item.cateParent === code);
 
 	if (hasChildren) {
-		// 자식이 있으면 -> 코드 수정 불가 (Readonly)
 		$('#cateCode').prop('readonly', true).addClass('bg-light');
 		$('#codeHelpText').text('⛔ 하위 카테고리가 존재하여 코드를 변경할 수 없습니다.');
 		$('#codeHelpText').removeClass('text-muted').addClass('text-danger');
 	} else {
-		// 자식이 없으면 -> 코드 수정 가능 (Editable)
 		$('#cateCode').prop('readonly', false).removeClass('bg-light');
 		$('#codeHelpText').text('✏️ 코드를 수정할 수 있습니다. (연결된 상품 정보도 함께 업데이트됩니다.)');
 		$('#codeHelpText').removeClass('text-danger').addClass('text-muted');
 	}
 
-	// 3. 상위 카테고리는 구조 꼬임 방지를 위해 항상 비활성
 	$('#cateParent').prop('disabled', true);
 
-	// 3. 버튼 노출
 	$('#btnDelete').show();
 
-	// 하위 분류 추가 버튼은 Depth가 깊지 않을 때만 노출 (예: 3단계 미만일 때만)
 	if (depth < 3) {
 		$('#btnSubAdd').show();
 	} else {
@@ -230,18 +188,14 @@ function viewCategory(code, name, parent, depth, orderNo, status) {
 	}
 }
 
-// [Action] 하위 분류 추가 준비 (상세보기 상태에서 '하위 분류 추가' 버튼 클릭)
 function prepareSubAdd() {
-	const currentCode = $('#cateCode').val(); // 현재 보고 있는 카테고리 (부모가 될 코드)
+	const currentCode = $('#cateCode').val(); 
 	const currentName = $('#cateName').val();
 
-	// 1. 폼 리셋 (Insert 모드)
 	resetForm();
-
-	// 2. 드롭다운에서 현재 코드를 부모로 선택
+	
 	$('#cateParent').val(currentCode);
 
-	// 3. 변경 이벤트 강제 발생 -> 코드 접두어(MEN_) 자동 생성
 	onChangeParent();
 
 	if (typeof updatePathBadge === 'function') updatePathBadge(currentName + ' > 하위 분류 등록');
@@ -259,25 +213,21 @@ $(document).ready(function() {
 });
 
 $(document).ready(function() {
-	// 초기화
 	$('#currentPath').text('READY / INSERT MODE');
 });
 
-// [CUD] 저장 (Insert / Update)
 function submitCategory() {
 	const mode = $('#mode').val();
 	const code = $('#cateCode').val();
 	const name = $('#cateName').val();
 	const parentCode = $('#cateParent').val();
 
-	// 1. 유효성 검사
 	if (!code) {
 		alert("카테고리 코드를 입력하세요.");
 		$('#cateCode').focus();
 		return;
 	}
 
-	// 코드 형식 검사 (영문 대문자, 숫자, 언더바)
 	const codeRegex = /^[A-Z0-9_]+$/;
 	if (!codeRegex.test(code)) {
 		alert("카테고리 코드는 영문 대문자, 숫자, 언더바(_)만 사용 가능합니다.");
@@ -291,7 +241,6 @@ function submitCategory() {
 		return;
 	}
 
-	// Insert 시 접두어 검증 (사용자가 실수로 지웠을 경우 대비)
 	if (mode === 'insert' && parentCode) {
 		if (!code.startsWith(parentCode + "_")) {
 			alert(`하위 카테고리 코드는 상위코드('${parentCode}_')로 시작해야 합니다.`);
@@ -300,25 +249,20 @@ function submitCategory() {
 		}
 	}
 
-	// 2. 전송 준비
 	let url = mode === 'insert' ? "category_insert" : "category_update";
-
-	// 주의: disabled된 select(cateParent)는 serialize()에 포함되지 않음.
-	// Insert시는 enabled이므로 전송됨. Update시는 disabled이므로 전송 안 됨 (Backend에서 수정 안 하면 OK).
 	const formData = $('#categoryForm').serialize();
 
 	ajaxRequest(url, "post", formData, "json", function(data) {
 		if (data && data.state === "true") {
 			alert("저장되었습니다.");
-			loadCategoryList(); // 트리 및 목록 갱신
-			if (mode === 'insert') resetForm(); // 입력창 초기화
+			loadCategoryList(); 
+			if (mode === 'insert') resetForm(); 
 		} else {
 			alert(data.message || "처리 중 오류가 발생했습니다.");
 		}
 	});
 }
 
-// [CUD] 삭제
 function deleteCategoryFunc() {
 	const code = $('#cateCode').val();
 	if (!code) return;
@@ -328,7 +272,6 @@ function deleteCategoryFunc() {
 	}
 
 	const url = "category_delete";
-	// post body에 cateCode 전달
 	const params = "cateCode=" + code;
 
 	ajaxRequest(url, "post", params, "json", function(data) {

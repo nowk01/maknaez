@@ -1,8 +1,5 @@
 @charset "UTF-8";
 
-/* ================================================================
-   [1] 기본 레이아웃 & 헤더
-   ================================================================ */
 .product-detail-container {
     max-width: 85%;
     margin: 0 auto;
@@ -10,7 +7,6 @@
     padding-bottom: 100px;
 }
 
-/* --- Header Animation Styles --- */
 body > header {
     position: sticky;
     top: 0;
@@ -24,14 +20,10 @@ body > header.header-hidden {
     transform: translateY(-100%);
 }
 
-/* ================================================================
-   [2] 좌측 섹션 (이미지, 탭, 컨텐츠)
-   ================================================================ */
 .detail-left-section {
     padding-right: 40px;
 }
 
-/* 1. Image Grid Layout */
 .product-image-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -52,7 +44,6 @@ body > header.header-hidden {
     margin: 0 auto;
 }
 
-/* 2. Tabs (Centered) */
 .product-tabs {
     margin-bottom: 30px;
     border-bottom: 1px solid #ddd;
@@ -73,7 +64,6 @@ body > header.header-hidden {
     color: #000;
 }
 
-/* 3. Product Info */
 .product-info-content {
     margin-bottom: 50px;
     padding-bottom: 30px;
@@ -84,7 +74,6 @@ body > header.header-hidden {
     height: auto;
 }
 
-/* 4 & 5. Product Features & Notice (Unified Table Style) */
 .product-features,
 .product-notice {
     margin-bottom: 60px;
@@ -100,27 +89,26 @@ body > header.header-hidden {
     margin-bottom: 20px;
     color: #000;
     display: inline-block;
-    border-bottom: 2px solid #000; /* 제목 아래 강조선 */
+    border-bottom: 2px solid #000; 
     padding-bottom: 5px;
 }
 
-/* 공통 테이블 스타일 (Features & Notice) */
 .detail-table {
     width: 100%;
     border-collapse: collapse;
-    border-top: 1px solid #000; /* 상단 진한 라인 */
+    border-top: 1px solid #000;
 }
 
 .detail-table th,
 .detail-table td {
     padding: 12px 10px;
     font-size: 0.9rem;
-    border-bottom: 1px solid #eee; /* 하단 연한 라인 */
+    border-bottom: 1px solid #eee; 
 }
 
 .detail-table th {
     width: 150px;
-    background-color: #fcfcfc; /* 헤더 배경 연회색 */
+    background-color: #fcfcfc;
     color: #333;
     font-weight: 600;
     text-align: left;
@@ -131,9 +119,6 @@ body > header.header-hidden {
     line-height: 1.5;
 }
 
-/* ================================================================
-   [3] 우측 섹션 (스티키 사이드바)
-   ================================================================ */
 .detail-right-section {
     position: relative; 
 }
@@ -363,16 +348,12 @@ body > header.header-hidden {
     color: #000;
 }
 
-/* ================================================================
-   [4] 리뷰 섹션 (통합 구현)
-   ================================================================ */
 .review-wrapper { 
     padding-top: 50px; 
     margin-top: 50px; 
     border-top: 1px solid #333; 
 }
 
-/* 헤더: 타이틀(좌) - 검색창(우하단) */
 .review-header-container {
     display: flex;
     justify-content: space-between;
@@ -390,13 +371,11 @@ body > header.header-hidden {
 }
 .review-search-box i { position: absolute; right: 0; top: 50%; transform: translateY(-50%); color: #555; cursor: pointer; }
 
-/* 1영역: 포토&동영상 전체보기 */
 .review-photo-summary { margin-bottom: 20px; padding: 15px 0; border-bottom: 1px solid #eee; }
 .photo-summary-header { display: flex; justify-content: space-between; margin-bottom: 15px; font-weight: 600; font-size: 0.95rem; }
 .photo-summary-list { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 5px; }
 .photo-summary-item { width: 100px; height: 100px; flex-shrink: 0; border: 1px solid #eee; cursor: pointer; }
 
-/* 2영역 & 3영역: 필터 바 */
 .review-filter-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
 .round-checkbox-wrapper { display: flex; align-items: center; cursor: pointer; font-size: 0.9rem; color: #333; }
 .round-checkbox-wrapper input { display: none; }
@@ -409,7 +388,6 @@ body > header.header-hidden {
 }
 .filter-select { border: 1px solid #ddd; padding: 5px 15px; font-size: 0.85rem; border-radius: 4px; outline: none; cursor: pointer; }
 
-/* 리스트 아이템 */
 .review-item { padding: 25px 0; border-bottom: 1px solid #eee; }
 .review-meta-top { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.85rem; color: #888; }
 .review-badge-new { background-color: #ff5500; color: #fff; font-size: 0.7rem; padding: 1px 5px; margin-right: 8px; font-weight: bold; }
@@ -426,7 +404,6 @@ body > header.header-hidden {
 .review-thumb:hover img { transform: scale(1.1); }
 .review-empty { text-align: center; padding: 100px 0; color: #888; font-size: 1rem; background-color: #fcfcfc; border-bottom: 1px solid #eee; }
 
-/* --- Recommend Section --- */
 .recommend-carousel {
     position: relative;
     overflow: hidden;

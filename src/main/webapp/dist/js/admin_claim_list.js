@@ -1,4 +1,3 @@
-
 document.addEventListener("DOMContentLoaded", function() {
     const checkAll = document.getElementById('checkAll');
     if (checkAll) {
@@ -10,7 +9,7 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 });
 
-// 2. 선택 일괄 승인
+// 선택 일괄 승인
 function approveClaim() {
     const selected = document.querySelectorAll('tbody input[type="checkbox"]:checked');
     if (selected.length === 0) return alert("처리할 항목을 선택해주세요.");
@@ -21,7 +20,7 @@ function approveClaim() {
     }
 }
 
-// 3. 엑셀 다운로드 
+// 엑셀 다운로드 
 function excelDownload() {
     alert("Excel 다운로드를 시작합니다.");
     // location.href = '/admin/order/excel/download'; // 실제 링크 연결 시 사용

@@ -1,5 +1,4 @@
 document.addEventListener("DOMContentLoaded", function() {
-    // 전체 선택 기능
     const checkAll = document.getElementById('checkAll');
     if(checkAll) {
         checkAll.addEventListener('change', function() {
@@ -11,8 +10,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
 function searchList() {
         const f = document.searchForm;
-        
-        // 날짜 유효성 검사
         if(f.startDate.value && f.endDate.value && f.startDate.value > f.endDate.value) {
             alert("종료일은 시작일보다 늦어야 합니다.");
             return;
@@ -42,13 +39,12 @@ function searchList() {
             if (!confirm("선택한 " + cnt + "명의 회원을 복구하시겠습니까?")) {
                 return;
             }
-
-            // 체크된 회원들의 memberIdxs 값을 쿼리 스트링으로 변환
+			
             const query = $("input[name=memberIdxs]:checked").serialize();
 
             $.ajax({
                 type: "POST",
-                url: "releaseDormantList", // Controller URL
+                url: "releaseDormantList", 
                 data: query,
                 dataType: "json",
                 success: function(data) {
@@ -82,7 +78,7 @@ function searchList() {
 
             $.ajax({
                 type: "POST",
-                url: "deleteList", // Controller URL
+                url: "deleteList",
                 data: query,
                 dataType: "json",
                 success: function(data) {
@@ -101,8 +97,6 @@ function searchList() {
         
         $(".btn-restore").click(function() {
             let memberIdx = $(this).data("idx");
-            
-            // 버튼이 속한 행(tr)에서 회원의 이름 찾기 (4번째 td)
             let userName = $(this).closest("tr").find("td:eq(3)").text(); 
 
             if (!confirm("'" + userName + "' 회원을 복구하시겠습니까?")) return;
@@ -123,7 +117,4 @@ function searchList() {
                 error: function() { alert("에러 발생"); }
             });
         });
-        
-        // 기존 JS에 삭제 버튼에 대한 이벤트가 없어 추가해 드립니다.
-        // 만약 버튼에 .btn-delete 클래스가 없다면 HTML에서 추가해야 합니다. (위 코드에는 없음, 버튼 생성 시 필요시 추가)
     });

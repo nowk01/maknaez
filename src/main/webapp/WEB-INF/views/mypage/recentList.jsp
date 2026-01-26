@@ -31,7 +31,7 @@
 
         .recent-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr); /* 한 줄에 4개 */
+            grid-template-columns: repeat(4, 1fr);
             gap: 20px;
             list-style: none;
             padding: 0; margin: 0;
@@ -65,7 +65,6 @@
         function clearRecent() {
             if(!confirm("최근 본 상품 기록을 모두 삭제하시겠습니까?")) return;
             
-            // 쿠키 삭제 (Max-Age=0)
             document.cookie = "recent_products=; path=/; max-age=0";
             
             alert("삭제되었습니다.");

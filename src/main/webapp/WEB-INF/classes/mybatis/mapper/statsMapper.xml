@@ -105,8 +105,7 @@
         ORDER BY d.dt
     </select>
 	
-	<!--                              상품 통계                             -->
-    
+	<!-- 상품 통계-->
     <select id="getOrderStatusDistribution" resultType="map">
         SELECT 
             status AS "status",
@@ -216,7 +215,7 @@
         ) WHERE ROWNUM &lt;= 10
     </select>
     
-    <!--                              회원 통계                             -->
+    <!-- 회원 통계-->
     <select id="getDormantMemberCount" resultType="int">
         SELECT COUNT(*) 
         FROM member1 
@@ -320,7 +319,7 @@
         WHERE ROWNUM &lt;= 20
     </select>
     
-    <!--                              방문자 통계                             -->
+    <!-- 방문자 통계 -->
     <select id="getDailyDau" resultType="map">
         SELECT 
             TO_CHAR(l.log_date, 'MM.DD') AS "date",

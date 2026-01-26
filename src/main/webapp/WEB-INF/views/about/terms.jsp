@@ -90,9 +90,6 @@
 </div>
 
 <style>
-/* Privacy Policy와 동일한 스타일 적용 (통일성 유지)
-   :root 변수 및 기본 레이아웃 설정
-*/
 :root {
     --text-primary: #111;
     --text-secondary: #555;
@@ -108,7 +105,7 @@ body {
 
 .privacy-container {
     max-width: 900px;
-    margin: 160px auto 150px auto; /* 상단 여백 시원하게 */
+    margin: 160px auto 150px auto; 
     padding: 0 40px;
 }
 
@@ -116,7 +113,6 @@ body {
     margin-bottom: 50px;
 }
 
-/* [애니메이션] 세로 선 */
 .vertical-point {
     width: 2px;
     height: 0;
@@ -130,7 +126,6 @@ body {
     to { height: 40px; }
 }
 
-/* [애니메이션] 텍스트 등장 */
 .animate-up {
     opacity: 0;
     transform: translateY(20px);
@@ -167,7 +162,7 @@ body {
     margin: 0;
 }
 
-/* 메타데이터 (요약 정보) */
+/* 메타데이터  */
 .policy-summary {
     display: flex;
     gap: 60px;
@@ -215,10 +210,9 @@ body {
     color: #555;
     margin-bottom: 25px;
     line-height: 1.7;
-    word-break: keep-all; /* 한글 단어 끊김 방지 */
+    word-break: keep-all; 
 }
 
-/* 데이터 그리드 (테이블 대체) */
 .data-grid {
     border-top: 1px solid #000;
 }

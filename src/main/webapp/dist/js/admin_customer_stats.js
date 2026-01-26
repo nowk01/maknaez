@@ -1,5 +1,3 @@
-/* [admin_customer_stats.js] - 최종 수정본 */
-
 document.addEventListener("DOMContentLoaded", function() {
     loadCustomerStats();
 
@@ -26,7 +24,7 @@ function loadCustomerStats(callback) {
         dataType: 'json',
         success: function(data) {
             updateSummary(data);
-            initTrendChart(data.newMemberTrend); // 이 함수가 아래에 정의되어 있어야 함
+            initTrendChart(data.newMemberTrend); 
             initGradeChart(data.gradeDist);
             initAgeChart(data.ageDist);
             initGenderChart(data.genderDist);
@@ -60,9 +58,7 @@ function updateSummary(data) {
     $('#newMember7').text("+ " + format(newSum) + " 명");
 }
 
-/* --- Charts --- */
-
-// [빠진 함수 추가] 1. 신규 가입 추이 차트
+// 신규 가입 추이 차트
 function initTrendChart(list) {
     const canvasId = 'trendChart';
     
@@ -96,14 +92,12 @@ function getTierInfo(level) {
     return { name: 'UNKNOWN', color: '#000', bg: '#fff' };
 }
 
-// 2. 등급별 분포 차트 (티어 적용 버전 하나만 남김)
+//등급별 분포 차트 
 function initGradeChart(list) {
     const canvasId = 'gradeChart';
     
     const existingChart = Chart.getChart(canvasId);
     if (existingChart) existingChart.destroy();
-
-    // 데이터 그룹화
     const tierCounts = { 'IRON': 0, 'BRONZE': 0, 'SILVER': 0, 'GOLD': 0, 'PLATINUM': 0 };
     
     if(list) {
@@ -152,7 +146,7 @@ function initGradeChart(list) {
     });
 }
 
-// 3. 연령별 분포 차트
+// 연령별 분포 차트
 function initAgeChart(list) {
     const canvasId = 'ageChart';
 
@@ -180,7 +174,7 @@ function initAgeChart(list) {
     });
 }
 
-// 4. 성별 분포 차트
+// 성별 분포 차트
 function initGenderChart(list) {
     const canvasId = 'genderChart';
 
@@ -201,7 +195,6 @@ function initGenderChart(list) {
     });
 }
 
-/* --- VIP Table Sorting --- */
 let vipDataList = [];
 let sortState = { col: 4, asc: false }; 
 

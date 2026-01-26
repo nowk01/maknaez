@@ -31,7 +31,6 @@
         font-family: 'Pretendard', sans-serif; 
         box-sizing: border-box;
     }
-    /* 상품 카드 (심플 & 모던) */
     .product-card { display: flex; align-items: center; padding: 15px; background: #fcfcfc; border: 1px solid #eee; margin-bottom: 30px; border-radius: 2px; }
     .product-card img { width: 64px; height: 64px; object-fit: cover; border: 1px solid #eee; background: #fff; flex-shrink: 0; }
     .product-info { margin-left: 15px; flex: 1; overflow: hidden; }
@@ -39,14 +38,12 @@
     .product-info .product-name { font-size: 14px; font-weight: 700; color: #333; margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .product-info .product-opt { font-size: 12px; color: #666; }
 
-    /* 폼 요소 공통 */
     .form-section { margin-bottom: 25px; }
     .form-label { display: block; font-size: 13px; font-weight: 700; color: #111; margin-bottom: 8px; }
     .form-control, .form-select { width: 100%; height: 46px; border: 1px solid #ddd; padding: 0 12px; font-size: 13px; border-radius: 0; transition: all 0.2s; box-sizing: border-box; }
     .form-control:focus, .form-select:focus { border-color: #ff4e00; outline: none; background-color: #fff; }
     .form-control[readonly] { background-color: #f8f9fa; color: #555; border-color: #eee; cursor: default; font-weight: 500; }
     
-    /* 반품 방법 라디오 버튼 (칼각 정렬) */
     .radio-box { display: flex; gap: 8px; width: 100%; }
     .radio-item { flex: 1; position: relative; } /* 1:1 비율 */
     .radio-item input[type="radio"] { position: absolute; opacity: 0; width: 0; }
@@ -59,17 +56,14 @@
         border-color: #1a1c1e; background: #1a1c1e; color: #fff;
     }
 
-    /* 안내 박스 */
     .info-box { background: #f7f7f7; padding: 15px; font-size: 12px; color: #666; line-height: 1.5; margin-top: 10px; border-radius: 2px; border: 1px dashed #ddd; }
     .info-box strong { color: #222; display: block; margin-bottom: 4px; font-weight: 700; }
 
-    /* 텍스트 박스 */
     .form-textarea { height: 120px !important; padding: 12px; line-height: 1.5; resize: none; }
 
-    /* [중요] 버튼 그룹: Grid 사용으로 5:5 완벽 분할 */
     .btn-group-custom { 
         display: grid; 
-        grid-template-columns: 1fr 1fr; /* 정확히 반반 */
+        grid-template-columns: 1fr 1fr; 
         gap: 10px; 
         margin-top: 40px; 
     }
@@ -80,17 +74,14 @@
         font-weight: 700; 
         cursor: pointer; 
         transition: 0.2s; 
-        border-radius: 0; /* 각지게 */
+        border-radius: 0; 
         display: flex; 
         align-items: center; 
         justify-content: center;
     }
     
-    /* 취소/돌아가기 버튼 (흰색) */
     .btn-back { background: #fff; color: #1a1c1e; border: 1px solid #ccc; }
     .btn-back:hover { border-color: #1a1c1e; background: #f9f9f9; }
-
-    /* 신청하기 버튼 (검정색) */
     .btn-submit { background: #1a1c1e; color: #fff; border: 1px solid #1a1c1e; }
     .btn-submit:hover { background: #333; border-color: #333; }
     

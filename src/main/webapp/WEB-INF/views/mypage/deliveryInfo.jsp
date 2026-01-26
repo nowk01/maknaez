@@ -23,7 +23,7 @@
         background: #fff;
         width: 100%;
         max-width: 480px;
-        border-radius: 0; /* 살로몬 스타일: 각진 모서리 */
+        border-radius: 0; 
         box-shadow: 0 10px 25px rgba(0,0,0,0.05);
         overflow: hidden;
         border: 1px solid #ddd;
@@ -94,7 +94,6 @@
         margin-bottom: 0;
     }
 
-    /* 원형 점 (기본) */
     .event::after {
         content: '';
         position: absolute;

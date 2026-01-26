@@ -1,7 +1,4 @@
-// [admin_stock.js]
-
 document.addEventListener("DOMContentLoaded", function() {
-    // 체크박스 전체 선택 로직
     const checkAll = document.getElementById('checkAll');
     if (checkAll) {
         checkAll.addEventListener('change', function() {
@@ -29,16 +26,13 @@ function openStockModal(prodId, optId, prodName, size, currentStock) {
 	inputProdId.value = prodId;
 	
     inputMode.value = "single";
-    stockArea.style.display = "block"; // 현재 재고 보이기
+    stockArea.style.display = "block"; 
 	
-
-    // 모달 표시
     const myModal = new bootstrap.Modal(document.getElementById('stockModal'));
     myModal.show();
 }
 
 function openBulkStockModal() {
-    // 체크된 항목 확인
     const checkedBoxes = document.querySelectorAll('tbody input[name="optIds"]:checked');
     if(checkedBoxes.length === 0) {
         alert("일괄 처리할 상품을 목록에서 선택해주세요.");
@@ -52,7 +46,7 @@ function openBulkStockModal() {
     
     modalTitle.textContent = "재고 일괄 관리 (Bulk Update)";
     inputName.value = checkedBoxes.length + "개 품목 선택됨";
-    stockArea.style.display = "none"; // 일괄 처리시 현재 재고는 의미 없으므로 숨김
+    stockArea.style.display = "none"; 
     inputMode.value = "bulk";
 
     const myModal = new bootstrap.Modal(document.getElementById('stockModal'));
@@ -73,11 +67,9 @@ function updateStockSubmit() {
 	let prodIds = [];
     
     if(mode === 'single') {
-        // 단일 처리
         optIds.push(document.getElementById('modalOptId').value);
 		prodIds.push(document.getElementById('modalProdId').value);
     } else {
-        // 일괄 처리 (체크박스 값 수집)
         const checkedBoxes = document.querySelectorAll('tbody input[name="optIds"]:checked');
         checkedBoxes.forEach(function(cb) {
             optIds.push(cb.value);
@@ -89,11 +81,10 @@ function updateStockSubmit() {
         });
     }
 
-    // Ajax 전송
     $.ajax({
         type: "POST",
         url: cp + "/admin/product/updateStock",
-        traditional: true, // 배열 전송 허용
+        traditional: true,
         data: {
             optIds: optIds,
 			prodIds: prodIds,
@@ -116,7 +107,6 @@ function updateStockSubmit() {
     });
 }
 
-// 엑셀 다운로드
 function downloadStockExcel() {
     alert("현재 재고 리스트를 엑셀 파일로 추출합니다.");
 }

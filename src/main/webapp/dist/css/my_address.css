@@ -1,8 +1,5 @@
 @charset "UTF-8";
 
-/* =========================================
-   변수 및 공통 설정 (Salomon Style)
-========================================= */
 :root {
     --font-primary: "SALOMON Sans", "Noto Sans KR", sans-serif;
     --color-black: #000;
@@ -19,38 +16,30 @@ body {
     line-height: 1.5;
 }
 
-/* =========================================
-   페이지 래퍼
-========================================= */
 .customer-address-wrap {
     width: 100%;
     max-width: 800px;
     margin: 0 auto;
     padding-bottom: 60px;
-    
-    /* 등장 애니메이션 */
     opacity: 0; 
     animation: salomonSlideUp 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
     animation-delay: 0.2s;
 }
 
-/* =========================================
-   타이틀 영역
-========================================= */
 .feature-header {
     font-size: 24px;
     font-weight: 800;
     text-transform: uppercase;
     letter-spacing: -0.5px;
     margin-bottom: 8px;
-    text-align: center; /* 타이틀 가운데 정렬 */
+    text-align: center; 
 }
 
 .feature-subtext {
     font-size: 14px;
     color: #666;
     margin-bottom: 20px;
-    text-align: center; /* 서브텍스트 가운데 정렬 */
+    text-align: center; 
 }
 
 .line {
@@ -60,9 +49,6 @@ body {
     margin-bottom: 35px;
 }
 
-/* =========================================
-   배송지 목록 (이 부분이 핵심입니다)
-========================================= */
 #address-list {
     display: flex;
     flex-direction: column;
@@ -70,24 +56,21 @@ body {
 
 .addr-item {
     display: flex;
-    justify-content: space-between; /* 텍스트는 왼쪽, 버튼은 오른쪽 끝으로 */
-    align-items: center;            /* 수직 중앙 정렬 */
+    justify-content: space-between; 
+    align-items: center;            
     padding: 25px 0;
     border-bottom: 1px solid var(--color-gray);
-    
-    /* 리스트 등장 애니메이션 */
     opacity: 0;
     animation: salomonSlideUp 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
 }
 
-/* 리스트 순차 등장 딜레이 */
 .addr-item:nth-child(1) { animation-delay: 0.4s; }
 .addr-item:nth-child(2) { animation-delay: 0.5s; }
 .addr-item:nth-child(3) { animation-delay: 0.6s; }
 .addr-item:nth-child(n+4) { animation-delay: 0.7s; }
 
 .addr-info {
-    flex: 1; /* 남은 공간 차지 */
+    flex: 1;
     padding-right: 20px;
 }
 
@@ -114,14 +97,11 @@ body {
     margin-top: 3px;
 }
 
-/* -------------------------------------------
-   수정/삭제 버튼 영역 (여기가 안 먹혔던 부분)
-   ------------------------------------------- */
 .addr-actions {
     display: flex;
-    align-items: center;  /* 버튼과 바 수직 중앙 정렬 */
-    gap: 0;               /* gap 대신 margin으로 간격 조정 */
-    flex-shrink: 0;       /* 버튼 영역 줄어듦 방지 */
+    align-items: center;  
+    gap: 0;               
+    flex-shrink: 0;       
 }
 
 .btn-text {
@@ -140,7 +120,6 @@ body {
     font-weight: 600;
 }
 
-/* 구분선 문자 (|) 스타일 */
 .bar {
     font-size: 11px;
     color: #e0e0e0;
@@ -149,14 +128,10 @@ body {
     vertical-align: middle;
 }
 
-/* =========================================
-   배송지 추가 / 입력 폼 영역
-========================================= */
 .addr-create-area {
     margin-top: 45px;
 }
 
-/* 버튼 영역 */
 #addr_btn_area {
     margin-top: 30px;
     display: flex;
@@ -171,7 +146,6 @@ body {
     pointer-events: none;
 }
 
-/* 폼 영역 (숨김 상태) */
 #addr_form_area {
     max-height: 0;
     opacity: 0;
@@ -180,16 +154,12 @@ body {
     transition: max-height 0.4s ease, opacity 0.3s ease, transform 0.3s ease;
 }
 
-/* 폼 열림 (활성 상태) */
 #addr_form_area.active {
     max-height: 1000px;
     opacity: 1;
     transform: translateY(0);
 }
 
-/* =========================================
-   입력 폼 스타일 (Salomon Style)
-========================================= */
 .customer_address {
     width: 100%;
     margin: 0 auto;
@@ -208,7 +178,7 @@ body {
     display: block;
     font-size: 13px;
     font-weight: 700;
-    margin: 0 0 8px; /* 하단 여백만 줌 */
+    margin: 0 0 8px; 
 }
 
 .address_form {
@@ -229,7 +199,6 @@ body {
     border-color: var(--color-black);
 }
 
-/* 가로 배치 (이름, 우편번호) */
 .divided {
     display: flex;
     gap: 10px;
@@ -253,7 +222,6 @@ body {
     background: var(--color-light-gray);
 }
 
-/* 체크박스 */
 .as-salomon__addressInputLabel {
     display: flex;
     align-items: center;
@@ -269,7 +237,6 @@ body {
     accent-color: var(--color-black);
 }
 
-/* 하단 액션 버튼 */
 .action_bottom {
     max-width: 368px;
     margin: 35px auto 0;
@@ -309,9 +276,7 @@ body {
     color: var(--color-black);
 }
 
-/* =========================================
-   애니메이션 키프레임
-========================================= */
+
 @keyframes salomonSlideUp {
     0% {
         opacity: 0;

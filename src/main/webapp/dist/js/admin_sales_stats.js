@@ -24,7 +24,7 @@ function loadSalesData(mode, callback) {
     $.ajax({
         url: 'sales_api',
         type: 'GET',
-        data: { mode: mode }, // 모드 전달
+        data: { mode: mode }, 
         dataType: 'json',
         success: function(data) {
             updateCards(data);
@@ -48,7 +48,7 @@ function updateCards(data) {
     $('#card-today-sales').text('₩ ' + fmt(data.todaySales));
     $('#diff-today-sales').text(data.todaySalesDiff)
                           .removeClass('text-success text-danger')
-                          .addClass(data.todaySalesColor); // 색상 클래스 적용
+                          .addClass(data.todaySalesColor); 
     $('#text-today-diff').text(data.todaySalesDiff + (data.todaySalesColor === 'text-success' ? ' 증가' : ' 감소'));
 
     $('#card-month-sales').text('₩ ' + fmt(data.monthSales));
@@ -64,21 +64,19 @@ function updateCards(data) {
     $('#text-order-diff').text(data.orderDiffStr + (data.orderDiffColor === 'text-success' ? ' 증가' : ' 감소'));
 }
 
-// [핵심 수정 부분] renderChart 함수
 function renderChart(salesList, mode) {
     const canvasId = 'salesChart';
     const existingChart = Chart.getChart(canvasId);
     if (existingChart) existingChart.destroy();
 
     if (!Array.isArray(salesList) || salesList.length === 0) {
-        return; // 데이터 없음 처리 (필요시)
+        return; 
     }
 
     const ctx = document.getElementById(canvasId).getContext('2d');
     const labels = salesList.map(item => item.statsDate); // "MM-DD" or "YYYY-MM"
     const revenues = salesList.map(item => item.totalRevenue);
 
-    // 그라데이션
     const gradient = ctx.createLinearGradient(0, 0, 0, 400);
     gradient.addColorStop(0, 'rgba(255, 78, 0, 0.4)');
     gradient.addColorStop(1, 'rgba(255, 78, 0, 0.0)');

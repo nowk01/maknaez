@@ -58,7 +58,7 @@
                             <div class="chat-item-info">
                                 <div class="chat-item-top">
                                     <span class="chat-item-subject">${dto.subject}</span>
-                                    <%-- 등록일 출력 (날짜 부분만 잘라서 표시) --%>
+                                    <%-- 등록일 출력 --%>
                                     <span class="chat-item-date">${dto.reg_date.substring(0,10)}</span>
                                 </div>
                                 <div class="chat-item-bottom">

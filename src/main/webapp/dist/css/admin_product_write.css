@@ -1,37 +1,30 @@
 @charset "UTF-8";
 
-/* [MAKNAEZ] Professional Footwear Registration */
 body { background-color: #fafafa; color: #111; font-family: 'Inter', 'Pretendard', sans-serif; letter-spacing: -0.03em; }
 .content-container { padding: 50px 60px; animation: fadeIn 0.4s ease-out; }
 @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 
-/* 헤더 */
 .page-header { margin-bottom: 50px; border-left: 5px solid #ff4e00; padding-left: 25px; }
 .page-title { font-weight: 800; font-size: 28px; color: #000; }
 
-/* 카드 박스 */
 .card-box { background: #ffffff; border-radius: 2px; border: 1px solid #eee; padding: 45px; margin-bottom: 35px; box-shadow: 0 2px 12px rgba(0,0,0,0.02); }
 .section-title { font-size: 16px; font-weight: 800; color: #000; margin-bottom: 35px; padding-bottom: 12px; border-bottom: 2px solid #111; display: flex; align-items: center; }
 .section-num { color: #ff4e00; margin-right: 8px; font-family: 'Montserrat', sans-serif; font-weight: 900; }
 
-/* 폼 스타일 */
 .form-label { font-size: 13px; font-weight: 700; color: #555; margin-bottom: 10px; display: block; text-transform: uppercase; }
 .form-control, .form-select { border-radius: 0; border: 1px solid #ddd; padding: 12px 15px; font-size: 14px; transition: 0.2s; background: #fff; }
 .form-control:focus, .form-select:focus { border-color: #111; box-shadow: none; outline: none; }
 
-/* 옵션 테이블 */
 .option-table { width: 100%; border-collapse: collapse; margin-top: 15px; }
 .option-table th { background: #f8f9fa; font-weight: 800; color: #999; border-bottom: 1px solid #eee; text-align: center; padding: 12px; }
 .option-table td { padding: 12px; border-bottom: 1px solid #f9f9f9; text-align: center; vertical-align: middle; }
 
-/* 재고 입력창 */
 .input-stock { 
     width: 100px !important; height: 38px !important; text-align: center; 
     font-size: 14px !important; font-weight: 700 !important; 
     border: 1px solid #eee !important; display: inline-block;
 }
 
-/* 이미지 그리드 */
 .img-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 15px; }
 .img-upload-box {
     aspect-ratio: 1/1; 
@@ -66,14 +59,12 @@ body { background-color: #fafafa; color: #111; font-family: 'Inter', 'Pretendard
     display: none;
 }
 
-/* 하단 버튼 */
 .btn-footer { display: flex; justify-content: flex-end; gap: 15px; margin-top: 50px; padding-bottom: 100px; }
 .btn-luxury { width: 160px; height: 52px; font-weight: 800; font-size: 14px; display: flex; align-items: center; justify-content: center; transition: all 0.3s; border-radius: 1px; }
 .btn-dark { background: #111; color: #fff; border: 1px solid #111; }
 .btn-orange { background: #ff4e00; color: #fff; border: 1px solid #ff4e00; }
 .btn-orange:hover { background: #e04400; }
 
-/* 삭제 버튼 스타일 */
 .btn-img-delete {
     position: absolute;
     top: 5px;
@@ -87,7 +78,7 @@ body { background-color: #fafafa; color: #111; font-family: 'Inter', 'Pretendard
     font-size: 12px;
     font-weight: bold;
     cursor: pointer;
-    z-index: 10; /* 이미지보다 위에 오게 */
+    z-index: 10; 
     display: flex;
     align-items: center;
     justify-content: center;
@@ -97,5 +88,5 @@ body { background-color: #fafafa; color: #111; font-family: 'Inter', 'Pretendard
     background-color: darkred;
 }
 .img-upload-box {
-    position: relative; /* 자식인 버튼의 기준점 */
+    position: relative; 
 }

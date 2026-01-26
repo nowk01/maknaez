@@ -1,4 +1,3 @@
-// 리스트로 돌아가기
 function goBackList() {
     if (document.referrer.indexOf('/admin/order/estimate_list') !== -1) {
         history.back();

@@ -1,4 +1,3 @@
-// 1. 검색 기능
 function searchHistory() {
     const f = document.historySearchForm;
     if ((f.startDate.value && !f.endDate.value) || (!f.startDate.value && f.endDate.value)) {
@@ -8,7 +7,6 @@ function searchHistory() {
     f.submit();
 }
 
-// 2. 모달 열기 (+, - 버튼 연동)
 function openPointModal(mode) {
     const modalTitle = document.getElementById("pointModalLabel");
     const modalMode = document.getElementById("modalMode");
@@ -32,7 +30,6 @@ function openPointModal(mode) {
     myModal.show();
 }
 
-// 3. 사유 선택 시 입력창 활성화
 function changeReason(select) {
     const form = select.closest("form");
     const input = form.querySelector("input[name=reason]");
@@ -47,7 +44,6 @@ function changeReason(select) {
     }
 }
 
-// 4. 포인트 업데이트 전송 (AJAX)
 function submitPointUpdate() {
     const f = document.pointForm;
     const query = $(f).serialize();

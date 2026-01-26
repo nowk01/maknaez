@@ -1,23 +1,11 @@
 @charset "UTF-8";
 
-/* =====================================================
-   MY INFO – SALOMON STYLE (PAGE ONLY)
-   적용 범위: 마이페이지 > 내 정보 관리
-   ===================================================== */
-
-/* -------------------------------------
-   1. 페이지 전용 폰트 세팅
-------------------------------------- */
 .main-content {
     font-family: "Pretendard", "Noto Sans KR",
                  -apple-system, BlinkMacSystemFont,
                  "Segoe UI", Roboto, sans-serif;
     color: #000;
 }
-
-/* -------------------------------------
-   2. 페이지 타이틀
-------------------------------------- */
 .feature-header {
     font-size: 24px;
     font-weight: 700;
@@ -30,26 +18,17 @@
     border-bottom: 2px solid #000;
 }
 
-/* -------------------------------------
-   3. 폼 컨테이너 (Salomon 실제 폭)
-------------------------------------- */
 .customer__detailsForm {
     max-width: 368px;
     margin: 0 auto;
     padding-bottom: 48px;
 }
 
-/* -------------------------------------
-   4. 입력 행
-------------------------------------- */
 .input-row {
     width: 100%;
     margin-bottom: 24px;
 }
 
-/* -------------------------------------
-   5. 라벨
-------------------------------------- */
 .info-label {
     display: block;
     margin-bottom: 8px;
@@ -62,9 +41,6 @@
     color: #000;
 }
 
-/* -------------------------------------
-   6. 공통 입력 요소
-------------------------------------- */
 input[type="text"],
 input[type="password"],
 input[type="tel"],
@@ -88,7 +64,6 @@ select {
     -webkit-appearance: none;
 }
 
-/* 포커스 상태 */
 input:focus,
 select:focus {
     border-color: #000;
@@ -103,9 +78,6 @@ input[readonly] {
     cursor: default;
 }
 
-/* -------------------------------------
-   7. 성 / 이름 분리 입력
-------------------------------------- */
 .divided {
     display: flex;
     gap: 10px;
@@ -116,9 +88,6 @@ input[readonly] {
     flex: 1;
 }
 
-/* -------------------------------------
-   8. 휴대폰 입력 + 버튼
-------------------------------------- */
 .phone-field {
     display: flex;
     gap: 10px;
@@ -129,9 +98,6 @@ input[readonly] {
     flex: 1;
 }
 
-/* -------------------------------------
-   9. 버튼 (업데이트 / 재설정)
-------------------------------------- */
 .phone-field__send-code,
 .btn {
     height: 48px;
@@ -154,25 +120,16 @@ input[readonly] {
     opacity: 0.85;
 }
 
-/* -------------------------------------
-   10. OTP 안내 텍스트
-------------------------------------- */
 .otp-text {
     margin-top: 4px;
     font-size: 12px;
     color: #666;
 }
 
-/* -------------------------------------
-   11. 숨김 처리
-------------------------------------- */
 .hidden {
     display: none !important;
 }
 
-/* -------------------------------------
-   12. 셀렉트 커스텀 화살표
-------------------------------------- */
 .pretty-select {
     position: relative;
     margin-bottom: 24px;
@@ -190,9 +147,6 @@ input[readonly] {
     pointer-events: none;
 }
 
-/* -------------------------------------
-   13. 체크박스
-------------------------------------- */
 .checkbox-row {
     display: flex;
     align-items: center;
@@ -212,9 +166,6 @@ input[readonly] {
     cursor: pointer;
 }
 
-/* -------------------------------------
-   14. 저장 버튼
-------------------------------------- */
 .wide-action {
     margin-top: 48px;
 }
@@ -244,49 +195,30 @@ input[readonly] {
     height: 48px;
     padding: 0 16px;
     
-    /* 입력창과 비슷하게 위치를 잡기 위해 Flexbox 사용 */
     display: flex; 
     align-items: center;
 
     font-size: 14px;
-    color: #777; /* 읽기 전용 느낌의 회색 텍스트 */
+    color: #777; 
     
-    /* 배경색과 테두리 추가 여부 결정 */
-    background-color: #f5f5f5; /* 회색 배경 */
-    border: 1px solid #e0e0e0; /* 테두리 추가 */
+    background-color: #f5f5f5; 
+    border: 1px solid #e0e0e0; 
     box-sizing: border-box;
 }
-/* =====================================================
-   DASHBOARD ANIMATION (FADE IN)
-   적용: #customer_detail 영역이 서서히 나타나는 효과
-   ===================================================== */
 
-/* 1. 애니메이션 동작 정의 (Keyframes) */
 @keyframes fadeInUp {
     from {
         opacity: 0;
-        transform: translateY(20px); /* 20px 아래에서 시작 */
+        transform: translateY(20px); 
     }
     to {
         opacity: 1;
-        transform: translateY(0); /* 원래 위치로 */
+        transform: translateY(0);
     }
 }
 
-/* 2. 타겟 요소에 애니메이션 적용 */
 #customer_detail {
-    /* 초기 상태를 투명하게 설정하여 깜빡임 방지 */
     opacity: 0;
-    
-    /* 애니메이션 실행: 
-       - 이름: fadeInUp
-       - 시간: 0.8초 (속도 조절 가능)
-       - 가속도: ease-out (끝날 때 부드럽게)
-       - forwards: 애니메이션이 끝난 상태(opacity:1) 유지
-    */
     animation: fadeInUp 0.8s ease-out forwards;
-    
-    /* (선택사항) 딜레이가 필요하면 아래 주석 해제 */
-    /* animation-delay: 0.2s; */
 }
 

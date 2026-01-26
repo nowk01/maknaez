@@ -7,7 +7,6 @@ body {
 	letter-spacing: -0.5px;
 }
 
-/* 1. 전체 컨테이너 애니메이션 (주문 리스트와 동일) */
 .content-container {
 	padding: 40px;
 	animation: fadeInContainer 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94)
@@ -25,7 +24,6 @@ to {
 
 }
 
-/* 2. 시그니처 오렌지 헤더 */
 .page-header {
 	margin-bottom: 35px;
 	border-left: 5px solid #ff4e00;
@@ -47,7 +45,6 @@ to {
 	letter-spacing: 1px;
 }
 
-/* 3. 카드 박스 디자인 */
 .card-box {
 	background: #ffffff;
 	border-radius: 0;
@@ -57,9 +54,8 @@ to {
 	margin-bottom: 25px;
 }
 
-/* 4. 구린 돋보기 아이콘 제거 및 제목 정리 */
 .card-box h5.fw-bold span.bg-dark {
-	display: none !important; /* 동그란 돋보기 아이콘 강제 삭제 */
+	display: none !important; 
 }
 
 .card-box h5.fw-bold {
@@ -68,10 +64,9 @@ to {
 	letter-spacing: -0.5px;
 	margin-bottom: 25px !important;
 	display: block;
-	padding-left: 0; /* 아이콘이 빠진 만큼 여백 조정 */
+	padding-left: 0; 
 }
 
-/* 5. 검색 폼 요소 */
 .search-label {
 	font-size: 11px;
 	font-weight: 700;
@@ -96,7 +91,6 @@ to {
 	box-shadow: none !important;
 }
 
-/* 6. SEARCH 버튼 */
 .btn-dark {
 	background: #111 !important;
 	border: none !important;
@@ -112,7 +106,6 @@ to {
 	transform: translateY(-1px);
 }
 
-/* 7. 프리미엄 테이블 및 리스트 컨트롤 */
 .btn-group-premium .btn-ctrl {
 	font-size: 12px;
 	font-weight: 700;
@@ -160,7 +153,6 @@ to {
 	background-color: #fcfcfc !important;
 }
 
-/* 포인트 및 배지 */
 .text-orange {
 	color: #ff4e00 !important;
 }
@@ -185,7 +177,6 @@ to {
 	background: #f9fafb !important;
 }
 
-/* 8. 내역 버튼 */
 .btn-detail-sm {
 	background: #fff;
 	border: 1px solid #ddd;
@@ -203,7 +194,6 @@ to {
 	border-color: #111 !important;
 }
 
-/* 9. 페이지네이션 */
 .pagination .page-link {
 	color: #1a1c1e;
 	border-radius: 0 !important;
@@ -216,7 +206,6 @@ to {
 	border-color: #ff4e00 !important;
 }
 
-/* 10. 모달 스타일 (애니메이션 포함) */
 .modal-content {
 	border-radius: 0 !important;
 	border: none;
@@ -245,7 +234,6 @@ to {
 	filter: invert(1);
 }
 
-/* 1. 모달 전체 레이아웃 정렬 */
 .modal-content {
     border-radius: 0 !important;
     border: none;
@@ -256,17 +244,15 @@ to {
     padding: 30px !important;
 }
 
-/* 2. 문제의 취소/확인 버튼 정렬 (킹받는 포인트 해결) */
 .modal-footer {
     display: flex !important;
-    padding: 0 30px 30px 30px !important; /* 바닥 여백 확보 */
+    padding: 0 30px 30px 30px !important; 
     border: none !important;
-    gap: 10px; /* 버튼 사이 간격 고정 */
+    gap: 10px;
 }
 
-/* 취소 버튼 스타일 (Secondary) */
 .modal-footer .btn-secondary {
-    flex: 1; /* 비율 동일하게 */
+    flex: 1; 
     height: 48px;
     border-radius: 0 !important;
     background-color: #eee !important;
@@ -274,7 +260,7 @@ to {
     color: #444 !important;
     font-size: 14px;
     font-weight: 600;
-    margin: 0 !important; /* 부트스트랩 기본 마진 제거 */
+    margin: 0 !important; 
     transition: all 0.2s ease;
 }
 
@@ -283,12 +269,11 @@ to {
     color: #000 !important;
 }
 
-/* 확인/저장하기 버튼 스타일 (Primary - Orange/Black) */
 .modal-footer .btn-primary {
-    flex: 2; /* 확인 버튼을 조금 더 넓게 설정해서 강조 */
+    flex: 2; 
     height: 48px;
     border-radius: 0 !important;
-    background-color: #ff4e00 !important; /* MAKNAEZ 오렌지 */
+    background-color: #ff4e00 !important;
     border: none !important;
     color: #fff !important;
     font-size: 14px;
@@ -298,18 +283,16 @@ to {
 }
 
 .modal-footer .btn-primary:hover {
-    background-color: #111 !important; /* 호버 시 다크하게 변신 */
+    background-color: #111 !important; 
     transform: translateY(-2px);
     box-shadow: 0 5px 15px rgba(255, 78, 0, 0.3);
 }
 
-/* 3. 인풋 박스 강조 애니메이션 */
 .modal-body .form-control:focus {
     border-color: #ff4e00 !important;
     background-color: #fff !important;
 }
 
-/* 4. 선택된 회원 리스트 박스 디자인 */
 #selectedMembers {
     border: 1px dashed #ddd !important;
     background-color: #f9fafb !important;
@@ -317,7 +300,6 @@ to {
     line-height: 1.8;
 }
 
-/* 5. 변동 포인트 인풋 그룹 블랙 포인트 */
 .modal-body .input-group-text {
     background-color: #111 !important;
     color: #fff !important;
@@ -326,7 +308,6 @@ to {
     padding: 0 20px;
 }
 
-/* 1. 페이징 컨테이너: 확실하게 가로 전체를 쓰고 자식을 중앙으로 */
 .custom-paging-wrapper {
     width: 100% !important;
     display: flex !important;
@@ -336,7 +317,6 @@ to {
     padding: 20px 0 !important;
 }
 
-/* 2. 내부 모든 요소 (링크, 숫자, 화살표) 공통 스타일 */
 .custom-paging-wrapper a, 
 .custom-paging-wrapper span, 
 .custom-paging-wrapper b {
@@ -347,38 +327,34 @@ to {
     height: 32px !important;
     margin: 0 3px !important;
     padding: 0 6px !important;
-    text-decoration: none !important; /* 파란 밑줄 제거 */
-    color: #666 !important; /* 기본 글자색 */
+    text-decoration: none !important; 
+    color: #666 !important; 
     font-size: 14px !important;
     font-family: 'Pretendard', sans-serif !important;
     transition: all 0.2s ease !important;
     border-radius: 4px !important;
 }
 
-/* 3. 현재 페이지 (강조될 숫자) */
 .custom-paging-wrapper b, 
 .custom-paging-wrapper strong {
-    background-color: #ff4e00 !important; /* MAKNAEZ 오렌지 */
+    background-color: #ff4e00 !important; 
     color: #ffffff !important;
     font-weight: 800 !important;
     box-shadow: 0 4px 10px rgba(255, 78, 0, 0.2) !important;
 }
 
-/* 4. 마우스 올렸을 때 (Hover) */
 .custom-paging-wrapper a:hover {
     background-color: #f1f1f1 !important;
     color: #000 !important;
     transform: translateY(-1px) !important;
 }
 
-/* 5. 화살표(처음, 이전, 다음, 끝) 특수 스타일 */
 .custom-paging-wrapper a[title] {
     background-color: #fafafa !important;
     border: 1px solid #eee !important;
     font-weight: bold !important;
 }
 
-/* 6. 부트스트랩 pagination 클래스 간섭 방지 */
 .custom-paging-wrapper .pagination {
     display: flex !important;
     padding-left: 0 !important;

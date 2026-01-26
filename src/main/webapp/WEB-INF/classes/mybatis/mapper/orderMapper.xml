@@ -439,7 +439,7 @@
 	</select>
 
 
-	<!-- 배송 정보 저장 (SHIPMENTS 테이블) -->
+	<!-- 배송 정보 저장 -->
 	<insert id="insertShipment" parameterType="map">
 		INSERT INTO shipments (
 		delivery_number,
@@ -466,7 +466,7 @@
 		)
 	</insert>
 
-	<!-- 주문 상세 저장 (ORDER_ITEMS 테이블) -->
+	<!-- 주문 상세 저장 -->
 	<insert id="insertOrderItem"
 		parameterType="com.maknaez.model.OrderItemDTO">
 		INSERT INTO order_items (

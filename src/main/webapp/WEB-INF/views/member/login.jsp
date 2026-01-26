@@ -20,7 +20,6 @@
             color: #111;
         }
 
-        /* ===== LOGIN WRAPPER ===== */
         .login-wrapper {
             max-width: 420px;
             margin: 0 auto;
@@ -28,7 +27,6 @@
             text-align: center;
         }
 
-        /* ===== SLIDE ANIMATION ===== */
         .slide-item {
             opacity: 0;
             transform: translateY(30px);
@@ -40,7 +38,6 @@
             transform: translateY(0);
         }
 
-        /* ===== LOGIN FORM STYLES ===== */
         .login-title { font-size: 28px; font-weight: 700; margin-bottom: 20px; }
         .login-desc { font-size: 14px; color: #555; line-height: 1.6; margin-bottom: 40px; }
         
@@ -69,14 +66,10 @@
 
         .error-msg { margin-top: 15px; color: #e74c3c; font-size: 13px; }
 
-        /* ===== REGISTER SECTION (여백 및 줄 스타일 수정) ===== */
         .register-wrapper {
-            /* [수정 1] 양옆 여백 주기 */
-            width: 80%;          /* 화면의 94%만 사용 (양옆 공간 남김) */
-            max-width: 1600px;   /* 너무 넓어지지 않게 최대폭 제한 */
-            margin: 0 auto 100px; /* 가운데 정렬 및 아래 여백 */
-            
-            /* [수정 2] 줄과 글자 사이 간격 (높이감) */
+            width: 80%;          
+            max-width: 1600px;   
+            margin: 0 auto 100px;
             padding: 70px 0;    
             
             border-top: 3px solid #000;    
@@ -160,13 +153,11 @@
             if (referer != null && !referer.contains("/member/login")) {
                 try {
                     java.net.URL url = new java.net.URL(referer);
-                    String path = url.getPath(); // 예: /maknaez/collections/list
+                    String path = url.getPath(); 
                     String query = url.getQuery();
-                    
-                    // [중요] 컨텍스트 패스(/maknaez)를 찾아 제거하여 중복 방지
                     String cp = request.getContextPath();
                     if (cp != null && !cp.isEmpty() && path.startsWith(cp)) {
-                        path = path.substring(cp.length()); // /collections/list 만 남김
+                        path = path.substring(cp.length()); 
                     }
                     
                     returnUrl = path + (query != null ? "?" + query : "");
@@ -210,7 +201,6 @@
 <jsp:include page="/WEB-INF/views/layout/footerResources.jsp" />
 
 <script>
-/* ===== LOGIN SLIDE ===== */
 document.addEventListener("DOMContentLoaded", () => {
     const items = document.querySelectorAll(".slide-item");
     items.forEach((el, idx) => {
@@ -220,7 +210,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 });
 
-/* ===== REGISTER SCROLL ANIMATION ===== */
 const registerWrapper = document.querySelector('.register-wrapper');
 const observer = new IntersectionObserver(entries => {
     entries.forEach(entry => {
@@ -232,7 +221,6 @@ const observer = new IntersectionObserver(entries => {
 }, { threshold: 0.2 });
 observer.observe(registerWrapper);
 
-/* ===== LOGIN LOGIC ===== */
 function sendLogin() {
     const f = document.loginForm;
     if (!f.userId.value.trim()) { alert("이메일을 입력해주세요."); f.userId.focus(); return; }

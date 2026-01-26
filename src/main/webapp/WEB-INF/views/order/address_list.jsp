@@ -5,23 +5,18 @@
 <head>
 <meta charset="UTF-8">
 <title>배송지 변경</title>
-<!-- Bootstrap 5 CDN -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <style>
     body { background: #fff; padding: 20px; font-family: 'Noto Sans KR', sans-serif; }
-    
-    /* 헤더 스타일 */
     .header { 
         border-bottom: 2px solid #000; 
         padding-bottom: 15px; 
         margin-bottom: 20px; 
         display: flex; 
-        justify-content: space-between; /* 양 끝 정렬 */
+        justify-content: space-between; 
         align-items: center; 
     }
     .header h2 { font-size: 20px; font-weight: 700; margin: 0; }
-
-    /* [추가] 배송지 추가/관리 버튼 스타일 */
     .btn-add {
         font-size: 13px;
         padding: 6px 12px;
@@ -33,20 +28,16 @@
         transition: all 0.2s;
     }
     .btn-add:hover { border-color: #000; background: #f9f9f9; color: #000; }
-    
-    /* 리스트 아이템 스타일 */
     .addr-item {
         display: block;
         position: relative;
         border: 1px solid #ddd;
-        padding: 20px 20px 20px 50px; /* 라디오 버튼 공간 확보 */
+        padding: 20px 20px 20px 50px;
         margin-bottom: 10px;
         cursor: pointer;
     }
     .addr-item:hover { border-color: #888; }
-    .addr-item.selected { border: 2px solid #000; padding: 19px 19px 19px 49px; /* 보더 두께만큼 보정 */ }
-
-    /* 라디오 버튼 커스텀 */
+    .addr-item.selected { border: 2px solid #000; padding: 19px 19px 19px 49px; }
     .addr-radio {
         position: absolute;
         left: 20px;
@@ -57,7 +48,6 @@
         cursor: pointer;
     }
 
-    /* 배송지 정보 텍스트 */
     .info-row { margin-bottom: 6px; }
     .name { font-weight: 700; font-size: 16px; margin-right: 8px; }
     .badge-basic {
@@ -69,7 +59,6 @@
     .phone { font-size: 14px; color: #555; }
     .addr-text { font-size: 14px; color: #333; margin-top: 8px; line-height: 1.5; }
 
-    /* 하단 버튼 */
     .btn-wrap {
         margin-top: 30px;
         display: flex;
@@ -93,7 +82,6 @@
 
 <div class="header">
     <h2>배송지 목록</h2>
-    <!-- [수정] 클릭 시 goAddrManage 호출 -->
     <button type="button" class="btn-add" onclick="goAddrManage()">배송지 관리</button>
 </div>
 
@@ -171,7 +159,6 @@ function formatTelList(tel) {
     return result;
 }
 
-// 클릭 시 스타일 변경
 function selectItem(element) {
     document.querySelectorAll('.addr-item').forEach(el => el.classList.remove('selected'));
     element.classList.add('selected');
@@ -179,7 +166,6 @@ function selectItem(element) {
     if(radio) radio.checked = true;
 }
 
-// [배송지 변경] 버튼 클릭 시
 function applyAddress() {
     const checked = document.querySelector('input[name="addrId"]:checked');
     if(!checked) {

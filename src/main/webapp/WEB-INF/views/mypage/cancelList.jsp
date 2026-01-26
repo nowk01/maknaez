@@ -21,7 +21,7 @@ body {
 	color: #000;
 }
 
-/* 1. 상단 상태 대시보드 */
+/* 상단 상태 대시보드 */
 .status-dashboard-container {
 	display: flex;
 	justify-content: space-between;
@@ -65,7 +65,7 @@ body {
 	background-color: #eee;
 }
 
-/* 2. 필터 영역 */
+/* 필터 영역 */
 .filter-section-row {
 	display: flex;
 	justify-content: space-between;
@@ -127,7 +127,7 @@ body {
 	border-radius: 5px;
 }
 
-/* 3. 게시판 UI (상세 목록형 5컬럼) */
+/* 게시판 UI */
 .order-list-board {
 	border-top: 1px solid #000;
 	margin-top: 10px;
@@ -229,7 +229,7 @@ body {
 	color: #000;
 }
 
-/* 4. 페이징 디자인 */
+/* 페이징 디자인 */
 .page-navigation-wrap {
 	margin: 60px 0;
 	text-align: center;
@@ -428,7 +428,7 @@ body {
 
 	<script>
     document.addEventListener("DOMContentLoaded", function() {
-        // 1. 기간 선택 버튼 이벤트 (디자인 active 유지 포함)
+        //기간 선택 버튼 이벤트
         document.querySelectorAll('.custom-pill-btn').forEach(pill => {
             pill.addEventListener('click', function() {
                 document.querySelectorAll('.custom-pill-btn').forEach(btn => btn.classList.remove('active'));
@@ -441,7 +441,7 @@ body {
             });
         });
 
-        // 2. 달력 초기값 세팅
+        // 달력 초기값 세팅
         const f = document.searchForm;
         if(f.historyStartDate.value) document.getElementById("sDate").value = f.historyStartDate.value;
         if(f.historyEndDate.value) document.getElementById("eDate").value = f.historyEndDate.value;
@@ -488,7 +488,7 @@ body {
         f.historyEndDate.value = formatDate(now);
         f.page.value = "1";
         
-        ajaxSubmit(); // AJAX 방식으로 호출
+        ajaxSubmit(); 
     }
 
     function searchList() {
@@ -505,13 +505,13 @@ body {
         f.historyEndDate.value = end;
         f.page.value = "1"; 
         
-        ajaxSubmit(); // AJAX 방식으로 호출
+        ajaxSubmit(); 
     }
 
     function listPage(page) {
         const f = document.searchForm;
         f.page.value = page;
-        ajaxSubmit(); // 페이징도 AJAX로 처리
+        ajaxSubmit();
     }
     </script>
 </body>

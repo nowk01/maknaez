@@ -20,7 +20,7 @@
         padding: 0 20px;
     }
 
-    /* 1. 수직선 확장 애니메이션 */
+    /* 수직선 확장 애니메이션 */
     .slm-divider {
         width: 1px;
         height: 0;
@@ -33,7 +33,7 @@
         to { height: 60px; }
     }
 
-    /* 2. 요소들 페이드인 + 슬라이드 업 애니메이션 */
+    /* 요소들 페이드인 + 슬라이드 업 애니메이션 */
     .animate-up {
         opacity: 0;
         transform: translateY(20px);

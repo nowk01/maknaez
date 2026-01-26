@@ -2,18 +2,16 @@
 <%@ taglib prefix="c" uri="jakarta.tags.core"%>
 
 <style>
-    /* 안 읽은 알림: 주황색 포인트 + 밝은 배경 + 선명함 */
     .noti-item.unread {
         background-color: #fff9f5 !important;
         border-left: 4px solid #ff4e00 !important;
-        opacity: 1 !important; /* 무조건 선명하게 */
+        opacity: 1 !important; 
     }
     .noti-item.unread .msg {
         color: #000 !important;
         font-weight: 700 !important;
     }
     
-    /* 기본(읽은) 알림: 흐리게 처리 */
     .noti-item {
         padding: 16px 20px;
         display: flex;
@@ -23,7 +21,7 @@
         cursor: pointer;
         transition: all 0.2s;
         background: #fff;
-        opacity: 0.5; /* 읽은 건 기본적으로 흐림 */
+        opacity: 0.5; 
     }
     .noti-item:hover {
         background-color: #f8f9fa !important;

@@ -8,7 +8,6 @@
 <jsp:include page="/WEB-INF/views/layout/headerResources.jsp" />
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/mypage.css">
 <style>
-    /* 살로몬 주문상세 전용 스타일 - 기존 mypage.css와 충돌 방지 */
     .detail-container { max-width: 1000px; margin: 40px auto; padding: 0 20px; color: #000; }
     .detail-title { font-size: 28px; font-weight: 700; text-align: center; margin-bottom: 40px; text-transform: uppercase; }
     
@@ -18,19 +17,15 @@
     /* 섹션 공통 */
     .detail-section { margin-bottom: 50px; }
     .detail-section-title { font-size: 20px; font-weight: 700; margin-bottom: 15px; }
-    
-    /* 살로몬 특유의 굵은 헤더 라인 */
     .detail-table { width: 100%; border-collapse: collapse; border-top: 2px solid #000; }
     .detail-table th { background-color: #fff; padding: 20px 10px; font-size: 14px; color: #000; border-bottom: 1px solid #eee; text-align: center; }
     .detail-table td { padding: 20px 10px; border-bottom: 1px solid #eee; vertical-align: middle; font-size: 14px; }
 
-    /* 상품 정보 열 */
     .prod-info-box { display: flex; align-items: center; gap: 20px; }
     .prod-info-box img { width: 100px; height: 100px; object-fit: cover; background: #f9f9f9; }
     .prod-details .name { font-weight: 700; font-size: 15px; display: block; margin-bottom: 5px; }
     .prod-details .opt { color: #888; font-size: 13px; }
 
-    /* 배송지/결제 정보 그리드 (2열) */
     .info-grid { display: grid; grid-template-columns: 150px 1fr; border-top: 2px solid #000; }
     .info-grid-item { display: contents; }
     .info-grid-item .label { padding: 20px 0; font-weight: 700; font-size: 14px; border-bottom: 1px solid #eee; }
@@ -44,8 +39,6 @@
         border-radius: 30px; text-decoration: none; transition: 0.3s;
     }
     .btn-list:hover { background: #333; }
-
-    /* 강조 텍스트 (총 결제금액 등) */
     .highlight-price { font-size: 18px; font-weight: 900; }
 </style>
 </head>

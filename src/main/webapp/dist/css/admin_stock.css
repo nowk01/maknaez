@@ -117,9 +117,9 @@ body {
     font-size: 11px;
     border-radius: 1px;
 }
-.bg-secondary { background-color: #eee !important; color: #777; } /* 일시품절 */
-.bg-danger { background-color: #fff5f5 !important; color: #ff4e00; border: 1px solid #ff4e00; } /* 품절임박 */
-.bg-success { background-color: #f0fff4 !important; color: #28a745; border: 1px solid #28a745; } /* 정상 */
+.bg-secondary { background-color: #eee !important; color: #777; } 
+.bg-danger { background-color: #fff5f5 !important; color: #ff4e00; border: 1px solid #ff4e00; } 
+.bg-success { background-color: #f0fff4 !important; color: #28a745; border: 1px solid #28a745; } 
 
 .text-danger-custom { color: #ff4e00 !important; font-weight: 800; }
 
@@ -144,7 +144,6 @@ body {
     border-color: #111;
 }
 
-/* 페이징 스타일 */
 .page-navigation a, .page-navigation span {
     display: inline-flex;
     justify-content: center;

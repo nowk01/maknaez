@@ -3,7 +3,7 @@
 
 <mapper namespace="com.maknaez.mapper.ProductMapper">
 
-      <!-- [공통] 할인율 조회 서브쿼리 -->
+      <!--  할인율 조회 서브쿼리 -->
     <sql id="discount-subquery">
         (SELECT NVL(MAX(val), 0)
          FROM DISCOUNTS 
@@ -12,13 +12,11 @@
            AND is_active = 1)
     </sql>
 
-    <!-- [공통] WHERE 절 (필터링) -->
     <sql id="where-list">
         <where>
             p.is_displayed = 1
             AND c.status = 1
 
-            <!-- 1. 대분류 필터 -->
             <if test="category == 'men'">
                 AND (p.prod_name LIKE 'M\_%' ESCAPE '\' OR p.prod_name LIKE 'U\_%' ESCAPE '\')
             </if>
@@ -29,12 +27,10 @@
                 AND UPPER(c.cate_parent) = 'SPORTSTYLE'
             </if>
 
-            <!-- 2. SALE 대분류: 할인값이 0보다 큰 경우 -->
             <if test="category == 'sale'">
                 AND <include refid="discount-subquery"/> > 0
             </if>
 
-            <!-- 3. 중분류 및 사이드바 필터 -->
             <if test="subCategory != null and subCategory != ''">
                 AND p.cate_code LIKE '%' || UPPER(#{subCategory}) || '%'
             </if>
@@ -59,7 +55,6 @@
                 )
             </if>
 
-            <!-- 4. 특수 필터 -->
             <if test="filter == 'new'">
                 AND p.prod_date >= SYSDATE - 30
             </if>
@@ -70,7 +65,6 @@
                 AND UPPER(p.prod_name) LIKE '%S/LAB%'
             </if>
 
-            <!-- 5. 가격대 필터 -->
             <if test="minPrice != null and minPrice != ''">
                 AND p.base_price >= TO_NUMBER(#{minPrice})
             </if>
@@ -78,7 +72,6 @@
                 AND p.base_price &lt;= TO_NUMBER(#{maxPrice})
             </if>
             
-            <!-- 6. 할인율 필터 -->
             <if test="discountRate == 'under10'"> 
                 AND <include refid="discount-subquery"/> &lt; 10 
             </if>
@@ -141,8 +134,6 @@
         WHERE p.prod_id = #{prodId}
     </select>
     
-     <!-- [수정] 상품별 사이즈 및 실시간 재고 리스트 조회 -->
-    <!-- STOCK_LOGS 테이블에서 각 OPT_ID별 가장 최신의 PROD_STOCK 값을 가져옵니다. -->
     <select id="listProductSize" parameterType="long" resultType="com.maknaez.model.ProductDTO">
         SELECT 
             s.opt_id AS optId, 
@@ -162,7 +153,6 @@
         ORDER BY s.pd_size ASC
     </select>
 
-    <!-- [추가] findById 구현 -->
     <select id="findById" parameterType="long" resultType="com.maknaez.model.ProductDTO">
         SELECT 
             prod_id AS prodId, 
@@ -173,8 +163,6 @@
         WHERE prod_id = #{prodId}
     </select>
     
-    
-    <!-- 사이즈별 실시간 재고 목록 조회 (통합됨) -->
     <select id="listProductSizes" parameterType="Long" resultType="com.maknaez.model.ProductDTO">
         SELECT 
             s.opt_id AS opt_id, 
@@ -187,8 +175,6 @@
         ORDER BY s.opt_id ASC
     </select>
 
-
-    <!-- 기타 조회 쿼리들 -->
     <select id="listCategoryNames" parameterType="String" resultType="String">
         SELECT cate_name FROM CATEGORY
         WHERE status = 1 AND cate_parent = UPPER(#{categoryCode})
@@ -224,7 +210,6 @@
         ORDER BY prod_name
     </select>
     
-    <!-- 입고알람 메일용: 옵션 ID로 상품 정보 조회 -->
     <select id="getOptionInfoForAlarm" parameterType="Long" resultType="com.maknaez.model.ProductDTO">
         SELECT 
             p.PROD_ID AS prodId, 
@@ -236,7 +221,6 @@
         WHERE ps.OPT_ID = #{optId}
     </select>
 
-    <!-- 입고알람 메일용: 상품 ID로 위시리스트에 담은 회원 이메일 조회 -->
     <select id="listWishListUserEmails" parameterType="Long" resultType="String">
         SELECT DISTINCT m2.EMAIL
         FROM MEMBER2 m2
@@ -269,12 +253,6 @@
     ) WHERE ROWNUM &lt;= 4
 </select>
 
-
-
-    
-    <!--  관리자관리자관리자관리자관리자관리자관리자관리자관리자관리자관리자관리자관리자관리자관리자관리자관리자관리자관리자 -->
-	
-	<!-- 카테고리 관리(관리자용) -->
 	<select id="listCategory" resultType="com.maknaez.model.CategoryDTO">
 	    SELECT 
 	        CATE_CODE   AS cateCode,
@@ -308,8 +286,6 @@
 	<delete id="deleteCategory" parameterType="string">
 	    DELETE FROM EZ.CATEGORY WHERE CATE_CODE = #{cateCode}
 	</delete>
-	
-	<!-- 제품 관리(관리자용) -->
 	
 	<insert id="insertProduct" parameterType="com.maknaez.model.ProductDTO">
 	    <selectKey keyProperty="prodId" resultType="long" order="BEFORE">
@@ -368,7 +344,6 @@
 	    ORDER SIBLINGS BY order_no ASC
 	</select>
 	
-	<!-- 제품 관리(관리자) -->
 	<sql id="where-manage">
         <where>
             p.status = 1  <if test="schType == 'all' and kwd != null and kwd != ''">
@@ -461,9 +436,6 @@
    	 	DELETE FROM product_img WHERE img_id = #{imgId}
 	</delete>
     
-    
-    <!-- 재고 관리(관리자) -->
-    
     <select id="listStock" parameterType="map" resultType="com.maknaez.model.ProductDTO">
 	    SELECT 
 	        p.prod_id    AS prodId,
@@ -472,7 +444,6 @@
 	        c.cate_name  AS cateName,
 	        ps.opt_id    AS optId,
 	        ps.pd_size   AS prodSize,
-	        -- 재고 테이블과 조인하여 가져온 값 (없으면 0)
 	        NVL(sl.prod_stock, 0) AS stockQty,
 	        sl.reg_date           AS regDate
 	    FROM products p
@@ -480,7 +451,6 @@
 	    JOIN pd_size ps ON p.prod_id = ps.prod_id
 	    JOIN category c ON p.cate_code = c.cate_code
 	    
-	    -- 2. [핵심] 재고 로그 중 '옵션별 최신 1건'만 가져와서 조인
 	    LEFT JOIN (
 	        SELECT 
 	            opt_id, 
@@ -491,7 +461,6 @@
 	                opt_id, 
 	                prod_stock, 
 	                reg_date,
-	                -- 옵션ID별로 log_id 내림차순 순번 매기기 (1등이 최신)
 	                ROW_NUMBER() OVER(PARTITION BY opt_id ORDER BY log_id DESC) as rn
 	            FROM stock_logs
 	        )
@@ -542,8 +511,8 @@
             stock_seq.NEXTVAL,
             #{prodId},
             #{optId},
-            #{qty},         -- 이번 변동 수량 (+5)
-            #{finalStock},  -- [핵심] 계산된 최종 재고 (15)
+            #{qty},         
+            #{finalStock},  
             #{reason},
             SYSDATE
         )
